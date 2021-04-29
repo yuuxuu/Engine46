@@ -1,129 +1,61 @@
-/**
+ï»¿/**
  * @file main.cpp
  * @brief
- * @author –Ø‘º—D
+ * @author æœ¨æ‘å„ª
  * @date 2018/12/15
  */
 
 #include "main.h"
-#include "CWindowManager.h"
-//#include	"CGameSystemManager.h"
-//#include	"CFileSystemManager.h"
-//#include	"CGuiManager.h"
-//#include	"CRenderManager.h"
+#include "CGameSystem.h"
 
 using namespace Engine46;
 
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszArgs,int nWinMode)
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszArgs, int nWinMode)
 {
+	// ã‚²ãƒ¼ãƒ ã‚·ã‚¹ãƒ†ãƒ ä½œæˆ
+	CGameSystem gameSystem;
+	if (!gameSystem.GameSystemInit(hInstance)) {
+		MessageBox(NULL, "ã‚²ãƒ¼ãƒ ã‚·ã‚¹ãƒ†ãƒ åˆæœŸåŒ–ï¼šå¤±æ•—", "MessageBox", MB_OK);
+		return -1;
+	}
+
 	MSG	msg;
-	bool flag = true;
-
-	// ƒRƒ“ƒ\[ƒ‹ŒÄ‚Ño‚µ
-	CallConsol();
-	// —”¶¬
-	srand((unsigned)time(NULL));
-	// ƒƒP[ƒ‹İ’è
-	setlocale(LC_CTYPE, "");
-
-	// ƒEƒCƒ“ƒhƒEƒ}ƒl[ƒWƒƒ[‚ğì¬
-	CWindowManager::Create();
-	CWindowManager::Get()->CreateCWindow(hInstance, std::make_unique<CWindow>("MainWindow", "Engine46"));
-
-	//// ƒtƒ@ƒCƒ‹ƒVƒXƒeƒ€‚Ìì¬
-	//CFileSystemManager::Create();
-	//// ƒtƒ@ƒCƒ‹ƒVƒXƒeƒ€‚Ì‰Šú‰»
-	//if (!CFileSystemManager::Get()->InitFileSystem()) {
-	//	MessageBox(NULL, "ƒtƒ@ƒCƒ‹ƒVƒXƒeƒ€‚Ìì¬‹y‚Ñ‰Šú‰»:¸”s", "MessageBox", MB_OK);
-	//	// ƒtƒ@ƒCƒ‹ƒVƒXƒeƒ€‚ÌI—¹
-	//	CFileSystemManager::Release();
-	//}
-	//else {
-	//	std::cout << "ƒtƒ@ƒCƒ‹ƒVƒXƒeƒ€‚Ìì¬‹y‚Ñ‰Šú‰»:Š®—¹" << std::endl;
-	//}
-
-	//// ƒQ[ƒ€ƒVƒXƒeƒ€‚Ìì¬
-	//CGameSystemManager::Create();
-	//// ƒQ[ƒ€ƒVƒXƒeƒ€‚Ì‰Šú‰»
-	//if (!CGameSystemManager::Get()->GameSystemInit()) {
-	//	MessageBox(NULL, "ƒQ[ƒ€ƒVƒXƒeƒ€‚Ìì¬‹y‚Ñ‰Šú‰»:¸”s", "MessageBox", MB_OK);
-	//	// ƒQ[ƒ€ƒVƒXƒeƒ€‚ÌI—¹
-	//	CGameSystemManager::Release();
-	//	return -1;
-	//}
-	//else {
-	//	std::cout << "ƒQ[ƒ€ƒVƒXƒeƒ€‚Ìì¬‹y‚Ñ‰Šú‰»:Š®—¹" << std::endl;
-	//}
-
-	// ƒCƒxƒ“ƒgƒ^ƒCƒ}[‚ğƒZƒbƒg‚·‚é
-	timeBeginPeriod(1);									// ƒ^ƒCƒ}‚Ì•ª‰ğ”\—Í‚ğ‚P‚‚“‚É‚·‚é
-	// ƒQ[ƒ€ƒVƒXƒeƒ€ID‚Ìæ“¾
-	int gameSystemId = timeSetEvent(16, 1, GameSystemManagerProc, 1, TIME_PERIODIC);
-	// ƒtƒ@ƒCƒ‹ƒVƒXƒeƒ€ID‚Ìæ“¾
-	int fileSystemId = timeSetEvent(16, 1, FileSystemManagerProc, 1, TIME_PERIODIC);
-
-	while (1) {											// ƒƒbƒZ[ƒW¥ƒ‹[ƒv
-		if (!GetMessage(&msg, NULL, 0, 0)) {			// ƒƒbƒZ[ƒW‚ğæ“¾
+	while (1) {
+		if (!GetMessage(&msg, NULL, 0, 0)) {
 			break;
 		}
 		else {
-			TranslateMessage(&msg); 					// •¶šƒƒbƒZ[ƒW‚Ö‚ÌƒRƒ“ƒo[ƒg
-			DispatchMessage(&msg); 						// ƒƒbƒZ[ƒW‚ğWndProc‚Ö‘—‚é
+			// æ–‡å­—ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã¸ã®ã‚³ãƒ³ãƒãƒ¼ãƒˆ
+			TranslateMessage(&msg);
+			// ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’WndProcã¸é€ã‚‹
+			DispatchMessage(&msg);
 		}
 	}
 
-	if (gameSystemId) timeKillEvent(gameSystemId);	// ƒ}ƒ‹ƒ`ƒƒfƒBƒAƒ^ƒCƒ}‚ÌI—¹
-	if (fileSystemId) timeKillEvent(fileSystemId);	// ƒ}ƒ‹ƒ`ƒƒfƒBƒAƒ^ƒCƒ}‚ÌI—¹
-
-	timeEndPeriod(1);									// ƒ^ƒCƒ}‚Ì•ª‰ğ”\—Í‚à‚Æ‚É–ß‚·
-
-	//CFileSystemManager::Release();						// ƒtƒ@ƒCƒ‹ƒVƒXƒeƒ€‚ÌI—¹
-	//CGameSystemManager::Release();						// ƒQ[ƒ€ƒVƒXƒeƒ€‚ÌI—¹
-	//CWindowManager::Release();							// ƒEƒCƒ“ƒhƒEƒ}ƒl[ƒWƒƒ[‚ÌŠJ•ú
-
-	FreeConsole();										// ƒRƒ“ƒ\[ƒ‹‚ÌŠJ•ú
 	return (int)msg.wParam;
 }
 
-void CALLBACK GameSystemManagerProc(UINT uID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dw1, DWORD_PTR dw2)
-{
-	//if (CGameSystemManager::Get()->GetOnMultiThread()) {
-	//	// ƒ}ƒ‹ƒ`ƒXƒŒƒbƒh—p
-	//	CGameSystemManager::SetGameEvent();								// ƒQ[ƒ€ƒVƒXƒeƒ€ƒCƒxƒ“ƒgƒZƒbƒg
-	//}
-	//else {
-	//	// ƒVƒ“ƒOƒ‹ƒXƒŒƒbƒh—p
-	//	CGameSystemManager::Get()->GameSystemUpdate();					// ƒQ[ƒ€ƒVƒXƒeƒ€‚ÌXV
-	//	CGameSystemManager::Get()->GameSystemDraw();					// ƒQ[ƒ€ƒVƒXƒeƒ€‚Ì•`‰æ
-	//}
-}
-
-void CALLBACK FileSystemManagerProc(UINT uID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dw1, DWORD_PTR dw2)
-{
-	//CFileSystemManager::SetFileEvent();			// ƒtƒ@ƒCƒ‹ƒVƒXƒeƒ€ƒCƒxƒ“ƒg‚ÌƒZƒbƒg
-}
-
-// ƒRƒ“ƒ\[ƒ‹‚ÌŒÄ‚Ño‚µ
+// ã‚³ãƒ³ã‚½ãƒ¼ãƒ«ã®å‘¼ã³å‡ºã—
 void CallConsol()
 {
-	char Consol[128];
-	HWND ConsolWindow;
-	RECT ConsolWindowRect;
+	char Console[128];
+	HWND ConsoleWindow;
+	RECT ConsoleWindowRect;
 
-	FILE* pfile = NULL; // ƒtƒ@ƒCƒ‹ƒ|ƒCƒ“ƒ^
+	FILE* pfile = NULL; // ãƒ•ã‚¡ã‚¤ãƒ«ãƒã‚¤ãƒ³ã‚¿
 
-	// ƒRƒ“ƒ\[ƒ‹o—Í
+	// ã‚³ãƒ³ã‚½ãƒ¼ãƒ«å‡ºåŠ›
 	AllocConsole();
-	// ƒXƒgƒŠ[ƒ€‚ÆŒ‹‚Ô
+	// ã‚¹ãƒˆãƒªãƒ¼ãƒ ã¨çµã¶
 	freopen_s(&pfile, "CONOUT$", "w", stdout);
 	freopen_s(&pfile, "CONNIN$", "r", stdin);
 
-	// ƒRƒ“ƒ\[ƒ‹ƒ^ƒCƒgƒ‹ŒŸõ
-	GetConsoleTitle(Consol, sizeof(Consol));
-	// ƒRƒ“ƒ\[ƒ‹ƒEƒCƒ“ƒhƒEƒnƒ“ƒhƒ‹æ“¾
-	ConsolWindow = FindWindow(NULL, Consol);
-	// Œ»İ‚ÌƒRƒ“ƒ\[ƒ‹ƒEƒCƒ“ƒhƒEˆÊ’u‚ğæ“¾
-	GetWindowRect(ConsolWindow, &ConsolWindowRect);
-	// ƒRƒ“ƒ\[ƒ‹ƒEƒCƒ“ƒhƒEˆÊ’u•ÏX
-	MoveWindow(ConsolWindow, 0, 0, ConsolWindowRect.right - ConsolWindowRect.left, ConsolWindowRect.bottom - ConsolWindowRect.top, TRUE);
+	// ã‚³ãƒ³ã‚½ãƒ¼ãƒ«ã‚¿ã‚¤ãƒˆãƒ«æ¤œç´¢
+	GetConsoleTitle(Console, sizeof(Console));
+	// ã‚³ãƒ³ã‚½ãƒ¼ãƒ«ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«å–å¾—
+	ConsoleWindow = FindWindow(NULL, Console);
+	// ç¾åœ¨ã®ã‚³ãƒ³ã‚½ãƒ¼ãƒ«ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ä½ç½®ã‚’å–å¾—
+	GetWindowRect(ConsoleWindow, &ConsoleWindowRect);
+	// ã‚³ãƒ³ã‚½ãƒ¼ãƒ«ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ä½ç½®å¤‰æ›´
+	MoveWindow(ConsoleWindow, 0, 0, ConsoleWindowRect.right - ConsoleWindowRect.left, ConsoleWindowRect.bottom - ConsoleWindowRect.top, TRUE);
 }

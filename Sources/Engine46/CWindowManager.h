@@ -1,9 +1,10 @@
-//*****************************************************************************
-//!	@file	CWindowManager.h
-//!	@brief	
-//!	@note	CWindowManagerƒNƒ‰ƒX
-//!	@author 2019/09/26 ì¬F–Ø‘º—D
-//*****************************************************************************
+ï»¿/**
+ * @file CWindowManager.h
+ * @brief
+ * @author æœ¨æ‘å„ª
+ * @date 2019/09/26
+ */
+
 #ifndef _CWINDOW_MANAGER_H_ 
 #define _CWINDOW_MANAGER_H_
 

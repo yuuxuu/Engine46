@@ -1,48 +1,40 @@
-//*****************************************************************************
-//!	@file	CWindowManager.cpp
-//!	@brief	
-//!	@note	CWindowManagerƒNƒ‰ƒX
-//!	@author 2019/09/26 ì¬F–Ø‘º—D
-//*****************************************************************************
-
+ï»¿/**
+ * @file CWindowManager.cpp
+ * @brief
+ * @author æœ¨æ‘å„ª
+ * @date 2019/09/26
+ */
 #include	"CWindowManager.h"
-//#include	"CDirectXShowManager.h"
-//#include	"CGuiManager.h"
-//#include	"CSceneManager.h"
-//#include	"CCamera.h"
-//#include	"CSkyBox.h"
-
-//extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 namespace Engine46 {
 
 	CWindowManager* CWindowManager::m_pCWinowManager = nullptr;
 
-	// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	CWindowManager::CWindowManager() :
 		m_hInstance(nullptr),
 		m_WinMode(0)
 	{}
 
-	// ƒfƒXƒgƒ‰ƒNƒ^
+	// ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	CWindowManager::~CWindowManager() 
 	{}
 
-	// XV
+	// æ›´æ–°
 	void CWindowManager::Update() {
 
 	}
 
-	// ƒEƒCƒ“ƒhƒE‚Ìì¬	
+	// ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã®ä½œæˆ	
 	bool CWindowManager::CreateCWindow(HINSTANCE hInstance, std::unique_ptr<CWindow> pWindow) {
 		if (!pWindow->InitInstance(hInstance)) {
-			std::cout << "ƒCƒ“ƒXƒ^ƒ“ƒX‚Ì“o˜^:¸”s" << std::endl;
+			std::cout << "ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã®ç™»éŒ²:å¤±æ•—" << std::endl;
 			return false;
 		}
 
-		// ƒEƒCƒ“ƒhƒE‚Ì‰Šú‰»
+		// ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã®åˆæœŸåŒ–
 		if (!pWindow->InitWindow(hInstance, m_WinMode)) {
-			std::cout << "ƒEƒCƒ“ƒhƒE‰Šú‰»:¸”s" << std::endl;
+			std::cout << "ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦åˆæœŸåŒ–:å¤±æ•—" << std::endl;
 			return false;
 		}
 
@@ -51,12 +43,12 @@ namespace Engine46 {
 		return true;
 	}
 
-	// ì¬
+	// ä½œæˆ
 	void CWindowManager::Create() {
 		if (!m_pCWinowManager) m_pCWinowManager = new CWindowManager;
 	}
 
-	// ŠJ•ú
+	// é–‹æ”¾
 	void CWindowManager::Release() {
 		if (m_pCWinowManager) delete m_pCWinowManager; m_pCWinowManager = nullptr;
 	}

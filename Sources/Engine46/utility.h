@@ -1,7 +1,7 @@
-/**
+ï»¿/**
  * @file utility.h
  * @brief
- * @author –Ø‘º—D
+ * @author æœ¨æ‘å„ª
  * @date 2021/04/10
  */
 
@@ -10,8 +10,10 @@
 #ifndef _UTILITY_H_
 #define _UTILITY_H_
 
+#include "CObject.h"
+
 namespace Engine46 {
-	// vector‚ÌƒNƒŠƒA
+	// vectorã®ã‚¯ãƒªã‚¢
 	template<class T>
 	void VecClear(std::vector<T>& vec) {
 		if (!vec.empty()) {
@@ -20,7 +22,7 @@ namespace Engine46 {
 		}
 	}
 
-	// vector‚ÌŠJ•ú
+	// vectorã®é–‹æ”¾
 	template <class T>
 	void VecRelease(std::vector<T*>& vec) {
 		if (!vec.empty()) {
@@ -32,7 +34,7 @@ namespace Engine46 {
 		}
 	}
 
-	void SaveToBmpFile(BITMAPINFOHEADER m_bmpInfo, LPCVOID pBuffer, std::string fileName);
+	void SaveToBmpFile(BITMAPINFOHEADER m_bmpInfo, LPCVOID pStr, std::string fileName);
 
 	std::wstring StringConvertToWString(std::string str);
 } // namespace

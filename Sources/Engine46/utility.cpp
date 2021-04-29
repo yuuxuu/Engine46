@@ -1,15 +1,15 @@
-/**
+ï»¿/**
  * @file utility.cpp
  * @brief
- * @author –Ø‘º—D
+ * @author æœ¨æ‘å„ª
  * @date 2021/04/10
  */
 
 #include "utility.h"
 
 namespace Engine46 {
-	// BMPƒtƒ@ƒCƒ‹‚Ì•Û‘¶
-	void SaveToBmpFile(BITMAPINFOHEADER m_bmpInfo, LPCVOID pBuffer, std::string fileName) {
+	// BMPãƒ•ã‚¡ã‚¤ãƒ«ã®ä¿å­˜
+	void SaveToBmpFile(BITMAPINFOHEADER m_bmpInfo, LPCVOID pStr, std::string fileName) {
 
 		HANDLE handle = CreateFile(fileName.c_str(), GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 		if (handle != INVALID_HANDLE_VALUE) {
@@ -24,15 +24,15 @@ namespace Engine46 {
 
 			WriteFile(handle, &bmpHead, sizeof(BITMAPFILEHEADER), &writeSize, NULL);
 			WriteFile(handle, &m_bmpInfo, sizeof(BITMAPINFOHEADER), &writeSize, NULL);
-			WriteFile(handle, pBuffer, m_bmpInfo.biSizeImage, &writeSize, NULL);
+			WriteFile(handle, pStr, m_bmpInfo.biSizeImage, &writeSize, NULL);
 		}
 		else {
-			MessageBox(NULL, "BMPƒtƒ@ƒCƒ‹‚Ì•Û‘¶:¸”s", "MessageBox", MB_OK);
+			MessageBox(NULL, "BMPãƒ•ã‚¡ã‚¤ãƒ«ã®ä¿å­˜:å¤±æ•—", "MessageBox", MB_OK);
 		}
 		CloseHandle(handle);
 	}
 
-	// WStringŒ^‚É•ÏŠ·
+	// WStringå‹ã«å¤‰æ›
 	std::wstring StringConvertToWString(std::string str) {
 		std::wstring result;
 		size_t size = 0;

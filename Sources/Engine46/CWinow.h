@@ -1,15 +1,16 @@
-//*****************************************************************************
-//!	@file	CWinow.h
-//!	@brief	
-//!	@note	CWinowÉNÉâÉX
-//!	@author 2019/09/28 çÏê¨ÅFñÿë∫óD
-//*****************************************************************************
+Ôªø/**
+ * @file CWinowManager.h
+ * @brief
+ * @author Êú®ÊùëÂÑ™
+ * @date 2019/09/28
+ */
+
 #ifndef _CWINOW_H_ 
 #define _CWINOW_H_
 
 #pragma once
 
-#include	"main.h"
+#include "main.h"
 
 namespace Engine46 {
 
@@ -18,8 +19,8 @@ namespace Engine46 {
 		HWND		m_hwnd;
 		WNDCLASSEX	m_wcex;
 
-		const char* m_windowClassName;
-		const char* m_titleName;
+		const char* m_pWindowClassName;
+		const char* m_pTitleName;
 
 		int			m_windowWidth;
 		int			m_windowHeight;

@@ -1,7 +1,7 @@
-/**
+Ôªø/**
  * @file main.h
  * @brief 
- * @author ñÿë∫óD
+ * @author Êú®ÊùëÂÑ™
  * @date 2018/12/15
  */
 
@@ -12,13 +12,6 @@
 #ifndef _MAIN_H_
 #define _MAIN_H_
 
-//#pragma comment(lib, "DirectX11.lib")
-//#pragma comment(lib, "DirectX12.lib")
-//#pragma comment(lib, "DirectXTex.lib")
-//#pragma comment(lib, "ImGui.lib")
-#pragma comment(lib, "winmm.lib")
-
-using std::byte;
 using Microsoft::WRL::ComPtr;
 
 constexpr int SCREEN_X = 1280;
@@ -27,8 +20,6 @@ constexpr int SCREEN_Y = 720;
 constexpr int FULL_SCREEN_X = 1920;
 constexpr int FULL_SCREEN_Y = 1080;
 
-void CALLBACK GameSystemManagerProc(UINT uID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dw1, DWORD_PTR dw2);
-void CALLBACK FileSystemManagerProc(UINT uID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dw1, DWORD_PTR dw2);
 void CallConsol();
 
 namespace Engine46 {	

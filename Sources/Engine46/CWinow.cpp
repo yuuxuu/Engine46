@@ -1,30 +1,31 @@
-//*****************************************************************************
-//!	@file	CWinowManager.cpp
-//!	@brief	
-//!	@note	CWinowManagerƒNƒ‰ƒX
-//!	@author 2019/09/28 ì¬F–Ø‘º—D
-//*****************************************************************************
+ï»¿/**
+ * @file CWinowManager.cpp
+ * @brief
+ * @author æœ¨æ‘å„ª
+ * @date 2019/09/28
+ */
 
 #include "CWinow.h"
 #include "utility.h"
-//#include "CTextureManager.h"
 
 namespace Engine46 {
 
-	UINT g_screenshotCount = 0;
+	UINT g_screenShotCount = 0;
 
-	// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	CWindow::CWindow(const char* windowClassName, const char* titleName):
 		m_hwnd(nullptr),
 		m_wcex(),
-		m_windowClassName(windowClassName),
-		m_titleName(titleName),
+		m_pWindowClassName(windowClassName),
+		m_pTitleName(titleName),
 		m_windowWidth(0),
 		m_windowHeight(0),
+		m_clientWidth(0),
+		m_clientHeight(0),
 		m_onFullScreen(false),
 		m_onScreenShot(false)
 	{
-		if (IDYES == MessageBox(NULL, "ƒtƒ‹ƒXƒNƒŠ[ƒ“‚Å‹N“®‚µ‚Ü‚·‚©H", "MessageBox", MB_YESNO)) {
+		if (IDYES == MessageBox(NULL, "ãƒ•ãƒ«ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ã§èµ·å‹•ã—ã¾ã™ã‹ï¼Ÿ", "MessageBox", MB_YESNO)) {
 			m_onFullScreen = true;
 			m_windowWidth = FULL_SCREEN_X;
 			m_windowHeight = FULL_SCREEN_Y;
@@ -35,39 +36,30 @@ namespace Engine46 {
 		}
 	}
 
-	// ƒfƒXƒgƒ‰ƒNƒ^
+	// ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	CWindow::~CWindow() {
 		UnregisterClass(m_wcex.lpszClassName, m_wcex.hInstance);
 	}
 
-	// ƒEƒCƒ“ƒhƒEƒvƒƒV[ƒWƒƒ
+	// ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒ—ãƒ­ã‚·ãƒ¼ã‚¸ãƒ£
 	LRESULT CWindow::WindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) {
 
 		//ImGui_ImplWin32_WndProcHandler(hwnd, message, wParam, lParam);
 
 		switch (message) {
 		case WM_CREATE:
-			// ƒtƒ@ƒCƒ‹‚Ìƒhƒƒbƒv‚ğ‹–‰Â
+			// ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ‰ãƒ­ãƒƒãƒ—ã‚’è¨±å¯
 			DragAcceptFiles(hwnd, true);
 			break;
 		case WM_DESTROY:
 			PostQuitMessage(0);
 			break;
 		case WM_MOUSEWHEEL:
-		{
-			//float r = 0;
-
-			//CCamera* camera = dynamic_cast<CCamera*>(CSceneManager::Get()->GetObjectManager()->Get3DObject(OBJ_TYPE::CAMERA, 0));
-			//// ƒ}ƒEƒXƒzƒC[ƒ‹‚ÌˆÚ“®—Ê‚ğæ“¾
-			//r = camera->GetR() + GET_WHEEL_DELTA_WPARAM(wParam) * -2;
-			//// ƒJƒƒ‰‚Ì”¼Œa‚ğƒZƒbƒg
-			//if (r <= POSITION_MAX) camera->SetR(r);
 			break;
-		}
 		case WM_KEYDOWN:
 			switch (wParam) {
 			case VK_ESCAPE:
-				if (IDYES == MessageBox(NULL, "I—¹‚µ‚Ü‚·‚©H", "MessageBox", MB_YESNO)) {
+				if (IDYES == MessageBox(NULL, "çµ‚äº†ã—ã¾ã™ã‹ï¼Ÿ", "MessageBox", MB_YESNO)) {
 					DestroyWindow(hwnd);
 				}
 				break;
@@ -75,19 +67,19 @@ namespace Engine46 {
 			break;
 		case WM_DROPFILES:
 		{
-			// DROP\‘¢‘Ì‚Ö‚Ìƒnƒ“ƒhƒ‹
+			// DROPæ§‹é€ ä½“ã¸ã®ãƒãƒ³ãƒ‰ãƒ«
 			HDROP hDrop;
 			char ch[256] = {};
 			UINT fileSize = 0;
 
 			hDrop = (HDROP)wParam;
 
-			// ƒhƒƒbƒv‚³‚ê‚½ƒtƒ@ƒCƒ‹”‚ğŒŸõ
+			// ãƒ‰ãƒ­ãƒƒãƒ—ã•ã‚ŒãŸãƒ•ã‚¡ã‚¤ãƒ«æ•°ã‚’æ¤œç´¢
 			fileSize = DragQueryFile(hDrop, -1, NULL, 0);
 
 			for (auto i = 0; i < (int)fileSize; ++i) {
 
-				// ƒhƒƒbƒv‚³‚ê‚½ƒtƒ@ƒCƒ‹‚Ìƒtƒ@ƒCƒ‹ƒpƒX‚ğæ“¾
+				// ãƒ‰ãƒ­ãƒƒãƒ—ã•ã‚ŒãŸãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã‚’å–å¾—
 				DragQueryFile(hDrop, i, ch, sizeof(ch));
 
 				//string str = ConvertString(ch);
@@ -97,70 +89,58 @@ namespace Engine46 {
 
 			//CFileSystemManager::Get()->SetLoadingFileType(FILE_TYPE::DROP_FILE);
 
-			// ƒtƒ@ƒCƒ‹‚ÌŠJ•ú
+			// ãƒ•ã‚¡ã‚¤ãƒ«ã®é–‹æ”¾
 			if (hDrop) DragFinish(hDrop);
 		}
 		break;
 		default:
-			//long evcode;
-			//long param1, param2;
-			//if (CDirectXShowManager::Get()) {
-			//	if (CDirectXShowManager::Get()->GetMediaEventEx()) {
-			//		/*if (SUCCEEDED(CDirectXShowManager::Get()->GetMediaEventEx()->GetEvent(&evcode, &param1, &param2, 0))) {
-			//			switch (evcode) {
-			//			case EC_COMPLETE:
-			//				CDirectXShowManager::Get()->SetMediaType(MEDIA_TYPE_::NONE);
-			//				break;
-			//			}
-			//		}*/
-			//	}
-			//}
+
 			break;
 		}
 
 		return DefWindowProc(hwnd, message, wParam, lParam);
 	}
 
-	// ƒCƒ“ƒXƒ^ƒ“ƒX‚Ì‰Šú‰»
+	// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã®åˆæœŸåŒ–
 	bool CWindow::InitInstance(HINSTANCE hInstance) {
 
-		m_wcex.hInstance		= hInstance;									// ƒCƒ“ƒXƒ^ƒ“ƒX’l‚ÌƒZƒbƒg
-		m_wcex.lpszClassName	= m_windowClassName;							// ƒNƒ‰ƒX–¼
-		m_wcex.lpfnWndProc		= WindowProc;									// ƒEƒCƒ“ƒhƒEƒƒbƒZ[ƒWŠÖ”
-		m_wcex.style			= CS_HREDRAW | CS_VREDRAW;						// ƒEƒCƒ“ƒhƒEƒXƒ^ƒCƒ‹
-		m_wcex.cbSize			= sizeof(WNDCLASSEX);							// \‘¢‘Ì‚ÌƒTƒCƒY
-		m_wcex.hIcon			= LoadIcon((HINSTANCE)NULL, IDI_APPLICATION);	// ƒ‰[ƒWƒAƒCƒRƒ“
-		m_wcex.hIconSm			= LoadIcon((HINSTANCE)NULL, IDI_WINLOGO);		// ƒXƒ‚[ƒ‹ƒAƒCƒRƒ“
-		m_wcex.hCursor			= LoadCursor((HINSTANCE)NULL, IDC_ARROW);		// ƒJ[ƒ\ƒ‹ƒXƒ^ƒCƒ‹
-		m_wcex.lpszMenuName		= NULL; 										// ƒƒjƒ…[‚È‚µ
-		m_wcex.cbClsExtra		= 0;											// ƒGƒLƒXƒgƒ‰‚È‚µ
+		m_wcex.hInstance		= hInstance;									// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹å€¤ã®ã‚»ãƒƒãƒˆ
+		m_wcex.lpszClassName	= m_pWindowClassName;							// ã‚¯ãƒ©ã‚¹å
+		m_wcex.lpfnWndProc		= WindowProc;									// ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸é–¢æ•°
+		m_wcex.style			= CS_HREDRAW | CS_VREDRAW;						// ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã‚¹ã‚¿ã‚¤ãƒ«
+		m_wcex.cbSize			= sizeof(WNDCLASSEX);							// æ§‹é€ ä½“ã®ã‚µã‚¤ã‚º
+		m_wcex.hIcon			= LoadIcon((HINSTANCE)NULL, IDI_APPLICATION);	// ãƒ©ãƒ¼ã‚¸ã‚¢ã‚¤ã‚³ãƒ³
+		m_wcex.hIconSm			= LoadIcon((HINSTANCE)NULL, IDI_WINLOGO);		// ã‚¹ãƒ¢ãƒ¼ãƒ«ã‚¢ã‚¤ã‚³ãƒ³
+		m_wcex.hCursor			= LoadCursor((HINSTANCE)NULL, IDC_ARROW);		// ã‚«ãƒ¼ã‚½ãƒ«ã‚¹ã‚¿ã‚¤ãƒ«
+		m_wcex.lpszMenuName		= NULL; 										// ãƒ¡ãƒ‹ãƒ¥ãƒ¼ãªã—
+		m_wcex.cbClsExtra		= 0;											// ã‚¨ã‚­ã‚¹ãƒˆãƒ©ãªã—
 		m_wcex.cbWndExtra		= 0;
-		m_wcex.hbrBackground	= (HBRUSH)GetStockObject(WHITE_BRUSH);			// ”wŒiF”’
+		m_wcex.hbrBackground	= (HBRUSH)GetStockObject(WHITE_BRUSH);			// èƒŒæ™¯è‰²ç™½
 
-		if (!RegisterClassEx(&m_wcex)) return false;							// ƒEƒCƒ“ƒhƒEƒNƒ‰ƒX‚Ì“o˜^
+		if (!RegisterClassEx(&m_wcex)) return false;							// ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã‚¯ãƒ©ã‚¹ã®ç™»éŒ²
 
 		return true;
 	}
 
-	// ƒEƒCƒ“ƒhƒE‚Ì‰Šú‰»
+	// ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã®åˆæœŸåŒ–
 	bool CWindow::InitWindow(HINSTANCE hInstance, int nWinMode) {
 		RECT rClient;
 
 		m_hwnd = CreateWindow(
-			m_windowClassName,				// ƒEƒBƒ“ƒhƒEƒNƒ‰ƒX‚Ì–¼‘O
-			m_titleName,					// ƒ^ƒCƒgƒ‹
-			WS_VISIBLE | WS_SYSMENU,		// ƒEƒBƒ“ƒhƒEƒXƒ^ƒCƒ‹
-			0,								// ƒEƒBƒ“ƒhƒEˆÊ’u_c
-			0,								// ƒEƒBƒ“ƒhƒEˆÊ’u_‰¡
-			m_windowWidth,					// ƒEƒBƒ“ƒhƒE‰¡•
-			m_windowHeight,					// ƒEƒBƒ“ƒhƒEc•
-			NULL,							// eƒEƒBƒ“ƒhƒE‚È‚µ
-			NULL,							// ƒƒjƒ…[‚È‚µ
-			hInstance,						// ƒCƒ“ƒXƒ^ƒ“ƒXƒnƒ“ƒhƒ‹
-			NULL);							// ’Ç‰Áˆø”‚È‚µ
+			m_pWindowClassName,				// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚¯ãƒ©ã‚¹ã®åå‰
+			m_pTitleName,					// ã‚¿ã‚¤ãƒˆãƒ«
+			WS_VISIBLE | WS_SYSMENU,		// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚¹ã‚¿ã‚¤ãƒ«
+			0,								// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ä½ç½®_ç¸¦
+			0,								// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ä½ç½®_æ¨ª
+			m_windowWidth,					// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦æ¨ªå¹…
+			m_windowHeight,					// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ç¸¦å¹…
+			NULL,							// è¦ªã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãªã—
+			NULL,							// ãƒ¡ãƒ‹ãƒ¥ãƒ¼ãªã—
+			hInstance,						// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ãƒãƒ³ãƒ‰ãƒ«
+			NULL);							// è¿½åŠ å¼•æ•°ãªã—
 
 		if (!m_hwnd) return false;
-		else { std::cout << "ƒEƒCƒ“ƒhƒE‰Šú‰»:Š®—¹" << std::endl; }
+		else { std::cout << "ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦åˆæœŸåŒ–:å®Œäº†" << std::endl; }
 
 		GetClientRect(m_hwnd, &rClient);
 
@@ -170,14 +150,14 @@ namespace Engine46 {
 		m_windowWidth -= m_clientWidth;
 		m_windowHeight -= m_clientHeight;
 
-		// ƒEƒCƒ“ƒhƒE‚ğ•\¦‚·‚é
+		// ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã‚’è¡¨ç¤ºã™ã‚‹
 		if (!ShowWindow(m_hwnd, SW_SHOW)) return false;
 		if (!UpdateWindow(m_hwnd)) return false;
 
 		return true;
 	}
 
-	// ƒEƒCƒ“ƒhƒE‚ÌƒTƒCƒY•ÏX
+	// ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã®ã‚µã‚¤ã‚ºå¤‰æ›´
 	void CWindow::ChangeSizeWindow(const int posx, const int posy, const int width, const int height) {
 		RECT rClient;
 
@@ -202,7 +182,7 @@ namespace Engine46 {
 		m_windowHeight -= m_clientHeight;
 	}
 
-	//	ƒEƒCƒ“ƒhƒE‚ğƒXƒNƒŠ[ƒ“ƒVƒ‡ƒbƒg
+	//	ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã‚’ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ã‚·ãƒ§ãƒƒãƒˆ
 	void CWindow::ScreenShotWindow() {
 
 		BYTE* pBuf = GetBuffer();
@@ -211,7 +191,7 @@ namespace Engine46 {
 
 			if (m_onScreenShot) {
 
-				std::string savePath = "Assets/Texture/ScreenShot/ScreenShot_" + std::to_string(g_screenshotCount) + ".bmp";
+				std::string savePath = "Assets/Texture/ScreenShot/ScreenShot_" + std::to_string(g_screenShotCount) + ".bmp";
 
 				BITMAPINFO bitmapInfo = {};
 
@@ -224,17 +204,14 @@ namespace Engine46 {
 
 				SaveToBmpFile(bitmapInfo.bmiHeader, pBuf, savePath);
 
-				g_screenshotCount++;
+				g_screenShotCount++;
 
 				m_onScreenShot = false;
-			}
-			else {
-				//CTextureManager::Get()->CreateCaptureTexture(m_pBufs.get(), m_windowWidth, m_windowHeight);
 			}
 		}
 	}
 
-	// ƒoƒbƒtƒ@‚Ìæ“¾
+	// ãƒãƒƒãƒ•ã‚¡ã®å–å¾—
 	BYTE* CWindow::GetBuffer() {
 		std::unique_ptr<BYTE[]>	pBufs = nullptr;
 
