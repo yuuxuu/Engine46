@@ -36,7 +36,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszArgs,
 }
 
 // コンソールの呼び出し
-void CallConsol()
+void CallConsole()
 {
 	char Console[128];
 	HWND ConsoleWindow;

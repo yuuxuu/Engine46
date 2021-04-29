@@ -101,9 +101,8 @@ namespace Engine46 {
 		return DefWindowProc(hwnd, message, wParam, lParam);
 	}
 
-	// インスタンスの初期化
-	bool CWindow::InitInstance(HINSTANCE hInstance) {
-
+	// ウインドウの初期化
+	bool CWindow::InitWindow(HINSTANCE hInstance) {
 		m_wcex.hInstance		= hInstance;									// インスタンス値のセット
 		m_wcex.lpszClassName	= m_pWindowClassName;							// クラス名
 		m_wcex.lpfnWndProc		= WindowProc;									// ウインドウメッセージ関数
@@ -118,13 +117,6 @@ namespace Engine46 {
 		m_wcex.hbrBackground	= (HBRUSH)GetStockObject(WHITE_BRUSH);			// 背景色白
 
 		if (!RegisterClassEx(&m_wcex)) return false;							// ウインドウクラスの登録
-
-		return true;
-	}
-
-	// ウインドウの初期化
-	bool CWindow::InitWindow(HINSTANCE hInstance, int nWinMode) {
-		RECT rClient;
 
 		m_hwnd = CreateWindow(
 			m_pWindowClassName,				// ウィンドウクラスの名前
@@ -142,6 +134,7 @@ namespace Engine46 {
 		if (!m_hwnd) return false;
 		else { std::cout << "ウインドウ初期化:完了" << std::endl; }
 
+		RECT rClient;
 		GetClientRect(m_hwnd, &rClient);
 
 		m_clientWidth = m_windowWidth - (rClient.right - rClient.left);

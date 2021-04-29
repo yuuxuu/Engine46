@@ -37,9 +37,7 @@ namespace Engine46 {
 
 		static LRESULT CALLBACK	WindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 
-		bool	InitInstance(HINSTANCE hInstance);
-
-		bool	InitWindow(HINSTANCE hInstance, int nWinMode);
+		bool	InitWindow(HINSTANCE hInstance);
 
 		void	ChangeSizeWindow(const int posx, const int posy, const int width, const int height);
 				

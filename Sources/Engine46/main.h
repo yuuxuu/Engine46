@@ -20,7 +20,7 @@ constexpr int SCREEN_Y = 720;
 constexpr int FULL_SCREEN_X = 1920;
 constexpr int FULL_SCREEN_Y = 1080;
 
-void CallConsol();
+void CallConsole();
 
 namespace Engine46 {	
 

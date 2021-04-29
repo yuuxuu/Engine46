@@ -19,7 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CWindowManager.cpp" />
+    <ClCompile Include="CFileSystem.cpp" />
+    <ClCompile Include="CGameSystem.cpp" />
+    <ClCompile Include="CObject.cpp" />
+    <ClCompile Include="CObjectManager.cpp" />
+    <ClCompile Include="CScene.cpp" />
     <ClCompile Include="CWinow.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="math.cpp" />
@@ -32,7 +36,11 @@
     <ClCompile Include="utility.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CWindowManager.h" />
+    <ClInclude Include="CFileSystem.h" />
+    <ClInclude Include="CGameSystem.h" />
+    <ClInclude Include="CObject.h" />
+    <ClInclude Include="CObjectManager.h" />
+    <ClInclude Include="CScene.h" />
     <ClInclude Include="CWinow.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="math.h" />
