@@ -25,7 +25,10 @@ namespace Engine46 {
 	class CSceneBase : public ObjectInterface {
 	protected:
 		CSceneBase*						pParentScene;
+		int								m_parentSceneID;
+
 		std::list<CSceneBase*>			pChiledSceneList;
+		std::vector<int>				m_chiledSceneIDList;
 
 		SceneType						m_SceneType;
 
@@ -34,6 +37,7 @@ namespace Engine46 {
 		std::unique_ptr<char[]>			m_SceneName;
 
 	public:
+		CSceneBase(const SceneType sceneType);
 		CSceneBase(const SceneType sceneType, const char* sceneName);
 		virtual ~CSceneBase();
 
@@ -46,9 +50,12 @@ namespace Engine46 {
 
 		void ConnectParentScene(CSceneBase* pParentScene) { this->pParentScene = pParentScene; };
 		CSceneBase* GetParentScene() const { return pParentScene; }
+		int GetParentSceneID() const { return m_parentSceneID; }
 
 		void AddChiledSceneList(CSceneBase* pChiledScene) { pChiledSceneList.emplace_back(pChiledScene); }
 		std::list<CSceneBase*> GetChildSceneList() const { return pChiledSceneList; }
+		std::vector<int> GetChiledSceneIDList() const { return m_chiledSceneIDList; }
+
 	};
 
 } // namespace
