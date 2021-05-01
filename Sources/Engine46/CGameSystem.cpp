@@ -48,14 +48,6 @@ namespace Engine46 {
 			return false;
 		}
 
-		CActorManager manager;
-		//std::unique_ptr<CObject> object1 = std::make_unique<CObject>(0, "object1111", Transform());
-		//std::unique_ptr<CObject> object2 = std::make_unique<CObject>(0, "object2222", Transform());
-		//manager.AddObjectToObjectList(object1);
-		//manager.AddObjectToObjectList(object2);
-		//manager.SaveObjectList();
-		manager.LoadActorList();
-
 		return true;
 	}
 

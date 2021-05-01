@@ -26,7 +26,7 @@ namespace Engine46 {
 
 		CActorBase* CreateActor(int id);
 
-		bool SaveActortList();
+		bool SaveActorList();
 		bool LoadActorList();
 
 		int GetElementNumberFromPoint(void* p);

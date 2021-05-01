@@ -21,8 +21,8 @@
   <ItemGroup>
     <ClCompile Include="CFileSystem.cpp" />
     <ClCompile Include="CGameSystem.cpp" />
-    <ClCompile Include="CObject.cpp" />
-    <ClCompile Include="CObjectManager.cpp" />
+    <ClCompile Include="CActor.cpp" />
+    <ClCompile Include="CActorManager.cpp" />
     <ClCompile Include="CScene.cpp" />
     <ClCompile Include="CWinow.cpp" />
     <ClCompile Include="main.cpp" />
@@ -38,11 +38,12 @@
   <ItemGroup>
     <ClInclude Include="CFileSystem.h" />
     <ClInclude Include="CGameSystem.h" />
-    <ClInclude Include="CObject.h" />
-    <ClInclude Include="CObjectManager.h" />
+    <ClInclude Include="CActor.h" />
+    <ClInclude Include="CActorManager.h" />
     <ClInclude Include="CScene.h" />
     <ClInclude Include="CWinow.h" />
     <ClInclude Include="DataRecord.h" />
+    <ClInclude Include="ObjectInterface.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="math.h" />
     <ClInclude Include="stdafx.h" />

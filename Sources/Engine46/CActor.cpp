@@ -15,6 +15,7 @@ namespace Engine46 {
 	// コンストラクタ
 	CActorBase::CActorBase() :
 		pParentObject(nullptr),
+		m_parentObjectID(0),
 		m_ClassID(0),
 		m_ObjectID(g_ActorCount++),
 		m_Name(),
@@ -23,6 +24,7 @@ namespace Engine46 {
 		std::string str = "Object_" + std::to_string(m_ObjectID);
 		int size = (int)str.size() + 1;
 		m_Name.reset(new char[size]);
+		str.resize(size);
 		str.copy(m_Name.get(), size);
 
 		this->Initialize();
@@ -39,6 +41,7 @@ namespace Engine46 {
 		std::string str = name;
 		int size = (int)str.size() + 1;
 		m_Name.reset(new char[size]);
+		str.resize(size);
 		str.copy(m_Name.get(), size);
 
 		this->Initialize();
@@ -51,13 +54,13 @@ namespace Engine46 {
 	// 初期化
 	void CActorBase::Initialize() {
 		vecDataRecord = {
-			DATARECORD(DATATYPE::TYPE_VAL, offsetof(CActorBase, m_ClassID), sizeof(m_ClassID)),
-			DATARECORD(DATATYPE::TYPE_PTR, offsetof(CActorBase, pParentObject), sizeof(pParentObject)),
-			DATARECORD(DATATYPE::TYPE_PTR, offsetof(CActorBase, pChiledObjectList), sizeof(pChiledObjectList)),
-			DATARECORD(DATATYPE::TYPE_VAL, offsetof(CActorBase, m_ObjectID), sizeof(m_ObjectID)),
-			DATARECORD(DATATYPE::TYPE_STR, offsetof(CActorBase, m_Name), sizeof(m_Name)),
-			DATARECORD(DATATYPE::TYPE_VAL, offsetof(CActorBase, m_Transform), sizeof(m_Transform)),
-			DATARECORD(DATATYPE::TYPE_END, 0, 0)
+			DATARECORD(DATATYPE::TYPE_VAL , offsetof(CActorBase, m_ClassID), sizeof(m_ClassID)),
+			DATARECORD(DATATYPE::TYPE_PTR , offsetof(CActorBase, pParentObject), sizeof(pParentObject)),
+			DATARECORD(DATATYPE::TYPE_LIST, offsetof(CActorBase, pChiledObjectList), sizeof(pChiledObjectList)),
+			DATARECORD(DATATYPE::TYPE_VAL , offsetof(CActorBase, m_ObjectID), sizeof(m_ObjectID)),
+			DATARECORD(DATATYPE::TYPE_STR , offsetof(CActorBase, m_Name), sizeof(m_Name)),
+			DATARECORD(DATATYPE::TYPE_VAL , offsetof(CActorBase, m_Transform), sizeof(m_Transform)),
+			DATARECORD(DATATYPE::TYPE_END , 0, 0)
 		};
 
 		vecStrDataRecord = {
@@ -86,19 +89,29 @@ namespace Engine46 {
 
 			if (records.dataType == DATATYPE::TYPE_STR) {
 				for (auto& strRecord : vecStrDataRecord) {
-					int size = (int)strlen(strRecord.pStr.get()) + 1;
+					if (records.offset == strRecord.offset) {
+						const char* str = strRecord.pStr.get();
+						int size = (int)strlen(str) + 1;
 
-					ofs.write((char*)&size, sizeof(int));
-					ofs.write((char*)&strRecord.pStr, size);
+						ofs.write((char*)&size, sizeof(int));
+						ofs.write(strRecord.pStr.get(), size);
+					}
 				}
 			}
 			else if (records.dataType == DATATYPE::TYPE_PTR) {
-				int elem = -1;
-				void* p = (void*)*((__int64*)(char*)this + records.offset);
-				if (p) {
-					//elem = GetElementNumberFromPoint(p);
+				int id = -1;
+				if (pParentObject) {
+					id = pParentObject->m_ObjectID;
 				}
-				ofs.write((char*)&elem, sizeof(int));
+				ofs.write((char*)&id, sizeof(int));
+			}
+			else if (records.dataType == DATATYPE::TYPE_LIST) {
+				int listSize = (int)pChiledObjectList.size();
+				ofs.write((char*)&listSize, sizeof(int));
+				
+				for (const auto& object : pChiledObjectList) {
+					ofs.write((char*)&object->m_ObjectID, sizeof(int));
+				}
 			}
 			else {
 				ofs.write((char*)this + records.offset, records.size);
@@ -111,6 +124,8 @@ namespace Engine46 {
 	// オブジェクト読み込み
 	bool CActorBase::Load(std::ifstream& ifs) {
 		for (auto& records : vecDataRecord) {
+			if (&records == &vecDataRecord[0]) continue;
+
 			if (records.dataType == DATATYPE::TYPE_END) break;
 
 			if (records.dataType == DATATYPE::TYPE_STR) {
@@ -120,7 +135,8 @@ namespace Engine46 {
 						ifs.read((char*)&size, sizeof(int));
 
 						std::string str;
-						ifs.read((char*)&str, size);
+						str.resize(size);
+						ifs.read(str.data(), size);
 
 						strRecords.pStr.reset(new char[size]);
 						str.copy(strRecords.pStr.get(), size);
@@ -128,18 +144,28 @@ namespace Engine46 {
 				}
 			}
 			else if (records.dataType == DATATYPE::TYPE_PTR) {
-				size_t elem = 0;
-				ifs.read((char*)&elem, sizeof(int));
+				int id = -1;
+				ifs.read((char*)&id, sizeof(int));
 
-				std::cout << elem << std::endl;
+				m_parentObjectID = id;
+			}
+			else if (records.dataType == DATATYPE::TYPE_LIST) {
+				int listSize = 0;
+				ifs.read((char*)&listSize, sizeof(int));
 
-				void* p = (void*)*(__int64*)((char*)this + records.offset);
-				p = reinterpret_cast<__int64*>(elem);
+				for (auto i = 0; i < listSize; ++i) {
+					int id = -1;
+					ifs.read((char*)&id, sizeof(int));
+
+					m_chiledObjectIDList.emplace_back(id);
+				}
 			}
 			else {
 				ifs.read((char*)this + records.offset, records.size);
 			}
 		}
+
+		return true;
 	}
 
 } // namespace

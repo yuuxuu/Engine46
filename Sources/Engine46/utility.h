@@ -10,8 +10,6 @@
 #ifndef _UTILITY_H_
 #define _UTILITY_H_
 
-#include "CObject.h"
-
 namespace Engine46 {
 	// vectorのクリア
 	template<class T>

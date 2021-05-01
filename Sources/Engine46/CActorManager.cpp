@@ -33,24 +33,21 @@ namespace Engine46 {
 	// オブジェクト同士の接続
 	void CActorManager::ConnectActor() {
 		for (auto& object : m_pActorList) {
-			__int64 parent = reinterpret_cast<__int64>(object->GetParentObject());
-			if ((int)parent > -1) {
-				object->ConnectParentObject(m_pActorList[parent].get());
+			int id = object->GetParentObjectID();
+			if (id > -1) {
+				object->ConnectParentObject(m_pActorList[id].get());
 			}
 
-			/*__int64 chiled = reinterpret_cast<__int64>(object->GetChiledObject());
-			if ((int)chiled > -1) {
-				object->ConnectChiled(m_pObjectList[chiled].get());
-			}*/
+			for (auto id : object->GetChiledObjectIDList()) {
+				object->AddChiledObjectList(m_pActorList[id].get());
+			}
 		}
 	}
 
 	// オブジェクトリストを保存
-	bool CActorManager::SaveActortList() {
+	bool CActorManager::SaveActorList() {
 
 		std::ios_base::openmode mode = std::ios_base::out | std::ios_base::binary;
-		LPVOID pStr = nullptr;
-		size_t bufferSize = 0;
 
 		std::ofstream ofs;
 		ofs.open(m_pActorListFileName, mode);
@@ -68,8 +65,6 @@ namespace Engine46 {
 	bool CActorManager::LoadActorList() {
 
 		std::ios_base::openmode mode = std::ios_base::in | std::ios_base::binary;
-		LPVOID pStr = nullptr;
-		size_t bufferSize = 0;
 
 		std::ifstream ifs;
 		ifs.open(m_pActorListFileName, mode);
@@ -78,8 +73,8 @@ namespace Engine46 {
 
 		while (true) {
 
-			int id = 0;
-			ifs.read((char*)&id, sizeof(UINT));
+			int id = -1;
+			ifs.read((char*)&id, sizeof(int));
 
 			if (ifs.eof()) break;
 
