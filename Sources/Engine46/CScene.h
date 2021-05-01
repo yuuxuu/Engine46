@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "DataRecord.h"
+#include "ObjectInterface.h"
 
 namespace Engine46 {
 
@@ -22,33 +22,33 @@ namespace Engine46 {
 		NONE,
 	};
 
-	class CSceneBase {
+	class CSceneBase : public ObjectInterface {
 	protected:
-		static std::vector<DATARECORD>	m_dataRecordsVec;
-
-		std::vector<STR_DATARECORD>		m_strDataRecordsVec;
-
 		CSceneBase*						pParentScene;
 		std::list<CSceneBase*>			pChiledSceneList;
 
 		SceneType						m_SceneType;
+
+		int								m_SceneID;
+
 		std::unique_ptr<char[]>			m_SceneName;
 
+	public:
 		CSceneBase(const SceneType sceneType, const char* sceneName);
 		virtual ~CSceneBase();
+
+		virtual void Initialize() override;
+		virtual void Update() override;
+		virtual void Draw() override;
+
+		virtual bool Save(std::ofstream& ofs) override;
+		virtual bool Load(std::ifstream& ifs) override;
 
 		void ConnectParentScene(CSceneBase* pParentScene) { this->pParentScene = pParentScene; };
 		CSceneBase* GetParentScene() const { return pParentScene; }
 
 		void AddChiledSceneList(CSceneBase* pChiledScene) { pChiledSceneList.emplace_back(pChiledScene); }
 		std::list<CSceneBase*> GetChildSceneList() const { return pChiledSceneList; }
-
-		virtual void InitializeScene();
-		virtual void UpdateScene();
-		virtual void DrawScene();
-
-		virtual bool SaveScene(std::ofstream& ofs);
-		virtual bool LoadScene(std::ifstream& ifs);
 	};
 
 } // namespace

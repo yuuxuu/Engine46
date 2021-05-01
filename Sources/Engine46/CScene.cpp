@@ -9,53 +9,59 @@
 
 namespace Engine46 {
 
-	std::vector<DATARECORD> CSceneBase::m_dataRecordsVec = {
-		DATARECORD(DATATYPE::TYPE_VAL, offsetof(CSceneBase, m_SceneType), sizeof(m_SceneType)),
-		DATARECORD(DATATYPE::TYPE_VAL, offsetof(CSceneBase, m_SceneName), sizeof(m_SceneName)),
-		DATARECORD(DATATYPE::TYPE_VAL, offsetof(CSceneBase, pParentScene), sizeof(pParentScene)),
-		DATARECORD(DATATYPE::TYPE_VAL, offsetof(CSceneBase, pChiledSceneList), sizeof(pChiledSceneList)),
-		DATARECORD(DATATYPE::TYPE_END, 0, 0)
-	};
+	static int g_SceneCount = 0;
 
 	// コンストラクタ
 	CSceneBase::CSceneBase(const SceneType sceneType, const char* sceneName) :
 		pParentScene(nullptr),
 		m_SceneType(sceneType),
+		m_SceneID(g_SceneCount++),
 		m_SceneName()
 	{
 		int strSize = strlen(sceneName) + 1;
 		m_SceneName.reset(new char[strSize]);
 		strcpy_s(m_SceneName.get(), strSize, sceneName);
-	}
 
-	//初期化
-	void CSceneBase::InitializeScene() {
-		m_strDataRecordsVec = {
-			STR_DATARECORD(offsetof(CSceneBase, m_SceneName), m_SceneName),
-		};
-	}
-
-	// 更新
-	void CSceneBase::UpdateScene() {
-
-	}
-
-	// 描画
-	void CSceneBase::DrawScene() {
-
+		this->Initialize();
 	}
 
 	// デストラクタ
 	CSceneBase::~CSceneBase() 
 	{}
 
+	//初期化
+	void CSceneBase::Initialize() {
+		vecDataRecord = {
+			DATARECORD(DATATYPE::TYPE_VAL, offsetof(CSceneBase, m_SceneType), sizeof(m_SceneType)),
+			DATARECORD(DATATYPE::TYPE_VAL, offsetof(CSceneBase, m_SceneID), sizeof(m_SceneID)),
+			DATARECORD(DATATYPE::TYPE_VAL, offsetof(CSceneBase, m_SceneName), sizeof(m_SceneName)),
+			DATARECORD(DATATYPE::TYPE_VAL, offsetof(CSceneBase, pParentScene), sizeof(pParentScene)),
+			DATARECORD(DATATYPE::TYPE_VAL, offsetof(CSceneBase, pChiledSceneList), sizeof(pChiledSceneList)),
+			DATARECORD(DATATYPE::TYPE_END, 0, 0)
+		};
+
+		vecStrDataRecord = {
+			STR_DATARECORD(offsetof(CSceneBase, m_SceneName), m_SceneName),
+		};
+	}
+
+	// 更新
+	void CSceneBase::Update() {
+
+	}
+
+	// 描画
+	void CSceneBase::Draw() {
+
+	}
+
 	// シーン出力
-	bool CSceneBase::SaveScene(std::ofstream& ofs) {
-		for (auto& records : m_dataRecordsVec) {
+	bool CSceneBase::Save(std::ofstream& ofs) {
+		for (auto& records : vecDataRecord) {
 			if (records.dataType == DATATYPE::TYPE_END) break;
 
 			if (records.dataType == DATATYPE::TYPE_STR) {
-				for (auto& strRecords : m_strDataRecordsVec) {
+				for (auto& strRecords : vecStrDataRecord) {
 					if (records.offset == strRecords.offset) {
 						int size = (int)strlen(strRecords.pStr.get()) + 1;
 						ofs.write((char*)&size, sizeof(int));
@@ -81,12 +87,12 @@ namespace Engine46 {
 	}
 
 	// シーン読み込み
-	bool CSceneBase::LoadScene(std::ifstream& ifs) {
-		for (auto& records : m_dataRecordsVec) {
+	bool CSceneBase::Load(std::ifstream& ifs) {
+		for (auto& records : vecDataRecord) {
 			if (records.dataType == DATATYPE::TYPE_END) break;
 
 			if (records.dataType == DATATYPE::TYPE_STR) {
-				for (auto& strRecords : m_strDataRecordsVec) {
+				for (auto& strRecords : vecStrDataRecord) {
 					if (records.offset == strRecords.offset) {
 						int size = 0;
 						ifs.read((char*)&size, sizeof(int));
