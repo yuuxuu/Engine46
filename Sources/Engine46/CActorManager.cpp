@@ -90,5 +90,4 @@ namespace Engine46 {
 
 		return true;
 	}
-
 } // namespace

@@ -6,6 +6,7 @@
  */
 #include "CGameSystem.h"
 #include "CActorManager.h"
+#include "SceneManager.h"
 
 namespace Engine46 {
 
@@ -47,6 +48,9 @@ namespace Engine46 {
 			std::cout << "ゲームメインスレッド生成:失敗" << std::endl;
 			return false;
 		}
+
+		SceneManager manager;
+		manager.LoadScene();
 
 		return true;
 	}
