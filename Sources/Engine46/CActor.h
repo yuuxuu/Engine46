@@ -20,7 +20,10 @@ namespace Engine46 {
 		UINT							m_ClassID;
 
 		CActorBase*						pParentObject;
+		int								m_parentObjectID;
+
 		std::list<CActorBase*>			pChiledObjectList;
+		std::vector<int>				m_chiledObjectIDList;
 
 		int								m_ObjectID;
 
@@ -42,9 +45,12 @@ namespace Engine46 {
 
 		void ConnectParentObject(CActorBase* pParentObject) { this->pParentObject = pParentObject; }
 		CActorBase* GetParentObject() const { return pParentObject; }
+		int GetParentObjectID() const { return m_parentObjectID; }
 
 		void AddChiledObjectList(CActorBase* pChiledObject) { pChiledObjectList.emplace_back(pChiledObject); }
 		std::list<CActorBase*> GetChiledObjectList() const { return pChiledObjectList; }
+
+		std::vector<int> GetChiledObjectIDList() const { return m_chiledObjectIDList; }
 	};
 } // namespace
 

@@ -16,6 +16,7 @@ namespace Engine46 {
 		TYPE_VAL,
 		TYPE_STR,
 		TYPE_PTR,
+		TYPE_LIST,
 		TYPE_END,
 	};
 

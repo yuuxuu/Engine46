@@ -13,6 +13,9 @@ namespace Engine46 {
 
 	class ObjectInterface {
 	protected:
+		ObjectInterface() {}
+		virtual ~ObjectInterface() {}
+
 		std::vector<DATARECORD>		vecDataRecord;
 		std::vector<STR_DATARECORD>	vecStrDataRecord;
 
