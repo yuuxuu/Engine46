@@ -5,7 +5,7 @@
  * @date 2018/12/19
  */
 #include "CGameSystem.h"
-#include "CObjectManager.h"
+#include "CActorManager.h"
 
 namespace Engine46 {
 
@@ -48,13 +48,13 @@ namespace Engine46 {
 			return false;
 		}
 
-		CObjectManager manager;
+		CActorManager manager;
 		//std::unique_ptr<CObject> object1 = std::make_unique<CObject>(0, "object1111", Transform());
 		//std::unique_ptr<CObject> object2 = std::make_unique<CObject>(0, "object2222", Transform());
 		//manager.AddObjectToObjectList(object1);
 		//manager.AddObjectToObjectList(object2);
 		//manager.SaveObjectList();
-		manager.LoadObjectList();
+		manager.LoadActorList();
 
 		return true;
 	}
