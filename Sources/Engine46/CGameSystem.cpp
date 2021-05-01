@@ -1,7 +1,7 @@
-/**
+ï»¿/**
  * @file CGameSystem.h
  * @brief
- * @author –Ø‘º—D
+ * @author æœ¨æ‘å„ª
  * @date 2018/12/19
  */
 #include "CGameSystem.h"
@@ -9,7 +9,7 @@
 
 namespace Engine46 {
 
-	// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	CGameSystem::CGameSystem() :
 		m_hGame(nullptr),
 		m_mainWindow(nullptr),
@@ -19,32 +19,32 @@ namespace Engine46 {
 		m_nowTime(0) 
 	{}
 
-	// ƒfƒXƒgƒ‰ƒNƒ^
+	// ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	CGameSystem::~CGameSystem() {
 		GameSystemExit();
 	}
 
-	// ƒQ[ƒ€ƒVƒXƒeƒ€‚Ì‰Šú‰»
+	// ã‚²ãƒ¼ãƒ ã‚·ã‚¹ãƒ†ãƒ ã®åˆæœŸåŒ–
 	bool CGameSystem::GameSystemInit(HINSTANCE hInstance) {
-		// ƒRƒ“ƒ\[ƒ‹ŒÄ‚Ño‚µ
+		// ã‚³ãƒ³ã‚½ãƒ¼ãƒ«å‘¼ã³å‡ºã—
 		CallConsole();
-		// —”¶¬
+		// ä¹±æ•°ç”Ÿæˆ
 		srand((unsigned)time(NULL));
-		// ƒƒP[ƒ‹İ’è
+		// ãƒ­ã‚±ãƒ¼ãƒ«è¨­å®š
 		setlocale(LC_CTYPE, "");
-		// ƒ^ƒCƒ}‚Ì•ª‰ğ”\—Í‚ğ‚P‚‚“‚É‚·‚é
+		// ã‚¿ã‚¤ãƒã®åˆ†è§£èƒ½åŠ›ã‚’ï¼‘ï½ï½“ã«ã™ã‚‹
 		timeBeginPeriod(1);
-		// ƒƒCƒ“ƒEƒCƒ“ƒhƒEì¬
+		// ãƒ¡ã‚¤ãƒ³ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ä½œæˆ
 		m_mainWindow = std::make_unique<CWindow>("MainWindow", "Engine46");
-		// ƒƒCƒ“ƒEƒCƒ“ƒhƒE‰Šú‰»
+		// ãƒ¡ã‚¤ãƒ³ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦åˆæœŸåŒ–
 		if (!m_mainWindow->InitWindow(hInstance)) {
-			std::cout << "ƒEƒCƒ“ƒhƒE‰Šú‰»:¸”s" << std::endl;
+			std::cout << "ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦åˆæœŸåŒ–:å¤±æ•—" << std::endl;
 			return false;
 		}
-		// ƒQ[ƒ€ƒƒCƒ“ƒXƒŒƒbƒh¶¬
+		// ã‚²ãƒ¼ãƒ ãƒ¡ã‚¤ãƒ³ã‚¹ãƒ¬ãƒƒãƒ‰ç”Ÿæˆ
 		m_gameSystemThread = std::thread(&CGameSystem::GameSystemLoop, this);
 		if (!m_gameSystemThread.joinable()) {
-			std::cout << "ƒQ[ƒ€ƒƒCƒ“ƒXƒŒƒbƒh¶¬:¸”s" << std::endl;
+			std::cout << "ã‚²ãƒ¼ãƒ ãƒ¡ã‚¤ãƒ³ã‚¹ãƒ¬ãƒƒãƒ‰ç”Ÿæˆ:å¤±æ•—" << std::endl;
 			return false;
 		}
 
@@ -59,18 +59,18 @@ namespace Engine46 {
 		return true;
 	}
 
-	// ƒQ[ƒ€ƒVƒXƒeƒ€ƒƒCƒ“
+	// ã‚²ãƒ¼ãƒ ã‚·ã‚¹ãƒ†ãƒ ãƒ¡ã‚¤ãƒ³
 	void CGameSystem::GameSystemLoop() {
-		// ƒCƒxƒ“ƒgƒnƒ“ƒhƒ‹¶¬
+		// ã‚¤ãƒ™ãƒ³ãƒˆãƒãƒ³ãƒ‰ãƒ«ç”Ÿæˆ
 		m_hGame = CreateEvent(NULL, false, false, NULL);
 		if (!m_hGame) {
-			MessageBox(NULL, "CGamesSYSTEM::CreateEventƒGƒ‰[", "MessageBox", MB_OK);
+			MessageBox(NULL, "CGamesSYSTEM::CreateEventã‚¨ãƒ©ãƒ¼", "MessageBox", MB_OK);
 			return;
 		}
 
 		DWORD sts;
 		while (1) {
-			// 1000ms(1•b)‘Ò‚Â
+			// 1000ms(1ç§’)å¾…ã¤
 			sts = WaitForSingleObject(m_hGame, 1000);
 			if (sts == WAIT_FAILED) {
 				break;
@@ -83,33 +83,33 @@ namespace Engine46 {
 			MeasFPS();
 		}
 	}
-	// ƒQ[ƒ€ƒVƒXƒeƒ€‚ÌXV
+	// ã‚²ãƒ¼ãƒ ã‚·ã‚¹ãƒ†ãƒ ã®æ›´æ–°
 	void CGameSystem::GameSystemUpdate() {
 
 	}
-	// ƒQ[ƒ€ƒVƒXƒeƒ€•`‰æ
+	// ã‚²ãƒ¼ãƒ ã‚·ã‚¹ãƒ†ãƒ æç”»
 	void CGameSystem::GameSystemDraw() {
 
 	}
-	// ƒQ[ƒ€ƒVƒXƒeƒ€‚ÌI—¹
+	// ã‚²ãƒ¼ãƒ ã‚·ã‚¹ãƒ†ãƒ ã®çµ‚äº†
 	void CGameSystem::GameSystemExit() {
 		if (m_hGame) {
 			CloseHandle(m_hGame);
 			m_hGame = 0;
 		}
-		// ƒQ[ƒ€ƒƒCƒ“ƒXƒŒƒbƒh‚ÌI—¹‚ğ‘Ò‚Â
+		// ã‚²ãƒ¼ãƒ ãƒ¡ã‚¤ãƒ³ã‚¹ãƒ¬ãƒƒãƒ‰ã®çµ‚äº†ã‚’å¾…ã¤
 		if (m_gameSystemThread.joinable()) {
 			m_gameSystemThread.join();
 		}
 
 		FreeConsole();
-		// ƒ^ƒCƒ}‚Ì•ª‰ğ”\—Í‚ğŒ³‚É–ß‚·
+		// ã‚¿ã‚¤ãƒã®åˆ†è§£èƒ½åŠ›ã‚’å…ƒã«æˆ»ã™
 		timeEndPeriod(1);
 	}
 
-	// FPSŒv‘ª
+	// FPSè¨ˆæ¸¬
 	void CGameSystem::MeasFPS() {
-		// Œ»İ‚ÌŠÔ‚ğæ“¾
+		// ç¾åœ¨ã®æ™‚é–“ã‚’å–å¾—
 		m_nowTime = timeGetTime();
 		m_wfps++;
 

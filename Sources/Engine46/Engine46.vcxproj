@@ -42,6 +42,7 @@
     <ClInclude Include="CObjectManager.h" />
     <ClInclude Include="CScene.h" />
     <ClInclude Include="CWinow.h" />
+    <ClInclude Include="DataRecord.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="math.h" />
     <ClInclude Include="stdafx.h" />

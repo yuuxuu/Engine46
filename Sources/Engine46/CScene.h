@@ -1,7 +1,7 @@
-/**
+Ôªø/**
  * @file CScene.h
  * @brief
- * @author ñÿë∫óD
+ * @author Êú®ÊùëÂÑ™
  * @date 2020/05/18
  */
 
@@ -9,6 +9,8 @@
 #define _CSCENE_H_
 
 #pragma once
+
+#include "DataRecord.h"
 
 namespace Engine46 {
 
@@ -22,32 +24,31 @@ namespace Engine46 {
 
 	class CSceneBase {
 	protected:
-		CSceneBase* pPrevScene;
-		CSceneBase* pNextScene;
+		static std::vector<DATARECORD>	m_dataRecordsVec;
 
-		SceneType	m_SceneType;
-		std::string	m_SceneName;
+		std::vector<STR_DATARECORD>		m_strDataRecordsVec;
 
+		CSceneBase*						pParentScene;
+		std::list<CSceneBase*>			pChiledSceneList;
 
-		CSceneBase(const SceneType sceneType, const std::string& sceneName);
+		SceneType						m_SceneType;
+		std::unique_ptr<char[]>			m_SceneName;
+
+		CSceneBase(const SceneType sceneType, const char* sceneName);
 		virtual ~CSceneBase();
 
-		virtual void	InitScene() = 0;
-		virtual void	UpdateScene() = 0;
-		virtual void	DrawScene() = 0;
+		void ConnectParentScene(CSceneBase* pParentScene) { this->pParentScene = pParentScene; };
+		CSceneBase* GetParentScene() const { return pParentScene; }
 
-		void			TransitionNextScene();
-		void			TransitionPrevScene();
+		void AddChiledSceneList(CSceneBase* pChiledScene) { pChiledSceneList.emplace_back(pChiledScene); }
+		std::list<CSceneBase*> GetChildSceneList() const { return pChiledSceneList; }
 
-		void			SaveScene();
-		void			LoadScene();
-		void			ReleaseScene();
+		virtual void InitializeScene();
+		virtual void UpdateScene();
+		virtual void DrawScene();
 
-		SceneType		GetSceneType() const { return m_SceneType; }
-		void			SetSceneType(const SceneType type) { m_SceneType = type; }
-		
-		std::string		GetSceneName() const { return m_SceneName; }
-		void			SetSceneName(const std::string name) { m_SceneName = name; }
+		virtual bool SaveScene(std::ofstream& ofs);
+		virtual bool LoadScene(std::ifstream& ifs);
 	};
 
 } // namespace
