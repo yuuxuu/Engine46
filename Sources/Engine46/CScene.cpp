@@ -1,7 +1,7 @@
-/**
+Ôªø/**
  * @file CScene.cpp
  * @brief
- * @author ñÿë∫óD
+ * @author Êú®ÊùëÂÑ™
  * @date 2020/05/18
  */
 
@@ -9,41 +9,111 @@
 
 namespace Engine46 {
 
-	// ÉRÉìÉXÉgÉâÉNÉ^
-	CSceneBase::CSceneBase(const SceneType type, const std::string& scene) :
-		pPrevScene(nullptr),
-		pNextScene(nullptr),
-		m_SceneType(type),
-		m_SceneName(scene)
-	{}
+	std::vector<DATARECORD> CSceneBase::m_dataRecordsVec = {
+		DATARECORD(DATATYPE::TYPE_VAL, offsetof(CSceneBase, m_SceneType), sizeof(m_SceneType)),
+		DATARECORD(DATATYPE::TYPE_VAL, offsetof(CSceneBase, m_SceneName), sizeof(m_SceneName)),
+		DATARECORD(DATATYPE::TYPE_VAL, offsetof(CSceneBase, pParentScene), sizeof(pParentScene)),
+		DATARECORD(DATATYPE::TYPE_VAL, offsetof(CSceneBase, pChiledSceneList), sizeof(pChiledSceneList)),
+		DATARECORD(DATATYPE::TYPE_END, 0, 0)
+	};
 
-	// ÉfÉXÉgÉâÉNÉ^
+	// „Ç≥„É≥„Çπ„Éà„É©„ÇØ„Çø
+	CSceneBase::CSceneBase(const SceneType sceneType, const char* sceneName) :
+		pParentScene(nullptr),
+		m_SceneType(sceneType),
+		m_SceneName()
+	{
+		int strSize = strlen(sceneName) + 1;
+		m_SceneName.reset(new char[strSize]);
+		strcpy_s(m_SceneName.get(), strSize, sceneName);
+	}
+
+	//ÂàùÊúüÂåñ
+	void CSceneBase::InitializeScene() {
+		m_strDataRecordsVec = {
+			STR_DATARECORD(offsetof(CSceneBase, m_SceneName), m_SceneName),
+		};
+	}
+
+	// Êõ¥Êñ∞
+	void CSceneBase::UpdateScene() {
+
+	}
+
+	// ÊèèÁîª
+	void CSceneBase::DrawScene() {
+
+	}
+
+	// „Éá„Çπ„Éà„É©„ÇØ„Çø
 	CSceneBase::~CSceneBase() 
 	{}
 
-	// éüÇÃÉVÅ[ÉìÇ÷ëJà⁄
-	void CSceneBase::TransitionNextScene() {
+	// „Ç∑„Éº„É≥Âá∫Âäõ
+	bool CSceneBase::SaveScene(std::ofstream& ofs) {
+		for (auto& records : m_dataRecordsVec) {
+			if (records.dataType == DATATYPE::TYPE_END) break;
 
+			if (records.dataType == DATATYPE::TYPE_STR) {
+				for (auto& strRecords : m_strDataRecordsVec) {
+					if (records.offset == strRecords.offset) {
+						int size = (int)strlen(strRecords.pStr.get()) + 1;
+						ofs.write((char*)&size, sizeof(int));
+
+						ofs.write((char*)&strRecords.pStr, size);
+					}
+				}
+			}
+			else if (records.dataType == DATATYPE::TYPE_PTR) {
+				int elem = -1;
+				void* p = (void*)*((__int64*)(char*)this + records.offset);
+				if (p) {
+					//elem = GetElementNumberFromPoint(p);
+				}
+				ofs.write((char*)&elem, sizeof(int));
+			}
+			else {
+				ofs.write((char*)this + records.offset, records.size);
+			}
+		}
+
+		return true;
 	}
 
-	// ëOÇÃÉVÅ[ÉìÇ÷ëJà⁄
-	void CSceneBase::TransitionPrevScene() {
+	// „Ç∑„Éº„É≥Ë™≠„ÅøËæº„Åø
+	bool CSceneBase::LoadScene(std::ifstream& ifs) {
+		for (auto& records : m_dataRecordsVec) {
+			if (records.dataType == DATATYPE::TYPE_END) break;
 
-	}
+			if (records.dataType == DATATYPE::TYPE_STR) {
+				for (auto& strRecords : m_strDataRecordsVec) {
+					if (records.offset == strRecords.offset) {
+						int size = 0;
+						ifs.read((char*)&size, sizeof(int));
 
-	// ÉVÅ[ÉìèoóÕ
-	void CSceneBase::SaveScene() {
-		
-	}
+						std::string str;
+						ifs.read((char*)&str, size);
 
-	// ÉVÅ[Éìì«Ç›çûÇ›
-	void CSceneBase::LoadScene() {
+						strRecords.pStr.reset(new char[size]);
+						str.copy(strRecords.pStr.get(), size);
+					}
+				}
+			}
+			else if (records.dataType == DATATYPE::TYPE_PTR) {
+				size_t elem = 0;
+				ifs.read((char*)&elem, sizeof(int));
 
-	}
+				std::cout << elem << std::endl;
 
-	// ÉVÅ[Éìâï˙
-	void CSceneBase::ReleaseScene() {
+				void* p = (void*)*(__int64*)((char*)this + records.offset);
+				p = reinterpret_cast<__int64*>(elem);
+			}
+			else {
+				ifs.read((char*)this + records.offset, records.size);
+			}
+		}
 
+		return true;
 	}
 
 } // namespace

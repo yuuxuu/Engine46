@@ -1,7 +1,7 @@
-/**
+ï»¿/**
  * @file CFileSystem.cpp
  * @brief
- * @author –Ø‘º—D
+ * @author æœ¨æ‘å„ª
  * @date 2019/01/16
  */
 
@@ -9,15 +9,15 @@
 
 namespace Engine46 {
 
-	// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	CFileSystem::CFileSystem()
 	{}
 
-	// ƒfƒXƒgƒ‰ƒNƒ^
+	// ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	CFileSystem::~CFileSystem()
 	{}
 
-	// ƒtƒ@ƒCƒ‹‚Ì‘‚«‚İ
+	// ãƒ•ã‚¡ã‚¤ãƒ«ã®æ›¸ãè¾¼ã¿
 	bool CFileSystem::WriteFile(std::string writeFileName, std::ios::openmode mode, LPVOID pBuffers, size_t size) {
 		std::ofstream ofs;
 
@@ -30,7 +30,7 @@ namespace Engine46 {
 		return true;
 	}
 
-	// ƒtƒ@ƒCƒ‹‚Ì“Ç‚İ‚İ
+	// ãƒ•ã‚¡ã‚¤ãƒ«ã®èª­ã¿è¾¼ã¿
 	bool CFileSystem::ReadFile(std::string readFileName, std::ios::openmode mode, LPVOID& pBuffers, size_t size) {
 		std::ifstream ifs;
 
