@@ -1,5 +1,5 @@
 ﻿/**
- * @file CObjectManager.h
+ * @file CActorManager.h
  * @brief
  * @author 木村優
  * @date 2019/01/02
@@ -18,8 +18,6 @@ namespace Engine46 {
 	private:
 		std::vector<std::unique_ptr<CActorBase>>	m_pActorList;
 
-		const char*									m_pActorListFileName;
-
 	public:
 		CActorManager();
 		~CActorManager();
@@ -28,8 +26,6 @@ namespace Engine46 {
 
 		bool SaveActorList();
 		bool LoadActorList();
-
-		int GetElementNumberFromPoint(void* p);
 
 		void AddActorToActorList(std::unique_ptr<CActorBase>& pObject) { m_pActorList.emplace_back(move(pObject)); };
 	

@@ -1,5 +1,5 @@
 ﻿/**
- * @file CObjectManager.cpp
+ * @file CActorManager.cpp
  * @brief
  * @author 木村優
  * @date 2019/01/02
@@ -10,9 +10,10 @@
 
 namespace Engine46 {
 
+	constexpr const char* g_ActorListFileName = "ActorListData.bin";
+
 	// コンストラクタ
-	CActorManager::CActorManager() :
-		m_pActorListFileName("ObjectListData.bin")
+	CActorManager::CActorManager()
 	{}
 
 	// デストラクタ
@@ -21,25 +22,25 @@ namespace Engine46 {
 
 	// オブジェクト作成
 	CActorBase* CActorManager::CreateActor(int id) {
-		std::unique_ptr<CActorBase> object = std::make_unique<CActorBase>();
+		std::unique_ptr<CActorBase> actor = std::make_unique<CActorBase>();
 
-		CActorBase* pObject = object.get();
+		CActorBase* pActor = actor.get();
 
-		AddActorToActorList(object);
+		AddActorToActorList(actor);
 
-		return pObject;
+		return pActor;
 	}
 
 	// オブジェクト同士の接続
 	void CActorManager::ConnectActor() {
-		for (auto& object : m_pActorList) {
-			int id = object->GetParentObjectID();
+		for (const auto& actor : m_pActorList) {
+			int id = actor->GetParentObjectID();
 			if (id > -1) {
-				object->ConnectParentObject(m_pActorList[id].get());
+				actor->ConnectParentObject(m_pActorList[id].get());
 			}
 
-			for (auto id : object->GetChiledObjectIDList()) {
-				object->AddChiledObjectList(m_pActorList[id].get());
+			for (auto id : actor->GetChiledObjectIDList()) {
+				actor->AddChiledObjectList(m_pActorList[id].get());
 			}
 		}
 	}
@@ -50,12 +51,12 @@ namespace Engine46 {
 		std::ios_base::openmode mode = std::ios_base::out | std::ios_base::binary;
 
 		std::ofstream ofs;
-		ofs.open(m_pActorListFileName, mode);
+		ofs.open(g_ActorListFileName, mode);
 
 		if (!ofs.is_open()) return false;
 
-		for (const auto& object : m_pActorList) {
-			object->Save(ofs);
+		for (const auto& actor : m_pActorList) {
+			actor->Save(ofs);
 		}
 
 		return true;
@@ -67,7 +68,7 @@ namespace Engine46 {
 		std::ios_base::openmode mode = std::ios_base::in | std::ios_base::binary;
 
 		std::ifstream ifs;
-		ifs.open(m_pActorListFileName, mode);
+		ifs.open(g_ActorListFileName, mode);
 
 		if (!ifs.is_open()) return false;
 
@@ -78,28 +79,16 @@ namespace Engine46 {
 
 			if (ifs.eof()) break;
 
-			CActorBase* object = CreateActor(id);
+			CActorBase* pActor = CreateActor(id);
 
-			object->Load(ifs);
+			pActor->Load(ifs);
 		}
 
-		std::cout << m_pActorListFileName << "を読み込みしました。" << std::endl;
+		std::cout << g_ActorListFileName << "を読み込みしました。" << std::endl;
 
 		this->ConnectActor();
 
 		return true;
-	}
-
-	// オブジェクトのポインタから要素番号を取得
-	int CActorManager::GetElementNumberFromPoint(void* p){
-		int elem = 0;
-		for (const auto& object : m_pActorList) {
-			if (object.get() == p) return elem;
-
-			elem++;
-		}
-
-		return -1;
 	}
 
 } // namespace
