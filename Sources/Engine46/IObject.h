@@ -1,5 +1,5 @@
 ﻿/**
- * @file ObjectInterface.h
+ * @file IObject.h
  * @brief
  * @author 木村優
  * @date 2021/05/01
@@ -7,17 +7,12 @@
 
 #pragma once
 
-#include "DataRecord.h"
-
 namespace Engine46 {
 
-	class ObjectInterface {
+	class IObject {
 	protected:
-		ObjectInterface() {}
-		virtual ~ObjectInterface() {}
-
-		std::vector<DATARECORD>		vecDataRecord;
-		std::vector<STR_DATARECORD>	vecStrDataRecord;
+		IObject() {}
+		virtual ~IObject() {}
 
 		virtual void Initialize() = 0;
 		virtual void Update() = 0;

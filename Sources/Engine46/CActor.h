@@ -11,12 +11,16 @@
 #pragma once
 
 #include "math.h"
-#include "ObjectInterface.h"
+#include "IObject.h"
+#include "DataRecord.h"
 
 namespace Engine46 {
 	
-	class CActorBase : public ObjectInterface {
+	class CActorBase : public IObject {
 	protected:
+		std::vector<DATARECORD>			vecDataRecord;
+		std::vector<STR_DATARECORD>		vecStrDataRecord;
+
 		UINT							m_ClassID;
 
 		CActorBase*						pParentObject;

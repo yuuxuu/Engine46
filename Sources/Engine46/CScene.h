@@ -10,7 +10,8 @@
 
 #pragma once
 
-#include "ObjectInterface.h"
+#include "IObject.h"
+#include "DataRecord.h"
 
 namespace Engine46 {
 
@@ -22,8 +23,11 @@ namespace Engine46 {
 		NONE,
 	};
 
-	class CSceneBase : public ObjectInterface {
+	class CSceneBase : public IObject {
 	protected:
+		std::vector<DATARECORD>			vecDataRecord;
+		std::vector<STR_DATARECORD>		vecStrDataRecord;
+
 		CSceneBase*						pParentScene;
 		int								m_parentSceneID;
 

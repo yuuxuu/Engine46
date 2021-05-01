@@ -83,7 +83,7 @@
     <ClInclude Include="DataRecord.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="ObjectInterface.h">
+    <ClInclude Include="IObject.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="SceneManager.h">

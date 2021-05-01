@@ -44,7 +44,7 @@
     <ClInclude Include="CScene.h" />
     <ClInclude Include="CWinow.h" />
     <ClInclude Include="DataRecord.h" />
-    <ClInclude Include="ObjectInterface.h" />
+    <ClInclude Include="IObject.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="math.h" />
     <ClInclude Include="SceneManager.h" />
