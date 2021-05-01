@@ -109,8 +109,8 @@ namespace Engine46 {
 				int listSize = (int)pChiledObjectList.size();
 				ofs.write((char*)&listSize, sizeof(int));
 				
-				for (const auto& object : pChiledObjectList) {
-					ofs.write((char*)&object->m_ObjectID, sizeof(int));
+				for (const auto& chiled : pChiledObjectList) {
+					ofs.write((char*)&chiled->m_ObjectID, sizeof(int));
 				}
 			}
 			else {
