@@ -25,20 +25,19 @@ namespace Engine46 {
 
 	class CSceneBase : public IObject {
 	protected:
-		std::vector<DATARECORD>			vecDataRecord;
-		std::vector<STR_DATARECORD>		vecStrDataRecord;
+		std::vector<std::unique_ptr<CDataRecordBase>>	vecDataRecords;
 
-		CSceneBase*						pParentScene;
-		int								m_parentSceneID;
+		CSceneBase*										pParentScene;
+		int												m_parentSceneID;
 
-		std::list<CSceneBase*>			pChiledSceneList;
-		std::vector<int>				m_chiledSceneIDList;
+		std::list<CSceneBase*>							pChiledSceneList;
+		std::vector<int>								m_chiledSceneIDList;
 
-		SceneType						m_SceneType;
+		SceneType										m_SceneType;
 
-		int								m_SceneID;
+		int												m_SceneID;
 
-		std::unique_ptr<char[]>			m_SceneName;
+		std::unique_ptr<char[]>							m_SceneName;
 
 	public:
 		CSceneBase(const SceneType sceneType);
@@ -52,11 +51,13 @@ namespace Engine46 {
 		virtual bool Save(std::ofstream& ofs) override;
 		virtual bool Load(std::ifstream& ifs) override;
 
-		void ConnectParentScene(CSceneBase* pParentScene) { this->pParentScene = pParentScene; };
+		void ConnectParentScene(CSceneBase* pParentScene);
+
 		CSceneBase* GetParentScene() const { return pParentScene; }
 		int GetParentSceneID() const { return m_parentSceneID; }
 
-		void AddChiledSceneList(CSceneBase* pChiledScene) { pChiledSceneList.emplace_back(pChiledScene); }
+		void AddChiledSceneList(CSceneBase* pChiledScene);
+
 		std::list<CSceneBase*> GetChildSceneList() const { return pChiledSceneList; }
 		std::vector<int> GetChiledSceneIDList() const { return m_chiledSceneIDList; }
 	};

@@ -14,35 +14,35 @@ namespace Engine46 {
 
 	// コンストラクタ
 	CActorBase::CActorBase() :
-		pParentObject(nullptr),
-		m_parentObjectID(0),
+		pParentActor(nullptr),
+		m_parentActorID(0),
 		m_ClassID(0),
-		m_ObjectID(g_ActorCount++),
-		m_Name(),
+		m_ActorID(g_ActorCount++),
+		m_ActorName(),
 		m_Transform(Transform())
 	{
-		std::string str = "Object_" + std::to_string(m_ObjectID);
+		std::string str = "Object_" + std::to_string(m_ActorID);
 		int size = (int)str.size() + 1;
-		m_Name.reset(new char[size]);
+		m_ActorName.reset(new char[size]);
 		str.resize(size);
-		str.copy(m_Name.get(), size);
+		str.copy(m_ActorName.get(), size);
 
 		this->Initialize();
 	}
 
 	// コンストラクタ
 	CActorBase::CActorBase(UINT id, const char* name, const Transform transform) :
-		pParentObject(nullptr),
+		pParentActor(nullptr),
 		m_ClassID(id),
-		m_ObjectID(g_ActorCount++),
-		m_Name(),
+		m_ActorID(g_ActorCount++),
+		m_ActorName(),
 		m_Transform(transform.pos, transform.rotation, transform.scale)
 	{
 		std::string str = name;
 		int size = (int)str.size() + 1;
-		m_Name.reset(new char[size]);
+		m_ActorName.reset(new char[size]);
 		str.resize(size);
-		str.copy(m_Name.get(), size);
+		str.copy(m_ActorName.get(), size);
 
 		this->Initialize();
 	}
@@ -53,69 +53,35 @@ namespace Engine46 {
 
 	// 初期化
 	void CActorBase::Initialize() {
-		vecDataRecord = {
-			DATARECORD(DATATYPE::TYPE_VAL , offsetof(CActorBase, m_ClassID), sizeof(m_ClassID)),
-			DATARECORD(DATATYPE::TYPE_PTR , offsetof(CActorBase, pParentObject), sizeof(pParentObject)),
-			DATARECORD(DATATYPE::TYPE_LIST, offsetof(CActorBase, pChiledObjectList), sizeof(pChiledObjectList)),
-			DATARECORD(DATATYPE::TYPE_VAL , offsetof(CActorBase, m_ObjectID), sizeof(m_ObjectID)),
-			DATARECORD(DATATYPE::TYPE_STR , offsetof(CActorBase, m_Name), sizeof(m_Name)),
-			DATARECORD(DATATYPE::TYPE_VAL , offsetof(CActorBase, m_Transform), sizeof(m_Transform)),
-			DATARECORD(DATATYPE::TYPE_END , 0, 0)
-		};
 
-		vecStrDataRecord = {
-			STR_DATARECORD(offsetof(CActorBase, m_Name), m_Name),
-		};
+		vecDataRecords.clear();
+
+		vecDataRecords.emplace_back(std::make_unique<CDataRecordBase>(offsetof(CActorBase, m_ClassID), sizeof(m_ClassID)));
+		vecDataRecords.emplace_back(std::make_unique<CDataRecordBase>(offsetof(CActorBase, m_ActorID), sizeof(m_ActorID)));
+		vecDataRecords.emplace_back(std::make_unique<CStrDataRecord>(offsetof(CActorBase, m_ActorName), m_ActorName));
+		vecDataRecords.emplace_back(std::make_unique<CDataRecordBase>(offsetof(CActorBase, m_Transform), sizeof(m_Transform)));
+		vecDataRecords.emplace_back(std::make_unique<CPtrDataRecord>(m_parentActorID));
+		vecDataRecords.emplace_back(std::make_unique<CListDataRecord>(m_chiledActorIDList));
 	}
 
 	// 更新
 	void CActorBase::Update() {
-		for(auto& chiled : pChiledObjectList) {
+		for(auto& chiled : pChiledActorList) {
 			chiled->Update();
 		}
 	}
 
 	// 描画
 	void CActorBase::Draw() {
-		for (auto& chiled : pChiledObjectList) {
+		for (auto& chiled : pChiledActorList) {
 			chiled->Draw();
 		}
 	}
 
 	// オブジェクトを保存
 	bool CActorBase::Save(std::ofstream& ofs) {
-		for (auto& records : vecDataRecord) {
-			if (records.dataType == DATATYPE::TYPE_END) break;
-
-			if (records.dataType == DATATYPE::TYPE_STR) {
-				for (auto& strRecord : vecStrDataRecord) {
-					if (records.offset == strRecord.offset) {
-						const char* str = strRecord.pStr.get();
-						int size = (int)strlen(str) + 1;
-
-						ofs.write((char*)&size, sizeof(int));
-						ofs.write(strRecord.pStr.get(), size);
-					}
-				}
-			}
-			else if (records.dataType == DATATYPE::TYPE_PTR) {
-				int id = -1;
-				if (pParentObject) {
-					id = pParentObject->m_ObjectID;
-				}
-				ofs.write((char*)&id, sizeof(int));
-			}
-			else if (records.dataType == DATATYPE::TYPE_LIST) {
-				int listSize = (int)pChiledObjectList.size();
-				ofs.write((char*)&listSize, sizeof(int));
-				
-				for (const auto& chiled : pChiledObjectList) {
-					ofs.write((char*)&chiled->m_ObjectID, sizeof(int));
-				}
-			}
-			else {
-				ofs.write((char*)this + records.offset, records.size);
-			}
+		for (auto& record : vecDataRecords) {
+			record->WriteData(ofs, (char*)this);
 		}
 
 		return true;
@@ -123,49 +89,38 @@ namespace Engine46 {
 
 	// オブジェクト読み込み
 	bool CActorBase::Load(std::ifstream& ifs) {
-		for (auto& records : vecDataRecord) {
-			if (&records == &vecDataRecord[0]) continue;
+		for (auto& record : vecDataRecords) {
+			if (&record == &vecDataRecords[0]) continue;
 
-			if (records.dataType == DATATYPE::TYPE_END) break;
-
-			if (records.dataType == DATATYPE::TYPE_STR) {
-				for (auto& strRecords : vecStrDataRecord) {
-					if (records.offset == strRecords.offset) {
-						int size = 0;
-						ifs.read((char*)&size, sizeof(int));
-
-						std::string str;
-						str.resize(size);
-						ifs.read(str.data(), size);
-
-						strRecords.pStr.reset(new char[size]);
-						str.copy(strRecords.pStr.get(), size);
-					}
-				}
-			}
-			else if (records.dataType == DATATYPE::TYPE_PTR) {
-				int id = -1;
-				ifs.read((char*)&id, sizeof(int));
-
-				m_parentObjectID = id;
-			}
-			else if (records.dataType == DATATYPE::TYPE_LIST) {
-				int listSize = 0;
-				ifs.read((char*)&listSize, sizeof(int));
-
-				for (auto i = 0; i < listSize; ++i) {
-					int id = -1;
-					ifs.read((char*)&id, sizeof(int));
-
-					m_chiledObjectIDList.emplace_back(id);
-				}
-			}
-			else {
-				ifs.read((char*)this + records.offset, records.size);
-			}
+			record->ReadData(ifs, (char*)this);
 		}
 
 		return true;
+	}
+
+	// 親アクターを接続
+	void CActorBase::ConnectParentActor(CActorBase* pParentActor) {
+		this->pParentActor = pParentActor;
+
+		if (pParentActor) {
+			m_parentActorID = pParentActor->m_ActorID;
+		}
+		else {
+			m_parentActorID = -1;
+		}
+	}
+
+	// 子アクターを追加
+	void CActorBase::AddChiledActorList(CActorBase* pChiledActor) {
+		if (pChiledActor) {
+			pChiledActorList.emplace_back(pChiledActor);
+
+			auto it = std::find(pChiledActorList.begin(), pChiledActorList.end(), pChiledActor->m_ActorID);
+
+			if (it == pChiledActorList.end()) {
+				m_chiledActorIDList.emplace_back(pChiledActor->m_ActorID);
+			}
+		}
 	}
 
 } // namespace
