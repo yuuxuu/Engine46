@@ -5,8 +5,6 @@
  * @date 2018/12/19
  */
 #include "CGameSystem.h"
-#include "CActorManager.h"
-#include "SceneManager.h"
 
 namespace Engine46 {
 
@@ -22,13 +20,11 @@ namespace Engine46 {
 
 	// デストラクタ
 	CGameSystem::~CGameSystem() {
-		GameSystemExit();
+		Finalize();
 	}
 
-	// ゲームシステムの初期化
-	bool CGameSystem::GameSystemInit(HINSTANCE hInstance) {
-		// コンソール呼び出し
-		CallConsole();
+	// 初期化
+	bool CGameSystem::Initialize(HINSTANCE hInstance) {
 		// 乱数生成
 		srand((unsigned)time(NULL));
 		// ロケール設定
@@ -43,20 +39,31 @@ namespace Engine46 {
 			return false;
 		}
 		// ゲームメインスレッド生成
-		m_gameSystemThread = std::thread(&CGameSystem::GameSystemLoop, this);
+		m_gameSystemThread = std::thread(&CGameSystem::Loop, this);
 		if (!m_gameSystemThread.joinable()) {
 			std::cout << "ゲームメインスレッド生成:失敗" << std::endl;
 			return false;
 		}
 
-		SceneManager manager;
-		manager.LoadScene();
-
 		return true;
 	}
 
-	// ゲームシステムメイン
-	void CGameSystem::GameSystemLoop() {
+	// ゲームシステムの終了
+	void CGameSystem::Finalize() {
+		if (m_hGame) {
+			CloseHandle(m_hGame);
+			m_hGame = 0;
+		}
+		// ゲームメインスレッドの終了を待つ
+		if (m_gameSystemThread.joinable()) {
+			m_gameSystemThread.join();
+		}
+		// タイマの分解能力を元に戻す
+		timeEndPeriod(1);
+	}
+
+	// ループ
+	void CGameSystem::Loop() {
 		// イベントハンドル生成
 		m_hGame = CreateEvent(NULL, false, false, NULL);
 		if (!m_hGame) {
@@ -72,35 +79,20 @@ namespace Engine46 {
 				break;
 			}
 
-			GameSystemUpdate();
+			Update();
 
-			GameSystemDraw();
+			Draw();
 
 			MeasFPS();
 		}
 	}
-	// ゲームシステムの更新
-	void CGameSystem::GameSystemUpdate() {
+	// 更新
+	void CGameSystem::Update() {
 
 	}
-	// ゲームシステム描画
-	void CGameSystem::GameSystemDraw() {
+	// 描画
+	void CGameSystem::Draw() {
 
-	}
-	// ゲームシステムの終了
-	void CGameSystem::GameSystemExit() {
-		if (m_hGame) {
-			CloseHandle(m_hGame);
-			m_hGame = 0;
-		}
-		// ゲームメインスレッドの終了を待つ
-		if (m_gameSystemThread.joinable()) {
-			m_gameSystemThread.join();
-		}
-
-		FreeConsole();
-		// タイマの分解能力を元に戻す
-		timeEndPeriod(1);
 	}
 
 	// FPS計測

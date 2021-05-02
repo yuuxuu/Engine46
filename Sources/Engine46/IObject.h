@@ -7,6 +7,9 @@
 
 #pragma once
 
+#ifndef _IOBJECT_H_
+#define _IOBJECT_H_
+
 namespace Engine46 {
 
 	class IObject {
@@ -23,3 +26,5 @@ namespace Engine46 {
 	};
 
 } // namespace
+
+#endif

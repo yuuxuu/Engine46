@@ -1,28 +1,29 @@
 ﻿/**
- * @file main.h
- * @brief 
+ * @file IRenderer.h
+ * @brief
  * @author 木村優
- * @date 2018/12/15
+ * @date 2021/05/02
  */
-
-#define _CRT_SECURE_NO_WARNINGS
 
 #pragma once
 
-#ifndef _MAIN_H_
-#define _MAIN_H_
+#ifndef _IRENDERER_H_
+#define _IRENDERER_H_
 
 using Microsoft::WRL::ComPtr;
 
-constexpr int SCREEN_X = 1280;
-constexpr int SCREEN_Y = 720;
+namespace Engine46 {
 
-constexpr int FULL_SCREEN_X = 1920;
-constexpr int FULL_SCREEN_Y = 1080;
+	class IRenderer {
+	protected:
+		IRenderer() {};
+		virtual ~IRenderer() {};
 
-void CallConsole();
+		virtual bool Initialize() = 0;
+		virtual void Finalize() = 0;
 
-namespace Engine46 {	
+		virtual bool Render() = 0;
+	};
 
 	enum class RENDERER_TYPE {
 		FORWARD,
@@ -115,6 +116,7 @@ namespace Engine46 {
 		SRV_0,
 		RS03_MAX,
 	};
+
 } // namespace
 
 #endif

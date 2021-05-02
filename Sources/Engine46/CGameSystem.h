@@ -30,12 +30,12 @@ namespace Engine46 {
 		CGameSystem();
 		~CGameSystem();
 
-		bool				GameSystemInit(HINSTANCE hInstance);
+		bool				Initialize(HINSTANCE hInstance);
+		void				Finalize();
 
-		void				GameSystemLoop();
-		void				GameSystemUpdate();
-		void				GameSystemDraw();
-		void				GameSystemExit();
+		void				Loop();
+		void				Update();
+		void				Draw();
 		
 		void				MeasFPS();
 
