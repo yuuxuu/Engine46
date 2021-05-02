@@ -31,20 +31,6 @@ namespace Engine46 {
 		return pActor;
 	}
 
-	// オブジェクト同士の接続
-	void CActorManager::ConnectActor() {
-		for (const auto& actor : m_pActorList) {
-			int id = actor->GetParentObjectID();
-			if (id > -1) {
-				actor->ConnectParentObject(m_pActorList[id].get());
-			}
-
-			for (auto id : actor->GetChiledObjectIDList()) {
-				actor->AddChiledObjectList(m_pActorList[id].get());
-			}
-		}
-	}
-
 	// オブジェクトリストを保存
 	bool CActorManager::SaveActorList() {
 
@@ -90,4 +76,19 @@ namespace Engine46 {
 
 		return true;
 	}
+
+	// オブジェクト同士の接続
+	void CActorManager::ConnectActor() {
+		for (const auto& actor : m_pActorList) {
+			int id = actor->GetParentActorID();
+			if (id > -1) {
+				actor->ConnectParentActor(m_pActorList[id].get());
+			}
+
+			for (auto id : actor->GetChiledActorIDList()) {
+				actor->AddChiledActorList(m_pActorList[id].get());
+			}
+		}
+	}
+
 } // namespace

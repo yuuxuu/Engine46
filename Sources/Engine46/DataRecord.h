@@ -12,7 +12,7 @@
 
 namespace Engine46 {
 
-	enum class DATATYPE {
+	enum class DATA_TYPE {
 		TYPE_VAL,
 		TYPE_STR,
 		TYPE_PTR,
@@ -20,44 +20,21 @@ namespace Engine46 {
 		TYPE_END,
 	};
 
-	struct DATARECORD {
-		DATATYPE dataType;
-		int offset;
-		int size;
-
-		DATARECORD(DATATYPE dataType, int offset, int size) :
-			dataType(dataType),
-			offset(offset),
-			size(size)
-		{}
-	};
-
-	struct STR_DATARECORD {
-		int offset;
-		std::unique_ptr<char[]>& pStr;
-
-		STR_DATARECORD(int offset, std::unique_ptr<char[]>& pStr) :
-			offset(offset),
-			pStr(pStr)
-		{}
-		STR_DATARECORD& operator = (const STR_DATARECORD&) { return *this; }
-	};
-
 	class CDataRecordBase {
 	protected:
-		DATATYPE	m_dataType;
+		DATA_TYPE	m_dataType;
 		int			m_dataOffset;
 		int			m_dataSize;
 
 	public:
-		CDataRecordBase(DATATYPE type, int offset, int size);
+		CDataRecordBase(DATA_TYPE type, int offset, int size);
 		CDataRecordBase(int offset, int size);
 		virtual ~CDataRecordBase();
 
 		virtual void WriteData(std::ofstream& ofs, char* p);
 		virtual void ReadData(std::ifstream& ifs, char* p);
 
-		DATATYPE GetDataType() const { return m_dataType; }
+		DATA_TYPE GetDataType() const { return m_dataType; }
 	};
 
 	class CStrDataRecord : public CDataRecordBase {

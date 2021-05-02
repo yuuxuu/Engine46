@@ -36,7 +36,7 @@ namespace Engine46 {
 
 	public:
 		CActorBase();
-		CActorBase(UINT id, const char* name, const Transform transform);
+		CActorBase(const UINT id, const char* name, const Transform transform);
 		virtual ~CActorBase();
 
 		virtual void Initialize() override;

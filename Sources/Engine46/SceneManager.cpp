@@ -29,20 +29,6 @@ namespace Engine46 {
 		return pScene;
 	}
 
-	// シーン同士を接続
-	void SceneManager::ConnectScene() {
-		for (auto& scene : m_pSceneList) {
-			int id = scene->GetParentSceneID();
-			if (id > -1) {
-				scene->ConnectParentScene(m_pSceneList[id].get());
-			}
-
-			for (auto id : scene->GetChiledSceneIDList()) {
-				scene->AddChiledSceneList(m_pSceneList[id].get());
-			}
-		}
-	}
-
 	// シーンリスト保存
 	bool SceneManager::SaveScene() {
 		std::ios_base::openmode mode = std::ios_base::out | std::ios_base::binary;
@@ -85,6 +71,20 @@ namespace Engine46 {
 		this->ConnectScene();
 
 		return true;
+	}
+
+	// シーン同士の接続
+	void SceneManager::ConnectScene() {
+		for (auto& scene : m_pSceneList) {
+			int id = scene->GetParentSceneID();
+			if (id > -1) {
+				scene->ConnectParentScene(m_pSceneList[id].get());
+			}
+
+			for (auto id : scene->GetChiledSceneIDList()) {
+				scene->AddChiledSceneList(m_pSceneList[id].get());
+			}
+		}
 	}
 
 } // namespace

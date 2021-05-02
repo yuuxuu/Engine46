@@ -15,7 +15,7 @@ namespace Engine46 {
 	// コンストラクタ
 	CActorBase::CActorBase() :
 		pParentActor(nullptr),
-		m_parentActorID(0),
+		m_parentActorID(-1),
 		m_ClassID(0),
 		m_ActorID(g_ActorCount++),
 		m_ActorName(),
@@ -31,12 +31,12 @@ namespace Engine46 {
 	}
 
 	// コンストラクタ
-	CActorBase::CActorBase(UINT id, const char* name, const Transform transform) :
+	CActorBase::CActorBase(const UINT id, const char* name, const Transform transform) :
 		pParentActor(nullptr),
 		m_ClassID(id),
 		m_ActorID(g_ActorCount++),
 		m_ActorName(),
-		m_Transform(transform.pos, transform.rotation, transform.scale)
+		m_Transform(transform)
 	{
 		std::string str = name;
 		int size = (int)str.size() + 1;
@@ -115,9 +115,9 @@ namespace Engine46 {
 		if (pChiledActor) {
 			pChiledActorList.emplace_back(pChiledActor);
 
-			auto it = std::find(pChiledActorList.begin(), pChiledActorList.end(), pChiledActor->m_ActorID);
+			auto it = std::find(m_chiledActorIDList.begin(), m_chiledActorIDList.end(), pChiledActor->m_ActorID);
 
-			if (it == pChiledActorList.end()) {
+			if (it == m_chiledActorIDList.end()) {
 				m_chiledActorIDList.emplace_back(pChiledActor->m_ActorID);
 			}
 		}

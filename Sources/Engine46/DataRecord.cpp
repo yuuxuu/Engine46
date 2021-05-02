@@ -10,7 +10,7 @@
 namespace Engine46 {
 
 	// コンストラクタ
-	CDataRecordBase::CDataRecordBase(DATATYPE type, int offset, int size) :
+	CDataRecordBase::CDataRecordBase(DATA_TYPE type, int offset, int size) :
 		m_dataType(type),
 		m_dataOffset(offset),
 		m_dataSize(size)
@@ -18,7 +18,7 @@ namespace Engine46 {
 
 	// コンストラクタ
 	CDataRecordBase::CDataRecordBase(int offset, int size) :
-		m_dataType(DATATYPE::TYPE_VAL),
+		m_dataType(DATA_TYPE::TYPE_VAL),
 		m_dataOffset(offset),
 		m_dataSize(size)
 	{}
@@ -39,7 +39,7 @@ namespace Engine46 {
 
 	// コンストラクタ
 	CStrDataRecord::CStrDataRecord(int offset, std::unique_ptr<char[]>& pStr) :
-		CDataRecordBase(DATATYPE::TYPE_STR, offset, (int)strlen(pStr.get()) + 1),
+		CDataRecordBase(DATA_TYPE::TYPE_STR, offset, (int)strlen(pStr.get()) + 1),
 		m_pStr(pStr)
 	{}
 
@@ -65,7 +65,7 @@ namespace Engine46 {
 
 	// コンストラクタ
 	CPtrDataRecord::CPtrDataRecord(int& id) :
-		CDataRecordBase(DATATYPE::TYPE_PTR, 0, sizeof(int)),
+		CDataRecordBase(DATA_TYPE::TYPE_PTR, 0, sizeof(int)),
 		m_id(id)
 	{}
 
@@ -85,7 +85,7 @@ namespace Engine46 {
 
 	// コンストラクタ
 	CListDataRecord::CListDataRecord(std::vector<int>& vecID) :
-		CDataRecordBase(DATATYPE::TYPE_LIST, 0, sizeof(int)),
+		CDataRecordBase(DATA_TYPE::TYPE_LIST, 0, sizeof(int)),
 		m_vecID(vecID)
 	{}
 
