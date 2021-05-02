@@ -18,26 +18,25 @@ namespace Engine46 {
 	
 	class CActorBase : public IObject {
 	protected:
-		std::vector<DATARECORD>			vecDataRecord;
-		std::vector<STR_DATARECORD>		vecStrDataRecord;
+		std::vector<std::unique_ptr<CDataRecordBase>>	vecDataRecords;
 
-		UINT							m_ClassID;
+		UINT											m_ClassID;
 
-		CActorBase*						pParentObject;
-		int								m_parentObjectID;
+		CActorBase*										pParentActor;
+		int												m_parentActorID;
 
-		std::list<CActorBase*>			pChiledObjectList;
-		std::vector<int>				m_chiledObjectIDList;
+		std::list<CActorBase*>							pChiledActorList;
+		std::vector<int>								m_chiledActorIDList;
 
-		int								m_ObjectID;
+		int												m_ActorID;
 
-		std::unique_ptr<char[]>			m_Name;
+		std::unique_ptr<char[]>							m_ActorName;
 
-		Transform						m_Transform;
+		Transform										m_Transform;
 
 	public:
 		CActorBase();
-		CActorBase(UINT id, const char* name, const Transform transform);
+		CActorBase(const UINT id, const char* name, const Transform transform);
 		virtual ~CActorBase();
 
 		virtual void Initialize() override;
@@ -47,14 +46,15 @@ namespace Engine46 {
 		virtual bool Save(std::ofstream& ofs) override;
 		virtual bool Load(std::ifstream& ifs) override;
 
-		void ConnectParentObject(CActorBase* pParentObject) { this->pParentObject = pParentObject; }
-		CActorBase* GetParentObject() const { return pParentObject; }
-		int GetParentObjectID() const { return m_parentObjectID; }
+		void ConnectParentActor(CActorBase* pParentActor);
 
-		void AddChiledObjectList(CActorBase* pChiledObject) { pChiledObjectList.emplace_back(pChiledObject); }
-		std::list<CActorBase*> GetChiledObjectList() const { return pChiledObjectList; }
+		CActorBase* GetParentActor() const { return pParentActor; }
+		int GetParentActorID() const { return m_parentActorID; }
 
-		std::vector<int> GetChiledObjectIDList() const { return m_chiledObjectIDList; }
+		void AddChiledActorList(CActorBase* pChiledObject);
+
+		std::list<CActorBase*> GetChiledActorList() const { return pChiledActorList; }
+		std::vector<int> GetChiledActorIDList() const { return m_chiledActorIDList; }
 	};
 } // namespace
 

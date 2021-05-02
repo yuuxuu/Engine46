@@ -49,18 +49,14 @@ namespace Engine46 {
 
 	//初期化
 	void CSceneBase::Initialize() {
-		vecDataRecord = {
-			DATARECORD(DATATYPE::TYPE_VAL,  offsetof(CSceneBase, m_SceneType), sizeof(m_SceneType)),
-			DATARECORD(DATATYPE::TYPE_VAL,  offsetof(CSceneBase, m_SceneID), sizeof(m_SceneID)),
-			DATARECORD(DATATYPE::TYPE_STR,  offsetof(CSceneBase, m_SceneName), sizeof(m_SceneName)),
-			DATARECORD(DATATYPE::TYPE_PTR,  offsetof(CSceneBase, pParentScene), sizeof(pParentScene)),
-			DATARECORD(DATATYPE::TYPE_LIST, offsetof(CSceneBase, pChiledSceneList), sizeof(pChiledSceneList)),
-			DATARECORD(DATATYPE::TYPE_END,  0, 0)
-		};
 
-		vecStrDataRecord = {
-			STR_DATARECORD(offsetof(CSceneBase, m_SceneName), m_SceneName),
-		};
+		vecDataRecords.clear();
+
+		vecDataRecords.emplace_back(std::make_unique<CDataRecordBase>(offsetof(CSceneBase, m_SceneType), sizeof(m_SceneType)));
+		vecDataRecords.emplace_back(std::make_unique<CDataRecordBase>(offsetof(CSceneBase, m_SceneID), sizeof(m_SceneID)));
+		vecDataRecords.emplace_back(std::make_unique<CStrDataRecord>(offsetof(CSceneBase, m_SceneName), m_SceneName));
+		vecDataRecords.emplace_back(std::make_unique<CPtrDataRecord>(m_parentSceneID));
+		vecDataRecords.emplace_back(std::make_unique<CListDataRecord>(m_chiledSceneIDList));
 	}
 
 	// 更新
@@ -75,37 +71,9 @@ namespace Engine46 {
 
 	// シーン出力
 	bool CSceneBase::Save(std::ofstream& ofs) {
-		for (const auto& records : vecDataRecord) {
-			if (records.dataType == DATATYPE::TYPE_END) break;
 
-			if (records.dataType == DATATYPE::TYPE_STR) {
-				for (auto& strRecords : vecStrDataRecord) {
-					if (records.offset == strRecords.offset) {
-						int size = (int)strlen(strRecords.pStr.get()) + 1;
-						ofs.write((char*)&size, sizeof(int));
-
-						ofs.write(strRecords.pStr.get(), size);
-					}
-				}
-			}
-			else if (records.dataType == DATATYPE::TYPE_PTR) {
-				int id = -1;
-				if (pParentScene) {
-					id = pParentScene->m_parentSceneID;
-				}
-				ofs.write((char*)&id, sizeof(int));
-			}
-			else if (records.dataType == DATATYPE::TYPE_LIST) {
-				int listSize = (int)pChiledSceneList.size();
-				ofs.write((char*)&listSize, sizeof(int));
-
-				for (const auto& chiled : pChiledSceneList) {
-					ofs.write((char*)&chiled->m_SceneID, sizeof(int));
-				}
-			}
-			else {
-				ofs.write((char*)this + records.offset, records.size);
-			}
+		for (auto& records : vecDataRecords) {
+			records->WriteData(ofs, (char*)this);
 		}
 
 		return true;
@@ -113,49 +81,39 @@ namespace Engine46 {
 
 	// シーン読み込み
 	bool CSceneBase::Load(std::ifstream& ifs) {
-		for (const auto& records : vecDataRecord) {
-			if (&records == &vecDataRecord[0]) continue;
 
-			if (records.dataType == DATATYPE::TYPE_END) break;
+		for (auto& records : vecDataRecords) {
+			if (&records == &vecDataRecords[0]) continue;
 
-			if (records.dataType == DATATYPE::TYPE_STR) {
-				for (auto& strRecords : vecStrDataRecord) {
-					if (records.offset == strRecords.offset) {
-						int size = 0;
-						ifs.read((char*)&size, sizeof(int));
-
-						std::string str;
-						str.resize(size);
-						ifs.read(str.data(), size);
-
-						strRecords.pStr.reset(new char[size]);
-						str.copy(strRecords.pStr.get(), size);
-					}
-				}
-			}
-			else if (records.dataType == DATATYPE::TYPE_PTR) {
-				int id = -1;
-				ifs.read((char*)&id, sizeof(int));
-
-				m_parentSceneID = id;
-			}
-			else if (records.dataType == DATATYPE::TYPE_LIST) {
-				int listSize = 0;
-				ifs.read((char*)&listSize, sizeof(int));
-
-				for (auto i = 0; i < listSize; ++i) {
-					int id = -1;
-					ifs.read((char*)&id, sizeof(int));
-
-					m_chiledSceneIDList.emplace_back(id);
-				}
-			}
-			else {
-				ifs.read((char*)this + records.offset, records.size);
-			}
+			records->ReadData(ifs, (char*)this);
 		}
 
 		return true;
+	}
+
+	// 親シーンを接続
+	void CSceneBase::ConnectParentScene(CSceneBase* pParentScene) {
+		this->pParentScene = pParentScene;
+
+		if (pParentScene) {
+			m_parentSceneID = pParentScene->m_SceneID;
+		}
+		else {
+			m_parentSceneID = -1;
+		}
+	}
+
+	// 子シーンを追加
+	void CSceneBase::AddChiledSceneList(CSceneBase* pChiledScene) {
+		if (pChiledScene) {
+			pChiledSceneList.emplace_back(pChiledScene);
+
+			auto it = std::find(m_chiledSceneIDList.begin(), m_chiledSceneIDList.end(), pChiledScene->m_SceneID);
+
+			if (it == m_chiledSceneIDList.end()) {
+				m_chiledSceneIDList.emplace_back(pChiledScene->m_SceneID);
+			}
+		}
 	}
 
 } // namespace

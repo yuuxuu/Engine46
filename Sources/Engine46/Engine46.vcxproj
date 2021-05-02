@@ -25,6 +25,7 @@
     <ClCompile Include="CActorManager.cpp" />
     <ClCompile Include="CScene.cpp" />
     <ClCompile Include="CWinow.cpp" />
+    <ClCompile Include="DataRecord.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="math.cpp" />
     <ClCompile Include="SceneManager.cpp" />

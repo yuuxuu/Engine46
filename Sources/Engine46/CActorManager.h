@@ -27,7 +27,7 @@ namespace Engine46 {
 		bool SaveActorList();
 		bool LoadActorList();
 
-		void AddActorToActorList(std::unique_ptr<CActorBase>& pObject) { m_pActorList.emplace_back(move(pObject)); };
+		void AddActorToActorList(std::unique_ptr<CActorBase>& pActor) { m_pActorList.emplace_back(move(pActor)); };
 	
 	private:
 		void ConnectActor();
