@@ -10,54 +10,38 @@
 
 #pragma once
 
-#include "main.h"
+#include "math.h"
 
 namespace Engine46 {
 
 	class CWindow {
 	private:
 		HWND		m_hwnd;
-		WNDCLASSEX	m_wcex;
+		HINSTANCE	m_hInstance;
+		const char* m_className;
 
-		const char* m_pWindowClassName;
-		const char* m_pTitleName;
-
-		int			m_windowWidth;
-		int			m_windowHeight;
-			 
-		int			m_clientWidth;
-		int			m_clientHeight;
-
-		bool		m_onScreenShot;
-		bool		m_onFullScreen;
+		RECT		m_windowSize;
+		RECT		m_clientSize;
 
 	public:
-		CWindow(const char* windowName, const char* titleName);
+		CWindow();
 		~CWindow();
 
 		static LRESULT CALLBACK	WindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 
-		bool	InitWindow(HINSTANCE hInstance);
+		bool	Initialize(HINSTANCE hInstance, const char* className, const char* titleName);
 
 		void	ChangeSizeWindow(const int posx, const int posy, const int width, const int height);
 				
 		void	ScreenShotWindow();
 				
-		BYTE*	GetBuffer();
+		bool	GetBuffer(std::unique_ptr<BYTE[]>& pBuf);
 				
 		HWND	GetHwnd() const { return m_hwnd; }
 			 
-		int		GetWindowWidth() const { return m_windowWidth; }
-		int		GetWindowHeight() const { return m_windowHeight; }
-			 
-		int		GetClientWidth() const { return m_clientWidth; }
-		int		GetClientHeight() const { return m_clientHeight; }
-			 
-		bool	GetOnScreenShot() const { return m_onScreenShot; }
-		void	SetOnScreenShot(bool flag) { m_onScreenShot = flag; }
-			 
-		bool	GetOnFullScreen() const { return m_onFullScreen; }
-		void	SetOnFullScreen(bool flag) { m_onFullScreen = flag; }
+		RECT	GetWindowWidth() const { return m_windowSize; }
+
+		RECT	GetClientSize() const { return m_clientSize; }
 	};
 
 } // namespace

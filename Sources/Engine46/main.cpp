@@ -46,7 +46,7 @@ void CallConsole()
 {
 	char Console[128];
 	HWND ConsoleWindow;
-	RECT ConsoleWindowRect;
+	::RECT ConsoleWindowRect;
 
 	FILE* pfile = NULL; // ファイルポインタ
 

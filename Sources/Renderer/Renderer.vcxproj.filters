@@ -18,12 +18,12 @@
     <ClInclude Include="IRenderer.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="DirectX11\DX11Renderer.h">
+    <ClInclude Include="DX11Renderer.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="DirectX11\DX11Renderer.cpp">
+    <ClCompile Include="DX11Renderer.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>

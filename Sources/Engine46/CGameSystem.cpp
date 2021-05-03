@@ -32,9 +32,9 @@ namespace Engine46 {
 		// タイマの分解能力を１ｍｓにする
 		timeBeginPeriod(1);
 		// メインウインドウ作成
-		m_mainWindow = std::make_unique<CWindow>("MainWindow", "Engine46");
+		m_mainWindow = std::make_unique<CWindow>();
 		// メインウインドウ初期化
-		if (!m_mainWindow->InitWindow(hInstance)) {
+		if (!m_mainWindow->Initialize(hInstance, "MainWindow", "Engine46")) {
 			std::cout << "ウインドウ初期化:失敗" << std::endl;
 			return false;
 		}
