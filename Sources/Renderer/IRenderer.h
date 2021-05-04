@@ -19,7 +19,8 @@ namespace Engine46 {
 		IRenderer() {};
 		virtual ~IRenderer() {};
 
-		virtual bool Initialize() = 0;
+		virtual bool Initialize(HWND hwnd, UINT width, UINT height) = 0;
+		
 		virtual void Finalize() = 0;
 
 		virtual bool Render() = 0;

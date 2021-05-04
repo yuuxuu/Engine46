@@ -38,6 +38,13 @@ namespace Engine46 {
 			std::cout << "ウインドウ初期化:失敗" << std::endl;
 			return false;
 		}
+
+		RECT rect = m_mainWindow->GetWindowSize();
+		HWND hwnd = m_mainWindow->GetHwnd();
+
+		m_pRenderer = std::make_unique<CDX11Renderer>();
+		if (!m_pRenderer->Initialize(hwnd, rect.w, rect.h)) return false;
+
 		// ゲームメインスレッド生成
 		m_gameSystemThread = std::thread(&CGameSystem::Loop, this);
 		if (!m_gameSystemThread.joinable()) {
@@ -92,7 +99,7 @@ namespace Engine46 {
 	}
 	// 描画
 	void CGameSystem::Draw() {
-
+		m_pRenderer->Render();
 	}
 
 	// FPS計測

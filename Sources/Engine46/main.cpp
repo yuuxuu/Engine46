@@ -13,8 +13,7 @@ void CallConsole();
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszArgs, int nWinMode)
 {
-	// コンソール呼び出し
-	void CallConsole();
+	CallConsole();
 
 	// ゲームシステム作成
 	CGameSystem gameSystem;

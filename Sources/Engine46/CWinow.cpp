@@ -84,6 +84,44 @@ namespace Engine46 {
 		return DefWindowProc(hwnd, message, wParam, lParam);
 	}
 
+	// バッファの取得
+	bool CWindow::GetBuffer(std::unique_ptr<BYTE[]>& pBuf) {
+
+		HDC hdc = GetDC(m_hwnd);
+		if (!hdc) return false;
+
+		HBITMAP hBmp = CreateCompatibleBitmap(hdc, m_windowSize.w, m_windowSize.h);
+		HDC hdc_bmp = CreateCompatibleDC(hdc);
+		SelectObject(hdc_bmp, hBmp);
+		if (!BitBlt(hdc_bmp, 0, 0, m_windowSize.w, m_windowSize.h, hdc, 0, 0, SRCCOPY)) {
+			std::cout << "Failed" << std::endl;
+		}
+
+		BITMAP bmp;
+		GetObject(hBmp, sizeof(BITMAP), &bmp);
+
+		BITMAPINFO bitmapInfo = {};
+		bitmapInfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+		bitmapInfo.bmiHeader.biWidth = m_windowSize.w;
+		bitmapInfo.bmiHeader.biHeight = m_windowSize.h;
+		bitmapInfo.bmiHeader.biPlanes = 1;
+		bitmapInfo.bmiHeader.biBitCount = 32;
+		bitmapInfo.bmiHeader.biCompression = BI_RGB;
+
+		int offsetByte = 4;
+		pBuf.reset(new BYTE[m_windowSize.w * m_windowSize.h * offsetByte]);
+
+		HDC hDC = GetDC(NULL);
+		GetDIBits(hDC, hBmp, 0, m_windowSize.h, pBuf.get(), &bitmapInfo, DIB_RGB_COLORS);
+		ReleaseDC(NULL, hDC);
+
+		DeleteDC(hdc_bmp);
+		DeleteObject(hBmp);
+		ReleaseDC(m_hwnd, hdc);
+
+		return true;
+	}
+
 	// ウインドウの初期化
 	bool CWindow::Initialize(HINSTANCE hInstance, const char* className, const char* titleName) {
 
@@ -175,44 +213,6 @@ namespace Engine46 {
 
 			SaveToBmpFile(bitmapInfo.bmiHeader, pBuf.get(), savePath.c_str());
 		}
-	}
-
-	// バッファの取得
-	bool CWindow::GetBuffer(std::unique_ptr<BYTE[]>& pBuf) {
-
-		HDC hdc = GetDC(m_hwnd);
-		if (!hdc) return false;
-
-		HBITMAP hBmp = CreateCompatibleBitmap(hdc, m_windowSize.w, m_windowSize.h);
-		HDC hdc_bmp = CreateCompatibleDC(hdc);
-		SelectObject(hdc_bmp, hBmp);
-		if (!BitBlt(hdc_bmp, 0, 0, m_windowSize.w, m_windowSize.h, hdc, 0, 0, SRCCOPY)) {
-			std::cout << "Failed" << std::endl;
-		}
-
-		BITMAP bmp;
-		GetObject(hBmp, sizeof(BITMAP), &bmp);
-
-		BITMAPINFO bitmapInfo = {};
-		bitmapInfo.bmiHeader.biSize			= sizeof(BITMAPINFOHEADER);
-		bitmapInfo.bmiHeader.biWidth		= m_windowSize.w;
-		bitmapInfo.bmiHeader.biHeight		= m_windowSize.h;
-		bitmapInfo.bmiHeader.biPlanes		= 1;
-		bitmapInfo.bmiHeader.biBitCount		= 32;
-		bitmapInfo.bmiHeader.biCompression	= BI_RGB;
-
-		int offsetByte = 4;
-		pBuf.reset(new BYTE[m_windowSize.w * m_windowSize.h * offsetByte]);
-
-		HDC hDC = GetDC(NULL);
-		GetDIBits(hDC, hBmp, 0, m_windowSize.h, pBuf.get(), &bitmapInfo, DIB_RGB_COLORS);
-		ReleaseDC(NULL, hDC);
-
-		DeleteDC(hdc_bmp);
-		DeleteObject(hBmp);
-		ReleaseDC(m_hwnd, hdc);
-
-		return true;
 	}
 
 } // namespace
