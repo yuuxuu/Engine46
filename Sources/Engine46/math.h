@@ -172,6 +172,53 @@ namespace Engine46 {
 		{}
 	};
 
+	struct RECT {
+		int w, h;
+
+		RECT() {
+			w = h = 0;
+		}
+		RECT(int f1, int f2) {
+			w = f1; h = f2;
+		}
+		RECT operator = (RECT f) {
+			w = f.w; h = f.h;
+			return RECT(w, h);
+		};
+		RECT operator + (RECT f) {
+			w += f.w; h += f.h;
+			return RECT(w, h);
+		};
+		RECT operator - (RECT f) {
+			w -= f.w; h -= f.h;
+			return RECT(w, h);
+		};
+		RECT operator * (RECT f) {
+			w *= f.w; h *= f.h;
+			return RECT(w, h);
+		};
+		RECT operator / (RECT f) {
+			w /= f.w; h /= f.h;
+			return RECT(w, h);
+		};
+		RECT operator += (RECT f) {
+			w += f.w; h += f.h;
+			return RECT(w, h);
+		};
+		RECT operator -= (RECT f) {
+			w -= f.w; h -= f.h;
+			return RECT(w, h);
+		};
+		RECT operator *= (RECT f) {
+			w *= f.w; h *= f.h;
+			return RECT(w, h);
+		};
+		RECT operator /= (RECT f) {
+			w /= f.w; h /= f.h;
+			return RECT(w, h);
+		};
+	};
+
 } // namespace
 
 #endif

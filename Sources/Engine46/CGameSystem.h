@@ -10,32 +10,35 @@
 #define _CGAME_SYSTEM_MANAGER_H_
 
 #include "CWinow.h"
+#include "CDX11Renderer.h"
 
 namespace Engine46 {
 
 	class CGameSystem {
 	private:
-		std::thread					m_gameSystemThread;
-		HANDLE						m_hGame;
+		std::thread						m_gameSystemThread;
+		HANDLE							m_hGame;
 
-		std::unique_ptr<CWindow>	m_mainWindow;
+		std::unique_ptr<CWindow>		m_mainWindow;
 
-		int							m_fps;
-		int							m_wfps;
+		std::unique_ptr<CDX11Renderer>	m_pRenderer;
 
-		int							m_nowTime;
-		int							m_oldTime;
+		int								m_fps;
+		int								m_wfps;
+
+		int								m_nowTime;
+		int								m_oldTime;
 
 	public:
 		CGameSystem();
 		~CGameSystem();
 
-		bool				GameSystemInit(HINSTANCE hInstance);
+		bool				Initialize(HINSTANCE hInstance);
+		void				Finalize();
 
-		void				GameSystemLoop();
-		void				GameSystemUpdate();
-		void				GameSystemDraw();
-		void				GameSystemExit();
+		void				Loop();
+		void				Update();
+		void				Draw();
 		
 		void				MeasFPS();
 

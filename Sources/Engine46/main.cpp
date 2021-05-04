@@ -5,16 +5,19 @@
  * @date 2018/12/15
  */
 
-#include "main.h"
 #include "CGameSystem.h"
 
 using namespace Engine46;
 
+void CallConsole();
+
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszArgs, int nWinMode)
 {
+	CallConsole();
+
 	// ゲームシステム作成
 	CGameSystem gameSystem;
-	if (!gameSystem.GameSystemInit(hInstance)) {
+	if (!gameSystem.Initialize(hInstance)) {
 		MessageBox(NULL, "ゲームシステム初期化：失敗", "MessageBox", MB_OK);
 		return -1;
 	}
@@ -32,6 +35,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszArgs,
 		}
 	}
 
+	FreeConsole();
+
 	return (int)msg.wParam;
 }
 
@@ -40,7 +45,7 @@ void CallConsole()
 {
 	char Console[128];
 	HWND ConsoleWindow;
-	RECT ConsoleWindowRect;
+	::RECT ConsoleWindowRect;
 
 	FILE* pfile = NULL; // ファイルポインタ
 

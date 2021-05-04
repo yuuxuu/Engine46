@@ -32,7 +32,7 @@ namespace Engine46 {
 		}
 	}
 
-	void SaveToBmpFile(BITMAPINFOHEADER m_bmpInfo, LPCVOID pStr, std::string fileName);
+	void SaveToBmpFile(BITMAPINFOHEADER m_bmpInfo, LPCVOID pStr, const char* fileName);
 
 	std::wstring StringConvertToWString(std::string str);
 } // namespace

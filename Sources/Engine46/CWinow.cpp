@@ -13,38 +13,21 @@ namespace Engine46 {
 	UINT g_screenShotCount = 0;
 
 	// コンストラクタ
-	CWindow::CWindow(const char* windowClassName, const char* titleName):
+	CWindow::CWindow():
 		m_hwnd(nullptr),
-		m_wcex(),
-		m_pWindowClassName(windowClassName),
-		m_pTitleName(titleName),
-		m_windowWidth(0),
-		m_windowHeight(0),
-		m_clientWidth(0),
-		m_clientHeight(0),
-		m_onFullScreen(false),
-		m_onScreenShot(false)
-	{
-		if (IDYES == MessageBox(NULL, "フルスクリーンで起動しますか？", "MessageBox", MB_YESNO)) {
-			m_onFullScreen = true;
-			m_windowWidth = FULL_SCREEN_X;
-			m_windowHeight = FULL_SCREEN_Y;
-		}
-		else {
-			m_windowWidth = SCREEN_X;
-			m_windowHeight = SCREEN_Y;
-		}
-	}
+		m_hInstance(nullptr),
+		m_className(),
+		m_windowSize(1280, 720),
+		m_clientSize(0, 0)
+	{}
 
 	// デストラクタ
 	CWindow::~CWindow() {
-		UnregisterClass(m_wcex.lpszClassName, m_wcex.hInstance);
+		UnregisterClass(m_className, m_hInstance);
 	}
 
 	// ウインドウプロシージャ
 	LRESULT CWindow::WindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) {
-
-		//ImGui_ImplWin32_WndProcHandler(hwnd, message, wParam, lParam);
 
 		switch (message) {
 		case WM_CREATE:
@@ -101,31 +84,71 @@ namespace Engine46 {
 		return DefWindowProc(hwnd, message, wParam, lParam);
 	}
 
-	// ウインドウの初期化
-	bool CWindow::InitWindow(HINSTANCE hInstance) {
-		m_wcex.hInstance		= hInstance;									// インスタンス値のセット
-		m_wcex.lpszClassName	= m_pWindowClassName;							// クラス名
-		m_wcex.lpfnWndProc		= WindowProc;									// ウインドウメッセージ関数
-		m_wcex.style			= CS_HREDRAW | CS_VREDRAW;						// ウインドウスタイル
-		m_wcex.cbSize			= sizeof(WNDCLASSEX);							// 構造体のサイズ
-		m_wcex.hIcon			= LoadIcon((HINSTANCE)NULL, IDI_APPLICATION);	// ラージアイコン
-		m_wcex.hIconSm			= LoadIcon((HINSTANCE)NULL, IDI_WINLOGO);		// スモールアイコン
-		m_wcex.hCursor			= LoadCursor((HINSTANCE)NULL, IDC_ARROW);		// カーソルスタイル
-		m_wcex.lpszMenuName		= NULL; 										// メニューなし
-		m_wcex.cbClsExtra		= 0;											// エキストラなし
-		m_wcex.cbWndExtra		= 0;
-		m_wcex.hbrBackground	= (HBRUSH)GetStockObject(WHITE_BRUSH);			// 背景色白
+	// バッファの取得
+	bool CWindow::GetBuffer(std::unique_ptr<BYTE[]>& pBuf) {
 
-		if (!RegisterClassEx(&m_wcex)) return false;							// ウインドウクラスの登録
+		HDC hdc = GetDC(m_hwnd);
+		if (!hdc) return false;
+
+		HBITMAP hBmp = CreateCompatibleBitmap(hdc, m_windowSize.w, m_windowSize.h);
+		HDC hdc_bmp = CreateCompatibleDC(hdc);
+		SelectObject(hdc_bmp, hBmp);
+		if (!BitBlt(hdc_bmp, 0, 0, m_windowSize.w, m_windowSize.h, hdc, 0, 0, SRCCOPY)) {
+			std::cout << "Failed" << std::endl;
+		}
+
+		BITMAP bmp;
+		GetObject(hBmp, sizeof(BITMAP), &bmp);
+
+		BITMAPINFO bitmapInfo = {};
+		bitmapInfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+		bitmapInfo.bmiHeader.biWidth = m_windowSize.w;
+		bitmapInfo.bmiHeader.biHeight = m_windowSize.h;
+		bitmapInfo.bmiHeader.biPlanes = 1;
+		bitmapInfo.bmiHeader.biBitCount = 32;
+		bitmapInfo.bmiHeader.biCompression = BI_RGB;
+
+		int offsetByte = 4;
+		pBuf.reset(new BYTE[m_windowSize.w * m_windowSize.h * offsetByte]);
+
+		HDC hDC = GetDC(NULL);
+		GetDIBits(hDC, hBmp, 0, m_windowSize.h, pBuf.get(), &bitmapInfo, DIB_RGB_COLORS);
+		ReleaseDC(NULL, hDC);
+
+		DeleteDC(hdc_bmp);
+		DeleteObject(hBmp);
+		ReleaseDC(m_hwnd, hdc);
+
+		return true;
+	}
+
+	// ウインドウの初期化
+	bool CWindow::Initialize(HINSTANCE hInstance, const char* className, const char* titleName) {
+
+		WNDCLASSEX	wcex;
+		wcex.hInstance		= hInstance;									// インスタンス値のセット
+		wcex.lpszClassName	= className;									// クラス名
+		wcex.lpfnWndProc	= WindowProc;									// ウインドウメッセージ関数
+		wcex.style			= CS_HREDRAW | CS_VREDRAW;						// ウインドウスタイル
+		wcex.cbSize			= sizeof(WNDCLASSEX);							// 構造体のサイズ
+		wcex.hIcon			= LoadIcon((HINSTANCE)NULL, IDI_APPLICATION);	// ラージアイコン
+		wcex.hIconSm		= LoadIcon((HINSTANCE)NULL, IDI_WINLOGO);		// スモールアイコン
+		wcex.hCursor		= LoadCursor((HINSTANCE)NULL, IDC_ARROW);		// カーソルスタイル
+		wcex.lpszMenuName	= NULL; 										// メニューなし
+		wcex.cbClsExtra		= 0;											// エキストラなし
+		wcex.cbWndExtra		= 0;
+		wcex.hbrBackground	= (HBRUSH)GetStockObject(WHITE_BRUSH);			// 背景色白
+
+		if (!RegisterClassEx(&wcex)) return false;							// ウインドウクラスの登録
 
 		m_hwnd = CreateWindow(
-			m_pWindowClassName,				// ウィンドウクラスの名前
-			m_pTitleName,					// タイトル
+			className,						// ウィンドウクラスの名前
+			titleName,						// タイトル
 			WS_VISIBLE | WS_SYSMENU,		// ウィンドウスタイル
 			0,								// ウィンドウ位置_縦
 			0,								// ウィンドウ位置_横
-			m_windowWidth,					// ウィンドウ横幅
-			m_windowHeight,					// ウィンドウ縦幅
+			m_windowSize.w,					// ウィンドウ横幅
+			m_windowSize.h,					// ウィンドウ縦幅
 			NULL,							// 親ウィンドウなし
 			NULL,							// メニューなし
 			hInstance,						// インスタンスハンドル
@@ -134,25 +157,24 @@ namespace Engine46 {
 		if (!m_hwnd) return false;
 		else { std::cout << "ウインドウ初期化:完了" << std::endl; }
 
-		RECT rClient;
-		GetClientRect(m_hwnd, &rClient);
-
-		m_clientWidth = m_windowWidth - (rClient.right - rClient.left);
-		m_clientHeight = m_windowHeight - (rClient.bottom - rClient.top);
-
-		m_windowWidth -= m_clientWidth;
-		m_windowHeight -= m_clientHeight;
-
 		// ウインドウを表示する
 		if (!ShowWindow(m_hwnd, SW_SHOW)) return false;
 		if (!UpdateWindow(m_hwnd)) return false;
+
+		m_hInstance = hInstance;
+		m_className = className;
+
+		::RECT rClient;
+		GetClientRect(m_hwnd, &rClient);
+
+		m_clientSize.w = m_windowSize.w - (rClient.right - rClient.left);
+		m_clientSize.h = m_windowSize.h - (rClient.bottom - rClient.top);
 
 		return true;
 	}
 
 	// ウインドウのサイズ変更
 	void CWindow::ChangeSizeWindow(const int posx, const int posy, const int width, const int height) {
-		RECT rClient;
 
 		SetWindowPos(
 			m_hwnd,
@@ -163,88 +185,34 @@ namespace Engine46 {
 			height,
 			SWP_NOZORDER);
 
+		::RECT rClient;
 		GetClientRect(m_hwnd, &rClient);
 
-		m_windowWidth = width;
-		m_windowHeight = height;
+		m_windowSize.w = width;
+		m_windowSize.h = height;
 
-		m_clientWidth = m_windowWidth - (rClient.right - rClient.left);
-		m_clientHeight = m_windowHeight - (rClient.bottom - rClient.top);
-
-		m_windowWidth -= m_clientWidth;
-		m_windowHeight -= m_clientHeight;
+		m_clientSize.w = m_windowSize.w - (rClient.right - rClient.left);
+		m_clientSize.h = m_windowSize.h - (rClient.bottom - rClient.top);
 	}
 
 	//	ウインドウをスクリーンショット
 	void CWindow::ScreenShotWindow() {
 
-		BYTE* pBuf = GetBuffer();
+		std::unique_ptr<BYTE[]> pBuf;
 
-		if (pBuf) {
-
-			if (m_onScreenShot) {
-
-				std::string savePath = "Assets/Texture/ScreenShot/ScreenShot_" + std::to_string(g_screenShotCount) + ".bmp";
-
-				BITMAPINFO bitmapInfo = {};
-
-				bitmapInfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
-				bitmapInfo.bmiHeader.biWidth = m_windowWidth;
-				bitmapInfo.bmiHeader.biHeight = m_windowHeight;
-				bitmapInfo.bmiHeader.biPlanes = 1;
-				bitmapInfo.bmiHeader.biBitCount = 32;
-				bitmapInfo.bmiHeader.biCompression = BI_RGB;
-
-				SaveToBmpFile(bitmapInfo.bmiHeader, pBuf, savePath);
-
-				g_screenShotCount++;
-
-				m_onScreenShot = false;
-			}
-		}
-	}
-
-	// バッファの取得
-	BYTE* CWindow::GetBuffer() {
-		std::unique_ptr<BYTE[]>	pBufs = nullptr;
-
-		HDC hdc = GetDC(m_hwnd);
-		if (hdc) {
-			HBITMAP hBmp = CreateCompatibleBitmap(hdc, m_windowWidth, m_windowHeight);
-			HDC hdc_bmp = CreateCompatibleDC(hdc);
-			SelectObject(hdc_bmp, hBmp);
-
-			if (!BitBlt(hdc_bmp, 0, 0, m_windowWidth, m_windowHeight, hdc, 0, 0, SRCCOPY)) {
-				std::cout << "Failed" << std::endl;
-			}
-
-			BITMAP bmp;
-			GetObject(hBmp, sizeof(BITMAP), &bmp);
-
-			int offsetByte = 4;
+		if (GetBuffer(pBuf)) {
+			std::string savePath = "Assets/Texture/ScreenShot/ScreenShot_" + std::to_string(g_screenShotCount++) + ".bmp";
 
 			BITMAPINFO bitmapInfo = {};
-
 			bitmapInfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
-			bitmapInfo.bmiHeader.biWidth = m_windowWidth;
-			bitmapInfo.bmiHeader.biHeight = m_windowHeight;
+			bitmapInfo.bmiHeader.biWidth = m_windowSize.w;
+			bitmapInfo.bmiHeader.biHeight = m_windowSize.h;
 			bitmapInfo.bmiHeader.biPlanes = 1;
 			bitmapInfo.bmiHeader.biBitCount = 32;
 			bitmapInfo.bmiHeader.biCompression = BI_RGB;
 
-			pBufs = std::make_unique<BYTE[]>(m_windowWidth * m_windowHeight * offsetByte);
-
-			HDC hDC = GetDC(NULL);
-			GetDIBits(hDC, hBmp, 0, m_windowHeight, pBufs.get(), &bitmapInfo, DIB_RGB_COLORS);
-
-			ReleaseDC(NULL, hDC);
-
-			DeleteDC(hdc_bmp);
-			DeleteObject(hBmp);
+			SaveToBmpFile(bitmapInfo.bmiHeader, pBuf.get(), savePath.c_str());
 		}
-		ReleaseDC(m_hwnd, hdc);
-
-		return pBufs.get();
 	}
 
 } // namespace

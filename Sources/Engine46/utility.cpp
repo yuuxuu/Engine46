@@ -9,9 +9,9 @@
 
 namespace Engine46 {
 	// BMPファイルの保存
-	void SaveToBmpFile(BITMAPINFOHEADER m_bmpInfo, LPCVOID pStr, std::string fileName) {
+	void SaveToBmpFile(BITMAPINFOHEADER m_bmpInfo, LPCVOID pStr, const char* fileName) {
 
-		HANDLE handle = CreateFile(fileName.c_str(), GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+		HANDLE handle = CreateFile(fileName, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 		if (handle != INVALID_HANDLE_VALUE) {
 
 			BITMAPFILEHEADER bmpHead;
