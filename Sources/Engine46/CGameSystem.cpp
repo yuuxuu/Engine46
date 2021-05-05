@@ -5,6 +5,8 @@
  * @date 2018/12/19
  */
 #include "CGameSystem.h"
+#include "../Renderer/CDX11Renderer.h"
+#include "../Shader/CShaderManager.h"
 
 namespace Engine46 {
 
@@ -42,9 +44,18 @@ namespace Engine46 {
 		RECT rect = m_mainWindow->GetWindowSize();
 		HWND hwnd = m_mainWindow->GetHwnd();
 
-		m_pRenderer = std::make_unique<CDX11Renderer>();
-		if (!m_pRenderer->Initialize(hwnd, rect.w, rect.h)) return false;
+		//m_pRenderer = std::make_unique<CDX11Renderer>();
+		//if (!m_pRenderer->Initialize(hwnd, rect.w, rect.h)) return false;
 
+		CShaderManager manager;
+		manager.Initialize();
+
+		// イベントハンドル生成
+		m_hGame = CreateEvent(NULL, false, false, NULL);
+		if (!m_hGame) {
+			MessageBox(NULL, "CGamesSystem::CreateEventエラー", "MessageBox", MB_OK);
+			return false;
+		}
 		// ゲームメインスレッド生成
 		m_gameSystemThread = std::thread(&CGameSystem::Loop, this);
 		if (!m_gameSystemThread.joinable()) {
@@ -71,13 +82,6 @@ namespace Engine46 {
 
 	// ループ
 	void CGameSystem::Loop() {
-		// イベントハンドル生成
-		m_hGame = CreateEvent(NULL, false, false, NULL);
-		if (!m_hGame) {
-			MessageBox(NULL, "CGamesSYSTEM::CreateEventエラー", "MessageBox", MB_OK);
-			return;
-		}
-
 		DWORD sts;
 		while (1) {
 			// 1000ms(1秒)待つ
@@ -99,7 +103,7 @@ namespace Engine46 {
 	}
 	// 描画
 	void CGameSystem::Draw() {
-		m_pRenderer->Render();
+		//m_pRenderer->Render();
 	}
 
 	// FPS計測

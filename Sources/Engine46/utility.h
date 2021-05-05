@@ -34,7 +34,8 @@ namespace Engine46 {
 
 	void SaveToBmpFile(BITMAPINFOHEADER m_bmpInfo, LPCVOID pStr, const char* fileName);
 
-	std::wstring StringConvertToWString(std::string str);
+	void CharConvertToWchar(std::unique_ptr<wchar_t[]>& pDest, const char* pSrc);
+
 } // namespace
 
 #endif

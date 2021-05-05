@@ -5,7 +5,7 @@
  * @date 2021/05/02
  */
 
-#include "DataRecord.h"
+#include "CDataRecord.h"
 
 namespace Engine46 {
 
@@ -114,6 +114,29 @@ namespace Engine46 {
 
 			m_vecID.emplace_back(id);
 		}
+	}
+
+	// コンストラクタ
+	CBufDataRecord::CBufDataRecord(std::unique_ptr<char[]>& pBuf, int& bufSize) :
+		CDataRecordBase(DATA_TYPE::TYPE_BUF, 0, 0),
+		m_pBuf(pBuf),
+		m_bufSize(bufSize)
+	{}
+
+	// デストラクタ
+	CBufDataRecord::~CBufDataRecord()
+	{}
+
+	// データの書き込み
+	void CBufDataRecord::WriteData(std::ofstream& ofs, char* p) {
+		ofs.write(m_pBuf.get(), m_bufSize);
+	}
+
+	// データの読み込み
+	void CBufDataRecord::ReadData(std::ifstream& ifs, char* p) {
+		m_pBuf.reset(new char[m_bufSize]);
+		
+		ifs.read(m_pBuf.get(), m_bufSize);
 	}
 
 } // namespace

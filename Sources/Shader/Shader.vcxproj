@@ -18,21 +18,11 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="CDX11Renderer.h" />
-    <ClInclude Include="CForwardRendering.h" />
-    <ClInclude Include="IRenderer.h" />
-    <ClInclude Include="IRendering.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="CDX11Renderer.cpp" />
-    <ClCompile Include="CForwardRendering.cpp" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{53b01961-9fa5-4bc6-bee7-2cfac56c99c5}</ProjectGuid>
-    <RootNamespace>Renderer</RootNamespace>
+    <ProjectGuid>{f20a9b78-a001-4235-87aa-44ed9b8261c0}</ProjectGuid>
+    <RootNamespace>Shader</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -102,11 +92,11 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <ForcedIncludeFiles>..\stdafx.h</ForcedIncludeFiles>
-      <PrecompiledHeaderOutputFile>$(IntDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
+      <ForcedIncludeFiles>../stdafx.h</ForcedIncludeFiles>
       <AdditionalIncludeDirectories>..\..\Inc;</AdditionalIncludeDirectories>
+      <PrecompiledHeaderOutputFile>$(IntDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
       <PrecompiledHeaderFile>..\stdafx.h</PrecompiledHeaderFile>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -123,11 +113,11 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <ForcedIncludeFiles>..\stdafx.h</ForcedIncludeFiles>
-      <PrecompiledHeaderOutputFile>$(IntDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
+      <ForcedIncludeFiles>../stdafx.h</ForcedIncludeFiles>
       <AdditionalIncludeDirectories>..\..\Inc;</AdditionalIncludeDirectories>
+      <PrecompiledHeaderOutputFile>$(IntDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
       <PrecompiledHeaderFile>..\stdafx.h</PrecompiledHeaderFile>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -144,11 +134,11 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <ForcedIncludeFiles>..\stdafx.h</ForcedIncludeFiles>
-      <PrecompiledHeaderOutputFile>$(IntDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
+      <ForcedIncludeFiles>../stdafx.h</ForcedIncludeFiles>
       <AdditionalIncludeDirectories>..\..\Inc;</AdditionalIncludeDirectories>
+      <PrecompiledHeaderOutputFile>$(IntDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
       <PrecompiledHeaderFile>..\stdafx.h</PrecompiledHeaderFile>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -165,11 +155,11 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <ForcedIncludeFiles>..\stdafx.h</ForcedIncludeFiles>
-      <PrecompiledHeaderOutputFile>$(IntDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
+      <ForcedIncludeFiles>../stdafx.h</ForcedIncludeFiles>
       <AdditionalIncludeDirectories>..\..\Inc;</AdditionalIncludeDirectories>
+      <PrecompiledHeaderOutputFile>$(IntDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
       <PrecompiledHeaderFile>..\stdafx.h</PrecompiledHeaderFile>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -180,6 +170,16 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="CShader.cpp" />
+    <ClCompile Include="CShaderManager.cpp" />
+    <ClCompile Include="CShaderPackage.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CShader.h" />
+    <ClInclude Include="CShaderManager.h" />
+    <ClInclude Include="CShaderPackage.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

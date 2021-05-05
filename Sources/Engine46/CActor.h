@@ -12,7 +12,7 @@
 
 #include "math.h"
 #include "IObject.h"
-#include "DataRecord.h"
+#include "CDataRecord.h"
 
 namespace Engine46 {
 	
