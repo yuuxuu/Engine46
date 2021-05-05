@@ -23,7 +23,10 @@
 #pragma comment(lib, "winmm.lib")
 
 #include <d3d11.h>
+#include <D3D12.h>
 
 #pragma comment(lib, "d3d11.lib")
 
-#pragma comment(lib, "renderer.lib")
+#include <d3dcompiler.h>
+
+#pragma comment(lib, "d3dcompiler.lib")

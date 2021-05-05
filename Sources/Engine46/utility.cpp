@@ -33,15 +33,12 @@ namespace Engine46 {
 	}
 
 	// WString型に変換
-	std::wstring StringConvertToWString(std::string str) {
-		std::wstring result;
-		size_t size = 0;
-		std::unique_ptr<wchar_t[]> wchar = std::make_unique<wchar_t[]>(str.size() + 1);
+	wchar_t* CharConvertToWchar(const char* pSrc) {
+		size_t size = strlen(pSrc);
+		std::unique_ptr<wchar_t[]> wchar = std::make_unique<wchar_t[]>(size + 1);
 
-		mbstowcs_s(&size, wchar.get(), str.size() + 1, str.c_str(), _TRUNCATE);
+		mbstowcs_s(&size, wchar.get(), size + 1, pSrc, _TRUNCATE);
 
-		result = wchar.get();
-
-		return result;
+		return wchar.get();
 	}
 } // namespace

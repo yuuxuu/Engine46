@@ -6,9 +6,12 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Engine46", "Sources\Engine46\Engine46.vcxproj", "{651C44AC-C73C-4DE1-B557-F02BF121CD47}"
 	ProjectSection(ProjectDependencies) = postProject
 		{53B01961-9FA5-4BC6-BEE7-2CFAC56C99C5} = {53B01961-9FA5-4BC6-BEE7-2CFAC56C99C5}
+		{F20A9B78-A001-4235-87AA-44ED9B8261C0} = {F20A9B78-A001-4235-87AA-44ED9B8261C0}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Renderer", "Sources\Renderer\Renderer.vcxproj", "{53B01961-9FA5-4BC6-BEE7-2CFAC56C99C5}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Shader", "Sources\Shader\Shader.vcxproj", "{F20A9B78-A001-4235-87AA-44ED9B8261C0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -34,6 +37,14 @@ Global
 		{53B01961-9FA5-4BC6-BEE7-2CFAC56C99C5}.Release|x64.Build.0 = Release|x64
 		{53B01961-9FA5-4BC6-BEE7-2CFAC56C99C5}.Release|x86.ActiveCfg = Release|Win32
 		{53B01961-9FA5-4BC6-BEE7-2CFAC56C99C5}.Release|x86.Build.0 = Release|Win32
+		{F20A9B78-A001-4235-87AA-44ED9B8261C0}.Debug|x64.ActiveCfg = Debug|x64
+		{F20A9B78-A001-4235-87AA-44ED9B8261C0}.Debug|x64.Build.0 = Debug|x64
+		{F20A9B78-A001-4235-87AA-44ED9B8261C0}.Debug|x86.ActiveCfg = Debug|Win32
+		{F20A9B78-A001-4235-87AA-44ED9B8261C0}.Debug|x86.Build.0 = Debug|Win32
+		{F20A9B78-A001-4235-87AA-44ED9B8261C0}.Release|x64.ActiveCfg = Release|x64
+		{F20A9B78-A001-4235-87AA-44ED9B8261C0}.Release|x64.Build.0 = Release|x64
+		{F20A9B78-A001-4235-87AA-44ED9B8261C0}.Release|x86.ActiveCfg = Release|Win32
+		{F20A9B78-A001-4235-87AA-44ED9B8261C0}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

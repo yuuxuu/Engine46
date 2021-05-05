@@ -19,8 +19,8 @@ namespace Engine46 {
 		CFileSystem();
 		~CFileSystem();
 
-		bool WriteFile(std::string writeFileName, std::ios::openmode mode, LPVOID pBuffers, size_t size);
-		bool ReadFile(std::string readFileName, std::ios::openmode mode, LPVOID& pBuffers, size_t size);
+		bool WriteFile(const char* writeFileName, std::ios::openmode mode, void* pBuffers, size_t size);
+		bool ReadFile(const char* readFileName, std::ios::openmode mode, void*& pBuffers, size_t size);
 	};
 
 } // namespace

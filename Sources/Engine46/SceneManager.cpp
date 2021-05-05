@@ -24,7 +24,7 @@ namespace Engine46 {
 
 		CSceneBase* pScene = scene.get();
 
-		AddSceneToSceneList(scene);
+		this->AddSceneToSceneList(scene);
 
 		return pScene;
 	}

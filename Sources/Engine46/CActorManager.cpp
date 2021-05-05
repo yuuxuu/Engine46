@@ -26,7 +26,7 @@ namespace Engine46 {
 
 		CActorBase* pActor = actor.get();
 
-		AddActorToActorList(actor);
+		this->AddActorToActorList(actor);
 
 		return pActor;
 	}

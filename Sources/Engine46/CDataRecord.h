@@ -1,5 +1,5 @@
 ﻿/**
- * @file DataRecord.h
+ * @file CDataRecord.h
  * @brief
  * @author 木村優
  * @date 2021/05/01
@@ -39,7 +39,7 @@ namespace Engine46 {
 
 	class CStrDataRecord : public CDataRecordBase {
 	private:
-		std::unique_ptr<char[]>& m_pStr;
+		std::unique_ptr<char[]>& m_pBuf;
 
 	public:
 		CStrDataRecord(int offset, std::unique_ptr<char[]>& pStr);
