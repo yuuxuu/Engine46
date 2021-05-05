@@ -10,11 +10,13 @@
 #define _CGAME_SYSTEM_MANAGER_H_
 
 #include "CWinow.h"
-#include "../Renderer/CDX11Renderer.h"
 
 #pragma comment(lib, "renderer.lib")
+#pragma comment(lib, "shader.lib")
 
 namespace Engine46 {
+
+	class CDX11Renderer;
 
 	class CGameSystem {
 	private:

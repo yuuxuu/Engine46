@@ -12,12 +12,22 @@ namespace Engine46 {
 
 	// コンストラクタ
 	CShader::CShader() :
+		m_shaderName(),
 		m_bufSize(0),
 		m_shaderType(SHADER_TYPE::TYPE_NONE)
-	{}
+	{
+		std::string str = "shader";
+		int size = (int)str.size() + 1;
+		m_shaderName.reset(new char[size]);
+		str.resize(size);
+		str.copy(m_shaderName.get(), size);
+
+		this->Initialize();
+	}
 
 	// コンストラクタ
-	CShader::CShader(const char* name, SHADER_TYPE type) :
+	CShader::CShader(const char* name, ComPtr<ID3DBlob>& pBlob, SHADER_TYPE type) :
+		m_bufSize(0),
 		m_shaderType(type)
 	{
 		std::string str = name;
@@ -25,6 +35,10 @@ namespace Engine46 {
 		m_shaderName.reset(new char[size]);
 		str.resize(size);
 		str.copy(m_shaderName.get(), size);
+
+		this->SetData(pBlob);
+
+		this->Initialize();
 	}
 
 	// デストラクタ
@@ -39,7 +53,7 @@ namespace Engine46 {
 		vecDataRecord.emplace_back(std::make_unique<CDataRecordBase>(offsetof(CShader, m_shaderType), sizeof(m_shaderType)));
 		vecDataRecord.emplace_back(std::make_unique<CStrDataRecord>(offsetof(CShader, m_shaderName), m_shaderName));
 		vecDataRecord.emplace_back(std::make_unique<CDataRecordBase>(offsetof(CShader, m_bufSize), sizeof(m_bufSize)));
-		vecDataRecord.emplace_back(std::make_unique<CStrDataRecord>(offsetof(CShader, m_pBuf), m_pBuf));
+		vecDataRecord.emplace_back(std::make_unique<CBufDataRecord>(m_pBuf, m_bufSize));
 	}
 
 	// シェーダーの保存
@@ -48,11 +62,6 @@ namespace Engine46 {
 			record->WriteData(ofs, (char*)this);
 		}
 
-		//CFileSystem fs;
-		//std::ios_base::openmode mode = std::ios_base::out | std::ios_base::binary;
-		//
-		//if (!fs.WriteFile(m_shaderName.get(), mode, m_pBuf.get(), m_bufSize)) return false;
-		
 		return true;
 	}
 
@@ -62,12 +71,18 @@ namespace Engine46 {
 			record->ReadData(ifs, (char*)this);
 		}
 
-		//CFileSystem fs;
-		//std::ios_base::openmode mode = std::ios_base::in | std::ios_base::binary;
-		//
-		//if (!fs.ReadFile(m_shaderName.get(), mode, (void*&)m_pBuf, m_bufSize)) return false;
-
 		return true;
+	}
+
+	// データを設定
+	void CShader::SetData(ComPtr<ID3DBlob>& pBlob) {
+		m_bufSize = pBlob->GetBufferSize();
+		m_pBuf.reset(new char[m_bufSize]);
+
+		char* p = (char*)pBlob->GetBufferPointer();
+		std::memcpy(m_pBuf.get(), p, m_bufSize);
+
+		m_pBlob = pBlob;
 	}
 
 } // namespace

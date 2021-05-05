@@ -10,7 +10,7 @@
 
 namespace Engine46 {
 
-	constexpr const char* g_ShaderPackageListFileName = "ShaderSources/Binary/ShaderPackageList.bin";
+	constexpr const char* g_ShaderPackageListFileName = "ShaderPackageList.bin";
 
 	// コンストラクタ
 	CShaderManager::CShaderManager()
@@ -23,20 +23,45 @@ namespace Engine46 {
 	// 初期化
 	bool CShaderManager::Initialize() {
 
-
+		this->LoadShaderPackageList();
+		
+		const char* shaderName = "D:/Engine46/Sources/Shader/ShaderSource/HLSL/Model.hlsl";
+		CShaderPackage* pSp = CreateShaderPackage(shaderName);
+		
+		if (!pSp->GetIsCompile()) {
+			if (!pSp->CompilePackage(this)) {
+				std::cout << shaderName << "読み込み：失敗" << std::endl;
+			}
+		}
+		
+		this->SaveShaderPackageList();
 
 		return true;
 	}
 
 	// シェーダーパッケージを作成
-	CShaderPackage* CShaderManager::CreateShaderPackage() {
-		std::unique_ptr<CShaderPackage> sp = std::make_unique<CShaderPackage>();
+	CShaderPackage* CShaderManager::CreateShaderPackage(const char* packageName) {
+		auto itr = m_mapShaderPackage.find(packageName);
 
-		CShaderPackage* pSp = sp.get();
+		if (itr == m_mapShaderPackage.end()) {
+			std::unique_ptr<CShaderPackage> sp = std::make_unique<CShaderPackage>(packageName);
 
-		this->AddShaderPackageToMap(sp->GetPackageName(), sp);
+			CShaderPackage* pSp = sp.get();
 
-		return pSp;
+			this->AddShaderPackageToMap(sp->GetPackageName(), sp);
+
+			return pSp;
+		}
+
+		return itr->second.get();
+	}
+
+	void CShaderManager::AddShaderPackageToMap(const char* name, std::unique_ptr<CShaderPackage>& pSp) {
+		auto itr = m_mapShaderPackage.find(name);
+
+		if (itr == m_mapShaderPackage.end()) {
+			m_mapShaderPackage[name] = move(pSp);
+		}
 	}
 
 	// シェーダーの保存
@@ -48,6 +73,9 @@ namespace Engine46 {
 		ofs.open(g_ShaderPackageListFileName, mode);
 
 		if (!ofs.is_open()) return false;
+
+		int packageSize = m_mapShaderPackage.size();
+		ofs.write((char*)&packageSize, sizeof(int));
 
 		for (const auto& pSp : m_mapShaderPackage) {
 			if (!pSp.second->SavePackage(ofs)) continue;
@@ -66,13 +94,15 @@ namespace Engine46 {
 
 		if (!ifs.is_open()) return false;
 
-		while (true) {
+		int packageSize = m_mapShaderPackage.size();
+		ifs.read((char*)&packageSize, sizeof(int));
 
-			if (ifs.eof()) break;
+		for (int i = 0; i < packageSize; ++i) {
+			std::unique_ptr<CShaderPackage> sp = std::make_unique<CShaderPackage>();
 
-			CShaderPackage* pSp = CreateShaderPackage();
-
-			pSp->LoadPackage(ifs);
+			if (sp->LoadPackage(ifs)) {
+				this->AddShaderPackageToMap(sp->GetPackageName(), sp);
+			}
 		}
 
 		return true;
@@ -86,11 +116,17 @@ namespace Engine46 {
 		const char* shaderModel) {
 
 		ComPtr<ID3DBlob> pErrBlob = nullptr;
+
 		DWORD shaderFlags = 0;
-		wchar_t* name = CharConvertToWchar(shaderName);
+#ifdef _DEBUG
+		shaderFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
+#endif
+
+		std::unique_ptr<wchar_t[]> name;
+		CharConvertToWchar(name, shaderName);
 
 		HRESULT hr = D3DCompileFromFile(
-			name,
+			name.get(),
 			nullptr,
 			D3D_COMPILE_STANDARD_FILE_INCLUDE,
 			entryPoint,
@@ -101,7 +137,7 @@ namespace Engine46 {
 			&pErrBlob);
 
 		if (FAILED(hr)) {
-			std::cout << name << " " << entryPoint << "コンパイル:失敗" << std::endl;
+			std::cout << name.get() << " " << entryPoint << "コンパイル:失敗" << std::endl;
 			return false;
 		}
 

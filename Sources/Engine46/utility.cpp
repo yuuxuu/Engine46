@@ -33,12 +33,10 @@ namespace Engine46 {
 	}
 
 	// WString型に変換
-	wchar_t* CharConvertToWchar(const char* pSrc) {
-		size_t size = strlen(pSrc);
-		std::unique_ptr<wchar_t[]> wchar = std::make_unique<wchar_t[]>(size + 1);
+	void CharConvertToWchar(std::unique_ptr<wchar_t[]>& pDest, const char* pSrc) {
+		size_t size = strlen(pSrc) + 1;
+		pDest = std::make_unique<wchar_t[]>(size);
 
-		mbstowcs_s(&size, wchar.get(), size + 1, pSrc, _TRUNCATE);
-
-		return wchar.get();
+		mbstowcs_s(&size, pDest.get(), size, pSrc, _TRUNCATE);
 	}
 } // namespace

@@ -40,7 +40,7 @@ namespace Engine46 {
 	// コンストラクタ
 	CStrDataRecord::CStrDataRecord(int offset, std::unique_ptr<char[]>& pStr) :
 		CDataRecordBase(DATA_TYPE::TYPE_STR, offset, (int)strlen(pStr.get()) + 1),
-		m_pBuf(pStr)
+		m_pStr(pStr)
 	{}
 
 	// デストラクタ
@@ -51,16 +51,16 @@ namespace Engine46 {
 	void CStrDataRecord::WriteData(std::ofstream& ofs, char* p) {
 		ofs.write((char*)&m_dataSize, sizeof(int));
 
-		ofs.write(m_pBuf.get(), m_dataSize);
+		ofs.write(m_pStr.get(), m_dataSize);
 	}
 
 	// データの読み込み
 	void CStrDataRecord::ReadData(std::ifstream& ifs, char* p) {
 		ifs.read((char*)&m_dataSize, sizeof(int));
 
-		m_pBuf.reset(new char[m_dataSize]);
+		m_pStr.reset(new char[m_dataSize]);
 
-		ifs.read(m_pBuf.get(), m_dataSize);
+		ifs.read(m_pStr.get(), m_dataSize);
 	}
 
 	// コンストラクタ
@@ -114,6 +114,29 @@ namespace Engine46 {
 
 			m_vecID.emplace_back(id);
 		}
+	}
+
+	// コンストラクタ
+	CBufDataRecord::CBufDataRecord(std::unique_ptr<char[]>& pBuf, int& bufSize) :
+		CDataRecordBase(DATA_TYPE::TYPE_BUF, 0, 0),
+		m_pBuf(pBuf),
+		m_bufSize(bufSize)
+	{}
+
+	// デストラクタ
+	CBufDataRecord::~CBufDataRecord()
+	{}
+
+	// データの書き込み
+	void CBufDataRecord::WriteData(std::ofstream& ofs, char* p) {
+		ofs.write(m_pBuf.get(), m_bufSize);
+	}
+
+	// データの読み込み
+	void CBufDataRecord::ReadData(std::ifstream& ifs, char* p) {
+		m_pBuf.reset(new char[m_bufSize]);
+		
+		ifs.read(m_pBuf.get(), m_bufSize);
 	}
 
 } // namespace

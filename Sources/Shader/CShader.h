@@ -10,6 +10,8 @@
 #ifndef _CSHADER_H_
 #define _CSHADER_H_
 
+using Microsoft::WRL::ComPtr;
+
 namespace Engine46 {
 
 	class CDataRecordBase;
@@ -29,22 +31,26 @@ namespace Engine46 {
 	protected:
 		std::vector<std::unique_ptr<CDataRecordBase>>	vecDataRecord;
 
+		ComPtr<ID3DBlob>								m_pBlob;
+
 		std::unique_ptr<char[]>							m_shaderName;
 
 		std::unique_ptr<char[]>							m_pBuf;
-		size_t											m_bufSize;
+		int												m_bufSize;
 
 		SHADER_TYPE										m_shaderType;
 
 	public:
 		CShader();
-		CShader(const char* name, SHADER_TYPE type);
+		CShader(const char* name, ComPtr<ID3DBlob>& pBlob, SHADER_TYPE type);
 		~CShader();
 
 		void Initialize();
 
 		bool Save(std::ofstream& ofs);
 		bool Load(std::ifstream& ifs);
+
+		void SetData(ComPtr<ID3DBlob>& pBlob);
 
 		SHADER_TYPE GetShaderType() const { return m_shaderType; }
 	};

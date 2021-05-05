@@ -23,14 +23,14 @@ namespace Engine46 {
 
 		bool Initialize();
 
-		CShaderPackage* CreateShaderPackage();
+		CShaderPackage* CreateShaderPackage(const char* packageName);
+		void AddShaderPackageToMap(const char* name, std::unique_ptr<CShaderPackage>& pSP);
 
 		bool SaveShaderPackageList();
 		bool LoadShaderPackageList();
 
 		bool CompileShader(ComPtr<ID3DBlob>& pBlob, const char* fileName, const char* entrPoint, const char* shaderModel);
 
-		void AddShaderPackageToMap(const char* name, std::unique_ptr<CShaderPackage>& pSP) { m_mapShaderPackage[name] = move(pSP); }
 	};
 
 } // namespace

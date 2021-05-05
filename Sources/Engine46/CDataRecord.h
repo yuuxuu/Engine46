@@ -17,6 +17,7 @@ namespace Engine46 {
 		TYPE_STR,
 		TYPE_PTR,
 		TYPE_LIST,
+		TYPE_BUF,
 		TYPE_END,
 	};
 
@@ -39,7 +40,7 @@ namespace Engine46 {
 
 	class CStrDataRecord : public CDataRecordBase {
 	private:
-		std::unique_ptr<char[]>& m_pBuf;
+		std::unique_ptr<char[]>& m_pStr;
 
 	public:
 		CStrDataRecord(int offset, std::unique_ptr<char[]>& pStr);
@@ -68,6 +69,19 @@ namespace Engine46 {
 	public:
 		CListDataRecord(std::vector<int>& vecID);
 		~CListDataRecord();
+
+		void WriteData(std::ofstream& ofs, char* p);
+		void ReadData(std::ifstream& ifs, char* p);
+	};
+
+	class CBufDataRecord : public CDataRecordBase {
+	private:
+		std::unique_ptr<char[]>&	m_pBuf;
+		int&						m_bufSize;
+
+	public:
+		CBufDataRecord(std::unique_ptr<char[]>& pBuf, int& bufSize);
+		~CBufDataRecord();
 
 		void WriteData(std::ofstream& ofs, char* p);
 		void ReadData(std::ifstream& ifs, char* p);
