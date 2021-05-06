@@ -25,6 +25,23 @@ namespace Engine46 {
 		VecClear(m_vecNormal);
 		VecClear(m_vecBinormal);
 		VecClear(m_vecTangent);
+
+		VecClear(m_vecIndexes);
+	}
+
+	// 頂点配列の初期化
+	void CMeshBase::ReserveVertex(int reserveSize) {
+		m_vecVertex.reserve(reserveSize);
+		m_vecColor.reserve(reserveSize);
+		m_vecUV.reserve(reserveSize);
+		m_vecNormal.reserve(reserveSize);
+		m_vecBinormal.reserve(reserveSize);
+		m_vecTangent.reserve(reserveSize);
+	}
+
+	// インデックス配列の初期化
+	void CMeshBase::ReserveIndex(int reserveSize) {
+		m_vecIndexes.reserve(reserveSize);
 	}
 
 	// コンストラクタ
@@ -68,7 +85,7 @@ namespace Engine46 {
 		bufDesc.StructureByteStride = 0;
 
 		D3D11_SUBRESOURCE_DATA subData = {};
-		subData.pSysMem = 0;
+		subData.pSysMem = this;
 
 		pRenderer->CreateBuffer(m_pVertexBuffer, bufDesc, &subData);
 

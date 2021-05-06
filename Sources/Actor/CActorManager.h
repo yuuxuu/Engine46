@@ -14,15 +14,23 @@
 
 namespace Engine46 {
 	
+	class CDX11Renderer;
+
 	class CActorManager {
 	private:
 		std::vector<std::unique_ptr<CActorBase>>	m_pActorList;
 
+		CDX11Renderer*								pDX11Renderer;
+
 	public:
-		CActorManager();
+		explicit CActorManager(CDX11Renderer* pRenderer);
 		~CActorManager();
 
 		CActorBase* CreateActor(int id);
+
+		void CreateMeshForActor(CActorBase* pActor);
+
+		void DrawActor();
 
 		bool SaveActorList();
 		bool LoadActorList();

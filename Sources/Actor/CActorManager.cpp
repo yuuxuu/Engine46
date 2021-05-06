@@ -6,14 +6,15 @@
  */
 
 #include "CActorManager.h"
-#include "CFileSystem.h"
+#include "CSprite.h"
 
 namespace Engine46 {
 
 	constexpr const char* g_ActorListFileName = "ActorListData.bin";
 
 	// コンストラクタ
-	CActorManager::CActorManager()
+	CActorManager::CActorManager(CDX11Renderer* pRenderer) :
+		pDX11Renderer(pRenderer)
 	{}
 
 	// デストラクタ
@@ -22,13 +23,30 @@ namespace Engine46 {
 
 	// オブジェクト作成
 	CActorBase* CActorManager::CreateActor(int id) {
-		std::unique_ptr<CActorBase> actor = std::make_unique<CActorBase>();
+		std::unique_ptr<CActorBase> actor;
+		
+		actor = std::make_unique<CSprite>();
 
 		CActorBase* pActor = actor.get();
 
 		this->AddActorToActorList(actor);
 
 		return pActor;
+	}
+
+	// オブジェクトのメッシュを作成
+	void CActorManager::CreateMeshForActor(CActorBase* pActor) {
+		if (pActor) {
+			pActor->CreateMesh(pDX11Renderer);
+
+			pActor->Initialize();
+		}
+	}
+
+	void CActorManager::DrawActor() {
+		for (const auto& actor : m_pActorList) {
+			actor->Draw();
+		}
 	}
 
 	// オブジェクトリストを保存
@@ -65,7 +83,7 @@ namespace Engine46 {
 
 			if (ifs.eof()) break;
 
-			CActorBase* pActor = CreateActor(id);
+			CActorBase* pActor = this->CreateActor(id);
 
 			pActor->Load(ifs);
 		}

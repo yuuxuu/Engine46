@@ -10,8 +10,8 @@
 
 #pragma once
 
-#include "IObject.h"
-#include "CDataRecord.h"
+#include "../Engine46/IObject.h"
+#include "../Engine46/CDataRecord.h"
 
 namespace Engine46 {
 

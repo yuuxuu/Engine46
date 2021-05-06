@@ -6,8 +6,6 @@
  */
 
 #include "CActor.h"
-#include "CDataRecord.h"
-#include "CMesh.h"
 
 namespace Engine46 {
 
@@ -40,7 +38,7 @@ namespace Engine46 {
 		pParentActor(nullptr),
 		m_parentActorID(-1)
 	{
-		std::string str = name;
+		std::string str = name + std::string('_' + std::to_string(m_ActorID));
 		int size = (int)str.size() + 1;
 		m_ActorName.reset(new char[size]);
 		str.resize(size);
@@ -75,6 +73,11 @@ namespace Engine46 {
 
 	// 描画
 	void CActorBase::Draw() {
+
+		if (m_pMesh) {
+			m_pMesh->Draw();
+		}
+
 		for (auto& chiled : pChiledActorList) {
 			chiled->Draw();
 		}
@@ -98,6 +101,13 @@ namespace Engine46 {
 		}
 
 		return true;
+	}
+
+	// メッシュ作成
+	void CActorBase::CreateMesh(CDX11Renderer* pRenderer) {
+		if (!m_pMesh) {
+			m_pMesh = std::make_unique<CDX11Mesh>(pRenderer);
+		}
 	}
 
 	// 親アクターを接続

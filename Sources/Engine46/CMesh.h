@@ -36,12 +36,17 @@ namespace Engine46 {
 		virtual void Create() {};
 		virtual void Draw() {};
 
+		void ReserveVertex(int reserveSize);
+		void ReserveIndex(int reserveSize);
+
 		void AddVertex(const VECTOR3& vertex) { m_vecVertex.emplace_back(vertex); }
 		void AddColor(const VECTOR4& color) { m_vecColor.emplace_back(color); }
 		void AddUV(const VECTOR2& uv) { m_vecUV.emplace_back(uv); }
 		void AddNormal(const VECTOR3& normal) { m_vecNormal.emplace_back(normal); }
 		void AddBinormal(const VECTOR3& binormal) { m_vecBinormal.emplace_back(binormal); }
 		void AddTangent(const VECTOR3& tangent) { m_vecTangent.emplace_back(tangent); }
+
+		void AddIndex(const DWORD index) { m_vecIndexes.emplace_back(index); }
 	};
 
 	class CDX11Mesh : public CMeshBase {

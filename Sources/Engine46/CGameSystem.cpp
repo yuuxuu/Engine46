@@ -5,8 +5,11 @@
  * @date 2018/12/19
  */
 #include "CGameSystem.h"
+#include "CWinow.h"
+
 #include "../Renderer/CDX11Renderer.h"
 #include "../Shader/CShaderManager.h"
+#include "../Actor/CActorManager.h"
 
 namespace Engine46 {
 
@@ -44,11 +47,15 @@ namespace Engine46 {
 		HWND hwnd = m_mainWindow->GetHwnd();
 		RECT rect = m_mainWindow->GetWindowSize();
 
-		//m_pRenderer = std::make_unique<CDX11Renderer>();
-		//if (!m_pRenderer->Initialize(hwnd, rect.w, rect.h)) return false;
-		//
+		m_pRenderer = std::make_unique<CDX11Renderer>();
+		if (!m_pRenderer->Initialize(hwnd, rect.w, rect.h)) return false;
+
 		//m_pSManager = std::make_unique<CShaderManager>();
 		//if (!m_pSManager->Initialize()) return false;
+
+		m_pAManager = std::make_unique<CActorManager>(m_pRenderer.get());
+		CActorBase* actor = m_pAManager->CreateActor(1);
+		m_pAManager->CreateMeshForActor(actor);
 
 		// イベントハンドル生成
 		m_hGame = CreateEvent(NULL, false, false, NULL);
@@ -104,6 +111,8 @@ namespace Engine46 {
 	// 描画
 	void CGameSystem::Draw() {
 		//m_pRenderer->Render();
+
+		m_pAManager->DrawActor();
 	}
 
 	// FPS計測

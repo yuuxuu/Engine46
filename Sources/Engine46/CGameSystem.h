@@ -9,16 +9,17 @@
 #ifndef _CGAME_SYSTEM_MANAGER_H_
 #define _CGAME_SYSTEM_MANAGER_H_
 
-#include "CWinow.h"
-
-#pragma comment(lib, "renderer.lib")
-#pragma comment(lib, "shader.lib")
+#pragma comment(lib, "Renderer.lib")
+#pragma comment(lib, "Shader.lib")
+#pragma comment(lib, "Actor.lib")
 
 namespace Engine46 {
 
 	// 前方宣言
+	class CWindow;
 	class CDX11Renderer;
 	class CShaderManager;
+	class CActorManager;
 
 	class CGameSystem {
 	private:
@@ -28,7 +29,9 @@ namespace Engine46 {
 		std::unique_ptr<CWindow>		m_mainWindow;
 
 		std::unique_ptr<CDX11Renderer>	m_pRenderer;
+
 		std::unique_ptr<CShaderManager>	m_pSManager;
+		std::unique_ptr<CActorManager>	m_pAManager;
 
 		int								m_fps;
 		int								m_wfps;
