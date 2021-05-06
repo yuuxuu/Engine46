@@ -6,7 +6,8 @@
  */
 
 #include "CActor.h"
-#include "utility.h"
+#include "CDataRecord.h"
+#include "CMesh.h"
 
 namespace Engine46 {
 
@@ -14,12 +15,12 @@ namespace Engine46 {
 
 	// コンストラクタ
 	CActorBase::CActorBase() :
-		pParentActor(nullptr),
-		m_parentActorID(-1),
 		m_ClassID(0),
 		m_ActorID(g_ActorCount++),
 		m_ActorName(),
-		m_Transform(Transform())
+		m_Transform(Transform()),
+		pParentActor(nullptr),
+		m_parentActorID(-1)
 	{
 		std::string str = "Object_" + std::to_string(m_ActorID);
 		int size = (int)str.size() + 1;
@@ -32,11 +33,12 @@ namespace Engine46 {
 
 	// コンストラクタ
 	CActorBase::CActorBase(const UINT id, const char* name, const Transform transform) :
-		pParentActor(nullptr),
 		m_ClassID(id),
 		m_ActorID(g_ActorCount++),
 		m_ActorName(),
-		m_Transform(transform)
+		m_Transform(transform),
+		pParentActor(nullptr),
+		m_parentActorID(-1)
 	{
 		std::string str = name;
 		int size = (int)str.size() + 1;

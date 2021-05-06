@@ -41,6 +41,7 @@
     <ClCompile Include="CGameSystem.cpp" />
     <ClCompile Include="CActor.cpp" />
     <ClCompile Include="CActorManager.cpp" />
+    <ClCompile Include="CMesh.cpp" />
     <ClCompile Include="CScene.cpp" />
     <ClCompile Include="CWinow.cpp" />
     <ClCompile Include="CDataRecord.cpp" />
@@ -55,6 +56,7 @@
     <ClInclude Include="CGameSystem.h" />
     <ClInclude Include="CActor.h" />
     <ClInclude Include="CActorManager.h" />
+    <ClInclude Include="CMesh.h" />
     <ClInclude Include="CScene.h" />
     <ClInclude Include="CWinow.h" />
     <ClInclude Include="CDataRecord.h" />

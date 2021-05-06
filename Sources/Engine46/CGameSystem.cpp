@@ -41,14 +41,14 @@ namespace Engine46 {
 			return false;
 		}
 
-		RECT rect = m_mainWindow->GetWindowSize();
 		HWND hwnd = m_mainWindow->GetHwnd();
+		RECT rect = m_mainWindow->GetWindowSize();
 
 		//m_pRenderer = std::make_unique<CDX11Renderer>();
 		//if (!m_pRenderer->Initialize(hwnd, rect.w, rect.h)) return false;
-
-		CShaderManager manager;
-		manager.Initialize();
+		//
+		//m_pSManager = std::make_unique<CShaderManager>();
+		//if (!m_pSManager->Initialize()) return false;
 
 		// イベントハンドル生成
 		m_hGame = CreateEvent(NULL, false, false, NULL);

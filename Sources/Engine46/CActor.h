@@ -12,27 +12,32 @@
 
 #include "math.h"
 #include "IObject.h"
-#include "CDataRecord.h"
 
 namespace Engine46 {
 	
+	// 前方宣言
+	class CDataRecordBase;
+	class CMeshBase;
+
 	class CActorBase : public IObject {
 	protected:
 		std::vector<std::unique_ptr<CDataRecordBase>>	vecDataRecords;
 
 		UINT											m_ClassID;
 
-		CActorBase*										pParentActor;
-		int												m_parentActorID;
-
-		std::list<CActorBase*>							pChiledActorList;
-		std::vector<int>								m_chiledActorIDList;
-
 		int												m_ActorID;
 
 		std::unique_ptr<char[]>							m_ActorName;
 
 		Transform										m_Transform;
+		
+		std::unique_ptr<CMeshBase>						m_pMesh;
+
+		CActorBase*										pParentActor;
+		int												m_parentActorID;
+
+		std::list<CActorBase*>							pChiledActorList;
+		std::vector<int>								m_chiledActorIDList;
 
 	public:
 		CActorBase();

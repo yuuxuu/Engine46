@@ -16,7 +16,9 @@
 
 namespace Engine46 {
 
+	// 前方宣言
 	class CDX11Renderer;
+	class CShaderManager;
 
 	class CGameSystem {
 	private:
@@ -26,6 +28,7 @@ namespace Engine46 {
 		std::unique_ptr<CWindow>		m_mainWindow;
 
 		std::unique_ptr<CDX11Renderer>	m_pRenderer;
+		std::unique_ptr<CShaderManager>	m_pSManager;
 
 		int								m_fps;
 		int								m_wfps;

@@ -117,6 +117,37 @@ namespace Engine46 {
 		return true;
 	}
 
+	// バッファ作成
+	bool CDX11Renderer::CreateBuffer(
+		ComPtr<ID3D11Buffer>& pBuffer,
+		D3D11_BUFFER_DESC& bufDesc,
+		D3D11_SUBRESOURCE_DATA* pInitData) {
+
+		HRESULT hr = m_pDevice->CreateBuffer(&bufDesc, pInitData, &pBuffer);
+		if (FAILED(hr)) {
+			MessageBox(NULL, "Buffer作成：失敗", "MessageBox", MB_OK);
+			return false;
+		}
+
+		return true;
+	}
+
+	// バッファを設定
+	void CDX11Renderer::SetBuffer(ID3D11Buffer* const* pVertexBuf, ID3D11Buffer* pIndexBuf, UINT strides, UINT offset) {
+
+		m_pDeviceContext->IASetVertexBuffers(0, 1, pVertexBuf, &strides, &offset);
+
+		m_pDeviceContext->IASetIndexBuffer(pIndexBuf, DXGI_FORMAT_R32_UINT, 0);
+	}
+
+	// インデックス描画
+	void CDX11Renderer::DrawIndexed(D3D_PRIMITIVE_TOPOLOGY topology, UINT numIndexes) {
+
+		m_pDeviceContext->IASetPrimitiveTopology(topology);
+
+		m_pDeviceContext->DrawIndexed(numIndexes, 0, 0);
+	}
+
 	// テクスチャ2D作成
 	bool CDX11Renderer::CreateTexture2D(
 		ComPtr<ID3D11Texture2D>& pTex2D,

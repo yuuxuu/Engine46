@@ -94,7 +94,7 @@ namespace Engine46 {
 
 		if (!ifs.is_open()) return false;
 
-		int packageSize = m_mapShaderPackage.size();
+		int packageSize = 0;
 		ifs.read((char*)&packageSize, sizeof(int));
 
 		for (int i = 0; i < packageSize; ++i) {
