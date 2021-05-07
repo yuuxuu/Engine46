@@ -100,9 +100,11 @@ namespace Engine46 {
 	}
 
 	// 描画
-	bool CDX11Renderer::Render() {
+	bool CDX11Renderer::Render(CSceneBase* pScene) {
 
 		m_pDX11FRendering->Begine();
+
+		pScene->Draw();
 
 		m_pDX11FRendering->End();
 
@@ -228,6 +230,21 @@ namespace Engine46 {
 	// レンダーターゲットビューを複数設定
 	void CDX11Renderer::SetRenderTargetViews(std::vector<ComPtr<ID3D11RenderTargetView>>& vecRtv, ID3D11DepthStencilView* pDsv) {
 		m_pDeviceContext->OMSetRenderTargets(vecRtv.size(), &vecRtv[0], pDsv);
+	}
+
+	// ピクセルシェーダーにリソースビューを設定
+	void CDX11Renderer::SetPSShaderResources(UINT slot, UINT num, ID3D11ShaderResourceView* pSrv) {
+		m_pDeviceContext->PSSetShaderResources(slot, num, &pSrv);
+	}
+
+	// ピクセルシェーダーにコンスタントバッファを設定
+	void CDX11Renderer::SetPSConstantBuffers(UINT slot, UINT num, ID3D11Buffer* pBuf) {
+		m_pDeviceContext->PSSetConstantBuffers(slot, num, &pBuf);
+	}
+
+	// サブリソースの更新
+	void CDX11Renderer::UpdateSubResource(ID3D11Buffer* pBuf, void* pSrcData) {
+		m_pDeviceContext->UpdateSubresource(pBuf, 0, nullptr, pSrcData, 0, 0);
 	}
 
 	// インプットレイアウトを設定

@@ -25,37 +25,51 @@ namespace Engine46 {
 	CShaderPackage::~CShaderPackage()
 	{}
 
+	// 初期化
+	bool CShaderPackage::Initialize(CShaderManager* pShaderManager) {
+		
+		if (m_isCompile) return true;
+
+		if (!this->CompilePackage(pShaderManager)) {
+			std::cout << m_PakageName << "読み込み：失敗" << std::endl;
+
+			return false;
+		}
+
+		return true;
+	}
+
 	//	シェーダーパッケージのコンパイル
-	bool CShaderPackage::CompilePackage(CShaderManager* pSm) {
+	bool CShaderPackage::CompilePackage(CShaderManager* pShaderManager) {
 		ComPtr<ID3DBlob> pBlob;
 		std::unique_ptr<CShader> pShader;
 
-		if (pSm->CompileShader(pBlob, m_PakageName, "VS_main", "vs_5_1")) {
+		if (pShaderManager->CompileShader(pBlob, m_PakageName, "VS_main", "vs_5_1")) {
 			pShader = std::make_unique<CShader>(m_PakageName, pBlob, SHADER_TYPE::TYPE_VERTEX);
 
 			this->AddShader(pShader);
 		}
-		if (pSm->CompileShader(pBlob, m_PakageName, "PS_main", "ps_5_1")) {
+		if (pShaderManager->CompileShader(pBlob, m_PakageName, "PS_main", "ps_5_1")) {
 			pShader = std::make_unique<CShader>(m_PakageName, pBlob, SHADER_TYPE::TYPE_PIXEL);
 
 			this->AddShader(pShader);
 		}
-		if (pSm->CompileShader(pBlob, m_PakageName, "HS_main", "hs_5_1")) {
+		if (pShaderManager->CompileShader(pBlob, m_PakageName, "HS_main", "hs_5_1")) {
 			pShader = std::make_unique<CShader>(m_PakageName, pBlob, SHADER_TYPE::TYPE_HULL);
 
 			this->AddShader(pShader);
 		}
-		if (pSm->CompileShader(pBlob, m_PakageName, "DS_main", "ds_5_1")) {
+		if (pShaderManager->CompileShader(pBlob, m_PakageName, "DS_main", "ds_5_1")) {
 			pShader = std::make_unique<CShader>(m_PakageName, pBlob, SHADER_TYPE::TYPE_DOMAIN);
 
 			this->AddShader(pShader);
 		}
-		if (pSm->CompileShader(pBlob, m_PakageName, "GS_main", "gs_5_1")) {
+		if (pShaderManager->CompileShader(pBlob, m_PakageName, "GS_main", "gs_5_1")) {
 			pShader = std::make_unique<CShader>(m_PakageName, pBlob, SHADER_TYPE::TYPE_GEOMETRY);
 
 			this->AddShader(pShader);
 		}
-		if (pSm->CompileShader(pBlob, m_PakageName, "CS_main", "cs_5_1")) {
+		if (pShaderManager->CompileShader(pBlob, m_PakageName, "CS_main", "cs_5_1")) {
 			pShader = std::make_unique<CShader>(m_PakageName, pBlob, SHADER_TYPE::TYPE_COMPUTE);
 
 			this->AddShader(pShader);
@@ -63,7 +77,7 @@ namespace Engine46 {
 
 		m_isCompile = (m_pVecShader.size() > 0) ? true : false;
 
-		return true;
+		return m_isCompile;
 	}
 	
 	// シェーダーパッケージを保存
@@ -101,17 +115,7 @@ namespace Engine46 {
 
 		m_isCompile = (m_pVecShader.size() > 0) ? true : false;
 
-		return true;
-	}
-
-	// シェーダーパッケージの解放
-	void CShaderPackage::ReleasePackage() {
-		for (auto& shader : m_pVecShader) {
-			shader.release();
-		}
-
-		m_pVecShader.clear();
-		m_pVecShader.shrink_to_fit();
+		return m_isCompile;
 	}
 
 	// シェーダーの取得

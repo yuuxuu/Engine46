@@ -6,8 +6,10 @@
  */
 
 #include "CMesh.h"
-#include "../Renderer/CDX11Renderer.h"
+
 #include "../Engine46/utility.h"
+
+#include "../Renderer/CDX11Renderer.h"
 
 namespace Engine46 {
 
@@ -23,8 +25,8 @@ namespace Engine46 {
 		VecClear(m_vecColor);
 		VecClear(m_vecUV);
 		VecClear(m_vecNormal);
-		VecClear(m_vecBinormal);
 		VecClear(m_vecTangent);
+		VecClear(m_vecBinormal);
 
 		VecClear(m_vecIndexes);
 	}
@@ -35,8 +37,8 @@ namespace Engine46 {
 		m_vecColor.reserve(reserveSize);
 		m_vecUV.reserve(reserveSize);
 		m_vecNormal.reserve(reserveSize);
-		m_vecBinormal.reserve(reserveSize);
 		m_vecTangent.reserve(reserveSize);
+		m_vecBinormal.reserve(reserveSize);
 	}
 
 	// インデックス配列の初期化
@@ -46,7 +48,7 @@ namespace Engine46 {
 
 	// コンストラクタ
 	CDX11Mesh::CDX11Mesh(CDX11Renderer* pRenderer) :
-		pRenderer(pRenderer)
+		pDX11Renderer(pRenderer)
 	{}
 
 	// デストラクタ
@@ -87,22 +89,22 @@ namespace Engine46 {
 		D3D11_SUBRESOURCE_DATA subData = {};
 		subData.pSysMem = this;
 
-		pRenderer->CreateBuffer(m_pVertexBuffer, bufDesc, &subData);
+		pDX11Renderer->CreateBuffer(m_pVertexBuffer, bufDesc, &subData);
 
 		bufDesc.ByteWidth			= sizeof(m_vecIndexes[0]) * m_vecIndexes.size();
 		bufDesc.BindFlags			= D3D11_BIND_INDEX_BUFFER;
 
 		subData.pSysMem = &m_vecIndexes[0];
 
-		pRenderer->CreateBuffer(m_pIndexBuffer, bufDesc, &subData);
+		pDX11Renderer->CreateBuffer(m_pIndexBuffer, bufDesc, &subData);
 	}
 
 	// メッシュ描画
 	void CDX11Mesh::Draw() {
 		
-		pRenderer->SetBuffer(m_pVertexBuffer.GetAddressOf(), m_pIndexBuffer.Get(), m_strides, 0);
+		pDX11Renderer->SetBuffer(m_pVertexBuffer.GetAddressOf(), m_pIndexBuffer.Get(), m_strides, 0);
 
-		pRenderer->DrawIndexed(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, m_vecIndexes.size());
+		pDX11Renderer->DrawIndexed(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, m_vecIndexes.size());
 	}
 
 } // namespace

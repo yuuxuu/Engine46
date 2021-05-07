@@ -4,22 +4,21 @@
  * @author 木村優
  * @date 2018/12/19
  */
+
 #pragma once
 
-#ifndef _CGAME_SYSTEM_MANAGER_H_
-#define _CGAME_SYSTEM_MANAGER_H_
+#ifndef _CGAME_SYSTEM_H_
+#define _CGAME_SYSTEM_H_
 
 #pragma comment(lib, "Renderer.lib")
-#pragma comment(lib, "Shader.lib")
-#pragma comment(lib, "Actor.lib")
+#pragma comment(lib, "Scene.lib")
 
 namespace Engine46 {
 
 	// 前方宣言
 	class CWindow;
 	class CDX11Renderer;
-	class CShaderManager;
-	class CActorManager;
+	class CSceneManager;
 
 	class CGameSystem {
 	private:
@@ -28,10 +27,9 @@ namespace Engine46 {
 
 		std::unique_ptr<CWindow>		m_mainWindow;
 
-		std::unique_ptr<CDX11Renderer>	m_pRenderer;
+		std::unique_ptr<CDX11Renderer>	m_pDX11Renderer;
 
-		std::unique_ptr<CShaderManager>	m_pSManager;
-		std::unique_ptr<CActorManager>	m_pAManager;
+		std::unique_ptr<CSceneManager>	m_pSceneManager;
 
 		int								m_fps;
 		int								m_wfps;

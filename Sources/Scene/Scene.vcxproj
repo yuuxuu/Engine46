@@ -160,11 +160,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CScene.cpp" />
-    <ClCompile Include="SceneManager.cpp" />
+    <ClCompile Include="CSceneManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CScene.h" />
-    <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="CSceneManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -7,6 +7,9 @@
 
 #pragma once
 
+#ifndef _CMESH_H_
+#define _CMESH_H_
+
 #include "math.h"
 
 using Microsoft::WRL::ComPtr;
@@ -22,8 +25,8 @@ namespace Engine46 {
 		std::vector<VECTOR4>	m_vecColor;
 		std::vector<VECTOR2>	m_vecUV;
 		std::vector<VECTOR3>	m_vecNormal;
-		std::vector<VECTOR3>	m_vecBinormal;
 		std::vector<VECTOR3>	m_vecTangent;
+		std::vector<VECTOR3>	m_vecBinormal;
 
 		std::vector<DWORD>		m_vecIndexes;
 
@@ -51,7 +54,7 @@ namespace Engine46 {
 
 	class CDX11Mesh : public CMeshBase {
 	private:
-		CDX11Renderer*			pRenderer;
+		CDX11Renderer*			pDX11Renderer;
 
 		ComPtr<ID3D11Buffer>	m_pVertexBuffer;
 		ComPtr<ID3D11Buffer>	m_pIndexBuffer;
@@ -65,3 +68,5 @@ namespace Engine46 {
 	};
 
 } // namespace
+
+#endif

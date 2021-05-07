@@ -5,15 +5,16 @@
  * @date 2018/12/18
  */
 
+#pragma once
+
 #ifndef _CACTOR_H_
 #define _CACTOR_H_
-
-#pragma once
 
 #include "../Engine46/math.h"
 #include "../Engine46/IObject.h"
 #include "../Engine46/CDataRecord.h"
 #include "../Engine46/CMesh.h"
+#include "../Engine46/CMaterial.h"
 
 namespace Engine46 {
 
@@ -30,6 +31,8 @@ namespace Engine46 {
 		Transform										m_Transform;
 		
 		std::unique_ptr<CMeshBase>						m_pMesh;
+
+		std::unique_ptr<CMaterialBase>					m_pMaterial;
 
 		CActorBase*										pParentActor;
 		int												m_parentActorID;
@@ -49,7 +52,9 @@ namespace Engine46 {
 		virtual bool Save(std::ofstream& ofs) override;
 		virtual bool Load(std::ifstream& ifs) override;
 
-		virtual void CreateMesh(CDX11Renderer* pRenderer);
+		void CreateMesh(CDX11Renderer* pRenderer);
+
+		void CreateMaterial(CDX11Renderer* pRenderer);
 
 		void ConnectParentActor(CActorBase* pParentActor);
 

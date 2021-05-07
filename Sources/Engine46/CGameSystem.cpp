@@ -4,12 +4,13 @@
  * @author 木村優
  * @date 2018/12/19
  */
+
 #include "CGameSystem.h"
 #include "CWinow.h"
 
 #include "../Renderer/CDX11Renderer.h"
-#include "../Shader/CShaderManager.h"
-#include "../Actor/CActorManager.h"
+
+#include "../Scene/CSceneManager.h"
 
 namespace Engine46 {
 
@@ -47,15 +48,11 @@ namespace Engine46 {
 		HWND hwnd = m_mainWindow->GetHwnd();
 		RECT rect = m_mainWindow->GetWindowSize();
 
-		m_pRenderer = std::make_unique<CDX11Renderer>();
-		if (!m_pRenderer->Initialize(hwnd, rect.w, rect.h)) return false;
+		m_pDX11Renderer = std::make_unique<CDX11Renderer>();
+		if (!m_pDX11Renderer->Initialize(hwnd, rect.w, rect.h)) return false;
 
-		//m_pSManager = std::make_unique<CShaderManager>();
-		//if (!m_pSManager->Initialize()) return false;
-
-		m_pAManager = std::make_unique<CActorManager>(m_pRenderer.get());
-		CActorBase* actor = m_pAManager->CreateActor(1);
-		m_pAManager->CreateMeshForActor(actor);
+		m_pSceneManager = std::make_unique<CSceneManager>(m_pDX11Renderer.get());
+		if (!m_pSceneManager->Initialize()) return false;
 
 		// イベントハンドル生成
 		m_hGame = CreateEvent(NULL, false, false, NULL);
@@ -104,15 +101,23 @@ namespace Engine46 {
 			MeasFPS();
 		}
 	}
+
 	// 更新
 	void CGameSystem::Update() {
+		CSceneBase* scene = m_pSceneManager->GetRootScene();
 
+		if (scene) {
+			scene->Update();
+		}
 	}
+
 	// 描画
 	void CGameSystem::Draw() {
-		//m_pRenderer->Render();
+		CSceneBase* scene = m_pSceneManager->GetRootScene();
 
-		m_pAManager->DrawActor();
+		if (scene) {
+			m_pDX11Renderer->Render(scene);
+		}
 	}
 
 	// FPS計測

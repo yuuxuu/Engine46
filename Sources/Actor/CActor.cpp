@@ -25,8 +25,6 @@ namespace Engine46 {
 		m_ActorName.reset(new char[size]);
 		str.resize(size);
 		str.copy(m_ActorName.get(), size);
-
-		this->Initialize();
 	}
 
 	// コンストラクタ
@@ -43,8 +41,6 @@ namespace Engine46 {
 		m_ActorName.reset(new char[size]);
 		str.resize(size);
 		str.copy(m_ActorName.get(), size);
-
-		this->Initialize();
 	}
 
 	// デストラクタ
@@ -73,6 +69,10 @@ namespace Engine46 {
 
 	// 描画
 	void CActorBase::Draw() {
+
+		if (m_pMaterial) {
+			m_pMaterial->Set(1);
+		}
 
 		if (m_pMesh) {
 			m_pMesh->Draw();
@@ -110,8 +110,18 @@ namespace Engine46 {
 		}
 	}
 
+	// マテリアル作成
+	void CActorBase::CreateMaterial(CDX11Renderer* pRenderer) {
+		if (!m_pMaterial) {
+			m_pMaterial = std::make_unique<CDX11Material>(pRenderer);
+		}
+	}
+
 	// 親アクターを接続
 	void CActorBase::ConnectParentActor(CActorBase* pParentActor) {
+		
+		if (this->pParentActor == pParentActor) return;
+		
 		this->pParentActor = pParentActor;
 
 		if (pParentActor) {
@@ -125,11 +135,13 @@ namespace Engine46 {
 	// 子アクターを追加
 	void CActorBase::AddChiledActorList(CActorBase* pChiledActor) {
 		if (pChiledActor) {
-			pChiledActorList.emplace_back(pChiledActor);
-
 			auto it = std::find(m_chiledActorIDList.begin(), m_chiledActorIDList.end(), pChiledActor->m_ActorID);
 
 			if (it == m_chiledActorIDList.end()) {
+				pChiledActor->ConnectParentActor(this);
+
+				pChiledActorList.emplace_back(pChiledActor);
+
 				m_chiledActorIDList.emplace_back(pChiledActor->m_ActorID);
 			}
 		}

@@ -39,7 +39,9 @@
     </ClCompile>
     <ClCompile Include="CFileSystem.cpp" />
     <ClCompile Include="CGameSystem.cpp" />
+    <ClCompile Include="CMaterial.cpp" />
     <ClCompile Include="CMesh.cpp" />
+    <ClCompile Include="CTexture.cpp" />
     <ClCompile Include="CWinow.cpp" />
     <ClCompile Include="CDataRecord.cpp" />
     <ClCompile Include="main.cpp" />
@@ -50,7 +52,9 @@
     <ClInclude Include="..\stdafx.h" />
     <ClInclude Include="CFileSystem.h" />
     <ClInclude Include="CGameSystem.h" />
+    <ClInclude Include="CMaterial.h" />
     <ClInclude Include="CMesh.h" />
+    <ClInclude Include="CTexture.h" />
     <ClInclude Include="CWinow.h" />
     <ClInclude Include="CDataRecord.h" />
     <ClInclude Include="IObject.h" />

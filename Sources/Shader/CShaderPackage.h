@@ -7,6 +7,9 @@
 
 #pragma once
 
+#ifndef _CSHADER_PACKAGE_H_
+#define _CSHADER_PACKAGE_H_
+
 #include "CShader.h"
 
 namespace Engine46 {
@@ -25,12 +28,12 @@ namespace Engine46 {
 		CShaderPackage(const char* name);
 		~CShaderPackage();
 
-		bool CompilePackage(CShaderManager* pSm);
+		bool Initialize(CShaderManager* pShaderManager);
+
+		bool CompilePackage(CShaderManager* pShaderManager);
 
 		bool SavePackage(std::ofstream& ofs);
 		bool LoadPackage(std::ifstream& ifs);
-
-		void ReleasePackage();
 
 		CShader* GetShader(SHADER_TYPE type);
 
@@ -42,3 +45,5 @@ namespace Engine46 {
 	};
 
 } // namespace
+
+#endif

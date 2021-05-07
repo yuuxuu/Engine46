@@ -15,42 +15,62 @@ namespace Engine46 {
 	// コンストラクタ
 	CActorManager::CActorManager(CDX11Renderer* pRenderer) :
 		pDX11Renderer(pRenderer)
-	{}
+	{
+		pRootActor = this->CreateActor(0);
+	}
 
 	// デストラクタ
 	CActorManager::~CActorManager()
 	{}
 
+	// 初期化
+	bool CActorManager::Initialize() {
+
+		CActorBase* actor = this->CreateActor(1);
+		
+		this->CreateMesh(actor);
+		this->CreateMaterial(actor);
+
+		actor->Initialize();
+
+		return true;
+	}
+
 	// オブジェクト作成
-	CActorBase* CActorManager::CreateActor(int id) {
+	CActorBase* CActorManager::CreateActor(int classID) {
 		std::unique_ptr<CActorBase> actor;
 		
 		actor = std::make_unique<CSprite>();
 
+		actor->CActorBase::Initialize();
+
 		CActorBase* pActor = actor.get();
 
-		this->AddActorToActorList(actor);
+		if (classID != 0) {
+			pRootActor->AddChiledActorList(pActor);
+		}
+
+		this->AddActorToActorVec(actor);
 
 		return pActor;
 	}
 
 	// オブジェクトのメッシュを作成
-	void CActorManager::CreateMeshForActor(CActorBase* pActor) {
+	void CActorManager::CreateMesh(CActorBase* pActor) {
 		if (pActor) {
 			pActor->CreateMesh(pDX11Renderer);
-
-			pActor->Initialize();
 		}
 	}
 
-	void CActorManager::DrawActor() {
-		for (const auto& actor : m_pActorList) {
-			actor->Draw();
+	// オブジェクトのマテリアルを作成
+	void CActorManager::CreateMaterial(CActorBase* pActor) {
+		if (pActor) {
+			pActor->CreateMaterial(pDX11Renderer);
 		}
 	}
 
-	// オブジェクトリストを保存
-	bool CActorManager::SaveActorList() {
+	// オブジェクトを保存
+	bool CActorManager::SaveActor() {
 
 		std::ios_base::openmode mode = std::ios_base::out | std::ios_base::binary;
 
@@ -59,15 +79,15 @@ namespace Engine46 {
 
 		if (!ofs.is_open()) return false;
 
-		for (const auto& actor : m_pActorList) {
+		for (const auto& actor : m_pVecActor) {
 			actor->Save(ofs);
 		}
 
 		return true;
 	}
 
-	// オブジェクトリストを読み込み
-	bool CActorManager::LoadActorList() {
+	// オブジェクトを読み込み
+	bool CActorManager::LoadActor() {
 
 		std::ios_base::openmode mode = std::ios_base::in | std::ios_base::binary;
 
@@ -97,14 +117,14 @@ namespace Engine46 {
 
 	// オブジェクト同士の接続
 	void CActorManager::ConnectActor() {
-		for (const auto& actor : m_pActorList) {
+		for (const auto& actor : m_pVecActor) {
 			int id = actor->GetParentActorID();
 			if (id > -1) {
-				actor->ConnectParentActor(m_pActorList[id].get());
+				actor->ConnectParentActor(m_pVecActor[id].get());
 			}
 
 			for (auto id : actor->GetChiledActorIDList()) {
-				actor->AddChiledActorList(m_pActorList[id].get());
+				actor->AddChiledActorList(m_pVecActor[id].get());
 			}
 		}
 	}

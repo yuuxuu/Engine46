@@ -21,33 +21,39 @@ namespace Engine46 {
 	// 初期化
 	void CSprite::Initialize() {
 
-		m_pMesh->ReserveVertex(4);
+		if (m_pMesh) {
+			m_pMesh->ReserveVertex(4);
 
-		m_pMesh->AddVertex(VECTOR3(-1.0f, 1.0f, 0.0f));
-		m_pMesh->AddVertex(VECTOR3( 1.0f, 1.0f, 0.0f));
-		m_pMesh->AddVertex(VECTOR3(-1.0f,-1.0f, 0.0f));
-		m_pMesh->AddVertex(VECTOR3( 1.0f,-1.0f, 0.0f));
+			m_pMesh->AddVertex(VECTOR3(-1.0f, 1.0f, 0.0f));
+			m_pMesh->AddVertex(VECTOR3(1.0f, 1.0f, 0.0f));
+			m_pMesh->AddVertex(VECTOR3(-1.0f, -1.0f, 0.0f));
+			m_pMesh->AddVertex(VECTOR3(1.0f, -1.0f, 0.0f));
 
-		m_pMesh->AddColor(VECTOR4(1.0f, 0.0f, 0.0f, 1.0f));
-		m_pMesh->AddColor(VECTOR4(0.0f, 1.0f, 0.0f, 1.0f));
-		m_pMesh->AddColor(VECTOR4(0.0f, 0.0f, 1.0f, 1.0f));
-		m_pMesh->AddColor(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f));
+			m_pMesh->AddColor(VECTOR4(1.0f, 0.0f, 0.0f, 1.0f));
+			m_pMesh->AddColor(VECTOR4(0.0f, 1.0f, 0.0f, 1.0f));
+			m_pMesh->AddColor(VECTOR4(0.0f, 0.0f, 1.0f, 1.0f));
+			m_pMesh->AddColor(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f));
 
-		m_pMesh->AddUV(VECTOR2(0.0f, 0.0f));
-		m_pMesh->AddUV(VECTOR2(1.0f, 0.0f));
-		m_pMesh->AddUV(VECTOR2(0.0f, 1.0f));
-		m_pMesh->AddUV(VECTOR2(1.0f, 1.0f));
+			m_pMesh->AddUV(VECTOR2(0.0f, 0.0f));
+			m_pMesh->AddUV(VECTOR2(1.0f, 0.0f));
+			m_pMesh->AddUV(VECTOR2(0.0f, 1.0f));
+			m_pMesh->AddUV(VECTOR2(1.0f, 1.0f));
 
-		m_pMesh->ReserveIndex(6);
+			m_pMesh->ReserveIndex(6);
 
-		m_pMesh->AddIndex(0);
-		m_pMesh->AddIndex(1);
-		m_pMesh->AddIndex(3);
-		m_pMesh->AddIndex(0);
-		m_pMesh->AddIndex(3);
-		m_pMesh->AddIndex(2);
+			m_pMesh->AddIndex(0);
+			m_pMesh->AddIndex(1);
+			m_pMesh->AddIndex(3);
+			m_pMesh->AddIndex(0);
+			m_pMesh->AddIndex(3);
+			m_pMesh->AddIndex(2);
 
-		m_pMesh->Create();
+			m_pMesh->Create();
+		}
+
+		if (m_pMaterial) {
+			m_pMaterial->Create();
+		}
 	}
 
 } // namespace

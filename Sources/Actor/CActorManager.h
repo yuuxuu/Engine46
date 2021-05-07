@@ -5,10 +5,10 @@
  * @date 2019/01/02
  */
 
+#pragma once
+
 #ifndef _CACTOR_MANAGER_H_
 #define _CACTOR_MANAGER_H_
-
-#pragma once
 
 #include "CActor.h"
 
@@ -18,27 +18,31 @@ namespace Engine46 {
 
 	class CActorManager {
 	private:
-		std::vector<std::unique_ptr<CActorBase>>	m_pActorList;
+		std::vector<std::unique_ptr<CActorBase>>	m_pVecActor;
+		CActorBase*									pRootActor;
 
 		CDX11Renderer*								pDX11Renderer;
+
+		void ConnectActor();
 
 	public:
 		explicit CActorManager(CDX11Renderer* pRenderer);
 		~CActorManager();
 
-		CActorBase* CreateActor(int id);
+		bool Initialize();
 
-		void CreateMeshForActor(CActorBase* pActor);
+		CActorBase* CreateActor(int classID);
 
-		void DrawActor();
+		void CreateMesh(CActorBase* pActor);
 
-		bool SaveActorList();
-		bool LoadActorList();
+		void CreateMaterial(CActorBase* pActor);
 
-		void AddActorToActorList(std::unique_ptr<CActorBase>& pActor) { m_pActorList.emplace_back(move(pActor)); };
-	
-	private:
-		void ConnectActor();
+		bool SaveActor();
+		bool LoadActor();
+
+		void AddActorToActorVec(std::unique_ptr<CActorBase>& pActor) { m_pVecActor.emplace_back(move(pActor)); };
+
+		CActorBase* GetRootActor() const { return pRootActor; }
 	};
 } // namespace
 

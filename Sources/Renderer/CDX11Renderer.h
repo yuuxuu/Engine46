@@ -39,7 +39,7 @@ namespace Engine46 {
 		
 		void Finalize() override;
 
-		bool Render() override;
+		bool Render(CSceneBase* pScene) override;
 
 		bool CreateBuffer(ComPtr<ID3D11Buffer>& pBuffer, D3D11_BUFFER_DESC& bufDesc, D3D11_SUBRESOURCE_DATA* pInitData = nullptr);
 
@@ -57,6 +57,11 @@ namespace Engine46 {
 		
 		void SetRenderTargetView(ID3D11RenderTargetView* pSrv, ID3D11DepthStencilView* pDsv);
 		void SetRenderTargetViews(std::vector<ComPtr<ID3D11RenderTargetView>>& vecRtv, ID3D11DepthStencilView* pDsv);
+
+		void SetPSShaderResources(UINT slot, UINT num, ID3D11ShaderResourceView* pSrv);
+		void SetPSConstantBuffers(UINT slot, UINT num, ID3D11Buffer* pBuf);
+
+		void UpdateSubResource(ID3D11Buffer* pBuf, void* pSrcData);
 
 		void SetInputLayout(void* pBuf, size_t bufSize);
 		void SetSamplerState(D3D11_SAMPLER_DESC& sDesc, UINT slot);

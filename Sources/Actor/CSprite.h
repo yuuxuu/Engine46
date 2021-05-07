@@ -7,6 +7,9 @@
 
 #pragma once
 
+#ifndef _CSPRITE_H_
+#define _CSPRITE_H_
+
 #include "CActor.h"
 
 namespace Engine46 {
@@ -23,3 +26,5 @@ namespace Engine46 {
 	};
 
 } // namespace
+
+#endif

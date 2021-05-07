@@ -11,6 +11,7 @@
 namespace Engine46 {
 
 	constexpr const char* g_ShaderPackageListFileName = "ShaderPackageList.bin";
+	const char* g_ShaderName = "D:/Engine46/Sources/Shader/ShaderSource/HLSL/Model.hlsl";
 
 	// コンストラクタ
 	CShaderManager::CShaderManager()
@@ -23,18 +24,12 @@ namespace Engine46 {
 	// 初期化
 	bool CShaderManager::Initialize() {
 
-		this->LoadShaderPackageList();
+		//this->LoadShaderPackageList();
 		
-		const char* shaderName = "D:/Engine46/Sources/Shader/ShaderSource/HLSL/Model.hlsl";
-		CShaderPackage* pSp = CreateShaderPackage(shaderName);
+		CShaderPackage* pSp = this->CreateShaderPackage(g_ShaderName);
+		if (!pSp->Initialize(this)) return false;
 		
-		if (!pSp->GetIsCompile()) {
-			if (!pSp->CompilePackage(this)) {
-				std::cout << shaderName << "読み込み：失敗" << std::endl;
-			}
-		}
-		
-		this->SaveShaderPackageList();
+		//this->SaveShaderPackageList();
 
 		return true;
 	}
@@ -56,6 +51,7 @@ namespace Engine46 {
 		return itr->second.get();
 	}
 
+	// シェーダーパッケージをマップへ追加
 	void CShaderManager::AddShaderPackageToMap(const char* name, std::unique_ptr<CShaderPackage>& pSp) {
 		auto itr = m_mapShaderPackage.find(name);
 
@@ -64,7 +60,7 @@ namespace Engine46 {
 		}
 	}
 
-	// シェーダーの保存
+	// シェーダーパッケージの保存
 	bool CShaderManager::SaveShaderPackageList() {
 
 		std::ios_base::openmode mode = std::ios_base::out | std::ios_base::binary;
@@ -84,7 +80,7 @@ namespace Engine46 {
 		return true;
 	}
 
-	// シェーダーの読み込み
+	// シェーダーパッケージの読み込み
 	bool CShaderManager::LoadShaderPackageList() {
 
 		std::ios_base::openmode mode = std::ios_base::in | std::ios_base::binary;

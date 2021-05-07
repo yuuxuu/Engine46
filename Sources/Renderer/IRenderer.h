@@ -10,6 +10,8 @@
 #ifndef _IRENDERER_H_
 #define _IRENDERER_H_
 
+#include "../Scene/CScene.h"
+
 using Microsoft::WRL::ComPtr;
 
 namespace Engine46 {
@@ -23,7 +25,7 @@ namespace Engine46 {
 		
 		virtual void Finalize() = 0;
 
-		virtual bool Render() = 0;
+		virtual bool Render(CSceneBase* pScene) = 0;
 	};
 
 	enum class RENDERER_TYPE {
