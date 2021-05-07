@@ -5,34 +5,40 @@
  * @date 2018/12/18
  */
 
+#pragma once
+
 #ifndef _CACTOR_H_
 #define _CACTOR_H_
 
-#pragma once
-
-#include "math.h"
-#include "IObject.h"
-#include "CDataRecord.h"
+#include "../Engine46/math.h"
+#include "../Engine46/IObject.h"
+#include "../Engine46/CDataRecord.h"
+#include "../Engine46/CMesh.h"
+#include "../Engine46/CMaterial.h"
 
 namespace Engine46 {
-	
+
 	class CActorBase : public IObject {
 	protected:
 		std::vector<std::unique_ptr<CDataRecordBase>>	vecDataRecords;
 
 		UINT											m_ClassID;
 
-		CActorBase*										pParentActor;
-		int												m_parentActorID;
-
-		std::list<CActorBase*>							pChiledActorList;
-		std::vector<int>								m_chiledActorIDList;
-
 		int												m_ActorID;
 
 		std::unique_ptr<char[]>							m_ActorName;
 
 		Transform										m_Transform;
+		
+		std::unique_ptr<CMeshBase>						m_pMesh;
+
+		std::unique_ptr<CMaterialBase>					m_pMaterial;
+
+		CActorBase*										pParentActor;
+		int												m_parentActorID;
+
+		std::list<CActorBase*>							pChiledActorList;
+		std::vector<int>								m_chiledActorIDList;
 
 	public:
 		CActorBase();
@@ -45,6 +51,10 @@ namespace Engine46 {
 
 		virtual bool Save(std::ofstream& ofs) override;
 		virtual bool Load(std::ifstream& ifs) override;
+
+		void CreateMesh(CDX11Renderer* pRenderer);
+
+		void CreateMaterial(CDX11Renderer* pRenderer);
 
 		void ConnectParentActor(CActorBase* pParentActor);
 

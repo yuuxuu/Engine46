@@ -5,10 +5,10 @@
  * @date 2019/09/28
  */
 
+#pragma once
+
 #ifndef _CWINOW_H_ 
 #define _CWINOW_H_
-
-#pragma once
 
 #include "math.h"
 

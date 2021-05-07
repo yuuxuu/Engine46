@@ -12,10 +12,9 @@ namespace Engine46 {
 	static int g_SceneCount = 0;
 
 	// コンストラクタ
-	CSceneBase::CSceneBase(const SceneType sceneType) :
+	CSceneBase::CSceneBase() :
 		pParentScene(nullptr),
 		m_parentSceneID(-1),
-		m_SceneType(sceneType),
 		m_SceneID(g_SceneCount++),
 		m_SceneName()
 	{
@@ -24,23 +23,18 @@ namespace Engine46 {
 		m_SceneName.reset(new char[size]);
 		str.resize(size);
 		str.copy(m_SceneName.get(), size);
-
-		this->Initialize();
 	}
 
 	// コンストラクタ
-	CSceneBase::CSceneBase(const SceneType sceneType, const char* sceneName) :
+	CSceneBase::CSceneBase(const char* sceneName) :
 		pParentScene(nullptr),
 		m_parentSceneID(-1),
-		m_SceneType(sceneType),
 		m_SceneID(g_SceneCount++),
 		m_SceneName()
 	{
 		int strSize = (int)strlen(sceneName) + 1;
 		m_SceneName.reset(new char[strSize]);
 		strcpy_s(m_SceneName.get(), strSize, sceneName);
-
-		this->Initialize();
 	}
 
 	// デストラクタ
@@ -52,21 +46,28 @@ namespace Engine46 {
 
 		vecDataRecords.clear();
 
-		vecDataRecords.emplace_back(std::make_unique<CDataRecordBase>(offsetof(CSceneBase, m_SceneType), sizeof(m_SceneType)));
 		vecDataRecords.emplace_back(std::make_unique<CDataRecordBase>(offsetof(CSceneBase, m_SceneID), sizeof(m_SceneID)));
 		vecDataRecords.emplace_back(std::make_unique<CStrDataRecord>(offsetof(CSceneBase, m_SceneName), m_SceneName));
 		vecDataRecords.emplace_back(std::make_unique<CPtrDataRecord>(m_parentSceneID));
 		vecDataRecords.emplace_back(std::make_unique<CListDataRecord>(m_chiledSceneIDList));
 	}
 
-	// 更新
+	// シーン更新
 	void CSceneBase::Update() {
+		CActorBase* actor = pActorManager->GetRootActor();
 
+		if (actor) {
+			actor->Update();
+		}
 	}
 
-	// 描画
+	// シーン描画
 	void CSceneBase::Draw() {
+		CActorBase* actor = pActorManager->GetRootActor();
 
+		if (actor) {
+			actor->Draw();
+		}
 	}
 
 	// シーン出力
@@ -91,8 +92,21 @@ namespace Engine46 {
 		return true;
 	}
 
+	// マネージャーを設定
+	void CSceneBase::SetManager(CShaderManager* pShaderManager, CActorManager* pActorManager) {
+		if (pShaderManager) {
+			this->pShaderManager = pShaderManager;
+		}
+		if (pActorManager) {
+			this->pActorManager = pActorManager;
+		}
+	}
+
 	// 親シーンを接続
 	void CSceneBase::ConnectParentScene(CSceneBase* pParentScene) {
+		
+		if (this->pParentScene == pParentScene) return;
+		
 		this->pParentScene = pParentScene;
 
 		if (pParentScene) {
@@ -106,11 +120,13 @@ namespace Engine46 {
 	// 子シーンを追加
 	void CSceneBase::AddChiledSceneList(CSceneBase* pChiledScene) {
 		if (pChiledScene) {
-			pChiledSceneList.emplace_back(pChiledScene);
-
 			auto it = std::find(m_chiledSceneIDList.begin(), m_chiledSceneIDList.end(), pChiledScene->m_SceneID);
 
 			if (it == m_chiledSceneIDList.end()) {
+				pChiledScene->ConnectParentScene(this);
+
+				pChiledSceneList.emplace_back(pChiledScene);
+
 				m_chiledSceneIDList.emplace_back(pChiledScene->m_SceneID);
 			}
 		}

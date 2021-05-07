@@ -24,7 +24,7 @@ namespace Engine46 {
 		ComPtr<ID3D11Texture2D>				m_pTex2D;
 
 	public:
-		CDX11ForwardRendering(CDX11Renderer* pRenderer);
+		explicit CDX11ForwardRendering(CDX11Renderer* pRenderer);
 		~CDX11ForwardRendering();
 
 		bool Initialize(UINT width, UINT height) override;

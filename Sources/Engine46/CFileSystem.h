@@ -5,10 +5,10 @@
  * @date 2019/01/16
  */
 
-#ifndef _CFILE_SYSTEM_MANAGER_H_
-#define _CFILE_SYSTEM_MANAGER_H_
-
 #pragma once
+
+#ifndef _CFILE_SYSTEM_H_
+#define _CFILE_SYSTEM_H_
 
 namespace Engine46 {
 
