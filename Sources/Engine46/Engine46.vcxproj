@@ -37,6 +37,7 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">stdafx.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="CConstantBuffer.cpp" />
     <ClCompile Include="CFileSystem.cpp" />
     <ClCompile Include="CGameSystem.cpp" />
     <ClCompile Include="CMaterial.cpp" />
@@ -50,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\stdafx.h" />
+    <ClInclude Include="CConstantBuffer.h" />
     <ClInclude Include="CFileSystem.h" />
     <ClInclude Include="CGameSystem.h" />
     <ClInclude Include="CMaterial.h" />

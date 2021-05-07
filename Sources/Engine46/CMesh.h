@@ -30,8 +30,6 @@ namespace Engine46 {
 
 		std::vector<DWORD>		m_vecIndexes;
 
-		UINT					m_strides;
-
 	public:
 		CMeshBase();
 		virtual ~CMeshBase();

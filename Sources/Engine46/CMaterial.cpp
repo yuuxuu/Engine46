@@ -9,7 +9,17 @@
 
 #include "../Renderer/CDX11Renderer.h"
 
+#include "../Engine46/CConstantBuffer.h"
+
 namespace Engine46 {
+
+	struct materialCB {
+		VECTOR4	diffuse;
+		VECTOR4	specular;
+		VECTOR4	ambient;
+		VECTOR4	emissive;
+		VECTOR4	brightness;
+	};
 
 	// コンストラクタ
 	CMaterialBase::CMaterialBase() :
@@ -35,38 +45,20 @@ namespace Engine46 {
 	{}
 
 	// 作成
-	void CDX11Material::Create() {
+	void CDX11Material::CreateConstantBuffer() {
 
-		UINT byteWidth = 0;
-		byteWidth += sizeof(m_diffuse);
-		byteWidth += sizeof(m_specular);
-		byteWidth += sizeof(m_ambient);
-		byteWidth += sizeof(m_emissive);
-		byteWidth += sizeof(m_brightness);
+		if (!m_pConstantBuffer) {
+			m_pConstantBuffer = std::make_unique<CDX11CB>(pDX11Renderer);
+		}
 
-		D3D11_BUFFER_DESC bufDesc = {};
-		bufDesc.ByteWidth			= byteWidth;
-		bufDesc.Usage				= D3D11_USAGE_DEFAULT;
-		bufDesc.BindFlags			= D3D11_BIND_CONSTANT_BUFFER;
-		bufDesc.CPUAccessFlags		= 0;
-		bufDesc.MiscFlags			= 0;
-		bufDesc.StructureByteStride = 0;
-
-		pDX11Renderer->CreateBuffer(m_pConstantBuffer, bufDesc);
+		m_pConstantBuffer->CreateConstantBuffer(sizeof(materialCB));
 
 		this->Update();
 	}
 
 	// 更新
 	void CDX11Material::Update() {
-		struct CB {
-			VECTOR4	diffuse;
-			VECTOR4	specular;
-			VECTOR4	ambient;
-			VECTOR4	emissive;
-			VECTOR4	brightness;
-		};
-		CB cb = {
+		materialCB cb = {
 			m_diffuse,
 			m_specular,
 			m_ambient,
@@ -74,7 +66,7 @@ namespace Engine46 {
 			m_brightness,
 		};
 
-		pDX11Renderer->UpdateSubResource(m_pConstantBuffer.Get(), &cb);
+		m_pConstantBuffer->Update(&cb);
 	}
 
 	// マテリアルをシェーダーへ設定
@@ -83,7 +75,7 @@ namespace Engine46 {
 			pTexture->Set(0);
 		}
 		
-		pDX11Renderer->SetPSConstantBuffers(slot, 1, m_pConstantBuffer.Get());
+		m_pConstantBuffer->Set(1);
 	}
 
 } // namespace

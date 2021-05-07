@@ -11,7 +11,7 @@ namespace Engine46 {
 
 	// コンストラクタ
 	CSprite::CSprite() :
-		CActorBase(1, "Sprite", Transform())
+		CActorBase((int)ClassType::Sprite, "Sprite", Transform())
 	{}
 
 	// デストラクタ
@@ -30,9 +30,9 @@ namespace Engine46 {
 			m_pMesh->AddVertex(VECTOR3(1.0f, -1.0f, 0.0f));
 
 			m_pMesh->AddColor(VECTOR4(1.0f, 0.0f, 0.0f, 1.0f));
-			m_pMesh->AddColor(VECTOR4(0.0f, 1.0f, 0.0f, 1.0f));
-			m_pMesh->AddColor(VECTOR4(0.0f, 0.0f, 1.0f, 1.0f));
-			m_pMesh->AddColor(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f));
+			m_pMesh->AddColor(VECTOR4(1.0f, 0.0f, 0.0f, 1.0f));
+			m_pMesh->AddColor(VECTOR4(1.0f, 0.0f, 0.0f, 1.0f));
+			m_pMesh->AddColor(VECTOR4(1.0f, 0.0f, 0.0f, 1.0f));
 
 			m_pMesh->AddUV(VECTOR2(0.0f, 0.0f));
 			m_pMesh->AddUV(VECTOR2(1.0f, 0.0f));
@@ -52,7 +52,7 @@ namespace Engine46 {
 		}
 
 		if (m_pMaterial) {
-			m_pMaterial->Create();
+			m_pMaterial->CreateConstantBuffer();
 		}
 	}
 

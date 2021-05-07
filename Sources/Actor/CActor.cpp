@@ -6,14 +6,23 @@
  */
 
 #include "CActor.h"
+#include "CCamera.h"
+
+#include "../Renderer/CDX11Renderer.h"
 
 namespace Engine46 {
 
 	static UINT g_ActorCount = 0;
 
+	struct mainCB {
+		Matrix	wvp;
+		Matrix	lwvp;
+		VECTOR3 cameraPos;
+	};
+
 	// コンストラクタ
 	CActorBase::CActorBase() :
-		m_ClassID(0),
+		m_ClassID((int)ClassType::Root),
 		m_ActorID(g_ActorCount++),
 		m_ActorName(),
 		m_Transform(Transform()),
@@ -74,6 +83,36 @@ namespace Engine46 {
 			m_pMaterial->Set(1);
 		}
 
+		if (m_pCb) {
+			Matrix matW = this->GetWorldMatrix();
+
+			if (pParentActor) {
+				for (auto& chiled : pParentActor->pChiledActorList) {
+					if (chiled->m_ClassID == (UINT)ClassType::Camera) {
+						CCamera* camera = dynamic_cast<CCamera*>(chiled);
+
+						Matrix matVP = camera->GetVPMatrix();
+
+						Matrix matWVP;
+						matWVP.dx_m = DirectX::XMMatrixMultiply(matW.dx_m, matVP.dx_m);
+						matWVP.dx_m = DirectX::XMMatrixTranspose(matWVP.dx_m);
+
+						mainCB cb = {
+							matWVP,
+							Matrix(),
+							chiled->m_Transform.pos,
+						};
+
+						m_pCb->Update(&cb);
+
+						m_pCb->Set(0);
+
+						break;
+					}
+				}
+			}
+		}
+
 		if (m_pMesh) {
 			m_pMesh->Draw();
 		}
@@ -101,20 +140,6 @@ namespace Engine46 {
 		}
 
 		return true;
-	}
-
-	// メッシュ作成
-	void CActorBase::CreateMesh(CDX11Renderer* pRenderer) {
-		if (!m_pMesh) {
-			m_pMesh = std::make_unique<CDX11Mesh>(pRenderer);
-		}
-	}
-
-	// マテリアル作成
-	void CActorBase::CreateMaterial(CDX11Renderer* pRenderer) {
-		if (!m_pMaterial) {
-			m_pMaterial = std::make_unique<CDX11Material>(pRenderer);
-		}
 	}
 
 	// 親アクターを接続
@@ -145,6 +170,46 @@ namespace Engine46 {
 				m_chiledActorIDList.emplace_back(pChiledActor->m_ActorID);
 			}
 		}
+	}
+
+	// コンスタントバッファの作成
+	void CActorBase::CreateConstantBuffer(CDX11Renderer* pRenderer) {
+		if (!m_pCb) {
+			m_pCb = std::make_unique<CDX11CB>(pRenderer);
+
+			m_pCb->CreateConstantBuffer(sizeof(mainCB));
+		}
+	}
+
+	// メッシュ作成
+	void CActorBase::CreateMesh(CDX11Renderer* pRenderer) {
+		if (!m_pMesh) {
+			m_pMesh = std::make_unique<CDX11Mesh>(pRenderer);
+		}
+	}
+
+	// マテリアル作成
+	void CActorBase::CreateMaterial(CDX11Renderer* pRenderer) {
+		if (!m_pMaterial) {
+			m_pMaterial = std::make_unique<CDX11Material>(pRenderer);
+		}
+	}
+
+	// ワールド行列を取得
+	Matrix CActorBase::GetWorldMatrix() {
+		Matrix matScale;
+		matScale.dx_m = DirectX::XMMatrixScaling(m_Transform.scale.x, m_Transform.scale.y, m_Transform.scale.z);
+		
+		Matrix matRotate;
+		matRotate.dx_m = DirectX::XMMatrixRotationRollPitchYaw(m_Transform.rotation.x, m_Transform.rotation.y, m_Transform.rotation.z);
+		
+		Matrix matTrans;
+		matTrans.dx_m = DirectX::XMMatrixTranslation(m_Transform.pos.x, m_Transform.pos.y, m_Transform.pos.z);
+
+		Matrix matWorld;
+		matWorld.dx_m = matScale.dx_m * matRotate.dx_m * matTrans.dx_m;
+
+		return matWorld;
 	}
 
 } // namespace

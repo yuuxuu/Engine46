@@ -31,6 +31,8 @@ namespace Engine46 {
 
 		size_t									m_iLayoutBufSize;
 
+		RECT									m_windowRect;
+
 	public:
 		CDX11Renderer();
 		~CDX11Renderer();
@@ -70,6 +72,8 @@ namespace Engine46 {
 		void SetDepthStencilState(D3D11_DEPTH_STENCIL_DESC& dsDesc, UINT Ref = 0x00);
 
 		void SetViewPort(int width, int height);
+
+		RECT GetWindowRect() const { return m_windowRect; }
 	};
 
 } // namespace

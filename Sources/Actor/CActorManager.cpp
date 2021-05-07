@@ -7,6 +7,9 @@
 
 #include "CActorManager.h"
 #include "CSprite.h"
+#include "CCamera.h"
+
+#include "../Renderer/CDX11Renderer.h"
 
 namespace Engine46 {
 
@@ -16,7 +19,7 @@ namespace Engine46 {
 	CActorManager::CActorManager(CDX11Renderer* pRenderer) :
 		pDX11Renderer(pRenderer)
 	{
-		pRootActor = this->CreateActor(0);
+		pRootActor = this->CreateActor((int)ClassType::Root);
 	}
 
 	// デストラクタ
@@ -26,12 +29,16 @@ namespace Engine46 {
 	// 初期化
 	bool CActorManager::Initialize() {
 
-		CActorBase* actor = this->CreateActor(1);
-		
-		this->CreateMesh(actor);
-		this->CreateMaterial(actor);
+		CActorBase* camera = this->CreateActor((int)ClassType::Camera);
+		camera->Initialize();
 
-		actor->Initialize();
+		CActorBase* sprite = this->CreateActor((int)ClassType::Sprite);
+		
+		this->CreateMesh(sprite);
+		this->CreateMaterial(sprite);
+		this->CreateConstantBuffer(sprite);
+
+		sprite->Initialize();
 
 		return true;
 	}
@@ -39,8 +46,20 @@ namespace Engine46 {
 	// オブジェクト作成
 	CActorBase* CActorManager::CreateActor(int classID) {
 		std::unique_ptr<CActorBase> actor;
-		
-		actor = std::make_unique<CSprite>();
+		RECT rect;
+
+		switch ((ClassType)classID) {
+		case ClassType::Root:
+			actor = std::make_unique<CActorBase>();
+			break;
+		case ClassType::Camera:
+			rect = pDX11Renderer->GetWindowRect();
+			actor = std::make_unique<CCamera>(rect.w, rect.h);
+			break;
+		case ClassType::Sprite:
+			actor = std::make_unique<CSprite>();
+			break;
+		}
 
 		actor->CActorBase::Initialize();
 
@@ -66,6 +85,13 @@ namespace Engine46 {
 	void CActorManager::CreateMaterial(CActorBase* pActor) {
 		if (pActor) {
 			pActor->CreateMaterial(pDX11Renderer);
+		}
+	}
+
+	// オブジェクトのコンスタントバッファを作成
+	void CActorManager::CreateConstantBuffer(CActorBase* pActor) {
+		if (pActor) {
+			pActor->CreateConstantBuffer(pDX11Renderer);
 		}
 	}
 

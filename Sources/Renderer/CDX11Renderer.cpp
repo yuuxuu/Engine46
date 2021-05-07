@@ -22,6 +22,8 @@ namespace Engine46 {
 	// 初期化
 	bool CDX11Renderer::Initialize(HWND hwnd, UINT width, UINT height) {
 		
+		m_windowRect = RECT(width, height);
+
 		UINT flag = 0;
 #ifdef _DEBUG
 		flag |= D3D11_CREATE_DEVICE_DEBUG;
@@ -212,7 +214,7 @@ namespace Engine46 {
 
 	// レンダーターゲットビューをクリア
 	void CDX11Renderer::ClearRenderTargetView(ID3D11RenderTargetView* pRtv) {
-		const float color[] = { 0.5f, 0.5f, 0.0f, 1.0f };
+		const float color[] = { 1.0f, 0.0f, 0.0f, 1.0f };
 
 		m_pDeviceContext->ClearRenderTargetView(pRtv, color);
 	}

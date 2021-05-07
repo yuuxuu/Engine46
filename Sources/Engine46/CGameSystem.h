@@ -25,7 +25,7 @@ namespace Engine46 {
 		std::thread						m_gameSystemThread;
 		HANDLE							m_hGame;
 
-		std::unique_ptr<CWindow>		m_mainWindow;
+		std::unique_ptr<CWindow>		m_pMainWindow;
 
 		std::unique_ptr<CDX11Renderer>	m_pDX11Renderer;
 

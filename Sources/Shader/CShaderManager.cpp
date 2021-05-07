@@ -6,7 +6,10 @@
  */
 
 #include "CShaderManager.h"
+
 #include "../Engine46/utility.h"
+
+#include "../Renderer/CDX11Renderer.h"
 
 namespace Engine46 {
 
@@ -14,7 +17,8 @@ namespace Engine46 {
 	const char* g_ShaderName = "D:/Engine46/Sources/Shader/ShaderSource/HLSL/Model.hlsl";
 
 	// コンストラクタ
-	CShaderManager::CShaderManager()
+	CShaderManager::CShaderManager(CDX11Renderer* pRenderer) :
+		pDX11Renderer(pRenderer)
 	{}
 
 	// デストラクタ
@@ -136,6 +140,8 @@ namespace Engine46 {
 			std::cout << name.get() << " " << entryPoint << "コンパイル:失敗" << std::endl;
 			return false;
 		}
+
+		pDX11Renderer->SetInputLayout(pBlob->GetBufferPointer(), pBlob->GetBufferSize());
 
 		return true;
 	}

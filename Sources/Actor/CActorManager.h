@@ -14,6 +14,7 @@
 
 namespace Engine46 {
 	
+	// 前方宣言
 	class CDX11Renderer;
 
 	class CActorManager {
@@ -36,6 +37,8 @@ namespace Engine46 {
 		void CreateMesh(CActorBase* pActor);
 
 		void CreateMaterial(CActorBase* pActor);
+
+		void CreateConstantBuffer(CActorBase* pActor);
 
 		bool SaveActor();
 		bool LoadActor();
