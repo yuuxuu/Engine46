@@ -17,7 +17,7 @@ namespace Engine46 {
 	// コンストラクタ
 	CGameSystem::CGameSystem() :
 		m_hGame(nullptr),
-		m_mainWindow(nullptr),
+		m_pMainWindow(nullptr),
 		m_fps(0),
 		m_wfps(0),
 		m_oldTime(0),
@@ -38,15 +38,15 @@ namespace Engine46 {
 		// タイマの分解能力を１ｍｓにする
 		timeBeginPeriod(1);
 		// メインウインドウ作成
-		m_mainWindow = std::make_unique<CWindow>();
+		m_pMainWindow = std::make_unique<CWindow>();
 		// メインウインドウ初期化
-		if (!m_mainWindow->Initialize(hInstance, "MainWindow", "Engine46")) {
+		if (!m_pMainWindow->Initialize(hInstance, "MainWindow", "Engine46")) {
 			std::cout << "ウインドウ初期化:失敗" << std::endl;
 			return false;
 		}
 
-		HWND hwnd = m_mainWindow->GetHwnd();
-		RECT rect = m_mainWindow->GetWindowSize();
+		HWND hwnd = m_pMainWindow->GetHwnd();
+		RECT rect = m_pMainWindow->GetWindowSize();
 
 		m_pDX11Renderer = std::make_unique<CDX11Renderer>();
 		if (!m_pDX11Renderer->Initialize(hwnd, rect.w, rect.h)) return false;

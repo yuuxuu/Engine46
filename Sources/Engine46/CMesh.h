@@ -19,18 +19,20 @@ namespace Engine46 {
 	// 前方宣言
 	class CDX11Renderer;
 
+	struct vertexInfo {
+		VECTOR3	vertex;
+		VECTOR4	color;
+		VECTOR2	uv;
+		VECTOR3	normal;
+		VECTOR3	tangent;
+		VECTOR3	binormal;
+	};
+
 	class CMeshBase {
 	protected:
-		std::vector<VECTOR3>	m_vecVertex;
-		std::vector<VECTOR4>	m_vecColor;
-		std::vector<VECTOR2>	m_vecUV;
-		std::vector<VECTOR3>	m_vecNormal;
-		std::vector<VECTOR3>	m_vecTangent;
-		std::vector<VECTOR3>	m_vecBinormal;
+		std::vector<vertexInfo>	m_vecVertexInfo;
 
 		std::vector<DWORD>		m_vecIndexes;
-
-		UINT					m_strides;
 
 	public:
 		CMeshBase();
@@ -42,12 +44,7 @@ namespace Engine46 {
 		void ReserveVertex(int reserveSize);
 		void ReserveIndex(int reserveSize);
 
-		void AddVertex(const VECTOR3& vertex) { m_vecVertex.emplace_back(vertex); }
-		void AddColor(const VECTOR4& color) { m_vecColor.emplace_back(color); }
-		void AddUV(const VECTOR2& uv) { m_vecUV.emplace_back(uv); }
-		void AddNormal(const VECTOR3& normal) { m_vecNormal.emplace_back(normal); }
-		void AddBinormal(const VECTOR3& binormal) { m_vecBinormal.emplace_back(binormal); }
-		void AddTangent(const VECTOR3& tangent) { m_vecTangent.emplace_back(tangent); }
+		void AddVertexInfo(vertexInfo info) { m_vecVertexInfo.emplace_back(info); }
 
 		void AddIndex(const DWORD index) { m_vecIndexes.emplace_back(index); }
 	};

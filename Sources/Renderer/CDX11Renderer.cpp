@@ -22,6 +22,8 @@ namespace Engine46 {
 	// 初期化
 	bool CDX11Renderer::Initialize(HWND hwnd, UINT width, UINT height) {
 		
+		m_windowRect = RECT(width, height);
+
 		UINT flag = 0;
 #ifdef _DEBUG
 		flag |= D3D11_CREATE_DEVICE_DEBUG;
@@ -71,22 +73,50 @@ namespace Engine46 {
 			return false;
 		}
 
-		ID3D11Texture2D* pTex2D;
-		hr = m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&pTex2D);
-		if (FAILED(hr)) {
-			MessageBox(NULL, "バックバッファ取得：失敗", "MessageBox", MB_OK);
-			return false;
+		{
+			ID3D11Texture2D* pTex2D;
+			hr = m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&pTex2D);
+			if (FAILED(hr)) {
+				MessageBox(NULL, "バックバッファ取得：失敗", "MessageBox", MB_OK);
+				return false;
+			}
+
+			D3D11_TEXTURE2D_DESC texDesc;
+			pTex2D->GetDesc(&texDesc);
+
+			D3D11_RENDER_TARGET_VIEW_DESC rtvDesc = {};
+			rtvDesc.ViewDimension				= D3D11_RTV_DIMENSION_TEXTURE2D;
+			rtvDesc.Format						= texDesc.Format;
+			rtvDesc.Texture2DArray.ArraySize	= texDesc.ArraySize;
+
+			if (!this->CreateRenderTargetView(m_pRtv, pTex2D, rtvDesc)) return false;
 		}
 
-		D3D11_TEXTURE2D_DESC texDesc;
-		pTex2D->GetDesc(&texDesc);
+		{
+			D3D11_TEXTURE2D_DESC texDesc = {};
+			texDesc.Width				= width;
+			texDesc.Height				= height;
+			texDesc.MipLevels			= 1;
+			texDesc.ArraySize			= 1;
+			texDesc.Format				= DXGI_FORMAT_R24G8_TYPELESS;
+			texDesc.SampleDesc.Count	= 1;
+			texDesc.SampleDesc.Quality	= 0;
+			texDesc.Usage				= D3D11_USAGE_DEFAULT;
+			texDesc.BindFlags			= D3D11_BIND_DEPTH_STENCIL;
+			texDesc.CPUAccessFlags		= 0;
+			texDesc.MiscFlags			= 0;
 
-		D3D11_RENDER_TARGET_VIEW_DESC rtvDesc = {};
-		rtvDesc.ViewDimension				= D3D11_RTV_DIMENSION_TEXTURE2D;
-		rtvDesc.Format						= texDesc.Format;
-		rtvDesc.Texture2DArray.ArraySize	= texDesc.ArraySize;
+			ComPtr<ID3D11Texture2D> pTex;
+			if (!this->CreateTexture2D(pTex, texDesc)) return false;
 
-		if(!this->CreateRenderTargetView(m_pRtv, pTex2D, rtvDesc)) return false;
+			D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
+			dsvDesc.ViewDimension				= D3D11_DSV_DIMENSION_TEXTURE2D;
+			dsvDesc.Format						= DXGI_FORMAT_D24_UNORM_S8_UINT;
+			dsvDesc.Texture2D.MipSlice			= 0;
+			dsvDesc.Texture2DArray.ArraySize	= texDesc.ArraySize;
+
+			if (!this->CreateDepthStencilView(m_pDsv, pTex.Get(), dsvDesc)) return false;
+		}
 
 		m_pDX11FRendering = std::make_unique<CDX11ForwardRendering>(this);
 		if (!m_pDX11FRendering->Initialize(width, height)) return false;
@@ -102,14 +132,15 @@ namespace Engine46 {
 	// 描画
 	bool CDX11Renderer::Render(CSceneBase* pScene) {
 
-		m_pDX11FRendering->Begine();
-
-		pScene->Draw();
-
-		m_pDX11FRendering->End();
+		//m_pDX11FRendering->Begine();
+		//
+		//m_pDX11FRendering->End();
 
 		this->ClearRenderTargetView(m_pRtv.Get());
-		this->SetRenderTargetView(m_pRtv.Get(), nullptr);
+		this->ClearDespthStencilView(m_pDsv.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL);
+		this->SetRenderTargetView(m_pRtv.Get(), m_pDsv.Get());
+		
+		pScene->Draw();
 
 		HRESULT hr = m_pSwapChain->Present(0, 0);
 		if (FAILED(hr)) {
@@ -135,15 +166,15 @@ namespace Engine46 {
 	}
 
 	// バッファを設定
-	void CDX11Renderer::SetBuffer(ID3D11Buffer* const* pVertexBuf, ID3D11Buffer* pIndexBuf, UINT strides, UINT offset) {
+	void CDX11Renderer::SetBuffer(ID3D11Buffer* pVertexBuf, ID3D11Buffer* pIndexBuf, UINT strides, UINT offset) {
 
-		m_pDeviceContext->IASetVertexBuffers(0, 1, pVertexBuf, &strides, &offset);
+		m_pDeviceContext->IASetVertexBuffers(0, 1, &pVertexBuf, &strides, &offset);
 
 		m_pDeviceContext->IASetIndexBuffer(pIndexBuf, DXGI_FORMAT_R32_UINT, 0);
 	}
 
 	// インデックス描画
-	void CDX11Renderer::DrawIndexed(D3D_PRIMITIVE_TOPOLOGY topology, UINT numIndexes) {
+	void CDX11Renderer::DrawIndexed(D3D11_PRIMITIVE_TOPOLOGY topology, UINT numIndexes) {
 
 		m_pDeviceContext->IASetPrimitiveTopology(topology);
 
@@ -210,9 +241,111 @@ namespace Engine46 {
 		return true;
 	}
 
+	// バーテックスシェーダー作成
+	bool CDX11Renderer::CreateVertexShader(ComPtr<ID3D11VertexShader>& pVS, ID3DBlob* pBlob) {
+
+		HRESULT hr = m_pDevice->CreateVertexShader(
+			pBlob->GetBufferPointer(),
+			pBlob->GetBufferSize(),
+			nullptr,
+			&pVS);
+
+		if (FAILED(hr)) {
+			MessageBox(NULL, "バーテックスシェーダー作成：失敗", "MessageBox", MB_OK);
+			return false;
+		}
+
+		return true;
+	}
+
+	// ピクセルシェーダー作成
+	bool CDX11Renderer::CreatePixelShader(ComPtr<ID3D11PixelShader>& pPS, ID3DBlob* pBlob) {
+		
+		HRESULT hr = m_pDevice->CreatePixelShader(
+			pBlob->GetBufferPointer(),
+			pBlob->GetBufferSize(),
+			nullptr,
+			&pPS);
+
+		if (FAILED(hr)) {
+			MessageBox(NULL, "ピクセルシェーダー作成：失敗", "MessageBox", MB_OK);
+			return false;
+		}
+
+		return true;
+	}
+
+	// ハルシェーダー作成
+	bool CDX11Renderer::CreateHullShader(ComPtr<ID3D11HullShader>& pHS, ID3DBlob* pBlob) {
+
+		HRESULT hr = m_pDevice->CreateHullShader(
+			pBlob->GetBufferPointer(),
+			pBlob->GetBufferSize(),
+			nullptr,
+			&pHS);
+
+		if (FAILED(hr)) {
+			MessageBox(NULL, "ハルシェーダー作成：失敗", "MessageBox", MB_OK);
+			return false;
+		}
+
+		return true;
+	}
+
+	// ドメインシェーダー作成
+	bool CDX11Renderer::CreateDomainShader(ComPtr<ID3D11DomainShader>& pDS, ID3DBlob* pBlob) {
+
+		HRESULT hr = m_pDevice->CreateDomainShader(
+			pBlob->GetBufferPointer(),
+			pBlob->GetBufferSize(),
+			nullptr,
+			&pDS);
+
+		if (FAILED(hr)) {
+			MessageBox(NULL, "ドメインシェーダー作成：失敗", "MessageBox", MB_OK);
+			return false;
+		}
+
+		return true;
+	}
+
+	// ジオメトリーシェーダー作成
+	bool CDX11Renderer::CreateGeometryShader(ComPtr<ID3D11GeometryShader>& pGS, ID3DBlob* pBlob) {
+
+		HRESULT hr = m_pDevice->CreateGeometryShader(
+			pBlob->GetBufferPointer(),
+			pBlob->GetBufferSize(),
+			nullptr,
+			&pGS);
+
+		if (FAILED(hr)) {
+			MessageBox(NULL, "ジオメトリーシェーダー作成：失敗", "MessageBox", MB_OK);
+			return false;
+		}
+
+		return true;
+	}
+
+	// コンピュートシェーダー作成
+	bool CDX11Renderer::CreateComputeShader(ComPtr<ID3D11ComputeShader>& pCS, ID3DBlob* pBlob) {
+
+		HRESULT hr = m_pDevice->CreateComputeShader(
+			pBlob->GetBufferPointer(),
+			pBlob->GetBufferSize(),
+			nullptr,
+			&pCS);
+
+		if (FAILED(hr)) {
+			MessageBox(NULL, "コンピュートシェーダー作成：失敗", "MessageBox", MB_OK);
+			return false;
+		}
+
+		return true;
+	}
+
 	// レンダーターゲットビューをクリア
 	void CDX11Renderer::ClearRenderTargetView(ID3D11RenderTargetView* pRtv) {
-		const float color[] = { 0.5f, 0.5f, 0.0f, 1.0f };
+		const float color[] = { 0.5f, 0.4f, 0.3f, 1.0f };
 
 		m_pDeviceContext->ClearRenderTargetView(pRtv, color);
 	}
@@ -232,9 +365,44 @@ namespace Engine46 {
 		m_pDeviceContext->OMSetRenderTargets(vecRtv.size(), &vecRtv[0], pDsv);
 	}
 
+	// バーテックスシェーダーを設定
+	void CDX11Renderer::SetVsShader(ID3D11VertexShader* pVs) {
+		m_pDeviceContext->VSSetShader(pVs, nullptr, 0);
+	}
+
+	// ピクセルシェーダーを設定
+	void CDX11Renderer::SetPsShader(ID3D11PixelShader* pPs) {
+		m_pDeviceContext->PSSetShader(pPs, nullptr, 0);
+	}
+
+	// ハルシェーダーを設定
+	void CDX11Renderer::SetHsShader(ID3D11HullShader* pHs) {
+		m_pDeviceContext->HSSetShader(pHs, nullptr, 0);
+	}
+
+	// ドメインシェーダーを設定
+	void CDX11Renderer::SetDsShader(ID3D11DomainShader* pDs) {
+		m_pDeviceContext->DSSetShader(pDs, nullptr, 0);
+	}
+
+	// ジオメトリーシェーダーを設定
+	void CDX11Renderer::SetGsShader(ID3D11GeometryShader* pGs) {
+		m_pDeviceContext->GSSetShader(pGs, nullptr, 0);
+	}
+
+	// コンピュートシェーダーを設定
+	void CDX11Renderer::SetCsShader(ID3D11ComputeShader* pCs) {
+		m_pDeviceContext->CSSetShader(pCs, nullptr, 0);
+	}
+
 	// ピクセルシェーダーにリソースビューを設定
 	void CDX11Renderer::SetPSShaderResources(UINT slot, UINT num, ID3D11ShaderResourceView* pSrv) {
 		m_pDeviceContext->PSSetShaderResources(slot, num, &pSrv);
+	}
+
+	// バーテックスシェーダーにコンスタントバッファを設定
+	void CDX11Renderer::SetVSConstantBuffers(UINT slot, UINT num, ID3D11Buffer* pBuf) {
+		m_pDeviceContext->VSSetConstantBuffers(slot, num, &pBuf);
 	}
 
 	// ピクセルシェーダーにコンスタントバッファを設定
@@ -253,7 +421,7 @@ namespace Engine46 {
 		if (m_iLayoutBufSize < bufSize) {
 			m_iLayoutBufSize = bufSize;
 
-			D3D11_INPUT_ELEMENT_DESC ieDesc[] = {
+			D3D11_INPUT_ELEMENT_DESC elemDesc[] = {
 				{ "POSITION",	0, DXGI_FORMAT_R32G32B32_FLOAT   , 0,  0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 				{ "COLOR",		0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 				{ "TEXCOORD",	0, DXGI_FORMAT_R32G32_FLOAT      , 0, 28, D3D11_INPUT_PER_VERTEX_DATA, 0 },
@@ -266,7 +434,7 @@ namespace Engine46 {
 
 			ID3D11InputLayout* pILayout;
 
-			HRESULT hr = m_pDevice->CreateInputLayout(ieDesc, ARRAYSIZE(ieDesc), pBuf, bufSize, &pILayout);
+			HRESULT hr = m_pDevice->CreateInputLayout(elemDesc, ARRAYSIZE(elemDesc), pBuf, bufSize, &pILayout);
 			if (FAILED(hr)) {
 				MessageBox(NULL, "インプットレイアウト作成：失敗", "MessageBox", MB_OK);
 			}

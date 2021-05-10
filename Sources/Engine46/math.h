@@ -163,13 +163,38 @@ namespace Engine46 {
 		VECTOR3 rotation;
 		VECTOR3 scale;
 
-		Transform() {}
+		Transform() :
+			pos(),
+			rotation(),
+			scale(1.0f,1.0f,1.0f)
+		{}
 
 		Transform(VECTOR3 pos, VECTOR3 rotation, VECTOR3 scale) :
 			pos(pos),
 			rotation(rotation),
 			scale(scale)
 		{}
+	};
+
+	struct Matrix {
+		union {
+			struct {
+				float _11, _12, _13, _14;
+				float _21, _22, _23, _24;
+				float _31, _32, _33, _34;
+				float _41, _42, _43, _44;
+			};
+			float m[4][4];
+
+			DirectX::XMMATRIX dx_m;
+		};
+
+		Matrix() {
+			m[0][0] = 1.0f; m[0][1] = 0.0f; m[0][2] = 0.0f; m[0][3] = 0.0f;
+			m[1][0] = 0.0f; m[1][1] = 1.0f; m[1][2] = 0.0f; m[1][3] = 0.0f;
+			m[2][0] = 0.0f; m[2][1] = 0.0f; m[2][2] = 1.0f; m[2][3] = 0.0f;
+			m[3][0] = 0.0f; m[3][1] = 0.0f; m[3][2] = 0.0f; m[3][3] = 1.0f;
+		}
 	};
 
 	struct RECT {

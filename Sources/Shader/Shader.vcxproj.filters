@@ -71,4 +71,15 @@
       <Filter>リソース ファイル</Filter>
     </FxCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="ShaderSource\ConstantBuffer.hlsli">
+      <Filter>リソース ファイル</Filter>
+    </None>
+    <None Include="ShaderSource\RootSignature.hlsli">
+      <Filter>リソース ファイル</Filter>
+    </None>
+    <None Include="ShaderSource\ShaderUlity.hlsli">
+      <Filter>リソース ファイル</Filter>
+    </None>
+  </ItemGroup>
 </Project>

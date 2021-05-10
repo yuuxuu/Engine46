@@ -14,31 +14,20 @@
 namespace Engine46 {
 
 	// コンストラクタ
-	CMeshBase::CMeshBase() :
-		m_strides(0)
+	CMeshBase::CMeshBase()
 	{}
 
 	// デストラクタ
 	CMeshBase::~CMeshBase()
 	{
-		VecClear(m_vecVertex);
-		VecClear(m_vecColor);
-		VecClear(m_vecUV);
-		VecClear(m_vecNormal);
-		VecClear(m_vecTangent);
-		VecClear(m_vecBinormal);
+		VecClear(m_vecVertexInfo);
 
 		VecClear(m_vecIndexes);
 	}
 
 	// 頂点配列の初期化
 	void CMeshBase::ReserveVertex(int reserveSize) {
-		m_vecVertex.reserve(reserveSize);
-		m_vecColor.reserve(reserveSize);
-		m_vecUV.reserve(reserveSize);
-		m_vecNormal.reserve(reserveSize);
-		m_vecTangent.reserve(reserveSize);
-		m_vecBinormal.reserve(reserveSize);
+		m_vecVertexInfo.reserve(reserveSize);
 	}
 
 	// インデックス配列の初期化
@@ -58,28 +47,8 @@ namespace Engine46 {
 	// メッシュ作成
 	void CDX11Mesh::Create() {
 
-		m_strides = 0;
-		if (!m_vecVertex.empty()) {
-			m_strides += sizeof(m_vecVertex[0]);
-		}
-		if (!m_vecColor.empty()) {
-			m_strides += sizeof(m_vecColor[0]);
-		}
-		if (!m_vecUV.empty()) {
-			m_strides += sizeof(m_vecUV[0]);
-		}
-		if (!m_vecNormal.empty()) {
-			m_strides += sizeof(m_vecNormal[0]);
-		}
-		if (!m_vecBinormal.empty()) {
-			m_strides += sizeof(m_vecBinormal[0]);
-		}
-		if (!m_vecTangent.empty()) {
-			m_strides += sizeof(m_vecTangent[0]);
-		}
-
 		D3D11_BUFFER_DESC bufDesc = {};
-		bufDesc.ByteWidth			= m_strides * m_vecVertex.size();
+		bufDesc.ByteWidth			= sizeof(vertexInfo) * m_vecVertexInfo.size();
 		bufDesc.Usage				= D3D11_USAGE_DEFAULT;
 		bufDesc.BindFlags			= D3D11_BIND_VERTEX_BUFFER;
 		bufDesc.CPUAccessFlags		= 0;
@@ -87,7 +56,7 @@ namespace Engine46 {
 		bufDesc.StructureByteStride = 0;
 
 		D3D11_SUBRESOURCE_DATA subData = {};
-		subData.pSysMem = this;
+		subData.pSysMem = &m_vecVertexInfo[0];
 
 		pDX11Renderer->CreateBuffer(m_pVertexBuffer, bufDesc, &subData);
 
@@ -102,7 +71,7 @@ namespace Engine46 {
 	// メッシュ描画
 	void CDX11Mesh::Draw() {
 		
-		pDX11Renderer->SetBuffer(m_pVertexBuffer.GetAddressOf(), m_pIndexBuffer.Get(), m_strides, 0);
+		pDX11Renderer->SetBuffer(m_pVertexBuffer.Get(), m_pIndexBuffer.Get(), sizeof(vertexInfo), 0);
 
 		pDX11Renderer->DrawIndexed(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, m_vecIndexes.size());
 	}

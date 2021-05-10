@@ -12,12 +12,15 @@ namespace Engine46 {
 
 	UINT g_screenShotCount = 0;
 
+	constexpr UINT screenWitdh = 1280;
+	constexpr UINT screenHeight = 720;
+
 	// コンストラクタ
 	CWindow::CWindow():
 		m_hwnd(nullptr),
 		m_hInstance(nullptr),
 		m_className(),
-		m_windowSize(1280, 720),
+		m_windowSize(screenWitdh, screenHeight),
 		m_clientSize(0, 0)
 	{}
 

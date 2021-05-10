@@ -15,8 +15,15 @@
 #include "../Engine46/CDataRecord.h"
 #include "../Engine46/CMesh.h"
 #include "../Engine46/CMaterial.h"
+#include "../Engine46/CConstantBuffer.h"
 
 namespace Engine46 {
+
+	enum class ClassType {
+		Root,
+		Camera,
+		Sprite,
+	};
 
 	class CActorBase : public IObject {
 	protected:
@@ -33,6 +40,8 @@ namespace Engine46 {
 		std::unique_ptr<CMeshBase>						m_pMesh;
 
 		std::unique_ptr<CMaterialBase>					m_pMaterial;
+
+		std::unique_ptr<CCbBase>						m_pCb;
 
 		CActorBase*										pParentActor;
 		int												m_parentActorID;
@@ -52,9 +61,13 @@ namespace Engine46 {
 		virtual bool Save(std::ofstream& ofs) override;
 		virtual bool Load(std::ifstream& ifs) override;
 
+		void CreateConstantBuffer(CDX11Renderer* pRenderer);
+
 		void CreateMesh(CDX11Renderer* pRenderer);
 
 		void CreateMaterial(CDX11Renderer* pRenderer);
+
+		void SetShaderPackage(CShaderPackage* pShaderPackage);
 
 		void ConnectParentActor(CActorBase* pParentActor);
 
@@ -65,7 +78,10 @@ namespace Engine46 {
 
 		std::list<CActorBase*> GetChiledActorList() const { return pChiledActorList; }
 		std::vector<int> GetChiledActorIDList() const { return m_chiledActorIDList; }
+
+		Matrix GetWorldMatrix();
 	};
+
 } // namespace
 
-#endif
+#endif 

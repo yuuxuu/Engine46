@@ -30,3 +30,5 @@
 #include <d3dcompiler.h>
 
 #pragma comment(lib, "d3dcompiler.lib")
+
+#include <DirectXMath/DirectXMath.h>

@@ -11,7 +11,7 @@ namespace Engine46 {
 
 	// コンストラクタ
 	CSprite::CSprite() :
-		CActorBase(1, "Sprite", Transform())
+		CActorBase((int)ClassType::Sprite, "Sprite", Transform(VECTOR3(), VECTOR3(), VECTOR3(5.0f, 5.0f, 5.0f)))
 	{}
 
 	// デストラクタ
@@ -24,20 +24,27 @@ namespace Engine46 {
 		if (m_pMesh) {
 			m_pMesh->ReserveVertex(4);
 
-			m_pMesh->AddVertex(VECTOR3(-1.0f, 1.0f, 0.0f));
-			m_pMesh->AddVertex(VECTOR3(1.0f, 1.0f, 0.0f));
-			m_pMesh->AddVertex(VECTOR3(-1.0f, -1.0f, 0.0f));
-			m_pMesh->AddVertex(VECTOR3(1.0f, -1.0f, 0.0f));
+			vertexInfo info;
 
-			m_pMesh->AddColor(VECTOR4(1.0f, 0.0f, 0.0f, 1.0f));
-			m_pMesh->AddColor(VECTOR4(0.0f, 1.0f, 0.0f, 1.0f));
-			m_pMesh->AddColor(VECTOR4(0.0f, 0.0f, 1.0f, 1.0f));
-			m_pMesh->AddColor(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f));
+			info.vertex = VECTOR3(-1.0f, 1.0f, 0.0f);
+			info.color	= VECTOR4(1.0f, 0.0f, 0.0f, 1.0f);
+			info.uv		= VECTOR2(0.0f, 0.0f);
+			m_pMesh->AddVertexInfo(info);
 
-			m_pMesh->AddUV(VECTOR2(0.0f, 0.0f));
-			m_pMesh->AddUV(VECTOR2(1.0f, 0.0f));
-			m_pMesh->AddUV(VECTOR2(0.0f, 1.0f));
-			m_pMesh->AddUV(VECTOR2(1.0f, 1.0f));
+			info.vertex = VECTOR3(1.0f, 1.0f, 0.0f);
+			info.color	= VECTOR4(0.0f, 1.0f, 0.0f, 1.0f);
+			info.uv		= VECTOR2(1.0f, 0.0f);
+			m_pMesh->AddVertexInfo(info);
+
+			info.vertex = VECTOR3(-1.0f, -1.0f, 0.0f);
+			info.color	= VECTOR4(0.0f, 0.0f, 1.0f, 1.0f);
+			info.uv		= VECTOR2(0.0f, 1.0f);
+			m_pMesh->AddVertexInfo(info);
+
+			info.vertex = VECTOR3(1.0f, -1.0f, 0.0f);
+			info.color	= VECTOR4(1.0f, 0.0f, 0.0f, 1.0f);
+			info.uv		= VECTOR2(1.0f, 1.0f);
+			m_pMesh->AddVertexInfo(info);
 
 			m_pMesh->ReserveIndex(6);
 
@@ -52,7 +59,7 @@ namespace Engine46 {
 		}
 
 		if (m_pMaterial) {
-			m_pMaterial->Create();
+			m_pMaterial->CreateConstantBuffer();
 		}
 	}
 

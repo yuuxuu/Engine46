@@ -15,9 +15,7 @@ namespace Engine46 {
 	// コンストラクタ
 	CSceneManager::CSceneManager(CDX11Renderer* pRenderer) :
 		pDX11Renderer(pRenderer)
-	{
-		pRootScene = this->CreateScene(0);
-	}
+	{}
 
 	// デストラクタ
 	CSceneManager::~CSceneManager()
@@ -26,11 +24,21 @@ namespace Engine46 {
 	// 初期化
 	bool CSceneManager::Initialize() {
 		
-		m_pShaderManager = std::make_unique<CShaderManager>();
+		m_pShaderManager = std::make_unique<CShaderManager>(pDX11Renderer);
 		if(!m_pShaderManager->Initialize()) return false;
 
 		m_pActorManager = std::make_unique<CActorManager>(pDX11Renderer);
 		if (!m_pActorManager->Initialize()) return false;
+
+		pRootScene = this->CreateScene(0);
+
+		const char* shaderName = "D:/Engine46/Sources/Shader/ShaderSource/HLSL/Model.hlsl";
+		CActorBase* pRootActor = m_pActorManager->GetRootActor();
+		CShaderPackage* pSp = m_pShaderManager->GetShaderPackage(shaderName);
+
+		for (auto& actor : pRootActor->GetChiledActorList()) {
+			actor->SetShaderPackage(pSp);
+		}
 
 		return true;
 	}
