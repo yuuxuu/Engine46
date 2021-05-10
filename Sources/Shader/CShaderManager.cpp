@@ -43,7 +43,7 @@ namespace Engine46 {
 		auto itr = m_mapShaderPackage.find(packageName);
 
 		if (itr == m_mapShaderPackage.end()) {
-			std::unique_ptr<CShaderPackage> sp = std::make_unique<CShaderPackage>(packageName);
+			std::unique_ptr<CShaderPackage> sp = std::make_unique<CShaderPackage>(pDX11Renderer, packageName);
 
 			CShaderPackage* pSp = sp.get();
 
@@ -115,7 +115,7 @@ namespace Engine46 {
 		const char* entryPoint,
 		const char* shaderModel) {
 
-		ComPtr<ID3DBlob> pErrBlob = nullptr;
+		ComPtr<ID3DBlob> pErrBlob;
 
 		DWORD shaderFlags = 0;
 #ifdef _DEBUG
@@ -137,13 +137,22 @@ namespace Engine46 {
 			&pErrBlob);
 
 		if (FAILED(hr)) {
-			std::cout << name.get() << " " << entryPoint << "コンパイル:失敗" << std::endl;
+			std::cout << name.get() << " " << (char*)pErrBlob->GetBufferPointer() << "コンパイル:失敗" << std::endl;
 			return false;
 		}
 
-		pDX11Renderer->SetInputLayout(pBlob->GetBufferPointer(), pBlob->GetBufferSize());
-
 		return true;
+	}
+
+	// シェーダーパッケージを取得
+	CShaderPackage* CShaderManager::GetShaderPackage(const char* name) {
+		auto itr = m_mapShaderPackage.find(name);
+
+		if (itr != m_mapShaderPackage.end()) {
+			return itr->second.get();
+		}
+
+		return nullptr;
 	}
 
 } // namespace

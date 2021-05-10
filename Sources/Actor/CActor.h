@@ -67,6 +67,8 @@ namespace Engine46 {
 
 		void CreateMaterial(CDX11Renderer* pRenderer);
 
+		void SetShaderPackage(CShaderPackage* pShaderPackage);
+
 		void ConnectParentActor(CActorBase* pParentActor);
 
 		CActorBase* GetParentActor() const { return pParentActor; }

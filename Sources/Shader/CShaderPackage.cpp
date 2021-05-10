@@ -7,6 +7,8 @@
 
 #include "CShaderManager.h"
 
+#include "../Renderer/CDX11Renderer.h"
+
 namespace Engine46 {
 
 	// コンストラクタ
@@ -16,7 +18,8 @@ namespace Engine46 {
 	{}
 
 	// コンストラクタ
-	CShaderPackage::CShaderPackage(const char* name) :
+	CShaderPackage::CShaderPackage(CDX11Renderer* pRenderer, const char* name) :
+		pDX11Renderer(pRenderer),
 		m_PakageName(name),
 		m_isCompile(false)
 	{}
@@ -39,40 +42,53 @@ namespace Engine46 {
 		return true;
 	}
 
+	// シェーダーパッケージのシェーダーをそれぞれ設定
+	void CShaderPackage::SetShader() {
+		for (const auto& shader : m_pVecShader) {
+			shader->Set();
+		}
+	}
+
 	//	シェーダーパッケージのコンパイル
 	bool CShaderPackage::CompilePackage(CShaderManager* pShaderManager) {
+		
+		struct shaderInfo {
+			const char* entryPoint;
+			const char* shaderModel;
+			SHADER_TYPE shadeType;
+		};
+		static std::vector<shaderInfo> vecShaderInfo = {
+			{ "VS_main", "vs_5_0", SHADER_TYPE::TYPE_VERTEX },
+			{ "PS_main", "ps_5_0", SHADER_TYPE::TYPE_PIXEL },
+			{ "HS_main", "hs_5_0", SHADER_TYPE::TYPE_HULL },
+			{ "DS_main", "ds_5_0", SHADER_TYPE::TYPE_DOMAIN },
+			{ "GS_main", "gs_5_0", SHADER_TYPE::TYPE_GEOMETRY },
+			{ "CS_main", "cs_5_0", SHADER_TYPE::TYPE_COMPUTE },
+		};
+
 		ComPtr<ID3DBlob> pBlob;
 		std::unique_ptr<CShader> pShader;
 
-		if (pShaderManager->CompileShader(pBlob, m_PakageName, "VS_main", "vs_5_1")) {
-			pShader = std::make_unique<CShader>(m_PakageName, pBlob, SHADER_TYPE::TYPE_VERTEX);
+		if (pDX11Renderer) {
+			for (const auto& info : vecShaderInfo) {
+				if (pShaderManager->CompileShader(pBlob, m_PakageName, info.entryPoint, info.shaderModel)) {
+					pDX11Renderer->SetInputLayout(pBlob->GetBufferPointer(), pBlob->GetBufferSize());
 
-			this->AddShader(pShader);
+					pShader = std::make_unique<CDX11Shader>(pDX11Renderer, m_PakageName, pBlob, info.shadeType);
+					pShader->Create();
+
+					this->AddShader(pShader);
+				}
+			}
 		}
-		if (pShaderManager->CompileShader(pBlob, m_PakageName, "PS_main", "ps_5_1")) {
-			pShader = std::make_unique<CShader>(m_PakageName, pBlob, SHADER_TYPE::TYPE_PIXEL);
+		else {
+			for (const auto& info : vecShaderInfo) {
+				if (pShaderManager->CompileShader(pBlob, m_PakageName, info.entryPoint, info.shaderModel)) {
+					pShader = std::make_unique<CShader>(m_PakageName, pBlob, info.shadeType);
 
-			this->AddShader(pShader);
-		}
-		if (pShaderManager->CompileShader(pBlob, m_PakageName, "HS_main", "hs_5_1")) {
-			pShader = std::make_unique<CShader>(m_PakageName, pBlob, SHADER_TYPE::TYPE_HULL);
-
-			this->AddShader(pShader);
-		}
-		if (pShaderManager->CompileShader(pBlob, m_PakageName, "DS_main", "ds_5_1")) {
-			pShader = std::make_unique<CShader>(m_PakageName, pBlob, SHADER_TYPE::TYPE_DOMAIN);
-
-			this->AddShader(pShader);
-		}
-		if (pShaderManager->CompileShader(pBlob, m_PakageName, "GS_main", "gs_5_1")) {
-			pShader = std::make_unique<CShader>(m_PakageName, pBlob, SHADER_TYPE::TYPE_GEOMETRY);
-
-			this->AddShader(pShader);
-		}
-		if (pShaderManager->CompileShader(pBlob, m_PakageName, "CS_main", "cs_5_1")) {
-			pShader = std::make_unique<CShader>(m_PakageName, pBlob, SHADER_TYPE::TYPE_COMPUTE);
-
-			this->AddShader(pShader);
+					this->AddShader(pShader);
+				}
+			}
 		}
 
 		m_isCompile = (m_pVecShader.size() > 0) ? true : false;

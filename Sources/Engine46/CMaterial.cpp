@@ -71,11 +71,15 @@ namespace Engine46 {
 
 	// マテリアルをシェーダーへ設定
 	void CDX11Material::Set(UINT slot) {
+		if (pShaderPackage) {
+			pShaderPackage->SetShader();
+		}
+
 		if (pTexture) {
 			pTexture->Set(0);
 		}
 		
-		m_pConstantBuffer->Set(1);
+		m_pConstantBuffer->Set(slot);
 	}
 
 } // namespace

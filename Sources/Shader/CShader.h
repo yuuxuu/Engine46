@@ -15,6 +15,7 @@ using Microsoft::WRL::ComPtr;
 namespace Engine46 {
 
 	class CDataRecordBase;
+	class CDX11Renderer;
 
 	enum class SHADER_TYPE {
 		TYPE_VERTEX,				// 頂点
@@ -22,8 +23,8 @@ namespace Engine46 {
 		TYPE_HULL,					// ハル
 		TYPE_DOMAIN,				// ドメイン
 		TYPE_GEOMETRY,				// ジオメトリー
-		TYPE_GEOMETRY_STREAM_OUTPUT,// ジオメトリーストリームアウトプット
 		TYPE_COMPUTE,				// コンピュート
+		TYPE_GEOMETRY_STREAM_OUTPUT,// ジオメトリーストリームアウトプット
 		TYPE_NONE,
 	};
 
@@ -43,9 +44,12 @@ namespace Engine46 {
 	public:
 		CShader();
 		CShader(const char* name, ComPtr<ID3DBlob>& pBlob, SHADER_TYPE type);
-		~CShader();
+		virtual ~CShader();
 
 		void Initialize();
+
+		virtual void Create() {}
+		virtual void Set() {}
 
 		bool Save(std::ofstream& ofs);
 		bool Load(std::ifstream& ifs);
@@ -53,6 +57,25 @@ namespace Engine46 {
 		void SetData(ComPtr<ID3DBlob>& pBlob);
 
 		SHADER_TYPE GetShaderType() const { return m_shaderType; }
+	};
+
+	class CDX11Shader : public CShader {
+	private:
+		CDX11Renderer*				pDX11Renderer;
+
+		ComPtr<ID3D11VertexShader>	 m_pVS;
+		ComPtr<ID3D11PixelShader>	 m_pPS;
+		ComPtr<ID3D11HullShader>	 m_pHS;
+		ComPtr<ID3D11DomainShader>	 m_pDS;
+		ComPtr<ID3D11GeometryShader> m_pGS;
+		ComPtr<ID3D11ComputeShader>	 m_pCS;
+
+	public:
+		CDX11Shader(CDX11Renderer* pRenderer, const char* name, ComPtr<ID3DBlob>& pBlob, SHADER_TYPE type);
+		~CDX11Shader();
+
+		void Create() override;
+		void Set() override;
 	};
 
 } // namespace

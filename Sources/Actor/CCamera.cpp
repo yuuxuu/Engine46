@@ -11,7 +11,10 @@ namespace Engine46 {
 
 	// コンストラクタ
 	CCamera::CCamera(const int sWidth, const int sHeight) :
-		CActorBase((int)ClassType::Camera, "Camera", Transform())
+		CActorBase((int)ClassType::Camera, "Camera", Transform()),
+		m_Eye(VECTOR3(0.0f, 0.0f, -10.0f)),
+		m_Focus(),
+		m_UP(VECTOR3(0.0f, 1.0f, 0.0f))
 	{
 		m_matProj.dx_m = DirectX::XMMatrixPerspectiveFovLH(
 			DirectX::XMConvertToRadians(90.0f),
@@ -19,10 +22,6 @@ namespace Engine46 {
 			Z_NEAR,
 			Z_FAR
 		);
-
-		m_Eye.z = -10.0f;
-
-		m_UP.y = 1.0f;
 	}
 
 	// デストラクタ
@@ -50,10 +49,10 @@ namespace Engine46 {
 
 	// ViewProjection合成行列を取得
 	Matrix CCamera::GetVPMatrix() {
-		Matrix mat;
-		mat.dx_m = DirectX::XMMatrixMultiply(m_matView.dx_m, m_matProj.dx_m);
+		Matrix matVP;
+		matVP.dx_m = m_matView.dx_m * m_matProj.dx_m;
 		
-		return mat;
+		return matVP;
 	}
 
 } // namespace

@@ -84,21 +84,22 @@ namespace Engine46 {
 		}
 
 		if (m_pCb) {
-			Matrix matW = this->GetWorldMatrix();
-
 			if (pParentActor) {
 				for (auto& chiled : pParentActor->pChiledActorList) {
 					if (chiled->m_ClassID == (UINT)ClassType::Camera) {
 						CCamera* camera = dynamic_cast<CCamera*>(chiled);
 
+						Matrix matW = this->GetWorldMatrix();
+
 						Matrix matVP = camera->GetVPMatrix();
 
 						Matrix matWVP;
-						matWVP.dx_m = DirectX::XMMatrixMultiply(matW.dx_m, matVP.dx_m);
-						matWVP.dx_m = DirectX::XMMatrixTranspose(matWVP.dx_m);
+						matWVP.dx_m = matW.dx_m * matVP.dx_m;
+						Matrix matTranspose;
+						matTranspose.dx_m = DirectX::XMMatrixTranspose(matWVP.dx_m);
 
 						mainCB cb = {
-							matWVP,
+							matTranspose,
 							Matrix(),
 							chiled->m_Transform.pos,
 						};
@@ -142,11 +143,41 @@ namespace Engine46 {
 		return true;
 	}
 
+	// コンスタントバッファの作成
+	void CActorBase::CreateConstantBuffer(CDX11Renderer* pRenderer) {
+		if (!m_pCb) {
+			m_pCb = std::make_unique<CDX11CB>(pRenderer);
+
+			m_pCb->CreateConstantBuffer(sizeof(mainCB));
+		}
+	}
+
+	// メッシュ作成
+	void CActorBase::CreateMesh(CDX11Renderer* pRenderer) {
+		if (!m_pMesh) {
+			m_pMesh = std::make_unique<CDX11Mesh>(pRenderer);
+		}
+	}
+
+	// マテリアル作成
+	void CActorBase::CreateMaterial(CDX11Renderer* pRenderer) {
+		if (!m_pMaterial) {
+			m_pMaterial = std::make_unique<CDX11Material>(pRenderer);
+		}
+	}
+
+	// シェーダーパッケージを設定
+	void CActorBase::SetShaderPackage(CShaderPackage* pShaderPackage) {
+		if (m_pMaterial) {
+			m_pMaterial->SetShaderPackage(pShaderPackage);
+		}
+	}
+
 	// 親アクターを接続
 	void CActorBase::ConnectParentActor(CActorBase* pParentActor) {
-		
+
 		if (this->pParentActor == pParentActor) return;
-		
+
 		this->pParentActor = pParentActor;
 
 		if (pParentActor) {
@@ -169,29 +200,6 @@ namespace Engine46 {
 
 				m_chiledActorIDList.emplace_back(pChiledActor->m_ActorID);
 			}
-		}
-	}
-
-	// コンスタントバッファの作成
-	void CActorBase::CreateConstantBuffer(CDX11Renderer* pRenderer) {
-		if (!m_pCb) {
-			m_pCb = std::make_unique<CDX11CB>(pRenderer);
-
-			m_pCb->CreateConstantBuffer(sizeof(mainCB));
-		}
-	}
-
-	// メッシュ作成
-	void CActorBase::CreateMesh(CDX11Renderer* pRenderer) {
-		if (!m_pMesh) {
-			m_pMesh = std::make_unique<CDX11Mesh>(pRenderer);
-		}
-	}
-
-	// マテリアル作成
-	void CActorBase::CreateMaterial(CDX11Renderer* pRenderer) {
-		if (!m_pMaterial) {
-			m_pMaterial = std::make_unique<CDX11Material>(pRenderer);
 		}
 	}
 

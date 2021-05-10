@@ -49,6 +49,7 @@ namespace Engine46 {
 
 	// コンスタントバッファをシェーダーへ設定
 	void CDX11CB::Set(UINT slot) {
+		pDX11Renderer->SetVSConstantBuffers(slot, 1, m_pConstantBuffer.Get());
 		pDX11Renderer->SetPSConstantBuffers(slot, 1, m_pConstantBuffer.Get());
 	}
 

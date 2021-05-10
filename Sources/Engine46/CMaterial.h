@@ -12,6 +12,8 @@
 
 #include "CTexture.h"
 
+#include "../Shader/CShaderPackage.h"
+
 namespace Engine46 {
 
 	// 前方宣言
@@ -21,6 +23,8 @@ namespace Engine46 {
 	class CMaterialBase {
 	protected:
 		CTextureBase*	pTexture;
+
+		CShaderPackage* pShaderPackage;
 
 		VECTOR4			m_diffuse;
 		VECTOR4			m_specular;
@@ -43,13 +47,15 @@ namespace Engine46 {
 		void SetBrightness(const VECTOR4& brightness) { m_diffuse = brightness; }
 
 		void SetTexture(CTextureBase* pTexture) { this->pTexture = pTexture; }
+
+		void SetShaderPackage(CShaderPackage* pSp) { pShaderPackage = pSp; }
 	};
 
 	class CDX11Material : public CMaterialBase {
 	private:
-		CDX11Renderer*			pDX11Renderer;
+		CDX11Renderer*				pDX11Renderer;
 
-		std::unique_ptr<CDX11CB> m_pConstantBuffer;
+		std::unique_ptr<CDX11CB>	m_pConstantBuffer;
 
 	public:
 		CDX11Material(CDX11Renderer* pRenderer);

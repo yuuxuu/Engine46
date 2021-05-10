@@ -40,6 +40,8 @@ namespace Engine46 {
 
 		void CreateConstantBuffer(CActorBase* pActor);
 
+		void SetShaderPackage(CActorBase* pActor, CShaderPackage* pShaderPackage);
+
 		bool SaveActor();
 		bool LoadActor();
 

@@ -65,7 +65,7 @@ namespace Engine46 {
 
 		CActorBase* pActor = actor.get();
 
-		if (classID != 0) {
+		if (classID != (int)ClassType::Root) {
 			pRootActor->AddChiledActorList(pActor);
 		}
 
@@ -92,6 +92,13 @@ namespace Engine46 {
 	void CActorManager::CreateConstantBuffer(CActorBase* pActor) {
 		if (pActor) {
 			pActor->CreateConstantBuffer(pDX11Renderer);
+		}
+	}
+
+	// オブジェクトにシェーダーパッケージを設定
+	void CActorManager::SetShaderPackage(CActorBase* pActor, CShaderPackage* pShaderPackage) {
+		if (pActor) {
+			pActor->SetShaderPackage(pShaderPackage);
 		}
 	}
 

@@ -32,6 +32,14 @@ namespace Engine46 {
 
 		pRootScene = this->CreateScene(0);
 
+		const char* shaderName = "D:/Engine46/Sources/Shader/ShaderSource/HLSL/Model.hlsl";
+		CActorBase* pRootActor = m_pActorManager->GetRootActor();
+		CShaderPackage* pSp = m_pShaderManager->GetShaderPackage(shaderName);
+
+		for (auto& actor : pRootActor->GetChiledActorList()) {
+			actor->SetShaderPackage(pSp);
+		}
+
 		return true;
 	}
 

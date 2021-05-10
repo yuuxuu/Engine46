@@ -8,6 +8,8 @@
 #include "CShader.h"
 #include "../Engine46/CDataRecord.h"
 
+#include "../Renderer/CDX11Renderer.h"
+
 namespace Engine46 {
 
 	// コンストラクタ
@@ -83,6 +85,64 @@ namespace Engine46 {
 		std::memcpy(m_pBuf.get(), p, m_bufSize);
 
 		m_pBlob = pBlob;
+	}
+
+	// コンストラクタ
+	CDX11Shader::CDX11Shader(CDX11Renderer* pRenderer, const char* name, ComPtr<ID3DBlob>& pBlob, SHADER_TYPE type) :
+		CShader(name, pBlob, type),
+		pDX11Renderer(pRenderer)
+	{}
+
+	// デストラクタ
+	CDX11Shader::~CDX11Shader()
+	{}
+
+	// シェーダーを作成
+	void CDX11Shader::Create() {
+		switch (m_shaderType) {
+		case SHADER_TYPE::TYPE_VERTEX:
+			pDX11Renderer->CreateVertexShader(m_pVS, m_pBlob.Get());
+			break;
+		case SHADER_TYPE::TYPE_PIXEL:
+			pDX11Renderer->CreatePixelShader(m_pPS, m_pBlob.Get());
+			break;
+		case SHADER_TYPE::TYPE_HULL:
+			pDX11Renderer->CreateHullShader(m_pHS, m_pBlob.Get());
+			break;
+		case SHADER_TYPE::TYPE_DOMAIN:
+			pDX11Renderer->CreateDomainShader(m_pDS, m_pBlob.Get());
+			break;
+		case SHADER_TYPE::TYPE_GEOMETRY:
+			pDX11Renderer->CreateGeometryShader(m_pGS, m_pBlob.Get());
+			break;
+		case SHADER_TYPE::TYPE_COMPUTE:
+			pDX11Renderer->CreateComputeShader(m_pCS, m_pBlob.Get());
+			break;
+		}
+	}
+
+	// シェーダーを設定
+	void CDX11Shader::Set() {
+		switch (m_shaderType) {
+		case SHADER_TYPE::TYPE_VERTEX:
+			pDX11Renderer->SetVsShader(m_pVS.Get());
+			break;
+		case SHADER_TYPE::TYPE_PIXEL:
+			pDX11Renderer->SetPsShader(m_pPS.Get());
+			break;
+		case SHADER_TYPE::TYPE_HULL:
+			pDX11Renderer->SetHsShader(m_pHS.Get());
+			break;
+		case SHADER_TYPE::TYPE_DOMAIN:
+			pDX11Renderer->SetDsShader(m_pDS.Get());
+			break;
+		case SHADER_TYPE::TYPE_GEOMETRY:
+			pDX11Renderer->SetGsShader(m_pGS.Get());
+			break;
+		case SHADER_TYPE::TYPE_COMPUTE:
+			pDX11Renderer->SetCsShader(m_pCS.Get());
+			break;
+		}
 	}
 
 } // namespace
