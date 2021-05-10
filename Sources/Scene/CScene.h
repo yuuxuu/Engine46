@@ -49,6 +49,8 @@ namespace Engine46 {
 		virtual bool Save(std::ofstream& ofs) override;
 		virtual bool Load(std::ifstream& ifs) override;
 
+		void DrawRenderingScene(CActorBase* pActor);
+
 		void SetManager(CShaderManager* pShaderManager, CActorManager* pActorManager);
 
 		void ConnectParentScene(CSceneBase* pParentScene);

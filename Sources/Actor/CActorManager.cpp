@@ -37,7 +37,6 @@ namespace Engine46 {
 		this->CreateMesh(sprite);
 		this->CreateMaterial(sprite);
 		this->CreateConstantBuffer(sprite);
-
 		sprite->Initialize();
 
 		return true;

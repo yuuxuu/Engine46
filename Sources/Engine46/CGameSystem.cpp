@@ -7,6 +7,7 @@
 
 #include "CGameSystem.h"
 #include "CWinow.h"
+#include "CTimer.h"
 
 #include "../Renderer/CDX11Renderer.h"
 
@@ -17,11 +18,7 @@ namespace Engine46 {
 	// コンストラクタ
 	CGameSystem::CGameSystem() :
 		m_hGame(nullptr),
-		m_pMainWindow(nullptr),
-		m_fps(0),
-		m_wfps(0),
-		m_oldTime(0),
-		m_nowTime(0) 
+		m_pMainWindow(nullptr)
 	{}
 
 	// デストラクタ
@@ -37,6 +34,7 @@ namespace Engine46 {
 		setlocale(LC_CTYPE, "");
 		// タイマの分解能力を１ｍｓにする
 		timeBeginPeriod(1);
+
 		// メインウインドウ作成
 		m_pMainWindow = std::make_unique<CWindow>();
 		// メインウインドウ初期化
@@ -97,8 +95,6 @@ namespace Engine46 {
 			Update();
 
 			Draw();
-
-			MeasFPS();
 		}
 	}
 
@@ -117,19 +113,6 @@ namespace Engine46 {
 
 		if (scene) {
 			m_pDX11Renderer->Render(scene);
-		}
-	}
-
-	// FPS計測
-	void CGameSystem::MeasFPS() {
-		// 現在の時間を取得
-		m_nowTime = timeGetTime();
-		m_wfps++;
-
-		if (m_nowTime - m_oldTime >= 1000) {
-			m_fps = m_wfps;
-			m_wfps = 0;
-			m_oldTime = m_nowTime;
 		}
 	}
 

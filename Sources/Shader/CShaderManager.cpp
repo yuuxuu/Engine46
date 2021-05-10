@@ -14,7 +14,8 @@
 namespace Engine46 {
 
 	constexpr const char* g_ShaderPackageListFileName = "ShaderPackageList.bin";
-	const char* g_ShaderName = "D:/Engine46/Sources/Shader/ShaderSource/HLSL/Model.hlsl";
+	const char* g_Shader_Model = "D:/Engine46/Sources/Shader/ShaderSource/HLSL/Model.hlsl";
+	const char* g_Shader_Sprite = "D:/Engine46/Sources/Shader/ShaderSource/HLSL/Sprite.hlsl";
 
 	// コンストラクタ
 	CShaderManager::CShaderManager(CDX11Renderer* pRenderer) :
@@ -30,7 +31,10 @@ namespace Engine46 {
 
 		//this->LoadShaderPackageList();
 		
-		CShaderPackage* pSp = this->CreateShaderPackage(g_ShaderName);
+		CShaderPackage* pSp = this->CreateShaderPackage(g_Shader_Model);
+		if (!pSp->Initialize(this)) return false;
+
+		pSp = this->CreateShaderPackage(g_Shader_Sprite);
 		if (!pSp->Initialize(this)) return false;
 		
 		//this->SaveShaderPackageList();

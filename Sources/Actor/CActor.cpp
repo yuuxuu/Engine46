@@ -166,6 +166,13 @@ namespace Engine46 {
 		}
 	}
 
+	// マテリアルにテクスチャを設定
+	void CActorBase::SetTexture(CTextureBase* pTex) {
+		if (m_pMaterial) {
+			m_pMaterial->SetTexture(pTex);
+		}
+	}
+
 	// シェーダーパッケージを設定
 	void CActorBase::SetShaderPackage(CShaderPackage* pShaderPackage) {
 		if (m_pMaterial) {

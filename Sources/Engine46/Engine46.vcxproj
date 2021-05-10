@@ -43,6 +43,7 @@
     <ClCompile Include="CMaterial.cpp" />
     <ClCompile Include="CMesh.cpp" />
     <ClCompile Include="CTexture.cpp" />
+    <ClCompile Include="CTimer.cpp" />
     <ClCompile Include="CWinow.cpp" />
     <ClCompile Include="CDataRecord.cpp" />
     <ClCompile Include="main.cpp" />
@@ -57,6 +58,7 @@
     <ClInclude Include="CMaterial.h" />
     <ClInclude Include="CMesh.h" />
     <ClInclude Include="CTexture.h" />
+    <ClInclude Include="CTimer.h" />
     <ClInclude Include="CWinow.h" />
     <ClInclude Include="CDataRecord.h" />
     <ClInclude Include="IObject.h" />

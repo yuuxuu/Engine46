@@ -67,6 +67,8 @@ namespace Engine46 {
 
 		void CreateMaterial(CDX11Renderer* pRenderer);
 
+		void SetTexture(CTextureBase* pTex);
+
 		void SetShaderPackage(CShaderPackage* pShaderPackage);
 
 		void ConnectParentActor(CActorBase* pParentActor);
@@ -84,4 +86,4 @@ namespace Engine46 {
 
 } // namespace
 
-#endif 
+#endif

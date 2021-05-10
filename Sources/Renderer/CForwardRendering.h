@@ -20,8 +20,8 @@ namespace Engine46 {
 		CDX11Renderer*						pRenderer;
 
 		ComPtr<ID3D11RenderTargetView>		m_pRtv;
-		ComPtr<ID3D11ShaderResourceView>	m_pSrv;
-		ComPtr<ID3D11Texture2D>				m_pTex2D;
+
+		std::unique_ptr<CDX11Texture>		m_pRtvTex2D;
 
 	public:
 		explicit CDX11ForwardRendering(CDX11Renderer* pRenderer);
@@ -30,6 +30,8 @@ namespace Engine46 {
 		bool Initialize(UINT width, UINT height) override;
 		void Begine() override;
 		void End() override;
+
+		CTextureBase* GetRenderingTexture() const { return m_pRtvTex2D.get(); }
 	};
 
 } // namespace

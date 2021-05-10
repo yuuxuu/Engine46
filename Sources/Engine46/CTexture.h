@@ -53,6 +53,8 @@ namespace Engine46 {
 
 		void Create() override;
 		void Set(UINT slot) override;
+
+		ID3D11Texture2D* GetTexture2D() const { return m_pTex2D.Get(); }
 	};
 
 } // namespace
