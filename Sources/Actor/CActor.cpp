@@ -180,6 +180,13 @@ namespace Engine46 {
 		}
 	}
 
+	// インプットを設定
+	void CActorBase::SetInput(CInput* pInput) {
+		if (pInput) {
+			this->pInput = pInput;
+		}
+	}
+
 	// 親アクターを接続
 	void CActorBase::ConnectParentActor(CActorBase* pParentActor) {
 

@@ -50,7 +50,7 @@ namespace Engine46 {
 		if (!m_pDX11Renderer->Initialize(hwnd, rect.w, rect.h)) return false;
 
 		m_pSceneManager = std::make_unique<CSceneManager>(m_pDX11Renderer.get());
-		if (!m_pSceneManager->Initialize()) return false;
+		if (!m_pSceneManager->Initialize(hInstance, hwnd)) return false;
 
 		// イベントハンドル生成
 		m_hGame = CreateEvent(NULL, false, false, NULL);
@@ -85,35 +85,30 @@ namespace Engine46 {
 	// ループ
 	void CGameSystem::Loop() {
 		DWORD sts;
+		DWORD ms = 1000 / 60; // (1000ms/60fps)
+
 		while (1) {
-			// 1000ms(1秒)待つ
-			sts = WaitForSingleObject(m_hGame, 1000);
+			sts = WaitForSingleObject(m_hGame, ms);
 			if (sts == WAIT_FAILED) {
 				break;
 			}
 
-			Update();
+			CTimer timer;
 
-			Draw();
+			this->Update();
+
+			this->Draw();
 		}
 	}
 
 	// 更新
 	void CGameSystem::Update() {
-		CSceneBase* scene = m_pSceneManager->GetRootScene();
-
-		if (scene) {
-			scene->Update();
-		}
+		m_pSceneManager->UpdateRootScene();
 	}
 
 	// 描画
 	void CGameSystem::Draw() {
-		CSceneBase* scene = m_pSceneManager->GetRootScene();
-
-		if (scene) {
-			m_pDX11Renderer->Render(scene);
-		}
+		m_pSceneManager->DrawRootScene();
 	}
 
 } // namespace

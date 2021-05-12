@@ -16,6 +16,7 @@
 #include "../Engine46/CMesh.h"
 #include "../Engine46/CMaterial.h"
 #include "../Engine46/CConstantBuffer.h"
+#include "../Engine46/CInput.h"
 
 namespace Engine46 {
 
@@ -42,6 +43,8 @@ namespace Engine46 {
 		std::unique_ptr<CMaterialBase>					m_pMaterial;
 
 		std::unique_ptr<CCbBase>						m_pCb;
+
+		CInput*											pInput;
 
 		CActorBase*										pParentActor;
 		int												m_parentActorID;
@@ -71,6 +74,8 @@ namespace Engine46 {
 
 		void SetShaderPackage(CShaderPackage* pShaderPackage);
 
+		void SetInput(CInput* pInput);
+
 		void ConnectParentActor(CActorBase* pParentActor);
 
 		CActorBase* GetParentActor() const { return pParentActor; }
@@ -80,6 +85,8 @@ namespace Engine46 {
 
 		std::list<CActorBase*> GetChiledActorList() const { return pChiledActorList; }
 		std::vector<int> GetChiledActorIDList() const { return m_chiledActorIDList; }
+
+		UINT GetClassID() const { return m_ClassID; }
 
 		Matrix GetWorldMatrix();
 	};

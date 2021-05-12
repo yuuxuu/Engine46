@@ -101,6 +101,13 @@ namespace Engine46 {
 		}
 	}
 
+	// オブジェクトにインプットを設定
+	void CActorManager::SetInput(CActorBase* pActor, CInput* pInput) {
+		if (pActor) {
+			pActor->SetInput(pInput);
+		}
+	}
+
 	// オブジェクトを保存
 	bool CActorManager::SaveActor() {
 

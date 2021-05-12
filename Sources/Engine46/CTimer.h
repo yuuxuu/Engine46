@@ -14,11 +14,9 @@ namespace Engine46 {
 
 	class CTimer {
 	private:
-		int		m_fps;
-		int		m_wfps;
-		    
 		DWORD	m_nowTime;
 		DWORD	m_oldTime;
+
 	public:
 		CTimer();
 		~CTimer();

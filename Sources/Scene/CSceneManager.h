@@ -16,6 +16,7 @@ namespace Engine46 {
 
 	// 前方宣言
 	class CDX11Renderer;
+	class CInput;
 
 	class CSceneManager {
 	private:
@@ -26,6 +27,8 @@ namespace Engine46 {
 
 		std::unique_ptr<CShaderManager>				m_pShaderManager;
 		std::unique_ptr<CActorManager>				m_pActorManager;
+		
+		std::unique_ptr<CInput>						m_pInput;
 
 		void ConnectScene();
 
@@ -33,7 +36,11 @@ namespace Engine46 {
 		CSceneManager(CDX11Renderer* pRenderer);
 		~CSceneManager();
 
-		bool Initialize();
+		bool Initialize(HINSTANCE hInstance, HWND hwnd);
+
+		void UpdateRootScene();
+
+		void DrawRootScene();
 
 		CSceneBase* CreateScene(int id);
 
@@ -43,6 +50,8 @@ namespace Engine46 {
 		void AddSceneToSceneVec(std::unique_ptr<CSceneBase>& pScene) { m_pVecScene.emplace_back(move(pScene)); }
 
 		CSceneBase* GetRootScene() const { return pRootScene; };
+
+		CInput* GetInput() const { return m_pInput.get(); }
 	};
 
 } // namespace

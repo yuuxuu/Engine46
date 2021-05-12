@@ -9,6 +9,9 @@
 
 namespace Engine46 {
 
+	constexpr float Z_NEAR = 0.1f;
+	constexpr float Z_FAR = 1000.0f;
+
 	// コンストラクタ
 	CCamera::CCamera(const int sWidth, const int sHeight) :
 		CActorBase((int)ClassType::Camera, "Camera", Transform()),
@@ -20,8 +23,7 @@ namespace Engine46 {
 			DirectX::XMConvertToRadians(90.0f),
 			(float)sWidth / (float)sHeight,
 			Z_NEAR,
-			Z_FAR
-		);
+			Z_FAR);
 	}
 
 	// デストラクタ
@@ -34,10 +36,13 @@ namespace Engine46 {
 		vecDataRecords.emplace_back(std::make_unique<CDataRecordBase>(offsetof(CCamera, m_Eye), sizeof(m_Eye)));
 		vecDataRecords.emplace_back(std::make_unique<CDataRecordBase>(offsetof(CCamera, m_Focus), sizeof(m_Focus)));
 		vecDataRecords.emplace_back(std::make_unique<CDataRecordBase>(offsetof(CCamera, m_UP), sizeof(m_UP)));
+		vecDataRecords.emplace_back(std::make_unique<CDataRecordBase>(offsetof(CCamera, m_matView), sizeof(m_matView)));
+		vecDataRecords.emplace_back(std::make_unique<CDataRecordBase>(offsetof(CCamera, m_matProj), sizeof(m_matProj)));
 	}
 
 	// 更新
 	void CCamera::Update() {
+
 		DirectX::XMVECTOR eye = DirectX::XMVectorSet(m_Eye.x, m_Eye.y, m_Eye.z, 0.0f);
 		DirectX::XMVECTOR focus = DirectX::XMVectorSet(m_Focus.x, m_Focus.y, m_Focus.z, 0.0f);
 		DirectX::XMVECTOR up = DirectX::XMVectorSet(m_UP.x, m_UP.y, m_UP.z, 0.0f);
