@@ -101,11 +101,11 @@ namespace Engine46 {
 	void CInput::UpdateInput() {
 
 		if (!UpdateKeyBoard()) {
-			std::cout << "キーボード更新：失敗" << std::endl;
+			
 		}
 
 		if (!UpdateMouse()) {
-			std::cout << "マウス更新：失敗" << std::endl;
+			
 		}
 	}
 
@@ -147,7 +147,7 @@ namespace Engine46 {
 
 	// キーが押され続けているかの取得
 	bool CInput::IsTriggerKey(UINT key) {
-		return (m_key[key] & 0x80) && !(m_oldKey[key] & 0x80);
+		return (m_key[key] & 0x80) && (m_oldKey[key] & 0x80);
 	}
 
 	// マウスの左が押されたかの取得
@@ -157,7 +157,7 @@ namespace Engine46 {
 
 	// マウスの左が押さ続けているかの取得
 	bool CInput::IsTriggerLeftMouse() {
-		return (m_mouse.rgbButtons[0] & 0x80) && !(m_mouse.rgbButtons[0] & 0x80);
+		return (m_mouse.rgbButtons[0] & 0x80) && (m_mouse.rgbButtons[0] & 0x80);
 	}
 
 	// マウスの右が押されたかの取得
@@ -167,7 +167,7 @@ namespace Engine46 {
 
 	// マウスの右が押さ続けているかの取得
 	bool CInput::IsTriggerRightMouse() {
-		return (m_mouse.rgbButtons[1] & 0x80) && !(m_mouse.rgbButtons[1] & 0x80);
+		return (m_mouse.rgbButtons[1] & 0x80) && (m_mouse.rgbButtons[1] & 0x80);
 	}
 
 	// マウスのホイールが押されたかの取得
@@ -177,7 +177,7 @@ namespace Engine46 {
 
 	// マウスのホイールが押さ続けているかの取得
 	bool CInput::IsTriggerCenterMouse() {
-		return (m_mouse.rgbButtons[2] & 0x80) && !(m_mouse.rgbButtons[0] & 0x80);
+		return (m_mouse.rgbButtons[2] & 0x80) && (m_mouse.rgbButtons[0] & 0x80);
 	}
 
 } // namespace

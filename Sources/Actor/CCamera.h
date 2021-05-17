@@ -18,12 +18,16 @@ namespace Engine46 {
 
 	class CCamera : public CActorBase {
 	private:
-		VECTOR3	m_Eye;
-		VECTOR3	m_Focus;
-		VECTOR3	m_UP;
+		VECTOR3 m_eye;
+		VECTOR3 m_forcus;
+		VECTOR3 m_up;
 
 		Matrix	m_matView;
 		Matrix	m_matProj;
+
+		float	m_speed;
+
+		float GetCameraSpeed(float nowSpeed);
 
 	public:
 		CCamera(const int sWidth, const int sHeight);
@@ -32,7 +36,11 @@ namespace Engine46 {
 		void Initialize() override;
 		void Update() override;
 
-		Matrix GetVPMatrix();
+		Matrix GetViewProjectionMatrix();
+
+		VECTOR3 GetCameraRightVector();
+		VECTOR3 GetCameraUpVector();
+		VECTOR3 GetCameraForwardVector();
 	};
 
 } // namespace

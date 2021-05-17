@@ -89,6 +89,13 @@ namespace Engine46 {
 		UINT GetClassID() const { return m_ClassID; }
 
 		Matrix GetWorldMatrix();
+
+
+		VECTOR3 GetDirectionVector();
+
+		VECTOR3 GetRightVector();
+		VECTOR3 GetUpVector();
+		VECTOR3 GetForwardVector();
 	};
 
 } // namespace

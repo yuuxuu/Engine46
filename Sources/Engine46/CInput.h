@@ -57,6 +57,10 @@ namespace Engine46 {
 
 		bool IsPressCenterMouse();
 		bool IsTriggerCenterMouse();
+
+		float GetMousePosX() { return (float)m_mouse.lX; }
+		float GetMousePosY() { return (float)m_mouse.lY; }
+		float GetMousePosZ() { return (float)m_mouse.lZ; }
 	};
 
 } // namespace

@@ -84,6 +84,9 @@ namespace Engine46 {
 			x *= f.x; y *= f.y; z *= f.z;
 			return VECTOR3(x, y, z);
 		};
+		VECTOR3 operator * (float f) {
+			return VECTOR3(x * f, y * f, z * f);
+		};
 		VECTOR3 operator / (VECTOR3 f) {
 			x /= f.x; y /= f.y; z /= f.z;
 			return VECTOR3(x, y, z);
@@ -243,6 +246,16 @@ namespace Engine46 {
 			return RECT(w, h);
 		};
 	};
+
+	float Vec3Lenght(VECTOR3 vec);
+
+	VECTOR3 Vec3Normalize(VECTOR3 vec);
+
+	float Vec3Dot(VECTOR3 vec1, VECTOR3 vec2);
+
+	VECTOR3 Vec3Cross(VECTOR3 vec1, VECTOR3 vec2);
+
+	Matrix MatrixLookAt(VECTOR3 pos, VECTOR3 look, VECTOR3 up);
 
 } // namespace
 
