@@ -48,25 +48,46 @@ namespace Engine46 {
 
 			VECTOR3 forward = GetCameraForwardVector() * m_speed;
 			VECTOR3 right = GetCameraRightVector() * m_speed;
+			VECTOR3 up = GetCameraUpVector() * m_speed;
 
 			if(pInput->IsPressKey(DIK_W)) {
 				m_eye += forward;
+				m_forcus += forward;
 			}
 			if (pInput->IsPressKey(DIK_S)) {
 				m_eye -= forward;
+				m_forcus -= forward;
 			}
 			if (pInput->IsPressKey(DIK_A)) {
 				m_eye -= right;
+				m_forcus -= right;
 			}
 			if (pInput->IsPressKey(DIK_D)) {
 				m_eye += right;
+				m_forcus += right;
 			}
 
+			const float speed = 0.01f;
 			if (pInput->IsTriggerLeftMouse()) {
-				const float speed = 0.1f;
 
-				m_forcus.x += pInput->GetMousePosX() * speed;
-				m_forcus.y += pInput->GetMousePosY() * speed;
+				m_forcus += right * pInput->GetMousePosX() * speed;
+				m_forcus += up * pInput->GetMousePosY() * speed;
+			}
+			if (pInput->IsTriggerRightMouse()) {
+				float r = Vec3Lenght(m_forcus - m_eye);
+
+				float theta = m_Transform.rotation.y + pInput->GetMousePosY() * speed;
+				float phi = m_Transform.rotation.x + pInput->GetMousePosX() * speed;
+
+				VECTOR3 pos;
+				pos.x = r * sinf(theta) * cosf(phi);
+				pos.y = r * cosf(theta);
+				pos.z = r * sinf(theta) * sinf(phi);
+
+				m_eye = m_forcus + pos;
+
+				m_Transform.rotation.x = phi;
+				m_Transform.rotation.y = theta;
 			}
 		}
 
