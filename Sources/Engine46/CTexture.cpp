@@ -57,9 +57,12 @@ namespace Engine46 {
 			subData.pSysMem				= m_pData;
 			subData.SysMemPitch			= m_dataRowPitch;
 			subData.SysMemSlicePitch	= 0;
-		}
 
-		pDX11Renderer->CreateTexture2D(m_pTex2D, m_texDesc, &subData);
+			pDX11Renderer->CreateTexture2D(m_pTex2D, m_texDesc, &subData);
+		}
+		else {
+			pDX11Renderer->CreateTexture2D(m_pTex2D, m_texDesc, nullptr);
+		}
 
 		pDX11Renderer->CreateShaderResourceView(m_pSrv, m_pTex2D.Get(), m_srvDesc);
 	}

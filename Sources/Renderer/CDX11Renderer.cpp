@@ -8,6 +8,8 @@
 #include "CDX11Renderer.h"
 #include "CForwardRendering.h"
 
+#include "../Actor/CSprite.h"
+
 namespace Engine46 {
 
 	// コンストラクタ
@@ -132,15 +134,24 @@ namespace Engine46 {
 	// 描画
 	bool CDX11Renderer::Render(CSceneBase* pScene) {
 
-		//m_pDX11FRendering->Begine();
-		//
-		//m_pDX11FRendering->End();
+		m_pDX11FRendering->Begine();
+		
+		pScene->Draw();
+		
+		m_pDX11FRendering->End();
 
 		this->ClearRenderTargetView(m_pRtv.Get());
 		this->ClearDespthStencilView(m_pDsv.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL);
 		this->SetRenderTargetView(m_pRtv.Get(), m_pDsv.Get());
-		
-		pScene->Draw();
+
+
+		CSprite sprite;
+		sprite.CreateMesh(this);
+		sprite.CreateMaterial(this);
+		sprite.SetTexture(m_pDX11FRendering->GetRenderingTexture());
+		sprite.Initialize();
+
+		pScene->DrawRenderingScene(&sprite);
 
 		HRESULT hr = m_pSwapChain->Present(0, 0);
 		if (FAILED(hr)) {

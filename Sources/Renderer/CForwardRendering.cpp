@@ -7,6 +7,8 @@
 
 #include "CForwardRendering.h"
 
+#include "../Actor/CSprite.h"
+
 namespace Engine46 {
 
 	// コンストラクタ
@@ -35,21 +37,20 @@ namespace Engine46 {
 			texDesc.CPUAccessFlags		= 0;
 			texDesc.MiscFlags			= 0;
 
-			if (!pRenderer->CreateTexture2D(m_pTex2D, texDesc)) return false;
+			D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+			srvDesc.ViewDimension		= D3D11_SRV_DIMENSION_TEXTURE2D;
+			srvDesc.Format				= srvDesc.Format;
+			srvDesc.Texture2D.MipLevels = texDesc.MipLevels;
+
+			m_pRtvTex2D = std::make_unique<CDX11Texture>(pRenderer, texDesc, srvDesc);
+			m_pRtvTex2D->Create();
 
 			D3D11_RENDER_TARGET_VIEW_DESC rtvDesc = {};
 			rtvDesc.ViewDimension				= D3D11_RTV_DIMENSION_TEXTURE2D;
 			rtvDesc.Format						= texDesc.Format;
 			rtvDesc.Texture2DArray.ArraySize	= texDesc.ArraySize;
 
-			if (!pRenderer->CreateRenderTargetView(m_pRtv, m_pTex2D.Get(), rtvDesc)) return false;
-
-			D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
-			srvDesc.ViewDimension		= D3D11_SRV_DIMENSION_TEXTURE2D;
-			srvDesc.Format				= srvDesc.Format;
-			srvDesc.Texture2D.MipLevels = texDesc.MipLevels;
-
-			if (!pRenderer->CreateShaderResourceView(m_pSrv, m_pTex2D.Get(), srvDesc)) return false;
+			if (!pRenderer->CreateRenderTargetView(m_pRtv, m_pRtvTex2D->GetTexture2D(), rtvDesc)) return false;
 		}
 
 		{

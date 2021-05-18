@@ -92,6 +92,18 @@ namespace Engine46 {
 		return true;
 	}
 
+	// レンダリングシーンを描画
+	void CSceneBase::DrawRenderingScene(CActorBase* pActor) {
+		if (pActor) {
+			const char* shaderName = "D:/Engine46/Sources/Shader/ShaderSource/HLSL/Sprite.hlsl";
+			CShaderPackage* pSp = pShaderManager->GetShaderPackage(shaderName);
+
+			pActorManager->SetShaderPackage(pActor, pSp);
+
+			pActor->Draw();
+		}
+	}
+
 	// マネージャーを設定
 	void CSceneBase::SetManager(CShaderManager* pShaderManager, CActorManager* pActorManager) {
 		if (pShaderManager) {

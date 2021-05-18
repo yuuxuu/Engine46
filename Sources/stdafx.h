@@ -20,15 +20,22 @@
 
 #include <wrl/client.h>
 
-#pragma comment(lib, "winmm.lib")
-
 #include <d3d11.h>
 #include <D3D12.h>
+#include <d3dcompiler.h>
+
+#include <DirectXMath/DirectXMath.h>
+
+#include <dinput.h>
+
+#pragma comment(lib, "winmm.lib")
 
 #pragma comment(lib, "d3d11.lib")
 
-#include <d3dcompiler.h>
-
 #pragma comment(lib, "d3dcompiler.lib")
 
-#include <DirectXMath/DirectXMath.h>
+#pragma comment(lib, "dinput8.lib")
+#pragma comment(lib, "dxguid.lib")
+
+
+

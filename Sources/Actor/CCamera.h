@@ -12,26 +12,22 @@
 
 #include "CActor.h"
 
+#include "../Engine46/CInput.h"
+
 namespace Engine46 {
-
-	constexpr UINT PLANE_MAX	= 6;
-	constexpr float Z_NEAR		= 0.1f;
-	constexpr float Z_FAR		= 1000.0f;
-
-	struct  PLANE {
-		// 平面の方程式
-		float a, b, c, d;
-		float Len;
-	};
 
 	class CCamera : public CActorBase {
 	private:
-		VECTOR3 m_Eye;
-		VECTOR3 m_Focus;
-		VECTOR3 m_UP;
+		VECTOR3 m_eye;
+		VECTOR3 m_forcus;
+		VECTOR3 m_up;
 
 		Matrix	m_matView;
-		Matrix  m_matProj;
+		Matrix	m_matProj;
+
+		float	m_speed;
+
+		float GetCameraSpeed(float nowSpeed);
 
 	public:
 		CCamera(const int sWidth, const int sHeight);
@@ -40,7 +36,11 @@ namespace Engine46 {
 		void Initialize() override;
 		void Update() override;
 
-		Matrix GetVPMatrix();
+		Matrix GetViewProjectionMatrix();
+
+		VECTOR3 GetCameraRightVector();
+		VECTOR3 GetCameraUpVector();
+		VECTOR3 GetCameraForwardVector();
 	};
 
 } // namespace

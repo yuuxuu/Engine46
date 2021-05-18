@@ -37,7 +37,6 @@ namespace Engine46 {
 		this->CreateMesh(sprite);
 		this->CreateMaterial(sprite);
 		this->CreateConstantBuffer(sprite);
-
 		sprite->Initialize();
 
 		return true;
@@ -99,6 +98,13 @@ namespace Engine46 {
 	void CActorManager::SetShaderPackage(CActorBase* pActor, CShaderPackage* pShaderPackage) {
 		if (pActor) {
 			pActor->SetShaderPackage(pShaderPackage);
+		}
+	}
+
+	// オブジェクトにインプットを設定
+	void CActorManager::SetInput(CActorBase* pActor, CInput* pInput) {
+		if (pActor) {
+			pActor->SetInput(pInput);
 		}
 	}
 

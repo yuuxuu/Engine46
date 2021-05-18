@@ -26,20 +26,16 @@ namespace Engine46 {
 			return VECTOR2(x, y);
 		};
 		VECTOR2 operator + (VECTOR2 f) {
-			x += f.x; y += f.y;
-			return VECTOR2(x, y);
+			return VECTOR2(x + f.x, y + f.y);
 		};
 		VECTOR2 operator - (VECTOR2 f) {
-			x -= f.x; y -= f.y;
-			return VECTOR2(x, y);
+			return VECTOR2(x - f.x, y - f.y);
 		};
 		VECTOR2 operator * (VECTOR2 f) {
-			x *= f.x; y *= f.y;
-			return VECTOR2(x, y);
+			return VECTOR2(x * f.x, y * f.y);
 		};
 		VECTOR2 operator / (VECTOR2 f) {
-			x /= f.x; y /= f.y;
-			return VECTOR2(x, y);
+			return VECTOR2(x / f.x, y / f.y);
 		};
 		VECTOR2 operator += (VECTOR2 f) {
 			x += f.x; y += f.y;
@@ -73,20 +69,23 @@ namespace Engine46 {
 			return VECTOR3(x, y, z);
 		};
 		VECTOR3 operator + (VECTOR3 f) {
-			x += f.x; y += f.y; z += f.z;
+			return VECTOR3(x + f.x, y + f.y, z + f.z);
+		};
+		VECTOR3 operator + (float f) {
+			x += f; y += f; z += f;
 			return VECTOR3(x, y, z);
 		};
 		VECTOR3 operator - (VECTOR3 f) {
-			x -= f.x; y -= f.y; z -= f.z;
-			return VECTOR3(x, y, z);
+			return VECTOR3(x - f.x, y - f.y, z - f.z);
 		};
 		VECTOR3 operator * (VECTOR3 f) {
-			x *= f.x; y *= f.y; z *= f.z;
-			return VECTOR3(x, y, z);
+			return VECTOR3(x * f.x, y * f.y, z * f.z);
+		};
+		VECTOR3 operator * (float f) {
+			return VECTOR3(x * f, y * f, z * f);
 		};
 		VECTOR3 operator / (VECTOR3 f) {
-			x /= f.x; y /= f.y; z /= f.z;
-			return VECTOR3(x, y, z);
+			return VECTOR3(x / f.x, y / f.y, z / f.z);
 		};
 		VECTOR3 operator += (VECTOR3 f) {
 			x += f.x; y += f.y; z += f.z;
@@ -125,20 +124,16 @@ namespace Engine46 {
 			return VECTOR4(x, y, z, w);
 		}
 		VECTOR4 operator + (VECTOR4 f) {
-			x += f.x; y += f.y; z += f.z; w += f.w;
-			return VECTOR4(x, y, z, w);
+			return VECTOR4(x + f.x, y + f.y, z + f.z, w + f.w);
 		};
 		VECTOR4 operator - (VECTOR4 f) {
-			x -= f.x; y -= f.y; z -= f.z; w -= f.w;
-			return VECTOR4(x, y, z, w);
+			return VECTOR4(x - f.x, y - f.y, z - f.z, w - f.w);
 		};
 		VECTOR4 operator * (VECTOR4 f) {
-			x *= f.x; y *= f.y; z *= f.z; w *= f.w;
-			return VECTOR4(x, y, z, w);
+			return VECTOR4(x * f.x, y * f.y, z * f.z, w * f.w);
 		};
 		VECTOR4 operator / (VECTOR4 f) {
-			x /= f.x; y /= f.y; z /= f.z; w /= f.w;
-			return VECTOR4(x, y, z, w);
+			return VECTOR4(x / f.x, y / f.y, z / f.z, w / f.w);
 		};
 		VECTOR4 operator += (VECTOR4 f) {
 			x += f.x; y += f.y; z += f.z; w += f.w;
@@ -243,6 +238,16 @@ namespace Engine46 {
 			return RECT(w, h);
 		};
 	};
+
+	float Vec3Lenght(VECTOR3 vec);
+
+	VECTOR3 Vec3Normalize(VECTOR3 vec);
+
+	float Vec3Dot(VECTOR3 vec1, VECTOR3 vec2);
+
+	VECTOR3 Vec3Cross(VECTOR3 vec1, VECTOR3 vec2);
+
+	Matrix MatrixLookAt(VECTOR3 pos, VECTOR3 look, VECTOR3 up);
 
 } // namespace
 

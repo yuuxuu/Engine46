@@ -31,12 +31,6 @@ namespace Engine46 {
 
 		std::unique_ptr<CSceneManager>	m_pSceneManager;
 
-		int								m_fps;
-		int								m_wfps;
-
-		int								m_nowTime;
-		int								m_oldTime;
-
 	public:
 		CGameSystem();
 		~CGameSystem();
@@ -47,10 +41,6 @@ namespace Engine46 {
 		void				Loop();
 		void				Update();
 		void				Draw();
-		
-		void				MeasFPS();
-
-		int					GetFPS() const { return m_fps; }
 	};
 
 } // namespace

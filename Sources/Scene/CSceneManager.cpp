@@ -7,6 +7,8 @@
 
 #include "CSceneManager.h"
 
+#include "../Engine46/CInput.h"
+
 #include "../Renderer/CDX11Renderer.h"
 
 namespace Engine46 {
@@ -22,13 +24,16 @@ namespace Engine46 {
 	{}
 
 	// 初期化
-	bool CSceneManager::Initialize() {
+	bool CSceneManager::Initialize(HINSTANCE hInstance, HWND hwnd) {
 		
 		m_pShaderManager = std::make_unique<CShaderManager>(pDX11Renderer);
 		if(!m_pShaderManager->Initialize()) return false;
 
 		m_pActorManager = std::make_unique<CActorManager>(pDX11Renderer);
 		if (!m_pActorManager->Initialize()) return false;
+
+		m_pInput = std::make_unique<CInput>(hwnd);
+		if (!m_pInput->Initialize(hInstance)) return false;
 
 		pRootScene = this->CreateScene(0);
 
@@ -37,10 +42,31 @@ namespace Engine46 {
 		CShaderPackage* pSp = m_pShaderManager->GetShaderPackage(shaderName);
 
 		for (auto& actor : pRootActor->GetChiledActorList()) {
+			if (actor->GetClassID() == (UINT)ClassType::Camera) {
+				actor->SetInput(m_pInput.get());
+			}
 			actor->SetShaderPackage(pSp);
 		}
 
 		return true;
+	}
+
+	// ルートシーン更新
+	void CSceneManager::UpdateRootScene() {
+		if (m_pInput) {
+			m_pInput->UpdateInput();
+		}
+
+		if (pRootScene) {
+			pRootScene->Update();
+		}
+	}
+
+	// ルートシーン描画
+	void CSceneManager::DrawRootScene() {
+		if (pRootScene) {
+			pDX11Renderer->Render(pRootScene);
+		}
 	}
 
 	// シーン作成

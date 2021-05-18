@@ -28,7 +28,8 @@ namespace Engine46 {
 		m_ambient(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),
 		m_emissive(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),
 		m_brightness(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),
-		pTexture(nullptr)
+		pTexture(nullptr),
+		pShaderPackage(nullptr)
 	{}
 
 	// デストラクタ

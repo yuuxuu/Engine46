@@ -91,7 +91,7 @@ namespace Engine46 {
 
 						Matrix matW = this->GetWorldMatrix();
 
-						Matrix matVP = camera->GetVPMatrix();
+						Matrix matVP = camera->GetViewProjectionMatrix();
 
 						Matrix matWVP;
 						matWVP.dx_m = matW.dx_m * matVP.dx_m;
@@ -166,10 +166,24 @@ namespace Engine46 {
 		}
 	}
 
+	// マテリアルにテクスチャを設定
+	void CActorBase::SetTexture(CTextureBase* pTex) {
+		if (m_pMaterial) {
+			m_pMaterial->SetTexture(pTex);
+		}
+	}
+
 	// シェーダーパッケージを設定
 	void CActorBase::SetShaderPackage(CShaderPackage* pShaderPackage) {
 		if (m_pMaterial) {
 			m_pMaterial->SetShaderPackage(pShaderPackage);
+		}
+	}
+
+	// インプットを設定
+	void CActorBase::SetInput(CInput* pInput) {
+		if (pInput) {
+			this->pInput = pInput;
 		}
 	}
 
@@ -218,6 +232,48 @@ namespace Engine46 {
 		matWorld.dx_m = matScale.dx_m * matRotate.dx_m * matTrans.dx_m;
 
 		return matWorld;
+	}
+
+	// 向きベクトルを取得
+	VECTOR3 CActorBase::GetDirectionVector() {
+		Matrix matRotate;
+		matRotate.dx_m = DirectX::XMMatrixRotationRollPitchYaw(m_Transform.rotation.x, m_Transform.rotation.y, m_Transform.rotation.z);
+
+		VECTOR3 right;
+		right.x = matRotate._11;
+		right.y = matRotate._12;
+		right.z = matRotate._13;
+		float rd = Vec3Dot(VECTOR3(1.0f, 0.0f, 0.0f), right);
+
+		VECTOR3 up;
+		up.x = matRotate._21;
+		up.y = matRotate._22;
+		up.z = matRotate._23;
+		float ud = Vec3Dot(VECTOR3(0.0f, 1.0f, 0.0f), up);
+
+		VECTOR3 forward;
+		forward.x = matRotate._31;
+		forward.y = matRotate._32;
+		forward.z = matRotate._33;
+		float fd = Vec3Dot(VECTOR3(0.0f, 0.0f, 1.0f), forward);
+
+		return VECTOR3(rd, ud, fd);
+
+	}
+
+	// 右方向ベクトルを取得
+	VECTOR3 CActorBase::GetRightVector() {
+		return GetDirectionVector() * VECTOR3(1.0f, 0.0f, 0.0f);
+	}
+
+	// 上方向ベクトルを取得
+	VECTOR3 CActorBase::GetUpVector() {
+		return GetDirectionVector() * VECTOR3(0.0f, 1.0f, 0.0f);
+	}
+
+	// 前方向ベクトルを取得
+	VECTOR3 CActorBase::GetForwardVector() {
+		return GetDirectionVector() * VECTOR3(0.0f, 0.0f, 1.0f);
 	}
 
 } // namespace

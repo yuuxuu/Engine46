@@ -7,6 +7,7 @@
 
 #include "CGameSystem.h"
 #include "CWinow.h"
+#include "CTimer.h"
 
 #include "../Renderer/CDX11Renderer.h"
 
@@ -17,11 +18,7 @@ namespace Engine46 {
 	// コンストラクタ
 	CGameSystem::CGameSystem() :
 		m_hGame(nullptr),
-		m_pMainWindow(nullptr),
-		m_fps(0),
-		m_wfps(0),
-		m_oldTime(0),
-		m_nowTime(0) 
+		m_pMainWindow(nullptr)
 	{}
 
 	// デストラクタ
@@ -37,6 +34,7 @@ namespace Engine46 {
 		setlocale(LC_CTYPE, "");
 		// タイマの分解能力を１ｍｓにする
 		timeBeginPeriod(1);
+
 		// メインウインドウ作成
 		m_pMainWindow = std::make_unique<CWindow>();
 		// メインウインドウ初期化
@@ -52,7 +50,7 @@ namespace Engine46 {
 		if (!m_pDX11Renderer->Initialize(hwnd, rect.w, rect.h)) return false;
 
 		m_pSceneManager = std::make_unique<CSceneManager>(m_pDX11Renderer.get());
-		if (!m_pSceneManager->Initialize()) return false;
+		if (!m_pSceneManager->Initialize(hInstance, hwnd)) return false;
 
 		// イベントハンドル生成
 		m_hGame = CreateEvent(NULL, false, false, NULL);
@@ -87,50 +85,30 @@ namespace Engine46 {
 	// ループ
 	void CGameSystem::Loop() {
 		DWORD sts;
+		DWORD ms = 1000 / 60; // (1000ms/60fps)
+
 		while (1) {
-			// 1000ms(1秒)待つ
-			sts = WaitForSingleObject(m_hGame, 1000);
+			sts = WaitForSingleObject(m_hGame, ms);
 			if (sts == WAIT_FAILED) {
 				break;
 			}
 
-			Update();
+			CTimer timer;
 
-			Draw();
+			this->Update();
 
-			MeasFPS();
+			this->Draw();
 		}
 	}
 
 	// 更新
 	void CGameSystem::Update() {
-		CSceneBase* scene = m_pSceneManager->GetRootScene();
-
-		if (scene) {
-			scene->Update();
-		}
+		m_pSceneManager->UpdateRootScene();
 	}
 
 	// 描画
 	void CGameSystem::Draw() {
-		CSceneBase* scene = m_pSceneManager->GetRootScene();
-
-		if (scene) {
-			m_pDX11Renderer->Render(scene);
-		}
-	}
-
-	// FPS計測
-	void CGameSystem::MeasFPS() {
-		// 現在の時間を取得
-		m_nowTime = timeGetTime();
-		m_wfps++;
-
-		if (m_nowTime - m_oldTime >= 1000) {
-			m_fps = m_wfps;
-			m_wfps = 0;
-			m_oldTime = m_nowTime;
-		}
+		m_pSceneManager->DrawRootScene();
 	}
 
 } // namespace

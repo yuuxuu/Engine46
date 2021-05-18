@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -40,9 +40,11 @@
     <ClCompile Include="CConstantBuffer.cpp" />
     <ClCompile Include="CFileSystem.cpp" />
     <ClCompile Include="CGameSystem.cpp" />
+    <ClCompile Include="CInput.cpp" />
     <ClCompile Include="CMaterial.cpp" />
     <ClCompile Include="CMesh.cpp" />
     <ClCompile Include="CTexture.cpp" />
+    <ClCompile Include="CTimer.cpp" />
     <ClCompile Include="CWinow.cpp" />
     <ClCompile Include="CDataRecord.cpp" />
     <ClCompile Include="main.cpp" />
@@ -54,9 +56,11 @@
     <ClInclude Include="CConstantBuffer.h" />
     <ClInclude Include="CFileSystem.h" />
     <ClInclude Include="CGameSystem.h" />
+    <ClInclude Include="CInput.h" />
     <ClInclude Include="CMaterial.h" />
     <ClInclude Include="CMesh.h" />
     <ClInclude Include="CTexture.h" />
+    <ClInclude Include="CTimer.h" />
     <ClInclude Include="CWinow.h" />
     <ClInclude Include="CDataRecord.h" />
     <ClInclude Include="IObject.h" />
