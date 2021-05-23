@@ -10,8 +10,7 @@
 #ifndef _CGAME_SYSTEM_H_
 #define _CGAME_SYSTEM_H_
 
-#pragma comment(lib, "Renderer.lib")
-#pragma comment(lib, "Scene.lib")
+#pragma comment(lib, "GraphicsAPI.lib")
 
 namespace Engine46 {
 

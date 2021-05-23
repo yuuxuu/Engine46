@@ -6,17 +6,13 @@
  */
 
 #include "CTexture.h"
-
-#include "../Renderer/CDX11Renderer.h"
+#include "utility.h"
 
 namespace Engine46 {
 
 	// コンストラクタ
 	CTextureBase::CTextureBase() :
-		m_Name(),
-		m_pData(),
-		m_dataRowPitch(),
-		m_dataSlicePitch()
+		m_Name()
 	{}
 
 	// デストラクタ
@@ -24,52 +20,43 @@ namespace Engine46 {
 	{}
 
 	// 初期化
-	bool CTextureBase::Initialize(const char* name, const char* pData, size_t rowPitch, size_t slicePitch) {
+	bool CTextureBase::Initialize(const char* name) {
 
 		m_Name = name;
-		m_pData = pData;
-		m_dataRowPitch = rowPitch;
-		m_dataSlicePitch = slicePitch;
 
 		return true;
 	}
 
-	// コンストラクタ
-	CDX11Texture::CDX11Texture(
-		CDX11Renderer* pRenderer,
-		D3D11_TEXTURE2D_DESC& texDesc,
-		D3D11_SHADER_RESOURCE_VIEW_DESC& srvDesc) :
-		
-		pDX11Renderer(pRenderer),
-		m_texDesc(texDesc),
-		m_srvDesc(srvDesc)
-	{}
+	// テクスチャを読み込む
+	bool CTextureBase::LoadTexture(const char* name) {
 
-	// デストラクタ
-	CDX11Texture::~CDX11Texture()
-	{}
+		std::unique_ptr<wchar_t[]> loadName;
+		CharConvertToWchar(loadName, name);
 
-	// テクスチャ2D作成
-	void CDX11Texture::Create() {
+		DirectX::ScratchImage sImage;
+		HRESULT hr = DirectX::LoadFromWICFile(loadName.get(), 0, nullptr, sImage);
+		if (FAILED(hr)) {
+			std::string errorStr = name;
+			errorStr += "読み込み：失敗";
 
-		D3D11_SUBRESOURCE_DATA subData = {};
-		if (m_pData) {
-			subData.pSysMem				= m_pData;
-			subData.SysMemPitch			= m_dataRowPitch;
-			subData.SysMemSlicePitch	= 0;
-
-			pDX11Renderer->CreateTexture2D(m_pTex2D, m_texDesc, &subData);
-		}
-		else {
-			pDX11Renderer->CreateTexture2D(m_pTex2D, m_texDesc, nullptr);
+			MessageBox(NULL, errorStr.c_str(), "MessageBox", MB_OK);
+			return false;
 		}
 
-		pDX11Renderer->CreateShaderResourceView(m_pSrv, m_pTex2D.Get(), m_srvDesc);
-	}
+		const DirectX::Image* image = sImage.GetImages();
 
-	// テクスチャをシェーダーに設定
-	void CDX11Texture::Set(UINT slot) {
-		pDX11Renderer->SetPSShaderResources(slot, 1, m_pSrv.Get());
+		m_textureData.pData = std::make_unique<uint8_t[]>(sImage.GetPixelsSize());
+		std::memcpy(m_textureData.pData.get(), image->pixels, sImage.GetPixelsSize());
+
+		m_textureData.rowPitch		= image->rowPitch;
+		m_textureData.slicePitch	= image->slicePitch;
+		m_textureData.width			= image->width;
+		m_textureData.height		= image->height;
+		m_textureData.format		= image->format;
+
+		m_Name = name;
+
+		return true;
 	}
 
 } // namespace

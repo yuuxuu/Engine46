@@ -12,12 +12,7 @@
 
 #include "math.h"
 
-using Microsoft::WRL::ComPtr;
-
 namespace Engine46 {
-
-	// 前方宣言
-	class CDX11Renderer;
 
 	struct vertexInfo {
 		VECTOR3	vertex;
@@ -47,21 +42,6 @@ namespace Engine46 {
 		void AddVertexInfo(vertexInfo info) { m_vecVertexInfo.emplace_back(info); }
 
 		void AddIndex(const DWORD index) { m_vecIndexes.emplace_back(index); }
-	};
-
-	class CDX11Mesh : public CMeshBase {
-	private:
-		CDX11Renderer*			pDX11Renderer;
-
-		ComPtr<ID3D11Buffer>	m_pVertexBuffer;
-		ComPtr<ID3D11Buffer>	m_pIndexBuffer;
-
-	public:
-		explicit CDX11Mesh(CDX11Renderer* pRenderer);
-		~CDX11Mesh();
-
-		void Create() override;
-		void Draw() override;
 	};
 
 } // namespace

@@ -10,15 +10,11 @@
 #ifndef _CMATERIAL_H_
 #define _CMATERIAL_H_
 
+#include "math.h"
 #include "CTexture.h"
-
-#include "../Shader/CShaderPackage.h"
+#include "CShaderPackage.h"
 
 namespace Engine46 {
-
-	// 前方宣言
-	class CDX11Renderer;
-	class CDX11CB;
 
 	class CMaterialBase {
 	protected:
@@ -49,21 +45,6 @@ namespace Engine46 {
 		void SetTexture(CTextureBase* pTexture) { this->pTexture = pTexture; }
 
 		void SetShaderPackage(CShaderPackage* pSp) { pShaderPackage = pSp; }
-	};
-
-	class CDX11Material : public CMaterialBase {
-	private:
-		CDX11Renderer*				pDX11Renderer;
-
-		std::unique_ptr<CDX11CB>	m_pConstantBuffer;
-
-	public:
-		CDX11Material(CDX11Renderer* pRenderer);
-		~CDX11Material();
-
-		void CreateConstantBuffer() override;
-		void Update() override;
-		void Set(UINT slot) override;
 	};
 
 } // namespace

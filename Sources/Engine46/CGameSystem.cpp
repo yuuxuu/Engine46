@@ -8,10 +8,9 @@
 #include "CGameSystem.h"
 #include "CWinow.h"
 #include "CTimer.h"
+#include "CSceneManager.h"
 
-#include "../Renderer/CDX11Renderer.h"
-
-#include "../Scene/CSceneManager.h"
+#include "../GraphicsAPI/CDX11Renderer.h"
 
 namespace Engine46 {
 
@@ -85,7 +84,7 @@ namespace Engine46 {
 	// ループ
 	void CGameSystem::Loop() {
 		DWORD sts;
-		DWORD ms = 1000 / 60; // (1000ms/60fps)
+		DWORD ms = 1000 / 60; // 1000ms/60fps = 0.16ms
 
 		while (1) {
 			sts = WaitForSingleObject(m_hGame, ms);

@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="リソース ファイル">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="DX11">
+      <UniqueIdentifier>{6bcbb1ec-f6f5-494b-a5d3-b188055b9bb9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="ヘッダー ファイル">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="DX11\ソース ファイル">
+      <UniqueIdentifier>{715337e3-77f0-44fd-9be0-0ca20e5d2096}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DX11\ヘッダー ファイル">
+      <UniqueIdentifier>{a78ce399-b5b0-4162-afc0-9acf9edf7e3b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="IRenderer.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="CDX11Device.h">
+      <Filter>DX11\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="CDX11DeviceContext.h">
+      <Filter>DX11\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="CDX11Renderer.h">
+      <Filter>DX11\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="CDX11ForwardRendering.h">
+      <Filter>DX11\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="CDX11ConstantBuffer.h">
+      <Filter>DX11\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="CDX11Material.h">
+      <Filter>DX11\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="CDX11Mesh.h">
+      <Filter>DX11\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="CDX11Texture.h">
+      <Filter>DX11\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="CDX11Shader.h">
+      <Filter>DX11\ヘッダー ファイル</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="CDX11Device.cpp">
+      <Filter>DX11\ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="CDX11DeviceContext.cpp">
+      <Filter>DX11\ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="CDX11Renderer.cpp">
+      <Filter>DX11\ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="CDX11ForwardRendering.cpp">
+      <Filter>DX11\ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="CDX11ConstantBuffer.cpp">
+      <Filter>DX11\ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="CDX11Material.cpp">
+      <Filter>DX11\ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="CDX11Mesh.cpp">
+      <Filter>DX11\ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="CDX11Texture.cpp">
+      <Filter>DX11\ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="CDX11Shader.cpp">
+      <Filter>DX11\ソース ファイル</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
