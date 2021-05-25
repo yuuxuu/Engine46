@@ -45,7 +45,10 @@
     <ClCompile Include="CGameSystem.cpp" />
     <ClCompile Include="CInput.cpp" />
     <ClCompile Include="CMaterial.cpp" />
+    <ClCompile Include="CMaterialManager.cpp" />
     <ClCompile Include="CMesh.cpp" />
+    <ClCompile Include="CMeshManager.cpp" />
+    <ClCompile Include="CRenderer.cpp" />
     <ClCompile Include="CRendering.cpp" />
     <ClCompile Include="CScene.cpp" />
     <ClCompile Include="CSceneManager.cpp" />
@@ -54,6 +57,7 @@
     <ClCompile Include="CShaderPackage.cpp" />
     <ClCompile Include="CSprite.cpp" />
     <ClCompile Include="CTexture.cpp" />
+    <ClCompile Include="CTextureManager.cpp" />
     <ClCompile Include="CTimer.cpp" />
     <ClCompile Include="CWinow.cpp" />
     <ClCompile Include="CDataRecord.cpp" />
@@ -71,7 +75,10 @@
     <ClInclude Include="CGameSystem.h" />
     <ClInclude Include="CInput.h" />
     <ClInclude Include="CMaterial.h" />
+    <ClInclude Include="CMaterialManager.h" />
     <ClInclude Include="CMesh.h" />
+    <ClInclude Include="CMeshManager.h" />
+    <ClInclude Include="CRenderer.h" />
     <ClInclude Include="CRendering.h" />
     <ClInclude Include="CScene.h" />
     <ClInclude Include="CSceneManager.h" />
@@ -80,10 +87,12 @@
     <ClInclude Include="CShaderPackage.h" />
     <ClInclude Include="CSprite.h" />
     <ClInclude Include="CTexture.h" />
+    <ClInclude Include="CTextureManager.h" />
     <ClInclude Include="CTimer.h" />
     <ClInclude Include="CWinow.h" />
     <ClInclude Include="CDataRecord.h" />
     <ClInclude Include="IObject.h" />
+    <ClInclude Include="IRenderer.h" />
     <ClInclude Include="math.h" />
     <ClInclude Include="utility.h" />
   </ItemGroup>

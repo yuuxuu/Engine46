@@ -1,8 +1,8 @@
-ï»¿//*****************************************************************************
+//*****************************************************************************
 //!	@file	Model.hlsl
 //!	@brief	
 //!	@note	
-//!	@author	2020/09/16 ä½œæˆï¼šæœ¨æ‘å„ª
+//!	@author	2020/09/16 ì¬F–Ø‘º—D
 //*****************************************************************************
 
 #include "../ConstantBuffer.hlsli"
@@ -44,7 +44,7 @@ PS_OUT PS_main(PS_IN input) {
 
 	output.color = diffuseTex.Sample(sampleState, input.uv);
 
-	output.color = input.color;
+	//output.color = input.color;
 
 	return output;
 }

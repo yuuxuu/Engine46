@@ -6,24 +6,25 @@
  */
 
 #include "CActorManager.h"
+#include "CActor.h"
+#include "CMesh.h"
+#include "CMaterial.h"
+#include "CConstantBuffer.h"
+#include "CShaderPackage.h"
+#include "CRenderer.h"
+#include "CInput.h"
 #include "CSprite.h"
 #include "CCamera.h"
-
-#include "../GraphicsAPI/CDX11Renderer.h"
-#include "../GraphicsAPI/CDX11Material.h"
-#include "../GraphicsAPI/CDX11Mesh.h"
-#include "../GraphicsAPI/CDX11ConstantBuffer.h"
+#include "math.h"
 
 namespace Engine46 {
 
 	constexpr const char* g_ActorListFileName = "ActorListData.bin";
 
 	// コンストラクタ
-	CActorManager::CActorManager(CDX11Renderer* pRenderer) :
-		pDX11Renderer(pRenderer)
-	{
-		pRootActor = this->CreateActor((int)ClassType::Root);
-	}
+	CActorManager::CActorManager(CRendererBase* pRenderer) :
+		pRenderer(pRenderer)
+	{}
 
 	// デストラクタ
 	CActorManager::~CActorManager()
@@ -32,15 +33,12 @@ namespace Engine46 {
 	// 初期化
 	bool CActorManager::Initialize() {
 
+		pRootActor = this->CreateActor((int)ClassType::Root);
+
 		CActorBase* camera = this->CreateActor((int)ClassType::Camera);
 		camera->Initialize();
 
 		CActorBase* sprite = this->CreateActor((int)ClassType::Sprite);
-		
-		this->CreateMesh(sprite);
-		this->CreateMaterial(sprite);
-		this->CreateConstantBuffer(sprite);
-		sprite->Initialize();
 
 		return true;
 	}
@@ -55,7 +53,7 @@ namespace Engine46 {
 			actor = std::make_unique<CActorBase>();
 			break;
 		case ClassType::Camera:
-			rect = pDX11Renderer->GetWindowRect();
+			rect = pRenderer->GetWindowRect();
 			actor = std::make_unique<CCamera>(rect.w, rect.h);
 			break;
 		case ClassType::Sprite:
@@ -71,35 +69,22 @@ namespace Engine46 {
 			pRootActor->AddChiledActorList(pActor);
 		}
 
-		this->AddActorToActorVec(actor);
+		this->AddActorToVec(actor);
 
 		return pActor;
 	}
 
-	// オブジェクトのメッシュを作成
-	void CActorManager::CreateMesh(CActorBase* pActor) {
+	// オブジェクトのメッシュを設定
+	void CActorManager::SetMesh(CActorBase* pActor, CMeshBase* pMesh) {
 		if (pActor) {
-			std::unique_ptr<CMeshBase> pMesh = std::make_unique<CDX11Mesh>(pDX11Renderer->GetDX11Device(), pDX11Renderer->GetDX11DeviceContext());
-
 			pActor->SetMesh(pMesh);
 		}
 	}
 
-	// オブジェクトのマテリアルを作成
-	void CActorManager::CreateMaterial(CActorBase* pActor) {
+	// オブジェクトのマテリアルを設定
+	void CActorManager::SetMaterial(CActorBase* pActor, CMaterialBase* pMaterial) {
 		if (pActor) {
-			std::unique_ptr<CMaterialBase> pMaterial = std::make_unique<CDX11Material>(pDX11Renderer->GetDX11Device(), pDX11Renderer->GetDX11DeviceContext());
-
 			pActor->SetMaterial(pMaterial);
-		}
-	}
-
-	// オブジェクトのコンスタントバッファを作成
-	void CActorManager::CreateConstantBuffer(CActorBase* pActor) {
-		if (pActor) {
-			std::unique_ptr<CConstantBufferBase> pConstantBuffer = std::make_unique<CDX11ConstantBuffer>(pDX11Renderer->GetDX11Device(), pDX11Renderer->GetDX11DeviceContext());
-
-			pActor->SetConstantBuffer(pConstantBuffer);
 		}
 	}
 

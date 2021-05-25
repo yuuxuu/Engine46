@@ -6,18 +6,15 @@
  */
 
 #include "CSceneManager.h"
-
-#include "CInput.h"
-
-#include "../GraphicsAPI/CDX11Renderer.h"
+#include "CScene.h"
+#include "CActor.h"
 
 namespace Engine46 {
 
 	constexpr const char* g_sceneListFileName = "SceneListData.bin";
 
 	// コンストラクタ
-	CSceneManager::CSceneManager(CDX11Renderer* pRenderer) :
-		pDX11Renderer(pRenderer)
+	CSceneManager::CSceneManager()
 	{}
 
 	// デストラクタ
@@ -25,49 +22,13 @@ namespace Engine46 {
 	{}
 
 	// 初期化
-	bool CSceneManager::Initialize(HINSTANCE hInstance, HWND hwnd) {
-		
-		m_pShaderManager = std::make_unique<CShaderManager>(pDX11Renderer);
-		if(!m_pShaderManager->Initialize()) return false;
-
-		m_pActorManager = std::make_unique<CActorManager>(pDX11Renderer);
-		if (!m_pActorManager->Initialize()) return false;
-
-		m_pInput = std::make_unique<CInput>(hwnd);
-		if (!m_pInput->Initialize(hInstance)) return false;
+	bool CSceneManager::Initialize(CActorBase* pRootActor) {
 
 		pRootScene = this->CreateScene(0);
 
-		const char* shaderName = "D:/Engine46/ShaderSource/HLSL/Model.hlsl";
-		CActorBase* pRootActor = m_pActorManager->GetRootActor();
-		CShaderPackage* pSp = m_pShaderManager->GetShaderPackage(shaderName);
-
-		for (auto& actor : pRootActor->GetChiledActorList()) {
-			if (actor->GetClassID() == (UINT)ClassType::Camera) {
-				actor->SetInput(m_pInput.get());
-			}
-			actor->SetShaderPackage(pSp);
-		}
+		pRootScene->SetRootActor(pRootActor);
 
 		return true;
-	}
-
-	// ルートシーン更新
-	void CSceneManager::UpdateRootScene() {
-		if (m_pInput) {
-			m_pInput->UpdateInput();
-		}
-
-		if (pRootScene) {
-			pRootScene->Update();
-		}
-	}
-
-	// ルートシーン描画
-	void CSceneManager::DrawRootScene() {
-		if (pRootScene) {
-			pDX11Renderer->Render(pRootScene);
-		}
 	}
 
 	// シーン作成
@@ -75,7 +36,6 @@ namespace Engine46 {
 		std::unique_ptr<CSceneBase> scene = std::make_unique<CSceneBase>();
 
 		scene->Initialize();
-		scene->SetManager(m_pShaderManager.get(), m_pActorManager.get());
 
 		CSceneBase* pScene = scene.get();
 
@@ -83,7 +43,7 @@ namespace Engine46 {
 			pRootScene->AddChiledSceneList(pScene);
 		}
 
-		this->AddSceneToSceneVec(scene);
+		this->AddSceneToVec(scene);
 
 		return pScene;
 	}

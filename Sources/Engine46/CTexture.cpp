@@ -12,7 +12,7 @@ namespace Engine46 {
 
 	// コンストラクタ
 	CTextureBase::CTextureBase() :
-		m_Name()
+		m_textureName()
 	{}
 
 	// デストラクタ
@@ -22,7 +22,7 @@ namespace Engine46 {
 	// 初期化
 	bool CTextureBase::Initialize(const char* name) {
 
-		m_Name = name;
+		m_textureName = name;
 
 		return true;
 	}
@@ -54,7 +54,7 @@ namespace Engine46 {
 		m_textureData.height		= image->height;
 		m_textureData.format		= image->format;
 
-		m_Name = name;
+		m_textureName = name;
 
 		return true;
 	}

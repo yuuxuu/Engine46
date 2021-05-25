@@ -10,9 +10,29 @@
 
 namespace Engine46 {
 
+	static UINT g_meshCount = 0;
+
 	// コンストラクタ
-	CMeshBase::CMeshBase()
-	{}
+	CMeshBase::CMeshBase() :
+		m_meshID(g_meshCount++)
+	{
+		std::string str = "mesh_" + std::to_string(g_meshCount);
+		int size = (int)str.size() + 1;
+		m_meshName.reset(new char[size]);
+		str.resize(size);
+		str.copy(m_meshName.get(), size);
+	}
+
+	// コンストラクタ
+	CMeshBase::CMeshBase(const char* name) :
+		m_meshID(g_meshCount++)
+	{
+		std::string str = name;
+		int size = (int)str.size() + 1;
+		m_meshName.reset(new char[size]);
+		str.resize(size);
+		str.copy(m_meshName.get(), size);
+	}
 
 	// デストラクタ
 	CMeshBase::~CMeshBase()

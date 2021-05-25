@@ -6,10 +6,8 @@
  */
 
 #include "CShaderManager.h"
-
+#include "CRenderer.h"
 #include "utility.h"
-
-#include "../GraphicsAPI/CDX11Renderer.h"
 
 namespace Engine46 {
 
@@ -18,8 +16,8 @@ namespace Engine46 {
 	const char* g_Shader_Sprite = "D:/Engine46/ShaderSource/HLSL/Sprite.hlsl";
 
 	// コンストラクタ
-	CShaderManager::CShaderManager(CDX11Renderer* pRenderer) :
-		pDX11Renderer(pRenderer)
+	CShaderManager::CShaderManager(CRendererBase* pRenderer) :
+		pRenderer(pRenderer)
 	{}
 
 	// デストラクタ
@@ -30,12 +28,16 @@ namespace Engine46 {
 	bool CShaderManager::Initialize() {
 
 		//this->LoadShaderPackageList();
-		
-		CShaderPackage* pSp = this->CreateShaderPackage(g_Shader_Model);
-		if (!pSp->Initialize(this)) return false;
 
-		pSp = this->CreateShaderPackage(g_Shader_Sprite);
-		if (!pSp->Initialize(this)) return false;
+		CShaderManager* pShaderManager = this;
+		pRenderer->CreateShader(pShaderManager, g_Shader_Model);
+		pRenderer->CreateShader(pShaderManager, g_Shader_Sprite);
+		
+		//CShaderPackage* pSp = this->CreateShaderPackage(g_Shader_Model);
+		//if (!pSp->Initialize(this)) return false;
+		//
+		//pSp = this->CreateShaderPackage(g_Shader_Sprite);
+		//if (!pSp->Initialize(this)) return false;
 		
 		//this->SaveShaderPackageList();
 
@@ -44,14 +46,14 @@ namespace Engine46 {
 
 	// シェーダーパッケージを作成
 	CShaderPackage* CShaderManager::CreateShaderPackage(const char* packageName) {
-		auto itr = m_mapShaderPackage.find(packageName);
+		auto itr = m_pMapShaderPackage.find(packageName);
 
-		if (itr == m_mapShaderPackage.end()) {
-			std::unique_ptr<CShaderPackage> sp = std::make_unique<CShaderPackage>(pDX11Renderer, packageName);
+		if (itr == m_pMapShaderPackage.end()) {
+			std::unique_ptr<CShaderPackage> sp = std::make_unique<CShaderPackage>(packageName);
 
 			CShaderPackage* pSp = sp.get();
 
-			this->AddShaderPackageToMap(sp->GetPackageName(), sp);
+			this->AddShaderPackageToMap(packageName, sp);
 
 			return pSp;
 		}
@@ -61,10 +63,10 @@ namespace Engine46 {
 
 	// シェーダーパッケージをマップへ追加
 	void CShaderManager::AddShaderPackageToMap(const char* name, std::unique_ptr<CShaderPackage>& pSp) {
-		auto itr = m_mapShaderPackage.find(name);
+		auto itr = m_pMapShaderPackage.find(name);
 
-		if (itr == m_mapShaderPackage.end()) {
-			m_mapShaderPackage[name] = move(pSp);
+		if (itr == m_pMapShaderPackage.end()) {
+			m_pMapShaderPackage[name] = std::move(pSp);
 		}
 	}
 
@@ -78,10 +80,10 @@ namespace Engine46 {
 
 		if (!ofs.is_open()) return false;
 
-		int packageSize = m_mapShaderPackage.size();
+		int packageSize = m_pMapShaderPackage.size();
 		ofs.write((char*)&packageSize, sizeof(int));
 
-		for (const auto& pSp : m_mapShaderPackage) {
+		for (const auto& pSp : m_pMapShaderPackage) {
 			if (!pSp.second->SavePackage(ofs)) continue;
 		}
 
@@ -150,9 +152,9 @@ namespace Engine46 {
 
 	// シェーダーパッケージを取得
 	CShaderPackage* CShaderManager::GetShaderPackage(const char* name) {
-		auto itr = m_mapShaderPackage.find(name);
+		auto itr = m_pMapShaderPackage.find(name);
 
-		if (itr != m_mapShaderPackage.end()) {
+		if (itr != m_pMapShaderPackage.end()) {
 			return itr->second.get();
 		}
 

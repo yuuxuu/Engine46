@@ -1,8 +1,8 @@
-ï»¿//*****************************************************************************
+//*****************************************************************************
 //!	@file	ShaderUlity.hlsli
-//!	@brief	ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ãƒ˜ãƒƒãƒ€ãƒ¼
+//!	@brief	ƒVƒF[ƒ_[ƒwƒbƒ_[
 //!	@note	
-//!	@author	2020/04/11 ä½œæˆï¼šæœ¨æ‘å„ª
+//!	@author	2020/04/11 ì¬F–Ø‘º—D
 //*****************************************************************************
 
 #ifndef _SHADER_ULITY_H_
@@ -38,34 +38,34 @@ float4x4 GetQuaternionMatrix(float4x4 quaternionMat) {
 	return mat;
 }
 
-// ã‚¬ãƒ³ãƒå€¤ã‚’å–å¾—
+// ƒKƒ“ƒ}’l‚ğæ“¾
 float GetGumma(float3 color) {
 	return dot(color, float3(0.299f, 0.587f, 0.144f));
 }
 
-// é«˜è¼åº¦ã®å–å¾—
+// ‚‹P“x‚Ìæ“¾
 float GetBrightness(float3 color) {
 	return max(color.r, max(color.g, color.b));
 }
 
-// ãƒ©ãƒ³ãƒãƒ¼ãƒˆ
+// ƒ‰ƒ“ƒo[ƒg
 float Lambert(float3 normal, float3 light) {
 	return saturate(dot(normal, light));
 }
 
-// ãƒãƒ¼ãƒ•ãƒ©ãƒ³ãƒãƒ¼ãƒˆ
+// ƒn[ƒtƒ‰ƒ“ƒo[ƒg
 float HalfLambert(float3 normal, float3 light) {
 	float d = Lambert(normal, light);
 	d = d * 0.5f + 0.5f;
 	return d * d;
 }
 
-// ãƒ•ã‚©ãƒ³
+// ƒtƒHƒ“
 float Phong(float3 normal, float3 halfVec, float specularPower) {
 	return pow(saturate(dot(normal, halfVec)), specularPower);
 }
 
-// æ³•ç·šåˆ†å¸ƒé–¢æ•°
+// –@ü•ª•zŠÖ”
 float D_GGX(float ndoth, float a) {
 	float a2 = a * a;
 	float f = (ndoth * ndoth) * (a2 - 1.0f) + 1.0f;
@@ -73,7 +73,7 @@ float D_GGX(float ndoth, float a) {
 	return a2 / (PI * f * f);
 }
 
-// å¹¾ä½•æ¸›è¡°é …
+// Šô‰½Œ¸Š€
 float G_CookTrrance(float ndotl, float ndotv, float ndoth, float vdoth) {
 	float nh2 = 2.0f * ndoth;
 
@@ -83,12 +83,12 @@ float G_CookTrrance(float ndotl, float ndotv, float ndoth, float vdoth) {
 	return min(1.0f, min(g1, g2));
 }
 
-// ãƒ•ãƒ¬ãƒãƒ«é …
+// ƒtƒŒƒlƒ‹€
 float F_Schlick(float f0, float f90) {
 	return f0 + (1.0f - f0) * pow(1.0f - f90, 5);
 }
 
-// æ‹¡æ•£åå°„
+// ŠgU”½Ë
 float Fd_Burley(float ndotv, float ndotl, float ldoth, float roughness) {
 	float f90 = 0.5f + 2.0f * ldoth * ldoth * roughness;
 	float FL = 1.0f + (f90 - 1.0f) * pow(1.0f - ndotl, 5);//F_Schlick(f0, ndotl);

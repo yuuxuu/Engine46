@@ -12,17 +12,17 @@
 
 #include "IObject.h"
 #include "CDataRecord.h"
-#include "CShaderManager.h"
-#include "CActorManager.h"
 
 namespace Engine46 {
+
+	// 前方宣言
+	class CActorBase;
 
 	class CSceneBase : public IObject {
 	protected:
 		std::vector<std::unique_ptr<CDataRecordBase>>	vecDataRecords;
 
-		CShaderManager*									pShaderManager;
-		CActorManager*									pActorManager;
+		CActorBase*										pRootActor;
 
 		CSceneBase*										pParentScene;
 		int												m_parentSceneID;
@@ -36,7 +36,7 @@ namespace Engine46 {
 
 	public:
 		CSceneBase();
-		CSceneBase(const char* sceneName);
+		explicit CSceneBase(const char* sceneName);
 		virtual ~CSceneBase();
 
 		virtual void Initialize() override;
@@ -45,10 +45,6 @@ namespace Engine46 {
 
 		virtual bool Save(std::ofstream& ofs) override;
 		virtual bool Load(std::ifstream& ifs) override;
-
-		void DrawRenderingScene(CActorBase* pActor);
-
-		void SetManager(CShaderManager* pShaderManager, CActorManager* pActorManager);
 
 		void ConnectParentScene(CSceneBase* pParentScene);
 
@@ -59,6 +55,8 @@ namespace Engine46 {
 
 		std::list<CSceneBase*> GetChildSceneList() const { return pChiledSceneList; }
 		std::vector<int> GetChiledSceneIDList() const { return m_chiledSceneIDList; }
+
+		void SetRootActor(CActorBase* pRootActor) { this->pRootActor = pRootActor; }
 	};
 
 } // namespace

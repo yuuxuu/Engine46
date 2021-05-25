@@ -6,6 +6,7 @@
  */
 
 #include "CScene.h"
+#include "CActor.h"
 
 namespace Engine46 {
 
@@ -54,19 +55,15 @@ namespace Engine46 {
 
 	// シーン更新
 	void CSceneBase::Update() {
-		CActorBase* actor = pActorManager->GetRootActor();
-
-		if (actor) {
-			actor->Update();
+		if (pRootActor) {
+			pRootActor->Update();
 		}
 	}
 
 	// シーン描画
 	void CSceneBase::Draw() {
-		CActorBase* actor = pActorManager->GetRootActor();
-
-		if (actor) {
-			actor->Draw();
+		if (pRootActor) {
+			pRootActor->Draw();
 		}
 	}
 
@@ -90,28 +87,6 @@ namespace Engine46 {
 		}
 
 		return true;
-	}
-
-	// レンダリングシーンを描画
-	void CSceneBase::DrawRenderingScene(CActorBase* pActor) {
-		if (pActor) {
-			const char* shaderName = "D:/Engine46/ShaderSource/HLSL/Sprite.hlsl";
-			CShaderPackage* pSp = pShaderManager->GetShaderPackage(shaderName);
-
-			pActorManager->SetShaderPackage(pActor, pSp);
-
-			pActor->Draw();
-		}
-	}
-
-	// マネージャーを設定
-	void CSceneBase::SetManager(CShaderManager* pShaderManager, CActorManager* pActorManager) {
-		if (pShaderManager) {
-			this->pShaderManager = pShaderManager;
-		}
-		if (pActorManager) {
-			this->pActorManager = pActorManager;
-		}
 	}
 
 	// 親シーンを接続

@@ -20,34 +20,34 @@ namespace Engine46 {
 
 	// コンストラクタ
 	CActorBase::CActorBase() :
-		m_ClassID((int)ClassType::Root),
-		m_ActorID(g_ActorCount++),
-		m_ActorName(),
-		m_Transform(Transform()),
+		m_classID((int)ClassType::Root),
+		m_actorID(g_ActorCount++),
+		m_actorName(),
+		m_transform(Transform()),
 		pParentActor(nullptr),
 		m_parentActorID(-1)
 	{
-		std::string str = "Object_" + std::to_string(m_ActorID);
+		std::string str = "Object_" + std::to_string(m_actorID);
 		int size = (int)str.size() + 1;
-		m_ActorName.reset(new char[size]);
+		m_actorName.reset(new char[size]);
 		str.resize(size);
-		str.copy(m_ActorName.get(), size);
+		str.copy(m_actorName.get(), size);
 	}
 
 	// コンストラクタ
-	CActorBase::CActorBase(const UINT id, const char* name, const Transform transform) :
-		m_ClassID(id),
-		m_ActorID(g_ActorCount++),
-		m_ActorName(),
-		m_Transform(transform),
+	CActorBase::CActorBase(const UINT classID, const char* name, const Transform transform) :
+		m_classID(classID),
+		m_actorID(g_ActorCount++),
+		m_actorName(),
+		m_transform(transform),
 		pParentActor(nullptr),
 		m_parentActorID(-1)
 	{
-		std::string str = name + std::string('_' + std::to_string(m_ActorID));
+		std::string str = name + std::string('_' + std::to_string(m_actorID));
 		int size = (int)str.size() + 1;
-		m_ActorName.reset(new char[size]);
+		m_actorName.reset(new char[size]);
 		str.resize(size);
-		str.copy(m_ActorName.get(), size);
+		str.copy(m_actorName.get(), size);
 	}
 
 	// デストラクタ
@@ -59,10 +59,10 @@ namespace Engine46 {
 
 		vecDataRecords.clear();
 
-		vecDataRecords.emplace_back(std::make_unique<CDataRecordBase>(offsetof(CActorBase, m_ClassID), sizeof(m_ClassID)));
-		vecDataRecords.emplace_back(std::make_unique<CDataRecordBase>(offsetof(CActorBase, m_ActorID), sizeof(m_ActorID)));
-		vecDataRecords.emplace_back(std::make_unique<CStrDataRecord>(offsetof(CActorBase, m_ActorName), m_ActorName));
-		vecDataRecords.emplace_back(std::make_unique<CDataRecordBase>(offsetof(CActorBase, m_Transform), sizeof(m_Transform)));
+		vecDataRecords.emplace_back(std::make_unique<CDataRecordBase>(offsetof(CActorBase, m_classID), sizeof(m_classID)));
+		vecDataRecords.emplace_back(std::make_unique<CDataRecordBase>(offsetof(CActorBase, m_actorID), sizeof(m_actorID)));
+		vecDataRecords.emplace_back(std::make_unique<CStrDataRecord>(offsetof(CActorBase, m_actorName), m_actorName));
+		vecDataRecords.emplace_back(std::make_unique<CDataRecordBase>(offsetof(CActorBase, m_transform), sizeof(m_transform)));
 		vecDataRecords.emplace_back(std::make_unique<CPtrDataRecord>(m_parentActorID));
 		vecDataRecords.emplace_back(std::make_unique<CListDataRecord>(m_chiledActorIDList));
 	}
@@ -84,7 +84,7 @@ namespace Engine46 {
 		if (m_pConstantBuffer) {
 			if (pParentActor) {
 				for (auto& chiled : pParentActor->pChiledActorList) {
-					if (chiled->m_ClassID == (UINT)ClassType::Camera) {
+					if (chiled->m_classID == (UINT)ClassType::Camera) {
 						CCamera* camera = dynamic_cast<CCamera*>(chiled);
 
 						Matrix matW = this->GetWorldMatrix();
@@ -99,7 +99,7 @@ namespace Engine46 {
 						mainCB cb = {
 							matTranspose,
 							Matrix(),
-							chiled->m_Transform.pos,
+							chiled->m_transform.pos,
 						};
 
 						m_pConstantBuffer->Update(&cb);
@@ -141,9 +141,9 @@ namespace Engine46 {
 		return true;
 	}
 
-	// コンスタントバッファを設定
+	// コンスタントバッファを作成
 	void CActorBase::SetConstantBuffer(std::unique_ptr<CConstantBufferBase>& pConstantBuffer) {
-		if (pConstantBuffer) {
+		if (!m_pConstantBuffer) {
 			m_pConstantBuffer = std::move(pConstantBuffer);
 
 			m_pConstantBuffer->CreateConstantBuffer(sizeof(mainCB));
@@ -151,16 +151,16 @@ namespace Engine46 {
 	}
 
 	// メッシュを設定
-	void CActorBase::SetMesh(std::unique_ptr<CMeshBase>& pMesh) {
+	void CActorBase::SetMesh(CMeshBase* pMesh) {
 		if (pMesh) {
-			m_pMesh = std::move(pMesh);
+			m_pMesh = pMesh;
 		}
 	}
 
 	// マテリアルを設定
-	void CActorBase::SetMaterial(std::unique_ptr<CMaterialBase>& pMaterial) {
+	void CActorBase::SetMaterial(CMaterialBase* pMaterial) {
 		if (pMaterial) {
-			m_pMaterial = std::move(pMaterial);
+			m_pMaterial = pMaterial;
 		}
 	}
 
@@ -193,7 +193,7 @@ namespace Engine46 {
 		this->pParentActor = pParentActor;
 
 		if (pParentActor) {
-			m_parentActorID = pParentActor->m_ActorID;
+			m_parentActorID = pParentActor->m_actorID;
 		}
 		else {
 			m_parentActorID = -1;
@@ -203,14 +203,14 @@ namespace Engine46 {
 	// 子アクターを追加
 	void CActorBase::AddChiledActorList(CActorBase* pChiledActor) {
 		if (pChiledActor) {
-			auto it = std::find(m_chiledActorIDList.begin(), m_chiledActorIDList.end(), pChiledActor->m_ActorID);
+			auto it = std::find(m_chiledActorIDList.begin(), m_chiledActorIDList.end(), pChiledActor->m_actorID);
 
 			if (it == m_chiledActorIDList.end()) {
 				pChiledActor->ConnectParentActor(this);
 
 				pChiledActorList.emplace_back(pChiledActor);
 
-				m_chiledActorIDList.emplace_back(pChiledActor->m_ActorID);
+				m_chiledActorIDList.emplace_back(pChiledActor->m_actorID);
 			}
 		}
 	}
@@ -218,13 +218,13 @@ namespace Engine46 {
 	// ワールド行列を取得
 	Matrix CActorBase::GetWorldMatrix() {
 		Matrix matScale;
-		matScale.dx_m = DirectX::XMMatrixScaling(m_Transform.scale.x, m_Transform.scale.y, m_Transform.scale.z);
+		matScale.dx_m = DirectX::XMMatrixScaling(m_transform.scale.x, m_transform.scale.y, m_transform.scale.z);
 		
 		Matrix matRotate;
-		matRotate.dx_m = DirectX::XMMatrixRotationRollPitchYaw(m_Transform.rotation.x, m_Transform.rotation.y, m_Transform.rotation.z);
+		matRotate.dx_m = DirectX::XMMatrixRotationRollPitchYaw(m_transform.rotation.x, m_transform.rotation.y, m_transform.rotation.z);
 		
 		Matrix matTrans;
-		matTrans.dx_m = DirectX::XMMatrixTranslation(m_Transform.pos.x, m_Transform.pos.y, m_Transform.pos.z);
+		matTrans.dx_m = DirectX::XMMatrixTranslation(m_transform.pos.x, m_transform.pos.y, m_transform.pos.z);
 
 		Matrix matWorld;
 		matWorld.dx_m = matScale.dx_m * matRotate.dx_m * matTrans.dx_m;
@@ -235,7 +235,7 @@ namespace Engine46 {
 	// 向きベクトルを取得
 	VECTOR3 CActorBase::GetDirectionVector() {
 		Matrix matRotate;
-		matRotate.dx_m = DirectX::XMMatrixRotationRollPitchYaw(m_Transform.rotation.x, m_Transform.rotation.y, m_Transform.rotation.z);
+		matRotate.dx_m = DirectX::XMMatrixRotationRollPitchYaw(m_transform.rotation.x, m_transform.rotation.y, m_transform.rotation.z);
 
 		VECTOR3 right;
 		right.x = matRotate._11;

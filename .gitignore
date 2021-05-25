@@ -1,6 +1,6 @@
 .vs
 *ilk
 *.pdb
-Debug/*
-Release/*
-!Lib
+Debug
+Release
+!*.lib

@@ -28,7 +28,6 @@
     <ClInclude Include="CDX11Shader.h" />
     <ClInclude Include="CDX11Texture.h" />
     <ClInclude Include="CDX11ForwardRendering.h" />
-    <ClInclude Include="IRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CDX11ConstantBuffer.cpp" />

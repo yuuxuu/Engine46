@@ -18,7 +18,7 @@ namespace Engine46 {
 	class CDX11Device;
 	class CDX11DeviceContext;
 
-	class CDX11Shader : public CShader {
+	class CDX11Shader : public CShaderBase {
 	private:
 		CDX11Device*					pDX11Device;
 		CDX11DeviceContext*				pDX11DeviceContext;

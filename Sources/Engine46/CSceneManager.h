@@ -10,48 +10,34 @@
 #ifndef _SCENE_MANAGER_H_
 #define _SCENE_MANAGER_H_
 
-#include "CScene.h"
-
 namespace Engine46 {
 
 	// 前方宣言
-	class CDX11Renderer;
-	class CInput;
+	class CActorBase;
+	class CSceneBase;
 
 	class CSceneManager {
 	private:
 		std::vector<std::unique_ptr<CSceneBase>>	m_pVecScene;
 		CSceneBase*									pRootScene;
 
-		CDX11Renderer*								pDX11Renderer;
-
-		std::unique_ptr<CShaderManager>				m_pShaderManager;
-		std::unique_ptr<CActorManager>				m_pActorManager;
-		
-		std::unique_ptr<CInput>						m_pInput;
-
-		void ConnectScene();
-
 	public:
-		CSceneManager(CDX11Renderer* pRenderer);
+		CSceneManager();
 		~CSceneManager();
 
-		bool Initialize(HINSTANCE hInstance, HWND hwnd);
-
-		void UpdateRootScene();
-
-		void DrawRootScene();
+		bool Initialize(CActorBase* pRootActor);
 
 		CSceneBase* CreateScene(int id);
 
 		bool SaveScene();
 		bool LoadScene();
 
-		void AddSceneToSceneVec(std::unique_ptr<CSceneBase>& pScene) { m_pVecScene.emplace_back(move(pScene)); }
+		void AddSceneToVec(std::unique_ptr<CSceneBase>& pScene) { m_pVecScene.emplace_back(move(pScene)); }
 
 		CSceneBase* GetRootScene() const { return pRootScene; };
 
-		CInput* GetInput() const { return m_pInput.get(); }
+	private:
+		void ConnectScene();
 	};
 
 } // namespace

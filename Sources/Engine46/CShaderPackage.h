@@ -16,24 +16,33 @@ namespace Engine46 {
 
 	// 前方宣言
 	class CShaderManager;
-	class CDX11Renderer;
+	class CRendererBase;
+
+	struct ShaderInfo {
+		const char* entryPoint;
+		const char* shaderModel;
+		SHADER_TYPE shadeType;
+	};
+
+	static const std::vector<ShaderInfo> vecShaderInfo = {
+		{ "VS_main", "vs_5_0", SHADER_TYPE::TYPE_VERTEX },
+		{ "PS_main", "ps_5_0", SHADER_TYPE::TYPE_PIXEL },
+		{ "HS_main", "hs_5_0", SHADER_TYPE::TYPE_HULL },
+		{ "DS_main", "ds_5_0", SHADER_TYPE::TYPE_DOMAIN },
+		{ "GS_main", "gs_5_0", SHADER_TYPE::TYPE_GEOMETRY },
+		{ "CS_main", "cs_5_0", SHADER_TYPE::TYPE_COMPUTE },
+	};
 
 	class CShaderPackage {
 	private:
-		std::vector<std::unique_ptr<CShader>>	m_pVecShader;
+		std::vector<std::unique_ptr<CShaderBase>>	m_pVecShader;
 
-		CDX11Renderer*							pDX11Renderer;
+		const char*									m_PakageName;
 
-		ComPtr<ID3D11InputLayout>				m_pInputLayout;
-
-		size_t									m_layoutBufSize;
-
-		const char*								m_PakageName;
-
-		bool									m_isCompile;
+		bool										m_isCompile;
 	public:
+		explicit CShaderPackage(const char* name);
 		CShaderPackage();
-		CShaderPackage(CDX11Renderer* pRenderer, const char* name);
 		~CShaderPackage();
 
 		bool Initialize(CShaderManager* pShaderManager);
@@ -45,9 +54,9 @@ namespace Engine46 {
 		bool SavePackage(std::ofstream& ofs);
 		bool LoadPackage(std::ifstream& ifs);
 
-		void AddShader(std::unique_ptr<CShader>& pShader) { m_pVecShader.emplace_back(move(pShader)); };
+		void AddShaderToVec(std::unique_ptr<CShaderBase>& pShader);
 
-		CShader* GetShader(SHADER_TYPE type);
+		CShaderBase* GetShader(SHADER_TYPE type);
 
 		const char* GetPackageName() const { return m_PakageName; }
 

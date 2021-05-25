@@ -76,8 +76,8 @@ namespace Engine46 {
 			if (pInput->IsTriggerRightMouse()) {
 				float r = Vec3Lenght(m_forcus - m_eye);
 
-				float theta = m_Transform.rotation.y + pInput->GetMousePosY() * speed;
-				float phi = m_Transform.rotation.x + pInput->GetMousePosX() * speed;
+				float theta = m_transform.rotation.y + pInput->GetMousePosY() * speed;
+				float phi = m_transform.rotation.x + pInput->GetMousePosX() * speed;
 
 				VECTOR3 pos;
 				pos.x = r * sinf(theta) * cosf(phi);
@@ -86,8 +86,8 @@ namespace Engine46 {
 
 				m_eye = m_forcus + pos;
 
-				m_Transform.rotation.x = phi;
-				m_Transform.rotation.y = theta;
+				m_transform.rotation.x = phi;
+				m_transform.rotation.y = theta;
 			}
 		}
 

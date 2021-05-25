@@ -13,7 +13,7 @@ namespace Engine46 {
 
 	// コンストラクタ
 	CDX11Shader::CDX11Shader(CDX11Device* pDevice, CDX11DeviceContext* pDeviceContext, const char* name, ComPtr<ID3DBlob>& pBlob, SHADER_TYPE type) :
-		CShader(name, pBlob, type),
+		CShaderBase(name, pBlob, type),
 		pDX11Device(pDevice),
 		pDX11DeviceContext(pDeviceContext)
 	{}

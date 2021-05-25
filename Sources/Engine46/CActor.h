@@ -31,17 +31,17 @@ namespace Engine46 {
 	protected:
 		std::vector<std::unique_ptr<CDataRecordBase>>	vecDataRecords;
 
-		UINT											m_ClassID;
+		UINT											m_classID;
 
-		int												m_ActorID;
+		int												m_actorID;
 
-		std::unique_ptr<char[]>							m_ActorName;
+		std::unique_ptr<char[]>							m_actorName;
 
-		Transform										m_Transform;
+		Transform										m_transform;
 		
-		std::unique_ptr<CMeshBase>						m_pMesh;
+		CMeshBase*										m_pMesh;
 
-		std::unique_ptr<CMaterialBase>					m_pMaterial;
+		CMaterialBase*									m_pMaterial;
 
 		std::unique_ptr<CConstantBufferBase>			m_pConstantBuffer;
 
@@ -55,7 +55,7 @@ namespace Engine46 {
 
 	public:
 		CActorBase();
-		CActorBase(const UINT id, const char* name, const Transform transform);
+		CActorBase(const UINT classID, const char* name, const Transform transform);
 		virtual ~CActorBase();
 
 		virtual void Initialize() override;
@@ -67,9 +67,9 @@ namespace Engine46 {
 
 		void SetConstantBuffer(std::unique_ptr<CConstantBufferBase>& pConstantBuffer);
 
-		void SetMesh(std::unique_ptr<CMeshBase>& pMesh);
+		void SetMesh(CMeshBase* pMesh);
 
-		void SetMaterial(std::unique_ptr<CMaterialBase>&  pMaterial);
+		void SetMaterial(CMaterialBase*  pMaterial);
 
 		void SetTexture(CTextureBase* pTex);
 
@@ -87,7 +87,7 @@ namespace Engine46 {
 		std::list<CActorBase*> GetChiledActorList() const { return pChiledActorList; }
 		std::vector<int> GetChiledActorIDList() const { return m_chiledActorIDList; }
 
-		UINT GetClassID() const { return m_ClassID; }
+		UINT GetClassID() const { return m_classID; }
 
 		Matrix GetWorldMatrix();
 

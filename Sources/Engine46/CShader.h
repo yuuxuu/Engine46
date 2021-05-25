@@ -28,7 +28,7 @@ namespace Engine46 {
 		TYPE_NONE,
 	};
 
-	class CShader {
+	class CShaderBase {
 	protected:
 		std::vector<std::unique_ptr<CDataRecordBase>>	vecDataRecord;
 
@@ -42,9 +42,9 @@ namespace Engine46 {
 		SHADER_TYPE										m_shaderType;
 
 	public:
-		CShader();
-		CShader(const char* name, ComPtr<ID3DBlob>& pBlob, SHADER_TYPE type);
-		virtual ~CShader();
+		CShaderBase();
+		CShaderBase(const char* name, ComPtr<ID3DBlob>& pBlob, SHADER_TYPE type);
+		virtual ~CShaderBase();
 
 		void Initialize();
 
@@ -55,6 +55,8 @@ namespace Engine46 {
 		bool Load(std::ifstream& ifs);
 
 		void SetData(ComPtr<ID3DBlob>& pBlob);
+
+		char* GetShaderName() const { return m_shaderName.get(); }
 
 		SHADER_TYPE GetShaderType() const { return m_shaderType; }
 	};

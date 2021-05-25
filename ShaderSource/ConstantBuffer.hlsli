@@ -1,8 +1,8 @@
-ï»¿//*****************************************************************************
+//*****************************************************************************
 //!	@file	constantBuffer.hlsli
-//!	@brief	ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰ãƒ˜ãƒƒãƒ€ãƒ¼
+//!	@brief	ƒVƒF[ƒ_[ƒCƒ“ƒNƒ‹[ƒhƒwƒbƒ_[
 //!	@note	
-//!	@author	2020/03/13 ä½œæˆï¼šæœ¨æ‘å„ª
+//!	@author	2020/03/13 ì¬F–Ø‘º—D
 //*****************************************************************************
 
 #ifndef _CONSTANTBUFFER_H_
@@ -20,7 +20,7 @@
 
 #define INSTANCE_MAX	1024
 
-// ãƒ†ã‚¯ã‚¹ãƒãƒ£
+// ƒeƒNƒXƒ`ƒƒ
 Texture2D			diffuseTex		: register(t0);
 Texture2D			specularTex		: register(t1);
 Texture2D			normalTex		: register(t2);
@@ -40,82 +40,82 @@ Texture2D			BlurTex1		: register(t15);
 Texture2D			BlurTex2		: register(t16);
 Texture2D			BlurTex3		: register(t17);
 
-// ã‚µãƒ³ãƒ—ãƒ©ãƒ¼
+// ƒTƒ“ƒvƒ‰[
 SamplerState sampleState					: register(s0);
 SamplerComparisonState shadowSamplerState	: register(s1);
 SamplerState sampleState1					: register(s2);
-// ã‚¢ãƒ³ã‚ªãƒ¼ãƒ€ãƒ¼ãƒ‰ã‚¢ã‚¯ã‚»ã‚¹ãƒ“ãƒ¥ãƒ¼(å‡ºåŠ›)
+// ƒAƒ“ƒI[ƒ_[ƒhƒAƒNƒZƒXƒrƒ…[(o—Í)
 RWByteAddressBuffer outBuffer				: register(u0);
 
-// ãƒ¡ã‚¤ãƒ³
+// ƒƒCƒ“
 cbuffer CbMain : register(b0)
 {
-	float4x4	matWVP;			// ãƒ¯ãƒ¼ãƒ«ãƒ‰ãƒ“ãƒ¥ãƒ¼ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ã‚·ãƒ§ãƒ³è¡Œåˆ—
+	float4x4	matWVP;			// ƒ[ƒ‹ƒhƒrƒ…[ƒvƒƒWƒFƒNƒVƒ‡ƒ“s—ñ
 
-	float4x4	matLightWVP;	// ãƒ©ã‚¤ãƒˆãƒ¯ãƒ¼ãƒ«ãƒ‰ãƒ“ãƒ¥ãƒ¼ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ã‚·ãƒ§ãƒ³è¡Œåˆ—
+	float4x4	matLightWVP;	// ƒ‰ƒCƒgƒ[ƒ‹ƒhƒrƒ…[ƒvƒƒWƒFƒNƒVƒ‡ƒ“s—ñ
 
-	float4		cameraPos;		// ã‚«ãƒ¡ãƒ©ã®ä½ç½®
+	float4		cameraPos;		// ƒJƒƒ‰‚ÌˆÊ’u
 }
 
-// ãƒãƒ†ãƒªã‚¢ãƒ«
+// ƒ}ƒeƒŠƒAƒ‹
 cbuffer CbMaterial : register(b1)
 {
-	float4		diffuse;					// ãƒãƒ†ãƒªã‚¢ãƒ«ãƒ‡ã‚£ãƒ•ãƒ¥ãƒ¼ã‚ºè‰²
-	float4		specular;					// ãƒãƒ†ãƒªã‚¢ãƒ«ã‚¹ãƒšã‚­ãƒ¥ãƒ©ãƒ¼è‰²
-	float4		ambinet;					// ãƒãƒ†ãƒªã‚¢ãƒ«ã‚¢ãƒ³ãƒ“ã‚¨ãƒ³ãƒˆè‰²
-	float4		emissive;					// ãƒãƒ†ãƒªã‚¢ãƒ«ã‚¨ãƒŸãƒƒã‚·ãƒ–è‰²
-	float4		brightness;					// è¼åº¦ã®è‰²
+	float4		diffuse;					// ƒ}ƒeƒŠƒAƒ‹ƒfƒBƒtƒ…[ƒYF
+	float4		specular;					// ƒ}ƒeƒŠƒAƒ‹ƒXƒyƒLƒ…ƒ‰[F
+	float4		ambinet;					// ƒ}ƒeƒŠƒAƒ‹ƒAƒ“ƒrƒGƒ“ƒgF
+	float4		emissive;					// ƒ}ƒeƒŠƒAƒ‹ƒGƒ~ƒbƒVƒuF
+	float4		brightness;					// ‹P“x‚ÌF
 }
 
-// ãƒ©ã‚¤ãƒˆã‚³ãƒ³ã‚¹ã‚¿ãƒ³ãƒˆãƒãƒƒãƒ•ã‚¡
+// ƒ‰ƒCƒgƒRƒ“ƒXƒ^ƒ“ƒgƒoƒbƒtƒ@
 cbuffer CbLight : register(b2)
 {
-	float4		lightPos[LIGHT_MAX];		// ã‚¹ãƒãƒƒãƒˆãƒ©ã‚¤ãƒˆã®ä½ç½®
-	float4		lightDiffuse[LIGHT_MAX];	// ã‚¹ãƒãƒƒãƒˆãƒ©ã‚¤ãƒˆãƒ‡ã‚£ãƒ•ãƒ¥ãƒ¼ã‚ºè‰²
-	float4		lightSpecular[LIGHT_MAX];	// ã‚¹ãƒãƒƒãƒˆãƒ©ã‚¤ãƒˆã‚¹ãƒšã‚­ãƒ¥ãƒ©ãƒ¼è‰²
+	float4		lightPos[LIGHT_MAX];		// ƒXƒ|ƒbƒgƒ‰ƒCƒg‚ÌˆÊ’u
+	float4		lightDiffuse[LIGHT_MAX];	// ƒXƒ|ƒbƒgƒ‰ƒCƒgƒfƒBƒtƒ…[ƒYF
+	float4		lightSpecular[LIGHT_MAX];	// ƒXƒ|ƒbƒgƒ‰ƒCƒgƒXƒyƒLƒ…ƒ‰[F
 	
-	float4		attenuation;				// ã‚¹ãƒãƒƒãƒˆãƒ©ã‚¤ãƒˆã®æ¸›è¡°ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ãƒ¼
+	float4		attenuation;				// ƒXƒ|ƒbƒgƒ‰ƒCƒg‚ÌŒ¸Šƒpƒ‰ƒ[ƒ^[
 
 	int			lightNum;
 }
 
-// è¡Œåˆ—ã‚³ãƒ³ã‚¹ã‚¿ãƒ³ãƒˆãƒãƒƒãƒ•ã‚¡
+// s—ñƒRƒ“ƒXƒ^ƒ“ƒgƒoƒbƒtƒ@
 cbuffer CbMatrix : register(b3)
 {
-	float4x4	insWorldMatrix[INSTANCE_MAX];	// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ãƒ¯ãƒ¼ãƒ«ãƒ‰å¤‰æ›è¡Œåˆ—
+	float4x4	insWorldMatrix[INSTANCE_MAX];	// ƒCƒ“ƒXƒ^ƒ“ƒXƒ[ƒ‹ƒh•ÏŠ·s—ñ
 }
 
 cbuffer cbDynamicCube : register(b4)
 {
-	float4x4	views[6];				// å‹•çš„ã‚­ãƒ¥ãƒ¼ãƒ–ãƒãƒƒãƒ—ãƒ“ãƒ¥ãƒ¼å¤‰æ›è¡Œåˆ—
+	float4x4	views[6];				// “®“IƒLƒ…[ƒuƒ}ƒbƒvƒrƒ…[•ÏŠ·s—ñ
 }
 
-// PBRãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ãƒ¼ã‚³ãƒ³ã‚¹ã‚¿ãƒ³ãƒˆãƒãƒƒãƒ•ã‚¡
+// PBRƒpƒ‰ƒ[ƒ^[ƒRƒ“ƒXƒ^ƒ“ƒgƒoƒbƒtƒ@
 cbuffer CbPBRParam : register(b5)
 {
-	float4		PBRParam;				// PBRãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ãƒ¼(x:metallic, y:roughness, z:reflectance)
+	float4		PBRParam;				// PBRƒpƒ‰ƒ[ƒ^[(x:metallic, y:roughness, z:reflectance)
 }
 
-// ãƒ–ãƒ©ãƒ¼ã‚³ãƒ³ã‚¹ã‚¿ãƒ³ãƒˆãƒãƒƒãƒ•ã‚¡
+// ƒuƒ‰[ƒRƒ“ƒXƒ^ƒ“ƒgƒoƒbƒtƒ@
 cbuffer CbBlur : register(b6)
 {
 	float4		offset[OFFSET_MAX];
 }
 
-// Tessãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ãƒ¼ã‚³ãƒ³ã‚¹ã‚¿ãƒ³ãƒˆãƒãƒƒãƒ•ã‚¡
+// Tessƒpƒ‰ƒ[ƒ^[ƒRƒ“ƒXƒ^ƒ“ƒgƒoƒbƒtƒ@
 cbuffer CbTessParam : register(b7)
 {
 	float4		tessParam;
 }
 
-// æ³¢ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ãƒ¼ã‚³ãƒ³ã‚¹ã‚¿ãƒ³ãƒˆãƒãƒƒãƒ•ã‚¡
+// ”gƒpƒ‰ƒ[ƒ^[ƒRƒ“ƒXƒ^ƒ“ƒgƒoƒbƒtƒ@
 cbuffer CbWaveParam : register(b8)
 {
-	float4		wavePos;		// æ³¢ã®åŸç‚¹ä½ç½®
-	float4		waveParam;		// æ³¢ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ãƒ¼(x:æŒ¯å¹…, y:æ³¢é•·, z:è§’åº¦, w:æ³¢ã®ã‚¨ãƒƒã‚¸)
+	float4		wavePos;		// ”g‚ÌŒ´“_ˆÊ’u
+	float4		waveParam;		// ”gƒpƒ‰ƒ[ƒ^[(x:U•, y:”g’·, z:Šp“x, w:”g‚ÌƒGƒbƒW)
 }
 
-// ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ãƒ¼ã‚³ãƒ³ã‚¹ã‚¿ãƒ³ãƒˆãƒãƒƒãƒ•ã‚¡
+// ƒp[ƒeƒBƒNƒ‹ƒpƒ‰ƒ[ƒ^[ƒRƒ“ƒXƒ^ƒ“ƒgƒoƒbƒtƒ@
 cbuffer CbParticleParam : register(b9)
 {
 	float		particleSize;
