@@ -173,7 +173,7 @@ namespace Engine46 {
 			}
 		}
 
-		if (pSp->GetIsCompile()) {
+		if (pSp->IsCompile()) {
 			pShaderManager->AddShaderPackageToMap(pSp->GetPackageName(), pSp);
 		}
 	}

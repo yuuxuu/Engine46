@@ -60,7 +60,7 @@ namespace Engine46 {
 
 		const char* GetPackageName() const { return m_PakageName; }
 
-		bool GetIsCompile() const { return m_isCompile; }
+		bool IsCompile() const { return m_isCompile; }
 	};
 
 } // namespace
