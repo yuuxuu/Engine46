@@ -9,37 +9,6 @@
 
 using namespace Engine46;
 
-void CallConsole();
-
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszArgs, int nWinMode)
-{
-	CallConsole();
-
-	// ゲームシステム作成
-	CGameSystem gameSystem;
-	if (!gameSystem.Initialize(hInstance)) {
-		MessageBox(NULL, "ゲームシステム初期化：失敗", "MessageBox", MB_OK);
-		return -1;
-	}
-
-	MSG	msg;
-	while (1) {
-		if (!GetMessage(&msg, NULL, 0, 0)) {
-			break;
-		}
-		else {
-			// 文字メッセージへのコンバート
-			TranslateMessage(&msg);
-			// メッセージをWndProcへ送る
-			DispatchMessage(&msg);
-		}
-	}
-
-	FreeConsole();
-
-	return (int)msg.wParam;
-}
-
 // コンソールの呼び出し
 void CallConsole()
 {
@@ -63,4 +32,33 @@ void CallConsole()
 	GetWindowRect(ConsoleWindow, &ConsoleWindowRect);
 	// コンソールウインドウ位置変更
 	MoveWindow(ConsoleWindow, 0, 0, ConsoleWindowRect.right - ConsoleWindowRect.left, ConsoleWindowRect.bottom - ConsoleWindowRect.top, TRUE);
+}
+
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszArgs, int nWinMode)
+{
+	CallConsole();
+
+	// ゲームシステム作成
+	CGameSystem& gameSystem = CGameSystem::GetGameSystem();
+	if (!gameSystem.Initialize(hInstance)) {
+		MessageBox(NULL, "ゲームシステム初期化：失敗", "MessageBox", MB_OK);
+		return -1;
+	}
+
+	MSG	msg;
+	while (1) {
+		if (!GetMessage(&msg, NULL, 0, 0)) {
+			break;
+		}
+		else {
+			// 文字メッセージへのコンバート
+			TranslateMessage(&msg);
+			// メッセージをWndProcへ送る
+			DispatchMessage(&msg);
+		}
+	}
+
+	FreeConsole();
+
+	return (int)msg.wParam;
 }

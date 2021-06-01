@@ -6,16 +6,33 @@
  */
 
 #include "CMesh.h"
-
-#include "../Engine46/utility.h"
-
-#include "../Renderer/CDX11Renderer.h"
+#include "utility.h"
 
 namespace Engine46 {
 
+	static UINT g_meshCount = 0;
+
 	// コンストラクタ
-	CMeshBase::CMeshBase()
-	{}
+	CMeshBase::CMeshBase() :
+		m_meshID(g_meshCount++)
+	{
+		std::string str = "mesh_" + std::to_string(g_meshCount);
+		int size = (int)str.size() + 1;
+		m_meshName.reset(new char[size]);
+		str.resize(size);
+		str.copy(m_meshName.get(), size);
+	}
+
+	// コンストラクタ
+	CMeshBase::CMeshBase(const char* name) :
+		m_meshID(g_meshCount++)
+	{
+		std::string str = name;
+		int size = (int)str.size() + 1;
+		m_meshName.reset(new char[size]);
+		str.resize(size);
+		str.copy(m_meshName.get(), size);
+	}
 
 	// デストラクタ
 	CMeshBase::~CMeshBase()
@@ -33,47 +50,6 @@ namespace Engine46 {
 	// インデックス配列の初期化
 	void CMeshBase::ReserveIndex(int reserveSize) {
 		m_vecIndexes.reserve(reserveSize);
-	}
-
-	// コンストラクタ
-	CDX11Mesh::CDX11Mesh(CDX11Renderer* pRenderer) :
-		pDX11Renderer(pRenderer)
-	{}
-
-	// デストラクタ
-	CDX11Mesh::~CDX11Mesh()
-	{}
-
-	// メッシュ作成
-	void CDX11Mesh::Create() {
-
-		D3D11_BUFFER_DESC bufDesc = {};
-		bufDesc.ByteWidth			= sizeof(vertexInfo) * m_vecVertexInfo.size();
-		bufDesc.Usage				= D3D11_USAGE_DEFAULT;
-		bufDesc.BindFlags			= D3D11_BIND_VERTEX_BUFFER;
-		bufDesc.CPUAccessFlags		= 0;
-		bufDesc.MiscFlags			= 0;
-		bufDesc.StructureByteStride = 0;
-
-		D3D11_SUBRESOURCE_DATA subData = {};
-		subData.pSysMem = &m_vecVertexInfo[0];
-
-		pDX11Renderer->CreateBuffer(m_pVertexBuffer, bufDesc, &subData);
-
-		bufDesc.ByteWidth			= sizeof(m_vecIndexes[0]) * m_vecIndexes.size();
-		bufDesc.BindFlags			= D3D11_BIND_INDEX_BUFFER;
-
-		subData.pSysMem = &m_vecIndexes[0];
-
-		pDX11Renderer->CreateBuffer(m_pIndexBuffer, bufDesc, &subData);
-	}
-
-	// メッシュ描画
-	void CDX11Mesh::Draw() {
-		
-		pDX11Renderer->SetBuffer(m_pVertexBuffer.Get(), m_pIndexBuffer.Get(), sizeof(vertexInfo), 0);
-
-		pDX11Renderer->DrawIndexed(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, m_vecIndexes.size());
 	}
 
 } // namespace

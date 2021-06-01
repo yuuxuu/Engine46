@@ -1,0 +1,78 @@
+﻿/**
+ * @file CTextureManager.cpp
+ * @brief
+ * @author 木村優
+ * @date 2021/05/23
+ */
+
+#include "CTextureManager.h"
+#include "CTexture.h"
+#include "CRenderer.h"
+#include "CActor.h"
+
+namespace Engine46 {
+
+	// コンストラクタ
+	CTextureManager::CTextureManager(CRendererBase* pRenderer) :
+		pRenderer(pRenderer)
+	{}
+
+	// デストラクタ
+	CTextureManager::~CTextureManager()
+	{}
+
+	// テクスチャを作成
+	CTextureBase* CTextureManager::CreateTexture(const char* textureName) {
+		CTextureBase* pTexture = GetTextureFromMap(textureName);
+
+		if (!pTexture) {
+			std::unique_ptr<CTextureBase> texture = std::make_unique<CTextureBase>();
+
+			pTexture = texture.get();
+
+			this->AddTextureToMap(textureName, texture);
+		}
+
+		return pTexture;
+	}
+
+	// テクスチャをマップへ追加
+	void CTextureManager::AddTextureToMap(const char* name, std::unique_ptr<CTextureBase>& pTexture) {
+
+		if (!GetTextureFromMap(name)) {
+			m_mapTexture[name] = std::move(pTexture);
+		}
+	}
+
+	// テクスチャを取得
+	CTextureBase* CTextureManager::GetTextureFromMap(const char* name) {
+		auto itr = m_mapTexture.find(name);
+
+		if (itr != m_mapTexture.end()) {
+			return itr->second.get();
+		}
+
+		return nullptr;
+	}
+
+	// アクターへテクスチャを設定
+	void CTextureManager::SetTextureToActor(CActorBase* pActor, const char* textureName) {
+		CTextureBase* pTexture = GetTextureFromMap(textureName);
+		
+		if (pTexture) {
+			pActor->SetTexture(pTexture);
+			return;
+		}
+
+		std::unique_ptr<CTextureBase> texture;
+
+		pRenderer->CreateTexture(texture, textureName);
+
+		if (texture) {
+			pActor->SetTexture(texture.get());
+
+			this->AddTextureToMap(textureName, texture);
+		}
+	}
+
+} // namespace
