@@ -43,12 +43,12 @@ namespace Engine46 {
 
 		bool CompileShader(ComPtr<ID3DBlob>& pBlob, const char* fileName, const char* entrPoint, const char* shaderModel);
 
-		bool SavePackage(std::ofstream& ofs);
-		bool LoadPackage(std::ifstream& ifs);
-
-		void AddShaderToVec(std::unique_ptr<CShaderBase>& pShader);
+		void AddShaderToVec(std::unique_ptr<CShaderBase>& pShader) { m_pVecShader.emplace_back(move(pShader)); }
 
 		CShaderBase* GetShader(SHADER_TYPE type);
+
+		bool SavePackage(std::ofstream& ofs);
+		bool LoadPackage(std::ifstream& ifs);
 
 		const char* GetPackageName() const { return m_PakageName; }
 

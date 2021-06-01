@@ -102,11 +102,6 @@ namespace Engine46 {
 		return IsCompile();
 	}
 
-	// シェーダーを追加
-	void CShaderPackage::AddShaderToVec(std::unique_ptr<CShaderBase>& pShader) {
-		m_pVecShader.emplace_back(move(pShader));
-	}
-
 	// シェーダーの取得
 	CShaderBase* CShaderPackage::GetShader(SHADER_TYPE type) {
 		for (const auto& shader : m_pVecShader) {
