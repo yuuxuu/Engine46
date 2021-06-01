@@ -5,14 +5,14 @@
  * @date 2020/05/18
  */
 
-#include "CShaderManager.h"
+#include "CShaderPackage.h"
+#include "utility.h"
 
 namespace Engine46 {
 
 	// コンストラクタ
 	CShaderPackage::CShaderPackage(const char* name) :
-		m_PakageName(name),
-		m_isCompile(false)
+		m_PakageName(name)
 	{}
 
 	// コンストラクタ
@@ -23,20 +23,6 @@ namespace Engine46 {
 	CShaderPackage::~CShaderPackage()
 	{}
 
-	// 初期化
-	bool CShaderPackage::Initialize(CShaderManager* pShaderManager) {
-		
-		if (m_isCompile) return true;
-
-		if (!this->CompilePackage(pShaderManager)) {
-			std::cout << m_PakageName << "読み込み：失敗" << std::endl;
-
-			return false;
-		}
-
-		return true;
-	}
-
 	// シェーダーパッケージのシェーダーをそれぞれ設定
 	void CShaderPackage::SetShader() {
 		for (const auto& shader : m_pVecShader) {
@@ -44,22 +30,40 @@ namespace Engine46 {
 		}
 	}
 
-	//	シェーダーパッケージのコンパイル
-	bool CShaderPackage::CompilePackage(CShaderManager* pShaderManager) {
+	// シェーダーコンパイル
+	bool CShaderPackage::CompileShader(
+		ComPtr<ID3DBlob>& pBlob,
+		const char* shaderName,
+		const char* entryPoint,
+		const char* shaderModel) {
 
-		for (const auto& info : vecShaderInfo) {
-			ComPtr<ID3DBlob> pBlob;
+		ComPtr<ID3DBlob> pErrBlob;
 
-			if (pShaderManager->CompileShader(pBlob, m_PakageName, info.entryPoint, info.shaderModel)) {
-				std::unique_ptr<CShaderBase> pShader = std::make_unique<CShaderBase>(m_PakageName, pBlob, info.shadeType);
+		DWORD shaderFlags = 0;
+#ifdef _DEBUG
+		shaderFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
+#endif
 
-				this->AddShaderToVec(pShader);
-			}
+		std::unique_ptr<wchar_t[]> name;
+		CharConvertToWchar(name, shaderName);
+
+		HRESULT hr = D3DCompileFromFile(
+			name.get(),
+			nullptr,
+			D3D_COMPILE_STANDARD_FILE_INCLUDE,
+			entryPoint,
+			shaderModel,
+			shaderFlags,
+			0,
+			&pBlob,
+			&pErrBlob);
+
+		if (FAILED(hr)) {
+			std::cout << name.get() << " " << (char*)pErrBlob->GetBufferPointer() << "コンパイル:失敗" << std::endl;
+			return false;
 		}
 
-		m_isCompile = (m_pVecShader.size() > 0) ? true : false;
-
-		return m_isCompile;
+		return true;
 	}
 	
 	// シェーダーパッケージを保存
@@ -95,18 +99,12 @@ namespace Engine46 {
 			}
 		}
 
-		m_isCompile = (m_pVecShader.size() > 0) ? true : false;
-
-		return m_isCompile;
+		return IsCompile();
 	}
 
 	// シェーダーを追加
 	void CShaderPackage::AddShaderToVec(std::unique_ptr<CShaderBase>& pShader) {
 		m_pVecShader.emplace_back(move(pShader));
-
-		if (!m_isCompile) {
-			m_isCompile = !m_pVecShader.empty();
-		}
 	}
 
 	// シェーダーの取得

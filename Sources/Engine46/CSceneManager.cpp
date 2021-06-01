@@ -7,7 +7,6 @@
 
 #include "CSceneManager.h"
 #include "CScene.h"
-#include "CActor.h"
 
 namespace Engine46 {
 
@@ -15,21 +14,13 @@ namespace Engine46 {
 
 	// コンストラクタ
 	CSceneManager::CSceneManager()
-	{}
+	{
+		pRootScene = this->CreateScene(0);
+	}
 
 	// デストラクタ
 	CSceneManager::~CSceneManager()
 	{}
-
-	// 初期化
-	bool CSceneManager::Initialize(CActorBase* pRootActor) {
-
-		pRootScene = this->CreateScene(0);
-
-		pRootScene->SetRootActor(pRootActor);
-
-		return true;
-	}
 
 	// シーン作成
 	CSceneBase* CSceneManager::CreateScene(int id) {

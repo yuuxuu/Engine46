@@ -6,7 +6,6 @@
  */
 
 #include "CDX11ForwardRendering.h"
-
 #include "CDX11Device.h"
 #include "CDX11DeviceContext.h"
 #include "CDX11Texture.h"

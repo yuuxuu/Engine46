@@ -41,11 +41,12 @@ namespace Engine46 {
 
 	public:
 		CTextureBase();
+		CTextureBase(const char* textureName);
 		virtual ~CTextureBase();
 
-		bool Initialize(const char* name);
+		bool Initialize();
 
-		bool LoadTexture(const char* name);
+		bool LoadTexture(const char* filePath);
 
 		virtual void Create() {};
 		virtual void Set(UINT slot) {};

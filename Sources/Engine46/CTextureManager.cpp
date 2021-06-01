@@ -8,10 +8,9 @@
 #include "CTextureManager.h"
 #include "CTexture.h"
 #include "CRenderer.h"
+#include "CActor.h"
 
 namespace Engine46 {
-
-	const char* g_Texture = "D:/PICTURE/キングダムハーツ/EWmO72SUwAEFtsQ.jpg";
 
 	// コンストラクタ
 	CTextureManager::CTextureManager(CRendererBase* pRenderer) :
@@ -22,43 +21,31 @@ namespace Engine46 {
 	CTextureManager::~CTextureManager()
 	{}
 
-	// 初期化
-	bool CTextureManager::Initialize() {
-
-		CTextureManager* pTextureManager = this;
-		pRenderer->CreateTexture(pTextureManager, g_Texture);
-
-		return true;
-	}
-
 	// テクスチャを作成
 	CTextureBase* CTextureManager::CreateTexture(const char* textureName) {
-		auto itr = m_mapTexture.find(textureName);
+		CTextureBase* pTexture = GetTextureFromMap(textureName);
 
-		if (itr == m_mapTexture.end()) {
+		if (!pTexture) {
 			std::unique_ptr<CTextureBase> texture = std::make_unique<CTextureBase>();
 
-			CTextureBase* pTexture = texture.get();
+			pTexture = texture.get();
 
 			this->AddTextureToMap(textureName, texture);
-
-			return pTexture;
 		}
 
-		return itr->second.get();
+		return pTexture;
 	}
 
 	// テクスチャをマップへ追加
 	void CTextureManager::AddTextureToMap(const char* name, std::unique_ptr<CTextureBase>& pTexture) {
-		auto itr = m_mapTexture.find(name);
 
-		if (itr == m_mapTexture.end()) {
+		if (!GetTextureFromMap(name)) {
 			m_mapTexture[name] = std::move(pTexture);
 		}
 	}
 
 	// テクスチャを取得
-	CTextureBase* CTextureManager::GetTexture(const char* name) {
+	CTextureBase* CTextureManager::GetTextureFromMap(const char* name) {
 		auto itr = m_mapTexture.find(name);
 
 		if (itr != m_mapTexture.end()) {
@@ -66,6 +53,26 @@ namespace Engine46 {
 		}
 
 		return nullptr;
+	}
+
+	// アクターへテクスチャを設定
+	void CTextureManager::SetTextureToActor(CActorBase* pActor, const char* textureName) {
+		CTextureBase* pTexture = GetTextureFromMap(textureName);
+		
+		if (pTexture) {
+			pActor->SetTexture(pTexture);
+			return;
+		}
+
+		std::unique_ptr<CTextureBase> texture;
+
+		pRenderer->CreateTexture(texture, textureName);
+
+		if (texture) {
+			pActor->SetTexture(texture.get());
+
+			this->AddTextureToMap(textureName, texture);
+		}
 	}
 
 } // namespace

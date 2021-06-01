@@ -15,28 +15,31 @@ namespace Engine46 {
 		m_textureName()
 	{}
 
+	// コンストラクタ
+	CTextureBase::CTextureBase(const char* textureName) :
+		m_textureName(textureName)
+	{}
+
 	// デストラクタ
 	CTextureBase::~CTextureBase()
 	{}
 
 	// 初期化
-	bool CTextureBase::Initialize(const char* name) {
-
-		m_textureName = name;
+	bool CTextureBase::Initialize() {
 
 		return true;
 	}
 
 	// テクスチャを読み込む
-	bool CTextureBase::LoadTexture(const char* name) {
+	bool CTextureBase::LoadTexture(const char* filePath) {
 
 		std::unique_ptr<wchar_t[]> loadName;
-		CharConvertToWchar(loadName, name);
+		CharConvertToWchar(loadName, filePath);
 
 		DirectX::ScratchImage sImage;
 		HRESULT hr = DirectX::LoadFromWICFile(loadName.get(), 0, nullptr, sImage);
 		if (FAILED(hr)) {
-			std::string errorStr = name;
+			std::string errorStr = filePath;
 			errorStr += "読み込み：失敗";
 
 			MessageBox(NULL, errorStr.c_str(), "MessageBox", MB_OK);
@@ -53,8 +56,6 @@ namespace Engine46 {
 		m_textureData.width			= image->width;
 		m_textureData.height		= image->height;
 		m_textureData.format		= image->format;
-
-		m_textureName = name;
 
 		return true;
 	}

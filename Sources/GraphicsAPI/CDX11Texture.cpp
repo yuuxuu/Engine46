@@ -12,7 +12,8 @@
 namespace Engine46 {
 
 	// コンストラクタ
-	CDX11Texture::CDX11Texture(CDX11Device* pDevice, CDX11DeviceContext* pDeviceContext) :
+	CDX11Texture::CDX11Texture(CDX11Device* pDevice, CDX11DeviceContext* pDeviceContext, const char* name) :
+		CTextureBase(name),
 		pDX11Device(pDevice),
 		pDX11DeviceContext(pDeviceContext)
 	{}

@@ -8,6 +8,7 @@
 #include "CMeshManager.h"
 #include "CMesh.h"
 #include "CRenderer.h"
+#include "CActor.h"
 
 namespace Engine46 {
 
@@ -22,32 +23,29 @@ namespace Engine46 {
 
 	// メッシュ作成
 	CMeshBase* CMeshManager::CreateMesh(const char* meshName) {
-		auto itr = m_pMapMesh.find(meshName);
+		CMeshBase* pMesh = GetMeshFromMap(meshName);
 
-		if (itr == m_pMapMesh.end()) {
+		if (!pMesh) {
 			std::unique_ptr<CMeshBase> mesh = std::make_unique<CMeshBase>();
 
-			CMeshBase* pMesh = mesh.get();
+			pMesh = mesh.get();
 
 			this->AddMeshToMap(meshName, mesh);
-
-			return pMesh;
 		}
 
-		return itr->second.get();
+		return pMesh;
 	}
 
 	// メッシュをマップへ追加
 	void CMeshManager::AddMeshToMap(const char* name, std::unique_ptr<CMeshBase>& pMesh) {
-		auto itr = m_pMapMesh.find(name);
 
-		if (itr == m_pMapMesh.end()) {
+		if (!GetMeshFromMap(name)) {
 			m_pMapMesh[name] = std::move(pMesh);
 		}
 	}
 
 	// メッシュを取得
-	CMeshBase* CMeshManager::GetMesh(const char* name) {
+	CMeshBase* CMeshManager::GetMeshFromMap(const char* name) {
 		auto itr = m_pMapMesh.find(name);
 
 		if (itr != m_pMapMesh.end()) {
@@ -55,6 +53,18 @@ namespace Engine46 {
 		}
 
 		return nullptr;
+	}
+
+	// アクターへメッシュを設定
+	void CMeshManager::SetMeshToActor(CActorBase* pActor) {
+		std::unique_ptr<CMeshBase> pMesh;
+
+		pRenderer->CreateMesh(pMesh);
+
+		if (pMesh) {
+			pActor->SetMesh(pMesh.get());
+			this->AddMeshToMap(pMesh->GetMeshName(), pMesh);
+		}
 	}
 
 } // namespace

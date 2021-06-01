@@ -11,11 +11,11 @@
 #define _CSCENE_H_
 
 #include "IObject.h"
-#include "CDataRecord.h"
 
 namespace Engine46 {
 
 	// 前方宣言
+	class CDataRecordBase;
 	class CActorBase;
 
 	class CSceneBase : public IObject {

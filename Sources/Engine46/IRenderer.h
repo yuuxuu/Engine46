@@ -10,12 +10,11 @@
 #ifndef _IRENDERER_H_
 #define _IRENDERER_H_
 
+#include "CScene.h"
+
 using Microsoft::WRL::ComPtr;
 
 namespace Engine46 {
-
-	// 前方宣言
-	class CSceneBase;
 
 	class IRenderer {
 	protected:

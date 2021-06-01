@@ -11,22 +11,24 @@
 #define _CRENDERER_H_
 
 #include "IRenderer.h"
-#include "CRendering.h"
-
 #include "math.h"
+#include "CRendering.h"
+#include "CFileSystem.h"
+#include "CShaderPackage.h"
 
 namespace Engine46 {
 
 	// 前方宣言
-	class CActorBase;
-	class CMeshManager;
-	class CMaterialManager;
-	class CShaderManager;
-	class CTextureManager;
+	class CConstantBufferBase;
+	class CMeshBase;
+	class CMaterialBase;
+	class CTextureBase;
 
 	class CRendererBase : public IRenderer {
 	protected:
 		std::unique_ptr<CRenderingBase> m_pRendering;
+
+		std::unique_ptr<CFileSystem>	m_pFileSystem;
 
 		RECT							m_windowRect;
 
@@ -38,11 +40,11 @@ namespace Engine46 {
 		virtual void Finalize() override {};
 		virtual bool Render(CSceneBase* pScene) override { return true; };
 
-		virtual void CreateConstantBuffer(CActorBase*& pActor) {};
-		virtual void CreateMesh(CMeshManager*& pMeshManager, CActorBase*& pActor) {};
-		virtual void CreateMaterial(CMaterialManager*& pMeshManager, CActorBase*& pActor) {};
-		virtual void CreateTexture(CTextureManager*& pTextureManager, const char* textureName) {};
-		virtual void CreateShader(CShaderManager*& pShaderManager, const char* shaderName) {};
+		virtual void CreateConstantBuffer(std::unique_ptr<CConstantBufferBase>& pConstantBuffer) {};
+		virtual void CreateMesh(std::unique_ptr<CMeshBase>& pMesh) {};
+		virtual void CreateMaterial(std::unique_ptr<CMaterialBase>& pMaterial) {};
+		virtual void CreateTexture(std::unique_ptr<CTextureBase>& pTexture, const char* textureName) {};
+		virtual void CreateShader(std::unique_ptr<CShaderPackage>& pShaderPackage, const char* shaderName) {};
 
 		RECT GetWindowRect() const { return m_windowRect; }
 	};

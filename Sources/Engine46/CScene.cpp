@@ -6,6 +6,7 @@
  */
 
 #include "CScene.h"
+#include "CDataRecord.h"
 #include "CActor.h"
 
 namespace Engine46 {
@@ -33,9 +34,11 @@ namespace Engine46 {
 		m_SceneID(g_SceneCount++),
 		m_SceneName()
 	{
-		int strSize = (int)strlen(sceneName) + 1;
-		m_SceneName.reset(new char[strSize]);
-		strcpy_s(m_SceneName.get(), strSize, sceneName);
+		std::string str = sceneName;
+		int size = (int)str.size() + 1;
+		m_SceneName.reset(new char[size]);
+		str.resize(size);
+		str.copy(m_SceneName.get(), size);
 	}
 
 	// デストラクタ

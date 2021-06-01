@@ -6,6 +6,8 @@
  */
 
 #include "CCamera.h"
+#include "CDataRecord.h"
+#include "CInput.h"
 
 namespace Engine46 {
 

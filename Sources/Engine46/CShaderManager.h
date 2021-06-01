@@ -10,19 +10,16 @@
 #ifndef _CSHADER_MANAGER_H_
 #define _CSHADER_MANAGER_H_
 
-#include "CShaderPackage.h"
-
-using Microsoft::WRL::ComPtr;
-
 namespace Engine46 {
 
 	// 前方宣言
 	class CRendererBase;
 	class CShaderPackage;
+	class CActorBase;
 
 	class CShaderManager {
 	private:
-		std::map<const char*, std::unique_ptr<CShaderPackage>>	m_pMapShaderPackage;
+		std::map<std::string, std::unique_ptr<CShaderPackage>>	m_pMapShaderPackage;
 
 		CRendererBase*											pRenderer;
 
@@ -30,18 +27,16 @@ namespace Engine46 {
 		explicit CShaderManager(CRendererBase* pRenderer);
 		~CShaderManager();
 
-		bool Initialize();
+		CShaderPackage* CreateShaderPackage(const char* packageName);
+
+		void AddShaderPackageToMap(const char* name, std::unique_ptr<CShaderPackage>& pSp);
+
+		CShaderPackage* GetShaderPackageFromMap(const char* name);
 
 		bool SaveShaderPackageList();
 		bool LoadShaderPackageList();
 
-		bool CompileShader(ComPtr<ID3DBlob>& pBlob, const char* fileName, const char* entrPoint, const char* shaderModel);
-
-		CShaderPackage* GetShaderPackage(const char* name);
-		
-		CShaderPackage* CreateShaderPackage(const char* packageName);
-
-		void AddShaderPackageToMap(const char* name, std::unique_ptr<CShaderPackage>& pSp);
+		void SetShaderPackageToActor(CActorBase* pActor, const char* shaderPackageName);
 	};
 
 } // namespace

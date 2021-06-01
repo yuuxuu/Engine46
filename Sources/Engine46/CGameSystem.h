@@ -17,8 +17,8 @@ namespace Engine46 {
 	// 前方宣言
 	class CWindow;
 	class CRendererBase;
-	class CShaderManager;
 	class CActorManager;
+	class CShaderManager;
 	class CMeshManager;
 	class CMaterialManager;
 	class CTextureManager;
@@ -34,9 +34,9 @@ namespace Engine46 {
 
 		std::unique_ptr<CRendererBase>		m_pRenderer;
 
-		std::unique_ptr<CShaderManager>		m_pShaderManager;
-
 		std::unique_ptr<CActorManager>		m_pActorManager;
+
+		std::unique_ptr<CShaderManager>		m_pShaderManager;
 
 		std::unique_ptr<CMeshManager>		m_pMeshManager;
 
@@ -48,16 +48,31 @@ namespace Engine46 {
 
 		std::unique_ptr<CInput>				m_pInput;
 
-	public:
+	private:
 		CGameSystem();
 		~CGameSystem();
-
-		bool				Initialize(HINSTANCE hInstance);
-		void				Finalize();
 
 		void				Loop();
 		void				Update();
 		void				Draw();
+
+	public:
+
+		bool				Initialize(HINSTANCE hInstance);
+		void				Finalize();
+
+		static CGameSystem& GetGameSystem() {
+			static CGameSystem gameSystem;
+			return gameSystem;
+		};
+
+		CActorManager*		GetActorManager() const { return m_pActorManager.get(); }
+		CShaderManager*		GetShaderManager() const { return m_pShaderManager.get(); }
+		CMeshManager*		GetMeshManager() const { return m_pMeshManager.get(); }
+		CMaterialManager*	GetMaterialManager() const { return m_pMaterialManager.get(); }
+		CTextureManager*	GetTextureManager() const { return m_pTextureManager.get(); }
+
+		CInput*				GetInput() const { return m_pInput.get(); }
 	};
 
 } // namespace

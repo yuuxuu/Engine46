@@ -37,7 +37,7 @@ namespace Engine46 {
 		explicit CMaterialBase(const char* name);
 		virtual ~CMaterialBase();
 
-		virtual void CreateConstantBuffer() {};
+		virtual void Create() {};
 		virtual void Update() {};
 		virtual void Set(UINT slot) {};
 

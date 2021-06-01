@@ -7,15 +7,9 @@
 
 #include "CActorManager.h"
 #include "CActor.h"
-#include "CMesh.h"
-#include "CMaterial.h"
-#include "CConstantBuffer.h"
-#include "CShaderPackage.h"
 #include "CRenderer.h"
-#include "CInput.h"
 #include "CSprite.h"
 #include "CCamera.h"
-#include "math.h"
 
 namespace Engine46 {
 
@@ -24,24 +18,13 @@ namespace Engine46 {
 	// コンストラクタ
 	CActorManager::CActorManager(CRendererBase* pRenderer) :
 		pRenderer(pRenderer)
-	{}
+	{
+		pRootActor = this->CreateActor((int)ClassType::Root);
+	}
 
 	// デストラクタ
 	CActorManager::~CActorManager()
 	{}
-
-	// 初期化
-	bool CActorManager::Initialize() {
-
-		pRootActor = this->CreateActor((int)ClassType::Root);
-
-		CActorBase* camera = this->CreateActor((int)ClassType::Camera);
-		camera->Initialize();
-
-		CActorBase* sprite = this->CreateActor((int)ClassType::Sprite);
-
-		return true;
-	}
 
 	// オブジェクト作成
 	CActorBase* CActorManager::CreateActor(int classID) {
@@ -50,7 +33,7 @@ namespace Engine46 {
 
 		switch ((ClassType)classID) {
 		case ClassType::Root:
-			actor = std::make_unique<CActorBase>();
+			actor = std::make_unique<CActorBase>(classID, "RootActor", Transform());
 			break;
 		case ClassType::Camera:
 			rect = pRenderer->GetWindowRect();
@@ -74,32 +57,13 @@ namespace Engine46 {
 		return pActor;
 	}
 
-	// オブジェクトのメッシュを設定
-	void CActorManager::SetMesh(CActorBase* pActor, CMeshBase* pMesh) {
-		if (pActor) {
-			pActor->SetMesh(pMesh);
+	// オブジェクト取得
+	CActorBase* CActorManager::GetActor(const char* name) {
+		for (const auto& actor : m_pVecActor) {
+			if (actor->GetActorName() == name) return actor.get();
 		}
-	}
 
-	// オブジェクトのマテリアルを設定
-	void CActorManager::SetMaterial(CActorBase* pActor, CMaterialBase* pMaterial) {
-		if (pActor) {
-			pActor->SetMaterial(pMaterial);
-		}
-	}
-
-	// オブジェクトにシェーダーパッケージを設定
-	void CActorManager::SetShaderPackage(CActorBase* pActor, CShaderPackage* pShaderPackage) {
-		if (pActor) {
-			pActor->SetShaderPackage(pShaderPackage);
-		}
-	}
-
-	// オブジェクトにインプットを設定
-	void CActorManager::SetInput(CActorBase* pActor, CInput* pInput) {
-		if (pActor) {
-			pActor->SetInput(pInput);
-		}
+		return nullptr;
 	}
 
 	// オブジェクトを保存

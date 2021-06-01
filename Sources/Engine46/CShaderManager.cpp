@@ -6,14 +6,13 @@
  */
 
 #include "CShaderManager.h"
+#include "CShaderPackage.h"
 #include "CRenderer.h"
-#include "utility.h"
+#include "CActor.h"
 
 namespace Engine46 {
 
 	constexpr const char* g_ShaderPackageListFileName = "ShaderPackageList.bin";
-	const char* g_Shader_Model = "D:/Engine46/ShaderSource/HLSL/Model.hlsl";
-	const char* g_Shader_Sprite = "D:/Engine46/ShaderSource/HLSL/Sprite.hlsl";
 
 	// コンストラクタ
 	CShaderManager::CShaderManager(CRendererBase* pRenderer) :
@@ -24,50 +23,38 @@ namespace Engine46 {
 	CShaderManager::~CShaderManager()
 	{}
 
-	// 初期化
-	bool CShaderManager::Initialize() {
-
-		//this->LoadShaderPackageList();
-
-		CShaderManager* pShaderManager = this;
-		pRenderer->CreateShader(pShaderManager, g_Shader_Model);
-		pRenderer->CreateShader(pShaderManager, g_Shader_Sprite);
-		
-		//CShaderPackage* pSp = this->CreateShaderPackage(g_Shader_Model);
-		//if (!pSp->Initialize(this)) return false;
-		//
-		//pSp = this->CreateShaderPackage(g_Shader_Sprite);
-		//if (!pSp->Initialize(this)) return false;
-		
-		//this->SaveShaderPackageList();
-
-		return true;
-	}
-
 	// シェーダーパッケージを作成
 	CShaderPackage* CShaderManager::CreateShaderPackage(const char* packageName) {
-		auto itr = m_pMapShaderPackage.find(packageName);
+		CShaderPackage* pSp = GetShaderPackageFromMap(packageName);
 
-		if (itr == m_pMapShaderPackage.end()) {
+		if (!pSp) {
 			std::unique_ptr<CShaderPackage> sp = std::make_unique<CShaderPackage>(packageName);
 
-			CShaderPackage* pSp = sp.get();
+			pSp = sp.get();
 
 			this->AddShaderPackageToMap(packageName, sp);
-
-			return pSp;
 		}
 
-		return itr->second.get();
+		return pSp;
 	}
 
 	// シェーダーパッケージをマップへ追加
 	void CShaderManager::AddShaderPackageToMap(const char* name, std::unique_ptr<CShaderPackage>& pSp) {
-		auto itr = m_pMapShaderPackage.find(name);
 
-		if (itr == m_pMapShaderPackage.end()) {
+		if (!GetShaderPackageFromMap(name)) {
 			m_pMapShaderPackage[name] = std::move(pSp);
 		}
+	}
+
+	// シェーダーパッケージを取得
+	CShaderPackage* CShaderManager::GetShaderPackageFromMap(const char* name) {
+		auto itr = m_pMapShaderPackage.find(name);
+
+		if (itr != m_pMapShaderPackage.end()) {
+			return itr->second.get();
+		}
+
+		return nullptr;
 	}
 
 	// シェーダーパッケージの保存
@@ -114,51 +101,26 @@ namespace Engine46 {
 		return true;
 	}
 
-	// シェーダーコンパイル
-	bool CShaderManager::CompileShader(
-		ComPtr<ID3DBlob>& pBlob,
-		const char* shaderName,
-		const char* entryPoint,
-		const char* shaderModel) {
+	// アクターへシェーダーパッケージを設定
+	void CShaderManager::SetShaderPackageToActor(CActorBase* pActor, const char* shaderPackageName){
+		CShaderPackage* pSp = GetShaderPackageFromMap(shaderPackageName);
 
-		ComPtr<ID3DBlob> pErrBlob;
-
-		DWORD shaderFlags = 0;
-#ifdef _DEBUG
-		shaderFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
-#endif
-
-		std::unique_ptr<wchar_t[]> name;
-		CharConvertToWchar(name, shaderName);
-
-		HRESULT hr = D3DCompileFromFile(
-			name.get(),
-			nullptr,
-			D3D_COMPILE_STANDARD_FILE_INCLUDE,
-			entryPoint,
-			shaderModel,
-			shaderFlags,
-			0,
-			&pBlob,
-			&pErrBlob);
-
-		if (FAILED(hr)) {
-			std::cout << name.get() << " " << (char*)pErrBlob->GetBufferPointer() << "コンパイル:失敗" << std::endl;
-			return false;
+		if (pSp) {
+			pActor->SetShaderPackage(pSp);
+			return;
 		}
+		
+		std::unique_ptr<CShaderPackage> sp = std::make_unique<CShaderPackage>(shaderPackageName);
 
-		return true;
-	}
+		pRenderer->CreateShader(sp, shaderPackageName);
 
-	// シェーダーパッケージを取得
-	CShaderPackage* CShaderManager::GetShaderPackage(const char* name) {
-		auto itr = m_pMapShaderPackage.find(name);
+		if (sp) {
+			if (sp->IsCompile()) {
+				pActor->SetShaderPackage(sp.get());
 
-		if (itr != m_pMapShaderPackage.end()) {
-			return itr->second.get();
+				this->AddShaderPackageToMap(sp->GetPackageName(), sp);
+			}
 		}
-
-		return nullptr;
 	}
 
 } // namespace

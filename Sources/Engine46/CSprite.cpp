@@ -6,6 +6,8 @@
  */
 
 #include "CSprite.h"
+#include "CMesh.h"
+#include "CMaterial.h"
 
 namespace Engine46 {
 
@@ -59,7 +61,7 @@ namespace Engine46 {
 		}
 
 		if (m_pMaterial) {
-			m_pMaterial->CreateConstantBuffer();
+			m_pMaterial->Create();
 		}
 	}
 

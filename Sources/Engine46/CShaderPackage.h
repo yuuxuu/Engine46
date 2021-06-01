@@ -14,10 +14,6 @@
 
 namespace Engine46 {
 
-	// 前方宣言
-	class CShaderManager;
-	class CRendererBase;
-
 	struct ShaderInfo {
 		const char* entryPoint;
 		const char* shaderModel;
@@ -38,18 +34,14 @@ namespace Engine46 {
 		std::vector<std::unique_ptr<CShaderBase>>	m_pVecShader;
 
 		const char*									m_PakageName;
-
-		bool										m_isCompile;
 	public:
 		explicit CShaderPackage(const char* name);
 		CShaderPackage();
 		~CShaderPackage();
 
-		bool Initialize(CShaderManager* pShaderManager);
-
 		void SetShader();
 
-		bool CompilePackage(CShaderManager* pShaderManager);
+		bool CompileShader(ComPtr<ID3DBlob>& pBlob, const char* fileName, const char* entrPoint, const char* shaderModel);
 
 		bool SavePackage(std::ofstream& ofs);
 		bool LoadPackage(std::ifstream& ifs);
@@ -60,7 +52,7 @@ namespace Engine46 {
 
 		const char* GetPackageName() const { return m_PakageName; }
 
-		bool IsCompile() const { return m_isCompile; }
+		bool IsCompile() const { return !m_pVecShader.empty(); }
 	};
 
 } // namespace

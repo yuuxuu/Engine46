@@ -15,10 +15,11 @@ namespace Engine46 {
 	// 前方宣言
 	class CRendererBase;
 	class CTextureBase;
+	class CActorBase;
 
 	class CTextureManager {
 	private:
-		std::map<const char*, std::unique_ptr<CTextureBase>>	m_mapTexture;
+		std::map<std::string, std::unique_ptr<CTextureBase>>	m_mapTexture;
 
 		CRendererBase*											pRenderer;
 
@@ -26,13 +27,13 @@ namespace Engine46 {
 		explicit CTextureManager(CRendererBase* pRenderer);
 		~CTextureManager();
 
-		bool Initialize();
-
-		CTextureBase* GetTexture(const char* name);
-
 		CTextureBase* CreateTexture(const char* textureName);
 
 		void AddTextureToMap(const char* name, std::unique_ptr<CTextureBase>& pTexture);
+
+		CTextureBase* GetTextureFromMap(const char* name);
+
+		void SetTextureToActor(CActorBase* pActor, const char* textureName);
 	};
 
 } // namespace

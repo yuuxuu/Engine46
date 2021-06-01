@@ -8,6 +8,14 @@
 #include "CActor.h"
 #include "CCamera.h"
 
+#include "CDataRecord.h"
+#include "CConstantBuffer.h"
+#include "CMesh.h"
+#include "CMaterial.h"
+#include "CTexture.h"
+#include "CShaderPackage.h"
+#include "CInput.h"
+
 namespace Engine46 {
 
 	static UINT g_ActorCount = 0;
@@ -35,7 +43,7 @@ namespace Engine46 {
 	}
 
 	// コンストラクタ
-	CActorBase::CActorBase(const UINT classID, const char* name, const Transform transform) :
+	CActorBase::CActorBase(const UINT classID, const char* ActorName, const Transform transform) :
 		m_classID(classID),
 		m_actorID(g_ActorCount++),
 		m_actorName(),
@@ -43,7 +51,7 @@ namespace Engine46 {
 		pParentActor(nullptr),
 		m_parentActorID(-1)
 	{
-		std::string str = name + std::string('_' + std::to_string(m_actorID));
+		std::string str = ActorName;
 		int size = (int)str.size() + 1;
 		m_actorName.reset(new char[size]);
 		str.resize(size);
@@ -143,8 +151,8 @@ namespace Engine46 {
 
 	// コンスタントバッファを作成
 	void CActorBase::SetConstantBuffer(std::unique_ptr<CConstantBufferBase>& pConstantBuffer) {
-		if (!m_pConstantBuffer) {
-			m_pConstantBuffer = std::move(pConstantBuffer);
+		if (pConstantBuffer) {
+			m_pConstantBuffer.swap(pConstantBuffer);
 
 			m_pConstantBuffer->CreateConstantBuffer(sizeof(mainCB));
 		}

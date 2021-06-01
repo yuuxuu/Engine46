@@ -6,20 +6,14 @@
  */
 
 #include "CDX11Renderer.h"
+#include "CDX11Device.h"
+#include "CDX11DeviceContext.h"
 #include "CDX11ForwardRendering.h"
 #include "CDX11ConstantBuffer.h"
 #include "CDX11Mesh.h"
 #include "CDX11Material.h"
 #include "CDX11Shader.h"
 #include "CDX11Texture.h"
-
-#include "../Engine46/CScene.h"
-#include "../Engine46/CSprite.h"
-
-#include "../Engine46/CMeshManager.h"
-#include "../Engine46/CMaterialManager.h"
-#include "../Engine46/CShaderManager.h"
-#include "../Engine46/CTextureManager.h"
 
 namespace Engine46 {
 
@@ -34,8 +28,6 @@ namespace Engine46 {
 
 	// 初期化
 	bool CDX11Renderer::Initialize(HWND hwnd, UINT width, UINT height) {
-		
-		m_windowRect = RECT(width, height);
 
 		ComPtr<ID3D11DeviceContext> pDeviceContext;
 
@@ -88,6 +80,11 @@ namespace Engine46 {
 			if (!m_pDX11Device->CreateDepthStencilView(m_pDsv, pTex.Get(), dsvDesc)) return false;
 		}
 
+		m_windowRect = RECT(width, height);
+
+		m_pFileSystem = std::make_unique<CFileSystem>();
+		if (!m_pFileSystem->Initialize()) return false;
+
 		return true;
 	}
 
@@ -101,80 +98,82 @@ namespace Engine46 {
 
 		m_pDX11DeviceContext->SetInputLayout(m_pInputLayout.Get());
 
-		//m_pRendering->Begine();
+		m_pRendering->Begine();
 		
-		//pScene->Draw();
+		pScene->Draw();
 		
-		//m_pRendering->End();
+		m_pRendering->End();
 
 		m_pDX11DeviceContext->ClearRenderTargetView(m_pRtv.Get());
 		m_pDX11DeviceContext->ClearDespthStencilView(m_pDsv.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL);
 		m_pDX11DeviceContext->SetRenderTargetView(m_pRtv.Get(), m_pDsv.Get());
 
-		pScene->Draw();
+		//CSprite sprite;
+		//std::unique_ptr<CMeshBase> pMesh;
+		//this->CreateMesh(pMesh);
+		//sprite.SetMesh(pMesh.get());
+		//
+		//std::unique_ptr<CMaterialBase> pMaterial;
+		//this->CreateMaterial(pMaterial);
+		//sprite.SetMaterial(pMaterial.get());
+		//
+		//sprite.SetTexture(m_pRendering->GetRenderTexture());
+		//sprite.Initialize();
+		//
+		//sprite.Draw();
 
 		return m_pDX11Device->Present();
 	}
 
 	// コンスタントバッファ作成
-	void CDX11Renderer::CreateConstantBuffer(CActorBase*& pActor) {
-		std::unique_ptr<CConstantBufferBase> pConstantBuffer = std::make_unique<CDX11ConstantBuffer>(m_pDX11Device.get(), m_pDX11DeviceContext.get());
-
-		pActor->SetConstantBuffer(pConstantBuffer);
+	void CDX11Renderer::CreateConstantBuffer(std::unique_ptr<CConstantBufferBase>& pConstantBuffer) {
+		pConstantBuffer = std::make_unique<CDX11ConstantBuffer>(m_pDX11Device.get(), m_pDX11DeviceContext.get());
 	}
 
 	// メッシュ作成
-	void CDX11Renderer::CreateMesh(CMeshManager*& pMeshManager, CActorBase*& pActor) {
-		std::unique_ptr<CMeshBase> mesh = std::make_unique<CDX11Mesh>(m_pDX11Device.get(), m_pDX11DeviceContext.get());
-
-		pActor->SetMesh(mesh.get());
-
-		pMeshManager->AddMeshToMap(mesh->GetMeshName(), mesh);
+	void CDX11Renderer::CreateMesh(std::unique_ptr<CMeshBase>& pMesh) {
+		pMesh = std::make_unique<CDX11Mesh>(m_pDX11Device.get(), m_pDX11DeviceContext.get());
 	}
 
 	// マテリアル作成
-	void CDX11Renderer::CreateMaterial(CMaterialManager*& pMaterialManager, CActorBase*& pActor) {
-		std::unique_ptr<CMaterialBase> material = std::make_unique<CDX11Material>(m_pDX11Device.get(), m_pDX11DeviceContext.get());
-
-		pActor->SetMaterial(material.get());
-
-		pMaterialManager->AddMaterialToMap(material->GetMaterialName(), material);
+	void CDX11Renderer::CreateMaterial(std::unique_ptr<CMaterialBase>& pMaterial) {
+		pMaterial = std::make_unique<CDX11Material>(m_pDX11Device.get(), m_pDX11DeviceContext.get());
 	}
 
 	// テクスチャ作成
-	void CDX11Renderer::CreateTexture(CTextureManager*& pTextureManager, const char* textureName) {
-		std::unique_ptr<CTextureBase> texture = std::make_unique<CDX11Texture>(m_pDX11Device.get(), m_pDX11DeviceContext.get());
+	void CDX11Renderer::CreateTexture(std::unique_ptr<CTextureBase>& pTexture, const char* textureName) {
+		FileInfo* fileInfo = m_pFileSystem->GetFileInfoFromMap(textureName);
 		
-		if (texture->LoadTexture(textureName)) {
-			texture->Create();
+		if (fileInfo) {
+			pTexture = std::make_unique<CDX11Texture>(m_pDX11Device.get(), m_pDX11DeviceContext.get(), textureName);
 
-			pTextureManager->AddTextureToMap(texture->GetTextureName(), texture);
+			if (pTexture->LoadTexture(fileInfo->filePath.get())) {
+				pTexture->Create();
+			}
 		}
 	}
 
 	// シェーダー作成
-	void CDX11Renderer::CreateShader(CShaderManager*& pShaderManager, const char* shaderName) {
-		std::unique_ptr<CShaderPackage> pSp = std::make_unique<CShaderPackage>(shaderName);
+	void CDX11Renderer::CreateShader(std::unique_ptr<CShaderPackage>& pShaderPackage, const char* shaderName) {
+		FileInfo* fileInfo = m_pFileSystem->GetFileInfoFromMap(shaderName);
 		
-		for (const auto& info : vecShaderInfo) {
-			ComPtr<ID3DBlob> pBlob;
+		if (fileInfo) {
+			for (const auto& info : vecShaderInfo) {
+				ComPtr<ID3DBlob> pBlob;
 
-			if (pShaderManager->CompileShader(pBlob, shaderName, info.entryPoint, info.shaderModel)) {
-				std::unique_ptr<CShaderBase> shader = std::make_unique<CDX11Shader>(m_pDX11Device.get(), m_pDX11DeviceContext.get(), shaderName, pBlob, info.shadeType);
-				shader->Create();
+				if (pShaderPackage->CompileShader(pBlob, fileInfo->filePath.get(), info.entryPoint, info.shaderModel)) {
+					std::unique_ptr<CShaderBase> shader = std::make_unique<CDX11Shader>(m_pDX11Device.get(), m_pDX11DeviceContext.get(), shaderName, pBlob, info.shadeType);
+					shader->Create();
 
-				pSp->AddShaderToVec(shader);
+					pShaderPackage->AddShaderToVec(shader);
 
-				if (m_layoutBufSize < pBlob->GetBufferSize()) {
-					m_layoutBufSize = pBlob->GetBufferSize();
+					if (m_layoutBufSize < pBlob->GetBufferSize()) {
+						m_layoutBufSize = pBlob->GetBufferSize();
 
-					m_pDX11Device->CreateInputLayout(m_pInputLayout, pBlob->GetBufferPointer(), pBlob->GetBufferSize());
+						m_pDX11Device->CreateInputLayout(m_pInputLayout, pBlob->GetBufferPointer(), pBlob->GetBufferSize());
+					}
 				}
 			}
-		}
-
-		if (pSp->IsCompile()) {
-			pShaderManager->AddShaderPackageToMap(pSp->GetPackageName(), pSp);
 		}
 	}
 

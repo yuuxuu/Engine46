@@ -10,16 +10,19 @@
 #ifndef _CACTOR_H_
 #define _CACTOR_H_
 
-#include "math.h"
 #include "IObject.h"
-#include "CDataRecord.h"
-#include "CConstantBuffer.h"
-#include "CMesh.h"
-#include "CMaterial.h"
-#include "CTexture.h"
-#include "CInput.h"
+#include "math.h"
 
 namespace Engine46 {
+
+	// 前方宣言
+	class CDataRecordBase;
+	class CConstantBufferBase;
+	class CMeshBase;
+	class CMaterialBase;
+	class CTextureBase;
+	class CShaderPackage;
+	class CInput;
 
 	enum class ClassType {
 		Root,
@@ -55,7 +58,7 @@ namespace Engine46 {
 
 	public:
 		CActorBase();
-		CActorBase(const UINT classID, const char* name, const Transform transform);
+		CActorBase(const UINT classID, const char* ActorName, const Transform transform);
 		virtual ~CActorBase();
 
 		virtual void Initialize() override;
@@ -69,7 +72,7 @@ namespace Engine46 {
 
 		void SetMesh(CMeshBase* pMesh);
 
-		void SetMaterial(CMaterialBase*  pMaterial);
+		void SetMaterial(CMaterialBase* pMaterial);
 
 		void SetTexture(CTextureBase* pTex);
 
@@ -88,6 +91,8 @@ namespace Engine46 {
 		std::vector<int> GetChiledActorIDList() const { return m_chiledActorIDList; }
 
 		UINT GetClassID() const { return m_classID; }
+
+		char* GetActorName() const { return m_actorName.get(); }
 
 		Matrix GetWorldMatrix();
 

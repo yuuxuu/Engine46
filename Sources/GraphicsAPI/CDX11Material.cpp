@@ -6,7 +6,8 @@
  */
 
 #include "CDX11Material.h"
-#include "CDX11Renderer.h"
+#include "CDX11Device.h"
+#include "CDX11DeviceContext.h"
 #include "CDX11ConstantBuffer.h"
 
 namespace Engine46 {
@@ -30,15 +31,15 @@ namespace Engine46 {
 	{}
 
 	// 作成
-	void CDX11Material::CreateConstantBuffer() {
+	void CDX11Material::Create() {
 
 		if (!m_pConstantBuffer) {
 			m_pConstantBuffer = std::make_unique<CDX11ConstantBuffer>(pDX11Device, pDX11DeviceContext);
+
+			m_pConstantBuffer->CreateConstantBuffer(sizeof(materialCB));
+
+			this->Update();
 		}
-
-		m_pConstantBuffer->CreateConstantBuffer(sizeof(materialCB));
-
-		this->Update();
 	}
 
 	// 更新

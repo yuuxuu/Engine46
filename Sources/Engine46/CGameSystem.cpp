@@ -12,12 +12,12 @@
 #include "CActor.h"
 #include "CScene.h"
 
+#include "CSceneManager.h"
 #include "CActorManager.h"
 #include "CMeshManager.h"
 #include "CMaterialManager.h"
 #include "CTextureManager.h"
 #include "CShaderManager.h"
-#include "CSceneManager.h"
 
 #include "../GraphicsAPI/CDX11Renderer.h"
 
@@ -57,54 +57,20 @@ namespace Engine46 {
 		m_pRenderer = std::make_unique<CDX11Renderer>();
 		if (!m_pRenderer->Initialize(hwnd, rect.w, rect.h)) return false;
 
+		m_pActorManager = std::make_unique<CActorManager>(m_pRenderer.get());
+
 		m_pShaderManager = std::make_unique<CShaderManager>(m_pRenderer.get());
-		if (!m_pShaderManager->Initialize()) return false;
 
 		m_pTextureManager = std::make_unique<CTextureManager>(m_pRenderer.get());
-		if (!m_pTextureManager->Initialize()) return false;
-
-		m_pActorManager = std::make_unique<CActorManager>(m_pRenderer.get());
-		if (!m_pActorManager->Initialize()) return false;
 
 		m_pMeshManager = std::make_unique<CMeshManager>(m_pRenderer.get());
 
 		m_pMaterialManager = std::make_unique<CMaterialManager>(m_pRenderer.get());
 
-		CActorBase* pRootActor = m_pActorManager->GetRootActor();
-
 		m_pSceneManager = std::make_unique<CSceneManager>();
-		if (!m_pSceneManager->Initialize(pRootActor)) return false;
 
 		m_pInput = std::make_unique<CInput>(hwnd);
 		if (!m_pInput->Initialize(hInstance)) return false;
-
-		const char* shaderName = "D:/Engine46/ShaderSource/HLSL/Model.hlsl";
-		CShaderPackage* pSp = m_pShaderManager->GetShaderPackage(shaderName);
-
-		const char* textureName = "D:/PICTURE/キングダムハーツ/EWmO72SUwAEFtsQ.jpg";
-		CTextureBase* pTex = m_pTextureManager->GetTexture(textureName);
-
-		CMeshManager* pMeshManager = m_pMeshManager.get();
-		CMaterialManager* pMaterialManager = m_pMaterialManager.get();
-
-		for (auto& pActor : pRootActor->GetChiledActorList()) {
-			if (pActor->GetClassID() == (UINT)ClassType::Camera) {
-				pActor->SetInput(m_pInput.get());
-			}
-			if (pActor->GetClassID() == (UINT)ClassType::Sprite) {
-				m_pRenderer->CreateConstantBuffer(pActor);
-
-				m_pRenderer->CreateMesh(pMeshManager, pActor);
-
-				m_pRenderer->CreateMaterial(pMaterialManager, pActor);
-
-				pActor->SetShaderPackage(pSp);
-
-				pActor->SetTexture(pTex);
-
-				pActor->Initialize();
-			}
-		}
 
 		// イベントハンドル生成
 		m_hGame = CreateEvent(NULL, false, false, NULL);

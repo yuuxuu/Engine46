@@ -10,12 +10,13 @@
 #ifndef _CDX11RENDERER_H_
 #define _CDX11RENDERER_H_
 
-#include "CDX11Device.h"
-#include "CDX11DeviceContext.h"
-
 #include "../Engine46/CRenderer.h"
 
 namespace Engine46 {
+
+	// 前方宣言
+	class CDX11Device;
+	class CDX11DeviceContext;
 
 	class CDX11Renderer : public CRendererBase {
 	private:
@@ -39,11 +40,11 @@ namespace Engine46 {
 
 		bool Render(CSceneBase* pScene) override;
 
-		void CreateConstantBuffer(CActorBase*& pActor) override;
-		void CreateMesh(CMeshManager*& pMeshManager, CActorBase*& pActor) override;
-		void CreateMaterial(CMaterialManager*& pMeshManager, CActorBase*& pActor) override;
-		void CreateTexture(CTextureManager*& pTextureManager, const char* textureName) override;
-		void CreateShader(CShaderManager*& pShaderManager, const char* shaderName) override;
+		void CreateConstantBuffer(std::unique_ptr<CConstantBufferBase>& pConstantBuffer) override;
+		void CreateMesh(std::unique_ptr<CMeshBase>& pMesh) override;
+		void CreateMaterial(std::unique_ptr<CMaterialBase>& pMaterial) override;
+		void CreateTexture(std::unique_ptr<CTextureBase>& pTexture, const char* textureName) override;
+		void CreateShader(std::unique_ptr<CShaderPackage>& pShaderPackage, const char* shaderName) override;
 
 		CDX11Device* GetDX11Device() const { return m_pDX11Device.get(); }
 

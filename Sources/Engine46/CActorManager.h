@@ -13,13 +13,8 @@
 namespace Engine46 {
 	
 	// 前方宣言
-	class CRendererBase;
 	class CActorBase;
-	class CMeshBase;
-	class CMaterialBase;
-	class CConstantBufferBase;
-	class CShaderPackage;
-	class CInput;
+	class CRendererBase;
 
 	class CActorManager {
 	private:
@@ -32,22 +27,14 @@ namespace Engine46 {
 		explicit CActorManager(CRendererBase* pRenderer);
 		~CActorManager();
 
-		bool Initialize();
-
 		CActorBase* CreateActor(int classID);
 
-		void SetMesh(CActorBase* pActor, CMeshBase* pMesh);
+		void AddActorToVec(std::unique_ptr<CActorBase>& pActor) { m_pVecActor.emplace_back(std::move(pActor)); }
 
-		void SetMaterial(CActorBase* pActor, CMaterialBase* pMaterial);
-
-		void SetShaderPackage(CActorBase* pActor, CShaderPackage* pShaderPackage);
-		
-		void SetInput(CActorBase* pActor, CInput* pInput);
+		CActorBase* GetActor(const char* name);
 
 		bool SaveActor();
 		bool LoadActor();
-
-		void AddActorToVec(std::unique_ptr<CActorBase>& pActor) { m_pVecActor.emplace_back(move(pActor)); };
 
 		CActorBase* GetRootActor() const { return pRootActor; }
 

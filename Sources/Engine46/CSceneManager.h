@@ -7,13 +7,12 @@
 
 #pragma once
 
-#ifndef _SCENE_MANAGER_H_
-#define _SCENE_MANAGER_H_
+#ifndef _CSCENE_MANAGER_H_
+#define _CSCENE_MANAGER_H_
 
 namespace Engine46 {
 
 	// 前方宣言
-	class CActorBase;
 	class CSceneBase;
 
 	class CSceneManager {
@@ -25,16 +24,14 @@ namespace Engine46 {
 		CSceneManager();
 		~CSceneManager();
 
-		bool Initialize(CActorBase* pRootActor);
-
 		CSceneBase* CreateScene(int id);
+
+		void AddSceneToVec(std::unique_ptr<CSceneBase>& pScene) { m_pVecScene.emplace_back(std::move(pScene)); }
+		
+		CSceneBase* GetRootScene() const { return pRootScene; };
 
 		bool SaveScene();
 		bool LoadScene();
-
-		void AddSceneToVec(std::unique_ptr<CSceneBase>& pScene) { m_pVecScene.emplace_back(move(pScene)); }
-
-		CSceneBase* GetRootScene() const { return pRootScene; };
 
 	private:
 		void ConnectScene();
