@@ -34,7 +34,7 @@ namespace Engine46 {
 
 		ComPtr<ID3DBlob>								m_pBlob;
 
-		std::unique_ptr<char[]>							m_shaderName;
+		std::string										m_shaderName;
 
 		std::unique_ptr<char[]>							m_pBuf;
 		int												m_bufSize;
@@ -56,7 +56,7 @@ namespace Engine46 {
 
 		void SetData(ComPtr<ID3DBlob>& pBlob);
 
-		char* GetShaderName() const { return m_shaderName.get(); }
+		const char* GetShaderName() const { return m_shaderName.c_str(); }
 
 		SHADER_TYPE GetShaderType() const { return m_shaderType; }
 	};

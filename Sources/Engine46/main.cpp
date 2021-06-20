@@ -38,13 +38,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszArgs,
 {
 	CallConsole();
 
-	// ゲームシステム作成
-	CGameSystem& gameSystem = CGameSystem::GetGameSystem();
-	if (!gameSystem.Initialize(hInstance)) {
-		MessageBox(NULL, "ゲームシステム初期化：失敗", "MessageBox", MB_OK);
-		return -1;
-	}
-
 	MSG	msg;
 	while (1) {
 		if (!GetMessage(&msg, NULL, 0, 0)) {

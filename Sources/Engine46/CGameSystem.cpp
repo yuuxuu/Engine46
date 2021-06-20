@@ -19,14 +19,15 @@
 #include "CTextureManager.h"
 #include "CShaderManager.h"
 
+#include "CConstantBuffer.h"
+
 #include "../GraphicsAPI/CDX11Renderer.h"
 
 namespace Engine46 {
 
 	// コンストラクタ
 	CGameSystem::CGameSystem() :
-		m_hGame(nullptr),
-		m_pMainWindow(nullptr)
+		m_hGame(nullptr)
 	{}
 
 	// デストラクタ
@@ -35,7 +36,7 @@ namespace Engine46 {
 	}
 
 	// 初期化
-	bool CGameSystem::Initialize(HINSTANCE hInstance) {
+	bool CGameSystem::Initialize(CRendererBase* renderer, HWND hwnd, RECT rect) {
 		// 乱数生成
 		srand((unsigned)time(NULL));
 		// ロケール設定
@@ -43,34 +44,43 @@ namespace Engine46 {
 		// タイマの分解能力を１ｍｓにする
 		timeBeginPeriod(1);
 
-		// メインウインドウ作成
-		m_pMainWindow = std::make_unique<CWindow>();
-		// メインウインドウ初期化
-		if (!m_pMainWindow->Initialize(hInstance, "MainWindow", "Engine46")) {
-			std::cout << "ウインドウ初期化:失敗" << std::endl;
-			return false;
-		}
+		m_pActorManager = std::make_unique<CActorManager>(renderer);
 
-		HWND hwnd = m_pMainWindow->GetHwnd();
-		RECT rect = m_pMainWindow->GetWindowSize();
+		m_pShaderManager = std::make_unique<CShaderManager>(renderer);
 
-		m_pRenderer = std::make_unique<CDX11Renderer>();
-		if (!m_pRenderer->Initialize(hwnd, rect.w, rect.h)) return false;
+		m_pTextureManager = std::make_unique<CTextureManager>(renderer);
 
-		m_pActorManager = std::make_unique<CActorManager>(m_pRenderer.get());
+		m_pMeshManager = std::make_unique<CMeshManager>(renderer);
 
-		m_pShaderManager = std::make_unique<CShaderManager>(m_pRenderer.get());
-
-		m_pTextureManager = std::make_unique<CTextureManager>(m_pRenderer.get());
-
-		m_pMeshManager = std::make_unique<CMeshManager>(m_pRenderer.get());
-
-		m_pMaterialManager = std::make_unique<CMaterialManager>(m_pRenderer.get());
+		m_pMaterialManager = std::make_unique<CMaterialManager>(renderer);
 
 		m_pSceneManager = std::make_unique<CSceneManager>();
 
+		HINSTANCE hInstance = GetModuleHandle(NULL);
+		
 		m_pInput = std::make_unique<CInput>(hwnd);
 		if (!m_pInput->Initialize(hInstance)) return false;
+
+		{
+			CSceneBase* rootScene = m_pSceneManager->GetRootScene();
+			CActorBase* rootActor = m_pActorManager->GetRootActor();
+			rootScene->SetRootActor(rootActor);
+
+			CActorBase* pCamera = m_pActorManager->CreateActor((int)ClassType::Camera);
+			pCamera->SetInput(m_pInput.get());
+
+			CActorBase* pSprite = m_pActorManager->CreateActor((int)ClassType::Sprite);
+
+			std::unique_ptr<CConstantBufferBase> cb;
+			renderer->CreateConstantBuffer(cb);
+			pSprite->SetConstantBuffer(cb);
+
+			m_pMeshManager->SetMeshToActor(pSprite);
+			m_pMaterialManager->SetMaterialToActor(pSprite);
+			m_pShaderManager->SetShaderPackageToActor(pSprite, "Model.hlsl");
+
+			pSprite->Initialize();
+		}
 
 		// イベントハンドル生成
 		m_hGame = CreateEvent(NULL, false, false, NULL);
@@ -88,13 +98,13 @@ namespace Engine46 {
 		return true;
 	}
 
-	// ゲームシステムの終了
+	// 終了
 	void CGameSystem::Finalize() {
 		if (m_hGame) {
 			CloseHandle(m_hGame);
 			m_hGame = 0;
 		}
-		// ゲームメインスレッドの終了を待つ
+		// ゲームメインスレッドの終了待ち
 		if (m_gameSystemThread.joinable()) {
 			m_gameSystemThread.join();
 		}
@@ -116,8 +126,6 @@ namespace Engine46 {
 			CTimer timer;
 
 			this->Update();
-
-			this->Draw();
 		}
 	}
 
@@ -131,15 +139,6 @@ namespace Engine46 {
 
 		if (pRootScene) {
 			pRootScene->Update();
-		}
-	}
-
-	// 描画
-	void CGameSystem::Draw() {
-		CSceneBase* pRootScene = m_pSceneManager->GetRootScene();
-
-		if (pRootScene) {
-			m_pRenderer->Render(pRootScene);
 		}
 	}
 

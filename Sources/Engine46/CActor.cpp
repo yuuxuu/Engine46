@@ -30,32 +30,24 @@ namespace Engine46 {
 	CActorBase::CActorBase() :
 		m_classID((int)ClassType::Root),
 		m_actorID(g_ActorCount++),
-		m_actorName(),
+		m_actorName("Actor_" + std::to_string(m_actorID)),
 		m_transform(Transform()),
 		pParentActor(nullptr),
 		m_parentActorID(-1)
 	{
-		std::string str = "Object_" + std::to_string(m_actorID);
-		int size = (int)str.size() + 1;
-		m_actorName.reset(new char[size]);
-		str.resize(size);
-		str.copy(m_actorName.get(), size);
+		m_actorName.resize(m_actorName.size());
 	}
 
 	// コンストラクタ
-	CActorBase::CActorBase(const UINT classID, const char* ActorName, const Transform transform) :
+	CActorBase::CActorBase(const UINT classID, const char* actorName, const Transform transform) :
 		m_classID(classID),
 		m_actorID(g_ActorCount++),
-		m_actorName(),
+		m_actorName(actorName),
 		m_transform(transform),
 		pParentActor(nullptr),
 		m_parentActorID(-1)
 	{
-		std::string str = ActorName;
-		int size = (int)str.size() + 1;
-		m_actorName.reset(new char[size]);
-		str.resize(size);
-		str.copy(m_actorName.get(), size);
+		m_actorName.resize(m_actorName.size());
 	}
 
 	// デストラクタ
@@ -67,12 +59,12 @@ namespace Engine46 {
 
 		vecDataRecords.clear();
 
-		vecDataRecords.emplace_back(std::make_unique<CDataRecordBase>(offsetof(CActorBase, m_classID), sizeof(m_classID)));
-		vecDataRecords.emplace_back(std::make_unique<CDataRecordBase>(offsetof(CActorBase, m_actorID), sizeof(m_actorID)));
-		vecDataRecords.emplace_back(std::make_unique<CStrDataRecord>(offsetof(CActorBase, m_actorName), m_actorName));
-		vecDataRecords.emplace_back(std::make_unique<CDataRecordBase>(offsetof(CActorBase, m_transform), sizeof(m_transform)));
-		vecDataRecords.emplace_back(std::make_unique<CPtrDataRecord>(m_parentActorID));
-		vecDataRecords.emplace_back(std::make_unique<CListDataRecord>(m_chiledActorIDList));
+		vecDataRecords.emplace_back(CDataRecordBase(offsetof(CActorBase, m_classID), sizeof(m_classID)));
+		vecDataRecords.emplace_back(CDataRecordBase(offsetof(CActorBase, m_actorID), sizeof(m_actorID)));
+		vecDataRecords.emplace_back(CStrDataRecord(offsetof(CActorBase, m_actorName), m_actorName));
+		vecDataRecords.emplace_back(CDataRecordBase(offsetof(CActorBase, m_transform), sizeof(m_transform)));
+		vecDataRecords.emplace_back(CPtrDataRecord(m_parentActorID));
+		vecDataRecords.emplace_back(CListDataRecord(m_chiledActorIDList));
 	}
 
 	// 更新
@@ -132,7 +124,7 @@ namespace Engine46 {
 	// オブジェクトを保存
 	bool CActorBase::Save(std::ofstream& ofs) {
 		for (auto& record : vecDataRecords) {
-			record->WriteData(ofs, (char*)this);
+			record.WriteData(ofs, (char*)this);
 		}
 
 		return true;
@@ -142,8 +134,8 @@ namespace Engine46 {
 	bool CActorBase::Load(std::ifstream& ifs) {
 		for (auto& record : vecDataRecords) {
 			if (&record == &vecDataRecords[0]) continue;
-
-			record->ReadData(ifs, (char*)this);
+		
+			record.ReadData(ifs, (char*)this);
 		}
 
 		return true;

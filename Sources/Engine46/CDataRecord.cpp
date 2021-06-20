@@ -38,9 +38,9 @@ namespace Engine46 {
 	}
 
 	// コンストラクタ
-	CStrDataRecord::CStrDataRecord(int offset, std::unique_ptr<char[]>& pStr) :
-		CDataRecordBase(DATA_TYPE::TYPE_STR, offset, (int)strlen(pStr.get()) + 1),
-		m_pStr(pStr)
+	CStrDataRecord::CStrDataRecord(int offset, std::string& string) :
+		CDataRecordBase(DATA_TYPE::TYPE_STR, offset, string.size() + 1),
+		m_string(string)
 	{}
 
 	// デストラクタ
@@ -51,16 +51,14 @@ namespace Engine46 {
 	void CStrDataRecord::WriteData(std::ofstream& ofs, char* p) {
 		ofs.write((char*)&m_dataSize, sizeof(int));
 
-		ofs.write(m_pStr.get(), m_dataSize);
+		ofs.write(m_string.data(), m_dataSize);
 	}
 
 	// データの読み込み
 	void CStrDataRecord::ReadData(std::ifstream& ifs, char* p) {
 		ifs.read((char*)&m_dataSize, sizeof(int));
 
-		m_pStr.reset(new char[m_dataSize]);
-
-		ifs.read(m_pStr.get(), m_dataSize);
+		ifs.read(m_string.data(), m_dataSize);
 	}
 
 	// コンストラクタ

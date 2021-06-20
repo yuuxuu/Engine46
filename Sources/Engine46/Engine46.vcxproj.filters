@@ -13,11 +13,11 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="リソース ファイル\HLSL">
+      <UniqueIdentifier>{64bef308-45d1-4ebc-9db7-618343f0f103}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="math.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -97,6 +97,12 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="CTextureManager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="CRendererSystem.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -188,51 +194,54 @@
     <ClInclude Include="CTextureManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="CRendererSystem.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="..\..\ShaderSource\HLSL\CPUParticle.hlsl">
-      <Filter>リソース ファイル</Filter>
+    <FxCompile Include="..\..\Assets\Shader\HLSL\CPUParticle.hlsl">
+      <Filter>リソース ファイル\HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="..\..\ShaderSource\HLSL\DepthStencil.hlsl">
-      <Filter>リソース ファイル</Filter>
+    <FxCompile Include="..\..\Assets\Shader\HLSL\DepthStencil.hlsl">
+      <Filter>リソース ファイル\HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="..\..\ShaderSource\HLSL\GBuffer.hlsl">
-      <Filter>リソース ファイル</Filter>
+    <FxCompile Include="..\..\Assets\Shader\HLSL\GBuffer.hlsl">
+      <Filter>リソース ファイル\HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="..\..\ShaderSource\HLSL\GBuffer_Lighting.hlsl">
-      <Filter>リソース ファイル</Filter>
+    <FxCompile Include="..\..\Assets\Shader\HLSL\GBuffer_Lighting.hlsl">
+      <Filter>リソース ファイル\HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="..\..\ShaderSource\HLSL\GPUParticle.hlsl">
-      <Filter>リソース ファイル</Filter>
+    <FxCompile Include="..\..\Assets\Shader\HLSL\GPUParticle.hlsl">
+      <Filter>リソース ファイル\HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="..\..\ShaderSource\HLSL\Model.hlsl">
-      <Filter>リソース ファイル</Filter>
+    <FxCompile Include="..\..\Assets\Shader\HLSL\Model.hlsl">
+      <Filter>リソース ファイル\HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="..\..\ShaderSource\HLSL\Model_Instance.hlsl">
-      <Filter>リソース ファイル</Filter>
+    <FxCompile Include="..\..\Assets\Shader\HLSL\Model_Instance.hlsl">
+      <Filter>リソース ファイル\HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="..\..\ShaderSource\HLSL\Shadow.hlsl">
-      <Filter>リソース ファイル</Filter>
+    <FxCompile Include="..\..\Assets\Shader\HLSL\Shadow.hlsl">
+      <Filter>リソース ファイル\HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="..\..\ShaderSource\HLSL\Sprite.hlsl">
-      <Filter>リソース ファイル</Filter>
+    <FxCompile Include="..\..\Assets\Shader\HLSL\Sprite.hlsl">
+      <Filter>リソース ファイル\HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="..\..\ShaderSource\HLSL\SpriteDepthDebug.hlsl">
-      <Filter>リソース ファイル</Filter>
+    <FxCompile Include="..\..\Assets\Shader\HLSL\SpriteDepthDebug.hlsl">
+      <Filter>リソース ファイル\HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="..\..\ShaderSource\HLSL\SpriteStencilDebug.hlsl">
-      <Filter>リソース ファイル</Filter>
+    <FxCompile Include="..\..\Assets\Shader\HLSL\SpriteStencilDebug.hlsl">
+      <Filter>リソース ファイル\HLSL</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\ShaderSource\ConstantBuffer.hlsli">
-      <Filter>リソース ファイル</Filter>
+    <None Include="..\..\Assets\Shader\ConstantBuffer.hlsli">
+      <Filter>リソース ファイル\HLSL</Filter>
     </None>
-    <None Include="..\..\ShaderSource\RootSignature.hlsli">
-      <Filter>リソース ファイル</Filter>
+    <None Include="..\..\Assets\Shader\RootSignature.hlsli">
+      <Filter>リソース ファイル\HLSL</Filter>
     </None>
-    <None Include="..\..\ShaderSource\ShaderUlity.hlsli">
-      <Filter>リソース ファイル</Filter>
+    <None Include="..\..\Assets\Shader\ShaderUlity.hlsli">
+      <Filter>リソース ファイル\HLSL</Filter>
     </None>
   </ItemGroup>
 </Project>

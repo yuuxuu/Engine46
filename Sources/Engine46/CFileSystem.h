@@ -31,9 +31,12 @@ namespace Engine46 {
 	class CFileSystem {
 	private:
 		std::map<std::string, std::unique_ptr<FileInfo>>	m_pMapFileInfo;
-	public:
+
+	private:
 		CFileSystem();
 		~CFileSystem();
+
+	public:
 
 		bool Initialize();
 
@@ -45,8 +48,12 @@ namespace Engine46 {
 
 		bool WriteFile(const char* writeFileName, std::ios::openmode mode, void* pBuffers, size_t size);
 		bool ReadFile(const char* readFileName, std::ios::openmode mode, void*& pBuffers, size_t size);
-	};
 
+		static CFileSystem& GetFileSystem() {
+			static CFileSystem fileSystem;
+			return fileSystem;
+		}
+	};
 } // namespace
 
 #endif

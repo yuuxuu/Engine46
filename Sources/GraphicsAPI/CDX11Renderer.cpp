@@ -15,6 +15,8 @@
 #include "CDX11Shader.h"
 #include "CDX11Texture.h"
 
+#include "../Engine46/CFileSystem.h"
+
 namespace Engine46 {
 
 	// コンストラクタ
@@ -82,9 +84,6 @@ namespace Engine46 {
 
 		m_windowRect = RECT(width, height);
 
-		m_pFileSystem = std::make_unique<CFileSystem>();
-		if (!m_pFileSystem->Initialize()) return false;
-
 		return true;
 	}
 
@@ -98,15 +97,17 @@ namespace Engine46 {
 
 		m_pDX11DeviceContext->SetInputLayout(m_pInputLayout.Get());
 
-		m_pRendering->Begine();
-		
-		pScene->Draw();
-		
-		m_pRendering->End();
+		//m_pRendering->Begine();
+		//
+		//pScene->Draw();
+		//
+		//m_pRendering->End();
 
 		m_pDX11DeviceContext->ClearRenderTargetView(m_pRtv.Get());
 		m_pDX11DeviceContext->ClearDespthStencilView(m_pDsv.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL);
 		m_pDX11DeviceContext->SetRenderTargetView(m_pRtv.Get(), m_pDsv.Get());
+
+		pScene->Draw();
 
 		//CSprite sprite;
 		//std::unique_ptr<CMeshBase> pMesh;
@@ -142,7 +143,7 @@ namespace Engine46 {
 
 	// テクスチャ作成
 	void CDX11Renderer::CreateTexture(std::unique_ptr<CTextureBase>& pTexture, const char* textureName) {
-		FileInfo* fileInfo = m_pFileSystem->GetFileInfoFromMap(textureName);
+		FileInfo* fileInfo = CFileSystem::GetFileSystem().GetFileInfoFromMap(textureName);
 		
 		if (fileInfo) {
 			pTexture = std::make_unique<CDX11Texture>(m_pDX11Device.get(), m_pDX11DeviceContext.get(), textureName);
@@ -155,7 +156,7 @@ namespace Engine46 {
 
 	// シェーダー作成
 	void CDX11Renderer::CreateShader(std::unique_ptr<CShaderPackage>& pShaderPackage, const char* shaderName) {
-		FileInfo* fileInfo = m_pFileSystem->GetFileInfoFromMap(shaderName);
+		FileInfo* fileInfo = CFileSystem::GetFileSystem().GetFileInfoFromMap(shaderName);
 		
 		if (fileInfo) {
 			for (const auto& info : vecShaderInfo) {

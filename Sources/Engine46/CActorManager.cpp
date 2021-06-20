@@ -73,7 +73,7 @@ namespace Engine46 {
 
 		std::ofstream ofs;
 		ofs.open(g_ActorListFileName, mode);
-
+		
 		if (!ofs.is_open()) return false;
 
 		for (const auto& actor : m_pVecActor) {

@@ -20,19 +20,19 @@ namespace Engine46 {
 
 	class CSceneBase : public IObject {
 	protected:
-		std::vector<std::unique_ptr<CDataRecordBase>>	vecDataRecords;
+		std::vector<CDataRecordBase>	vecDataRecords;
 
-		CActorBase*										pRootActor;
+		CActorBase*						pRootActor;
 
-		CSceneBase*										pParentScene;
-		int												m_parentSceneID;
+		CSceneBase*						pParentScene;
+		int								m_parentSceneID;
 
-		std::list<CSceneBase*>							pChiledSceneList;
-		std::vector<int>								m_chiledSceneIDList;
+		std::list<CSceneBase*>			pChiledSceneList;
+		std::vector<int>				m_chiledSceneIDList;
 
-		int												m_SceneID;
+		int								m_SceneID;
 
-		std::unique_ptr<char[]>							m_SceneName;
+		std::string						m_SceneName;
 
 	public:
 		CSceneBase();

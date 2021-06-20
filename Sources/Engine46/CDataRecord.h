@@ -40,10 +40,10 @@ namespace Engine46 {
 
 	class CStrDataRecord : public CDataRecordBase {
 	private:
-		std::unique_ptr<char[]>& m_pStr;
+		std::string& m_string;
 
 	public:
-		CStrDataRecord(int offset, std::unique_ptr<char[]>& pStr);
+		CStrDataRecord(int offset, std::string& pStr);
 		~CStrDataRecord();
 
 		void WriteData(std::ofstream& ofs, char* p) override;

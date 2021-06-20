@@ -36,11 +36,11 @@ namespace Engine46 {
 	// 初期化
 	void CCamera::Initialize() {
 
-		vecDataRecords.emplace_back(std::make_unique<CDataRecordBase>(offsetof(CCamera, m_eye), sizeof(m_eye)));
-		vecDataRecords.emplace_back(std::make_unique<CDataRecordBase>(offsetof(CCamera, m_forcus), sizeof(m_forcus)));
-		vecDataRecords.emplace_back(std::make_unique<CDataRecordBase>(offsetof(CCamera, m_up), sizeof(m_up)));
-		vecDataRecords.emplace_back(std::make_unique<CDataRecordBase>(offsetof(CCamera, m_matView), sizeof(m_matView)));
-		vecDataRecords.emplace_back(std::make_unique<CDataRecordBase>(offsetof(CCamera, m_matProj), sizeof(m_matProj)));
+		vecDataRecords.emplace_back(CDataRecordBase(offsetof(CCamera, m_eye), sizeof(m_eye)));
+		vecDataRecords.emplace_back(CDataRecordBase(offsetof(CCamera, m_forcus), sizeof(m_forcus)));
+		vecDataRecords.emplace_back(CDataRecordBase(offsetof(CCamera, m_up), sizeof(m_up)));
+		vecDataRecords.emplace_back(CDataRecordBase(offsetof(CCamera, m_matView), sizeof(m_matView)));
+		vecDataRecords.emplace_back(CDataRecordBase(offsetof(CCamera, m_matProj), sizeof(m_matProj)));
 	}
 
 	// 更新

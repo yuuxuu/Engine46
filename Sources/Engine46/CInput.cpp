@@ -17,8 +17,8 @@ namespace Engine46 {
 	// デストラクタ
 	CInput::~CInput()
 	{
-		m_pDirectDeviceKeyboard->Unacquire();
-		m_pDirectDeviceMouse->Unacquire();
+		if(m_pDirectDeviceKeyboard) m_pDirectDeviceKeyboard->Unacquire();
+		if(m_pDirectDeviceMouse) m_pDirectDeviceMouse->Unacquire();
 	}
 
 	// 初期化

@@ -13,7 +13,6 @@
 #include "IRenderer.h"
 #include "math.h"
 #include "CRendering.h"
-#include "CFileSystem.h"
 #include "CShaderPackage.h"
 
 namespace Engine46 {
@@ -27,8 +26,6 @@ namespace Engine46 {
 	class CRendererBase : public IRenderer {
 	protected:
 		std::unique_ptr<CRenderingBase> m_pRendering;
-
-		std::unique_ptr<CFileSystem>	m_pFileSystem;
 
 		RECT							m_windowRect;
 

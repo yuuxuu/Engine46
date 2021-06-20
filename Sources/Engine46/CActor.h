@@ -32,29 +32,29 @@ namespace Engine46 {
 
 	class CActorBase : public IObject {
 	protected:
-		std::vector<std::unique_ptr<CDataRecordBase>>	vecDataRecords;
+		std::vector<CDataRecordBase>			vecDataRecords;
 
-		UINT											m_classID;
+		UINT									m_classID;
 
-		int												m_actorID;
+		int										m_actorID;
 
-		std::unique_ptr<char[]>							m_actorName;
+		std::string								m_actorName;
 
-		Transform										m_transform;
+		Transform								m_transform;
 		
-		CMeshBase*										m_pMesh;
+		CMeshBase*								m_pMesh;
 
-		CMaterialBase*									m_pMaterial;
+		CMaterialBase*							m_pMaterial;
 
-		std::unique_ptr<CConstantBufferBase>			m_pConstantBuffer;
+		std::unique_ptr<CConstantBufferBase>	m_pConstantBuffer;
 
-		CInput*											pInput;
+		CInput*									pInput;
 
-		CActorBase*										pParentActor;
-		int												m_parentActorID;
+		CActorBase*								pParentActor;
+		int										m_parentActorID;
 
-		std::list<CActorBase*>							pChiledActorList;
-		std::vector<int>								m_chiledActorIDList;
+		std::list<CActorBase*>					pChiledActorList;
+		std::vector<int>						m_chiledActorIDList;
 
 	public:
 		CActorBase();
@@ -92,7 +92,7 @@ namespace Engine46 {
 
 		UINT GetClassID() const { return m_classID; }
 
-		char* GetActorName() const { return m_actorName.get(); }
+		const char* GetActorName() const { return m_actorName.c_str(); }
 
 		Matrix GetWorldMatrix();
 
