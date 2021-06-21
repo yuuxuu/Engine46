@@ -12,12 +12,14 @@
 
 namespace Engine46 {
 
+	constexpr const char* RESOURCE_ROOT_PATH = "D:/Engine46/Assets/";
+
 	struct FileInfo {
-		std::unique_ptr<char[]> filePath;
-		std::unique_ptr<char[]> driveName;
-		std::unique_ptr<char[]> directryName;
-		std::unique_ptr<char[]> fileName;
-		std::unique_ptr<char[]> extensionName;
+		std::string filePath;
+		std::string driveName;
+		std::string directryName;
+		std::string fileName;
+		std::string extensionName;
 
 		DWORD lastWriteTime;
 		DWORD lastAccessTime;

@@ -18,7 +18,7 @@ namespace Engine46 {
 
 	// 前方宣言
 	class CRendererBase;
-	class CSceneManager;
+	class CSceneBase;
 
 	class CRendererSystem{
 	private:
@@ -26,6 +26,8 @@ namespace Engine46 {
 		HANDLE							m_hRenderer;
 
 		std::unique_ptr<CRendererBase>	m_pRenderer;
+
+		CSceneBase*						pRenderScene;
 
 	private:
 		CRendererSystem();
@@ -44,6 +46,9 @@ namespace Engine46 {
 		}
 
 		CRendererBase* GetRenderer() const { return m_pRenderer.get(); }
+
+		void SetRenderScene(CSceneBase* pScene) { pRenderScene = pScene; }
+		CSceneBase* GetRenderScene() const { return pRenderScene; }
 	};
 
 } // namespace

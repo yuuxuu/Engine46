@@ -21,7 +21,7 @@ namespace Engine46 {
 	bool CFileSystem::Initialize() {
 
 		const std::vector<const char*> vecDirName = {
-			"D:/Engine46/Assets/"
+			RESOURCE_ROOT_PATH
 		};
 
 		for (const auto name : vecDirName) {
@@ -56,26 +56,16 @@ namespace Engine46 {
 		if (!pFileInfo) {
 			std::unique_ptr<FileInfo> fileInfo = std::make_unique<FileInfo>();
 
-			size_t size = strlen(filePath) + 1;
-			fileInfo->filePath.reset(new char[size]);
-			std::memcpy(fileInfo->filePath.get(), filePath, size);
+			fileInfo->filePath = filePath;
 
-			size = strlen(drive) + 1;
-			fileInfo->driveName.reset(new char[size]);
-			std::memcpy(fileInfo->driveName.get(), drive, size);
+			fileInfo->driveName = drive;
 
-			size = strlen(dir) + 1;
-			fileInfo->directryName.reset(new char[size]);
-			std::memcpy(fileInfo->directryName.get(), dir, size);
+			fileInfo->directryName = dir;
 
-			size = strlen(name) + strlen(extension) + 1;
-			fileInfo->fileName.reset(new char[size]);
-			strcat_s(name, size, extension);
-			std::memcpy(fileInfo->fileName.get(), name, size);
+			fileInfo->fileName = name;
+			fileInfo->fileName += extension;
 
-			size = strlen(extension) + 1;
-			fileInfo->extensionName.reset(new char[size]);
-			std::memcpy(fileInfo->extensionName.get(), extension, size);
+			fileInfo->extensionName = extension;
 
 			SYSTEMTIME sysTime;
 			WIN32_FIND_DATA findData;
@@ -103,7 +93,7 @@ namespace Engine46 {
 	void CFileSystem::AddFileInfoToMap(const char* name, std::unique_ptr<FileInfo>& pFileInfo) {
 
 		if (!GetFileInfoFromMap(name)) {
-			m_pMapFileInfo[pFileInfo->fileName.get()] = std::move(pFileInfo);
+			m_pMapFileInfo[pFileInfo->fileName] = std::move(pFileInfo);
 		}
 	}
 

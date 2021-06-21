@@ -6,14 +6,16 @@
  */
 
 #include "CActor.h"
+#include "CGameSystem.h"
 #include "CCamera.h"
-
 #include "CDataRecord.h"
 #include "CConstantBuffer.h"
 #include "CMesh.h"
 #include "CMaterial.h"
 #include "CTexture.h"
 #include "CShaderPackage.h"
+#include "CShaderManager.h"
+#include "CTextureManager.h"
 #include "CInput.h"
 
 namespace Engine46 {
@@ -144,23 +146,27 @@ namespace Engine46 {
 	// コンスタントバッファを作成
 	void CActorBase::SetConstantBuffer(std::unique_ptr<CConstantBufferBase>& pConstantBuffer) {
 		if (pConstantBuffer) {
-			m_pConstantBuffer.swap(pConstantBuffer);
+			pConstantBuffer->CreateConstantBuffer(sizeof(mainCB));
 
-			m_pConstantBuffer->CreateConstantBuffer(sizeof(mainCB));
+			m_pConstantBuffer.swap(pConstantBuffer);
 		}
 	}
 
 	// メッシュを設定
-	void CActorBase::SetMesh(CMeshBase* pMesh) {
+	void CActorBase::SetMesh(std::unique_ptr<CMeshBase>& pMesh) {
 		if (pMesh) {
-			m_pMesh = pMesh;
+			pMesh->Create();
+
+			m_pMesh.swap(pMesh);
 		}
 	}
 
 	// マテリアルを設定
-	void CActorBase::SetMaterial(CMaterialBase* pMaterial) {
+	void CActorBase::SetMaterial(std::unique_ptr<CMaterialBase>& pMaterial) {
 		if (pMaterial) {
-			m_pMaterial = pMaterial;
+			pMaterial->Create();
+
+			m_pMaterial.swap(pMaterial);
 		}
 	}
 
@@ -171,11 +177,23 @@ namespace Engine46 {
 		}
 	}
 
+	// マテリアルにテクスチャを設定
+	void CActorBase::SetTexture(const char* textureName) {
+		CTextureManager* textureManager = CGameSystem::GetGameSystem().GetTextureManager();
+		textureManager->SetTextureToActor(this, textureName);
+	}
+
 	// シェーダーパッケージを設定
 	void CActorBase::SetShaderPackage(CShaderPackage* pShaderPackage) {
 		if (m_pMaterial) {
 			m_pMaterial->SetShaderPackage(pShaderPackage);
 		}
+	}
+
+	// シェーダーパッケージを設定
+	void CActorBase::SetShaderPackage(const char* shaderPackageName) {
+		CShaderManager* shaderManager = CGameSystem::GetGameSystem().GetShaderManager();
+		shaderManager->SetShaderPackageToActor(this, shaderPackageName);
 	}
 
 	// インプットを設定

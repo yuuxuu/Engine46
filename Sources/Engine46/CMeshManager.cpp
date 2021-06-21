@@ -62,7 +62,7 @@ namespace Engine46 {
 		pRenderer->CreateMesh(pMesh);
 
 		if (pMesh) {
-			pActor->SetMesh(pMesh.get());
+			//pActor->SetMesh(pMesh);
 			this->AddMeshToMap(pMesh->GetMeshName(), pMesh);
 		}
 	}

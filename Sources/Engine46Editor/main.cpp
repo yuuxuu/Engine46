@@ -5,8 +5,6 @@
 #include "../Engine46/CFileSystem.h"
 #include "../Engine46/CRendererSystem.h"
 
-#include "../GraphicsAPI/CDX11Renderer.h"
-
 #pragma comment(lib, "Engine46.lib")
 #pragma comment(lib, "GraphicsAPI.lib")
 
@@ -15,6 +13,7 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     
     Engine46Editor w;
+    w.resize(QSize(1080, 720));
     w.show();
 
     Engine46::CFileSystem& fileSystem = Engine46::CFileSystem::GetFileSystem();
@@ -23,9 +22,9 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    QWidget* renderWidget = w.GetRenderWidget();
-    HWND hwnd = (HWND)renderWidget->winId();
-    Engine46::RECT rect = Engine46::RECT(renderWidget->width(), renderWidget->height());
+    QWidget* pRenderWidget = w.GetRenderWidget();
+    HWND hwnd = (HWND)pRenderWidget->winId();
+    Engine46::RECT rect = Engine46::RECT(pRenderWidget->width(), pRenderWidget->height());
 
     Engine46::CRendererSystem& rendererSystem = Engine46::CRendererSystem::GetRendererSystem();
     if (!rendererSystem.Initialize(hwnd, rect)) {
@@ -41,6 +40,8 @@ int main(int argc, char *argv[])
         MessageBoxA(NULL, "ゲームシステム初期化：失敗", "MessageBox", MB_OK);
         return -1;
     }
+
+    emit w.UpdateSceneTreeView();
 
     return a.exec();
 }

@@ -22,7 +22,7 @@ namespace Engine46 {
 		CSprite();
 		~CSprite();
 
-		void Initialize() override;
+		void InitializeResource(CRendererBase* pRenderer) override;
 
 		void Update() override;
 	};

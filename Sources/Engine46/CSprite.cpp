@@ -8,6 +8,8 @@
 #include "CSprite.h"
 #include "CMesh.h"
 #include "CMaterial.h"
+#include "CConstantBuffer.h"
+#include "CRenderer.h"
 
 namespace Engine46 {
 
@@ -21,47 +23,54 @@ namespace Engine46 {
 	{}
 
 	// 初期化
-	void CSprite::Initialize() {
+	void CSprite::InitializeResource(CRendererBase* pRenderer) {
 
-		if (m_pMesh) {
-			m_pMesh->ReserveVertex(4);
+		if (pRenderer) {
+			std::unique_ptr<CConstantBufferBase> pConstantBuffer;
+			pRenderer->CreateConstantBuffer(pConstantBuffer);
+			SetConstantBuffer(pConstantBuffer);
+
+			std::unique_ptr<CMeshBase> pMesh;
+			pRenderer->CreateMesh(pMesh);
+
+			pMesh->ReserveVertex(4);
 
 			vertexInfo info;
 
 			info.vertex = VECTOR3(-1.0f, 1.0f, 0.0f);
-			info.color	= VECTOR4(1.0f, 0.0f, 0.0f, 1.0f);
-			info.uv		= VECTOR2(0.0f, 0.0f);
-			m_pMesh->AddVertexInfo(info);
+			info.color = VECTOR4(1.0f, 0.0f, 0.0f, 1.0f);
+			info.uv = VECTOR2(0.0f, 0.0f);
+			pMesh->AddVertexInfo(info);
 
 			info.vertex = VECTOR3(1.0f, 1.0f, 0.0f);
-			info.color	= VECTOR4(0.0f, 1.0f, 0.0f, 1.0f);
-			info.uv		= VECTOR2(1.0f, 0.0f);
-			m_pMesh->AddVertexInfo(info);
+			info.color = VECTOR4(0.0f, 1.0f, 0.0f, 1.0f);
+			info.uv = VECTOR2(1.0f, 0.0f);
+			pMesh->AddVertexInfo(info);
 
 			info.vertex = VECTOR3(-1.0f, -1.0f, 0.0f);
-			info.color	= VECTOR4(0.0f, 0.0f, 1.0f, 1.0f);
-			info.uv		= VECTOR2(0.0f, 1.0f);
-			m_pMesh->AddVertexInfo(info);
+			info.color = VECTOR4(0.0f, 0.0f, 1.0f, 1.0f);
+			info.uv = VECTOR2(0.0f, 1.0f);
+			pMesh->AddVertexInfo(info);
 
 			info.vertex = VECTOR3(1.0f, -1.0f, 0.0f);
-			info.color	= VECTOR4(1.0f, 0.0f, 0.0f, 1.0f);
-			info.uv		= VECTOR2(1.0f, 1.0f);
-			m_pMesh->AddVertexInfo(info);
+			info.color = VECTOR4(1.0f, 0.0f, 0.0f, 1.0f);
+			info.uv = VECTOR2(1.0f, 1.0f);
+			pMesh->AddVertexInfo(info);
 
-			m_pMesh->ReserveIndex(6);
+			pMesh->ReserveIndex(6);
 
-			m_pMesh->AddIndex(0);
-			m_pMesh->AddIndex(1);
-			m_pMesh->AddIndex(3);
-			m_pMesh->AddIndex(0);
-			m_pMesh->AddIndex(3);
-			m_pMesh->AddIndex(2);
+			pMesh->AddIndex(0);
+			pMesh->AddIndex(1);
+			pMesh->AddIndex(3);
+			pMesh->AddIndex(0);
+			pMesh->AddIndex(3);
+			pMesh->AddIndex(2);
 
-			m_pMesh->Create();
-		}
+			SetMesh(pMesh);
 
-		if (m_pMaterial) {
-			m_pMaterial->Create();
+			std::unique_ptr<CMaterialBase> pMaterial;
+			pRenderer->CreateMaterial(pMaterial);
+			SetMaterial(pMaterial);
 		}
 	}
 

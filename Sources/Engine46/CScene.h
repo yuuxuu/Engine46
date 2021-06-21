@@ -57,6 +57,7 @@ namespace Engine46 {
 		std::vector<int> GetChiledSceneIDList() const { return m_chiledSceneIDList; }
 
 		void SetRootActor(CActorBase* pRootActor) { this->pRootActor = pRootActor; }
+		CActorBase* GetRootActor() const { return pRootActor; }
 	};
 
 } // namespace

@@ -42,9 +42,9 @@ typedef VS_OUT PS_IN;
 PS_OUT PS_main(PS_IN input) {
 	PS_OUT output = (PS_OUT)0;
 
-	//output.color = diffuseTex.Sample(sampleState, input.uv);
+	output.color = diffuseTex.Sample(sampleState, input.uv);
 
-	output.color = input.color;
+	//output.color = input.color;
 
 	return output;
 }

@@ -16,6 +16,7 @@
 namespace Engine46 {
 
 	// 前方宣言
+	class CRendererBase;
 	class CDataRecordBase;
 	class CConstantBufferBase;
 	class CMeshBase;
@@ -42,9 +43,9 @@ namespace Engine46 {
 
 		Transform								m_transform;
 		
-		CMeshBase*								m_pMesh;
+		std::unique_ptr<CMeshBase>				m_pMesh;
 
-		CMaterialBase*							m_pMaterial;
+		std::unique_ptr<CMaterialBase>			m_pMaterial;
 
 		std::unique_ptr<CConstantBufferBase>	m_pConstantBuffer;
 
@@ -68,15 +69,19 @@ namespace Engine46 {
 		virtual bool Save(std::ofstream& ofs) override;
 		virtual bool Load(std::ifstream& ifs) override;
 
+		virtual void InitializeResource(CRendererBase* pRenderer) {};
+
 		void SetConstantBuffer(std::unique_ptr<CConstantBufferBase>& pConstantBuffer);
 
-		void SetMesh(CMeshBase* pMesh);
+		void SetMesh(std::unique_ptr<CMeshBase>& pMesh);
 
-		void SetMaterial(CMaterialBase* pMaterial);
+		void SetMaterial(std::unique_ptr<CMaterialBase>& pMaterial);
 
 		void SetTexture(CTextureBase* pTex);
+		void SetTexture(const char* textureName);
 
 		void SetShaderPackage(CShaderPackage* pShaderPackage);
+		void SetShaderPackage(const char* shaderPackageName);
 
 		void SetInput(CInput* pInput);
 

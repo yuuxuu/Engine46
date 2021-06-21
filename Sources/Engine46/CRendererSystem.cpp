@@ -7,7 +7,7 @@
 
 #include "CRendererSystem.h"
 #include "CGameSystem.h"
-#include "CSceneManager.h"
+#include "CScene.h"
 
 #include "../GraphicsAPI/CDX11Renderer.h"
 
@@ -73,12 +73,8 @@ namespace Engine46 {
 
 	// 描画
 	void CRendererSystem::Draw() {
-		CGameSystem& gameSystem = CGameSystem::GetGameSystem();
-		CSceneManager* pSceneManager = gameSystem.GetSceneManager();
-		CSceneBase* rootScene = pSceneManager->GetRootScene();
-
-		if (rootScene) {
-			m_pRenderer->Render(rootScene);
+		if (pRenderScene) {
+			m_pRenderer->Render(pRenderScene);
 		}
 	}
 

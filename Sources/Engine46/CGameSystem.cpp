@@ -6,6 +6,7 @@
  */
 
 #include "CGameSystem.h"
+#include "CRendererSystem.h"
 #include "CWinow.h"
 #include "CInput.h"
 #include "CTimer.h"
@@ -18,8 +19,6 @@
 #include "CMaterialManager.h"
 #include "CTextureManager.h"
 #include "CShaderManager.h"
-
-#include "CConstantBuffer.h"
 
 #include "../GraphicsAPI/CDX11Renderer.h"
 
@@ -36,7 +35,7 @@ namespace Engine46 {
 	}
 
 	// 初期化
-	bool CGameSystem::Initialize(CRendererBase* renderer, HWND hwnd, RECT rect) {
+	bool CGameSystem::Initialize(CRendererBase* pRenderer, HWND hwnd, RECT rect) {
 		// 乱数生成
 		srand((unsigned)time(NULL));
 		// ロケール設定
@@ -44,15 +43,15 @@ namespace Engine46 {
 		// タイマの分解能力を１ｍｓにする
 		timeBeginPeriod(1);
 
-		m_pActorManager = std::make_unique<CActorManager>(renderer);
+		m_pActorManager = std::make_unique<CActorManager>(pRenderer);
 
-		m_pShaderManager = std::make_unique<CShaderManager>(renderer);
+		m_pShaderManager = std::make_unique<CShaderManager>(pRenderer);
 
-		m_pTextureManager = std::make_unique<CTextureManager>(renderer);
+		m_pTextureManager = std::make_unique<CTextureManager>(pRenderer);
 
-		m_pMeshManager = std::make_unique<CMeshManager>(renderer);
+		m_pMeshManager = std::make_unique<CMeshManager>(pRenderer);
 
-		m_pMaterialManager = std::make_unique<CMaterialManager>(renderer);
+		m_pMaterialManager = std::make_unique<CMaterialManager>(pRenderer);
 
 		m_pSceneManager = std::make_unique<CSceneManager>();
 
@@ -61,25 +60,17 @@ namespace Engine46 {
 		m_pInput = std::make_unique<CInput>(hwnd);
 		if (!m_pInput->Initialize(hInstance)) return false;
 
-		{
-			CSceneBase* rootScene = m_pSceneManager->GetRootScene();
-			CActorBase* rootActor = m_pActorManager->GetRootActor();
-			rootScene->SetRootActor(rootActor);
+		// レンダーシステムにシーンを設定
+		CRendererSystem::GetRendererSystem().SetRenderScene(m_pSceneManager->GetRootScene());
 
+		{
 			CActorBase* pCamera = m_pActorManager->CreateActor((int)ClassType::Camera);
 			pCamera->SetInput(m_pInput.get());
 
 			CActorBase* pSprite = m_pActorManager->CreateActor((int)ClassType::Sprite);
-
-			std::unique_ptr<CConstantBufferBase> cb;
-			renderer->CreateConstantBuffer(cb);
-			pSprite->SetConstantBuffer(cb);
-
-			m_pMeshManager->SetMeshToActor(pSprite);
-			m_pMaterialManager->SetMaterialToActor(pSprite);
-			m_pShaderManager->SetShaderPackageToActor(pSprite, "Model.hlsl");
-
-			pSprite->Initialize();
+			pSprite->InitializeResource(pRenderer);
+			pSprite->SetTexture("EWmO72SUwAEFtsQ.jpg");
+			pSprite->SetShaderPackage("Model.hlsl");
 		}
 
 		// イベントハンドル生成
@@ -100,6 +91,9 @@ namespace Engine46 {
 
 	// 終了
 	void CGameSystem::Finalize() {
+		// レンダラースレッドを先に終了
+		CRendererSystem::GetRendererSystem().Finalize();
+
 		if (m_hGame) {
 			CloseHandle(m_hGame);
 			m_hGame = 0;
