@@ -14,8 +14,8 @@
 namespace Engine46 {
 
 	// コンストラクタ
-	CSprite::CSprite() :
-		CActorBase((int)ClassType::Sprite, "Sprite", Transform(VECTOR3(), VECTOR3(), VECTOR3(10.0f, 10.0f, 10.0f)))
+	CSprite::CSprite(const char* actorName) :
+		CActorBase((int)ClassType::Sprite, actorName, Transform(VECTOR3(), VECTOR3(), VECTOR3(10.0f, 10.0f, 10.0f)))
 	{}
 
 	// デストラクタ

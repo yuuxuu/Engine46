@@ -30,17 +30,24 @@ namespace Engine46 {
 	CActorBase* CActorManager::CreateActor(int classID) {
 		std::unique_ptr<CActorBase> actor;
 		RECT rect;
+		std::string actorName;
 
 		switch ((ClassType)classID) {
 		case ClassType::Root:
-			actor = std::make_unique<CActorBase>(classID, "RootActor", Transform());
+			actorName = "Root_" + std::to_string(classCount.rootCount++);
+
+			actor = std::make_unique<CActorBase>(classID, actorName.c_str(), Transform());
 			break;
 		case ClassType::Camera:
 			rect = pRenderer->GetWindowRect();
-			actor = std::make_unique<CCamera>(rect.w, rect.h);
+			actorName = "Camera_" + std::to_string(classCount.cameraCount++);
+
+			actor = std::make_unique<CCamera>(actorName.c_str(), rect.w, rect.h);
 			break;
 		case ClassType::Sprite:
-			actor = std::make_unique<CSprite>();
+			actorName = "Sprite_" + std::to_string(classCount.spriteCount++);
+
+			actor = std::make_unique<CSprite>(actorName.c_str());
 			break;
 		}
 
@@ -120,7 +127,7 @@ namespace Engine46 {
 				actor->ConnectParentActor(m_pVecActor[id].get());
 			}
 
-			for (auto id : actor->GetChiledActorIDList()) {
+			for (auto id : actor->GetChildActorIDList()) {
 				actor->AddChiledActorList(m_pVecActor[id].get());
 			}
 		}

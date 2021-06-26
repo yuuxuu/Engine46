@@ -54,12 +54,12 @@ namespace Engine46 {
 		CActorBase*								pParentActor;
 		int										m_parentActorID;
 
-		std::list<CActorBase*>					pChiledActorList;
-		std::vector<int>						m_chiledActorIDList;
+		std::list<CActorBase*>					pChildActorList;
+		std::vector<int>						m_childActorIDList;
 
 	public:
 		CActorBase();
-		CActorBase(const UINT classID, const char* ActorName, const Transform transform);
+		CActorBase(const UINT classID, const char* actorName, const Transform transform);
 		virtual ~CActorBase();
 
 		virtual void Initialize() override;
@@ -86,14 +86,15 @@ namespace Engine46 {
 		void SetInput(CInput* pInput);
 
 		void ConnectParentActor(CActorBase* pParentActor);
+		void DisconnectParentActor(CActorBase* pParentActor);
 
 		CActorBase* GetParentActor() const { return pParentActor; }
 		int GetParentActorID() const { return m_parentActorID; }
 
 		void AddChiledActorList(CActorBase* pChiledObject);
 
-		std::list<CActorBase*> GetChiledActorList() const { return pChiledActorList; }
-		std::vector<int> GetChiledActorIDList() const { return m_chiledActorIDList; }
+		std::list<CActorBase*> GetChildActorList() const { return pChildActorList; }
+		std::vector<int> GetChildActorIDList() const { return m_childActorIDList; }
 
 		UINT GetClassID() const { return m_classID; }
 

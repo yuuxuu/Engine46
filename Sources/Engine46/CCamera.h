@@ -34,7 +34,7 @@ namespace Engine46 {
 		float GetCameraSpeed(float nowSpeed);
 
 	public:
-		CCamera(const int sWidth, const int sHeight);
+		CCamera(const char* actorName, const int sWidth, const int sHeight);
 		~CCamera();
 
 		void Initialize() override;

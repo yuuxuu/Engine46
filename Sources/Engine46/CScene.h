@@ -58,6 +58,8 @@ namespace Engine46 {
 
 		void SetRootActor(CActorBase* pRootActor) { this->pRootActor = pRootActor; }
 		CActorBase* GetRootActor() const { return pRootActor; }
+
+		const char* GetSceneName() const { return m_SceneName.c_str(); }
 	};
 
 } // namespace

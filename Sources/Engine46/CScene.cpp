@@ -11,13 +11,11 @@
 
 namespace Engine46 {
 
-	static int g_SceneCount = 0;
-
 	// コンストラクタ
 	CSceneBase::CSceneBase() :
 		pParentScene(nullptr),
 		m_parentSceneID(-1),
-		m_SceneID(g_SceneCount++),
+		m_SceneID(0),
 		m_SceneName("Scene_" + std::to_string(m_SceneID))
 	{
 		m_SceneName.resize(m_SceneName.size());
@@ -27,7 +25,7 @@ namespace Engine46 {
 	CSceneBase::CSceneBase(const char* sceneName) :
 		pParentScene(nullptr),
 		m_parentSceneID(-1),
-		m_SceneID(g_SceneCount++),
+		m_SceneID(0),
 		m_SceneName(sceneName)
 	{
 		m_SceneName.resize(m_SceneName.size());

@@ -110,7 +110,7 @@ namespace Engine46 {
 		m_pDX11DeviceContext->ClearDespthStencilView(m_pDsv.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL);
 		m_pDX11DeviceContext->SetRenderTargetView(m_pRtv.Get(), m_pDsv.Get());
 
-		CSprite sprite;
+		CSprite sprite("RenderSprite");
 		sprite.InitializeResource(this);
 		sprite.SetTexture(m_pRendering->GetRenderTexture());
 		sprite.SetShaderPackage("Sprite.hlsl");

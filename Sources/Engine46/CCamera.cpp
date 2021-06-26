@@ -15,8 +15,8 @@ namespace Engine46 {
 	constexpr float Z_FAR = 1000.0f;
 
 	// コンストラクタ
-	CCamera::CCamera(const int sWidth, const int sHeight) :
-		CActorBase((int)ClassType::Camera, "Camera", Transform()),
+	CCamera::CCamera(const char* actorName, const int sWidth, const int sHeight) :
+		CActorBase((int)ClassType::Camera, actorName, Transform()),
 		m_eye(0.0f, 0.0f, -10.0f),
 		m_forcus(),
 		m_up(0.0f, 1.0f, 0.0f),

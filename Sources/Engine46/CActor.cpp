@@ -20,8 +20,6 @@
 
 namespace Engine46 {
 
-	static UINT g_ActorCount = 0;
-
 	struct mainCB {
 		Matrix	wvp;
 		Matrix	lwvp;
@@ -31,7 +29,7 @@ namespace Engine46 {
 	// コンストラクタ
 	CActorBase::CActorBase() :
 		m_classID((int)ClassType::Root),
-		m_actorID(g_ActorCount++),
+		m_actorID(0),
 		m_actorName("Actor_" + std::to_string(m_actorID)),
 		m_transform(Transform()),
 		pParentActor(nullptr),
@@ -43,7 +41,7 @@ namespace Engine46 {
 	// コンストラクタ
 	CActorBase::CActorBase(const UINT classID, const char* actorName, const Transform transform) :
 		m_classID(classID),
-		m_actorID(g_ActorCount++),
+		m_actorID(0),
 		m_actorName(actorName),
 		m_transform(transform),
 		pParentActor(nullptr),
@@ -66,12 +64,12 @@ namespace Engine46 {
 		vecDataRecords.emplace_back(CStrDataRecord(offsetof(CActorBase, m_actorName), m_actorName));
 		vecDataRecords.emplace_back(CDataRecordBase(offsetof(CActorBase, m_transform), sizeof(m_transform)));
 		vecDataRecords.emplace_back(CPtrDataRecord(m_parentActorID));
-		vecDataRecords.emplace_back(CListDataRecord(m_chiledActorIDList));
+		vecDataRecords.emplace_back(CListDataRecord(m_childActorIDList));
 	}
 
 	// 更新
 	void CActorBase::Update() {
-		for(auto& chiled : pChiledActorList) {
+		for(auto& chiled : pChildActorList) {
 			chiled->Update();
 		}
 	}
@@ -85,7 +83,7 @@ namespace Engine46 {
 
 		if (m_pConstantBuffer) {
 			if (pParentActor) {
-				for (auto& chiled : pParentActor->pChiledActorList) {
+				for (auto& chiled : pParentActor->pChildActorList) {
 					if (chiled->m_classID == (UINT)ClassType::Camera) {
 						CCamera* camera = dynamic_cast<CCamera*>(chiled);
 
@@ -118,7 +116,7 @@ namespace Engine46 {
 			m_pMesh->Draw();
 		}
 
-		for (auto& chiled : pChiledActorList) {
+		for (auto& chiled : pChildActorList) {
 			chiled->Draw();
 		}
 	}
@@ -208,7 +206,9 @@ namespace Engine46 {
 
 		if (this->pParentActor == pParentActor) return;
 
-		this->pParentActor = pParentActor;
+		if (this->pParentActor) {
+			this->DisconnectParentActor(this->pParentActor);
+		}
 
 		if (pParentActor) {
 			m_parentActorID = pParentActor->m_actorID;
@@ -216,20 +216,41 @@ namespace Engine46 {
 		else {
 			m_parentActorID = -1;
 		}
+
+		this->pParentActor = pParentActor;
+
+		this->pParentActor->AddChiledActorList(this);
+	}
+
+	// 親アクターを解除
+	void CActorBase::DisconnectParentActor(CActorBase* pParentActor) {
+		if (pParentActor) {
+			auto actorItr = std::find(pParentActor->pChildActorList.begin(), pParentActor->pChildActorList.end(), this);
+			if (actorItr != pParentActor->pChildActorList.end()) {
+				pParentActor->pChildActorList.erase(actorItr);
+			}
+
+			auto idItr = std::find(pParentActor->m_childActorIDList.begin(), pParentActor->m_childActorIDList.end(), m_actorID);
+			if (idItr != pParentActor->m_childActorIDList.end()) {
+				pParentActor->m_childActorIDList.erase(idItr);
+			}
+		}
 	}
 
 	// 子アクターを追加
 	void CActorBase::AddChiledActorList(CActorBase* pChiledActor) {
 		if (pChiledActor) {
-			auto it = std::find(m_chiledActorIDList.begin(), m_chiledActorIDList.end(), pChiledActor->m_actorID);
-
-			if (it == m_chiledActorIDList.end()) {
-				pChiledActor->ConnectParentActor(this);
-
-				pChiledActorList.emplace_back(pChiledActor);
-
-				m_chiledActorIDList.emplace_back(pChiledActor->m_actorID);
+			auto actorItr = std::find(pChildActorList.begin(), pChildActorList.end(), pChiledActor);
+			if (actorItr == pChildActorList.end()) {
+				pChildActorList.emplace_back(pChiledActor);
 			}
+
+			auto idItr = std::find(m_childActorIDList.begin(), m_childActorIDList.end(), pChiledActor->m_actorID);
+			if (idItr == m_childActorIDList.end()) {
+				m_childActorIDList.emplace_back(pChiledActor->m_actorID);
+			}
+
+			pChiledActor->ConnectParentActor(this);
 		}
 	}
 

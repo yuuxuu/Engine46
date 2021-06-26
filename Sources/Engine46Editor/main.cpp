@@ -1,5 +1,5 @@
-﻿#include "Engine46Editor.h"
-#include <QtWidgets/QApplication>
+﻿#include "Engine46MainEditor.h"
+#include <QApplication>
 
 #include "../Engine46/CGameSystem.h"
 #include "../Engine46/CFileSystem.h"
@@ -12,9 +12,8 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     
-    Engine46Editor w;
-    w.resize(QSize(1080, 720));
-    w.show();
+    Engine46MainEditor w;
+    w.resize(QSize(1600, 900));
 
     Engine46::CFileSystem& fileSystem = Engine46::CFileSystem::GetFileSystem();
     if (!fileSystem.Initialize()) {
@@ -22,7 +21,7 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    QWidget* pRenderWidget = w.GetRenderWidget();
+    QWidget* pRenderWidget = w.GetSceneRenderWidget();
     HWND hwnd = (HWND)pRenderWidget->winId();
     Engine46::RECT rect = Engine46::RECT(pRenderWidget->width(), pRenderWidget->height());
 
@@ -41,7 +40,8 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    emit w.UpdateSceneTreeView();
+    w.Initialize();
+    w.show();
 
     return a.exec();
 }

@@ -200,10 +200,19 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <QtRcc Include="Engine46Editor.qrc" />
-    <QtUic Include="Engine46Editor.ui" />
-    <QtMoc Include="Engine46Editor.h" />
-    <ClCompile Include="Engine46Editor.cpp" />
+    <QtUic Include="Engine46ActorEditor.ui" />
+    <QtMoc Include="Engine46MainEditor.h" />
+    <ClCompile Include="Engine46MainEditor.cpp" />
+    <ClCompile Include="Engine46SceneEditor.cpp" />
+    <ClCompile Include="Engine46ActorEditor.cpp" />
     <ClCompile Include="main.cpp" />
+    <QtUic Include="Engine46MainEditor.ui" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="Engine46SceneEditor.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="Engine46ActorEditor.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
