@@ -52,7 +52,7 @@ namespace Engine46 {
 
 	public:
 
-		bool				Initialize(CRendererBase* pRenderer, HWND hwnd, RECT rect);
+		bool				Initialize(CRendererBase* pRenderer, HWND hwnd);
 		void				Finalize();
 
 		static CGameSystem& GetGameSystem() {

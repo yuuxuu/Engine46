@@ -18,23 +18,23 @@ namespace Engine46 {
 
 	class CMaterialBase {
 	protected:
-		CTextureBase*				pTexture;
+		CTextureBase*	pTexture;
 
-		CShaderPackage*				pShaderPackage;
+		CShaderPackage*	pShaderPackage;
 
-		VECTOR4						m_diffuse;
-		VECTOR4						m_specular;
-		VECTOR4						m_ambient;
-		VECTOR4						m_emissive;
-		VECTOR4						m_brightness;
+		VECTOR4			m_diffuse;
+		VECTOR4			m_specular;
+		VECTOR4			m_ambient;
+		VECTOR4			m_emissive;
+		VECTOR4			m_brightness;
 
-		int							m_materialID;
+		int				m_materialID;
 
-		std::unique_ptr<char[]>		m_materialName;
+		std::string		m_materialName;
 
 	public:
 		CMaterialBase();
-		explicit CMaterialBase(const char* name);
+		explicit CMaterialBase(const char* materialName);
 		virtual ~CMaterialBase();
 
 		virtual void Create() {};
@@ -51,7 +51,7 @@ namespace Engine46 {
 
 		void SetShaderPackage(CShaderPackage* pSp) { pShaderPackage = pSp; }
 
-		char* GetMaterialName() const { return m_materialName.get(); }
+		const char* GetMaterialName() const { return m_materialName.c_str(); }
 	};
 
 } // namespace

@@ -31,11 +31,11 @@ namespace Engine46 {
 
 		int						m_meshID;
 
-		std::unique_ptr<char[]>	m_meshName;
+		std::string				m_meshName;
 
 	public:
 		CMeshBase();
-		explicit CMeshBase(const char* name);
+		explicit CMeshBase(const char* meshName);
 		virtual ~CMeshBase();
 
 		virtual void Create() {};
@@ -48,7 +48,7 @@ namespace Engine46 {
 
 		void AddIndex(const DWORD index) { m_vecIndexes.emplace_back(index); }
 
-		char* GetMeshName() const { return m_meshName.get(); }
+		const char* GetMeshName() const { return m_meshName.c_str(); }
 	};
 
 } // namespace

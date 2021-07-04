@@ -112,4 +112,31 @@ namespace Engine46 {
 		}
 	}
 
+	// アクターの子アクターを再帰検索
+	CActorBase* CSceneBase::RecursiveActor(CActorBase* pRootActor, std::string& actorName) {
+		if (pRootActor) {
+			for (const auto& pChild : pRootActor->GetChildActorList()) {
+				if (pChild->GetActorName() == actorName) {
+					return pChild;
+				}
+
+				this->RecursiveActor(pChild, actorName);
+			}
+		}
+
+		return nullptr;
+	}
+
+	// アクター名でアクターを取得
+	CActorBase* CSceneBase::GetActorFromActorName(std::string& actorName) {
+		if (pRootActor) {
+			if (pRootActor->GetActorName() == actorName) {
+				return pRootActor;
+			}
+			return this->RecursiveActor(pRootActor, actorName);
+		}
+
+		return nullptr;
+	}
+
 } // namespace

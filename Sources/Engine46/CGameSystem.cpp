@@ -35,7 +35,7 @@ namespace Engine46 {
 	}
 
 	// 初期化
-	bool CGameSystem::Initialize(CRendererBase* pRenderer, HWND hwnd, RECT rect) {
+	bool CGameSystem::Initialize(CRendererBase* pRenderer, HWND hwnd) {
 		// 乱数生成
 		srand((unsigned)time(NULL));
 		// ロケール設定
@@ -69,7 +69,7 @@ namespace Engine46 {
 
 			CActorBase* pSprite = m_pActorManager->CreateActor((int)ClassType::Sprite);
 			pSprite->InitializeResource(pRenderer);
-			pSprite->SetTexture("EWmO72SUwAEFtsQ.jpg");
+			pSprite->SetTexture("E3g6p9QUYAMTSbT.jpg");
 			pSprite->SetShaderPackage("Model.hlsl");
 		}
 
@@ -125,10 +125,6 @@ namespace Engine46 {
 
 	// 更新
 	void CGameSystem::Update() {
-		if (m_pInput) {
-			m_pInput->UpdateInput();
-		}
-
 		CSceneBase* pRootScene = m_pSceneManager->GetRootScene();
 
 		if (pRootScene) {

@@ -24,7 +24,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="lineEdit"/>
+      <widget class="QLineEdit" name="lineEdit_ActorName"/>
      </item>
      <item>
       <spacer name="horizontalSpacer">
@@ -51,7 +51,7 @@
       </widget>
      </item>
      <item row="0" column="4">
-      <widget class="QDoubleSpinBox" name="doubleSpinBox_2"/>
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_PosY"/>
      </item>
      <item row="0" column="5">
       <widget class="QLabel" name="label_5">
@@ -61,10 +61,10 @@
       </widget>
      </item>
      <item row="1" column="2">
-      <widget class="QDoubleSpinBox" name="doubleSpinBox_4"/>
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_RotX"/>
      </item>
      <item row="1" column="4">
-      <widget class="QDoubleSpinBox" name="doubleSpinBox_5"/>
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_RotY"/>
      </item>
      <item row="1" column="1">
       <widget class="QLabel" name="label_7">
@@ -81,7 +81,7 @@
       </widget>
      </item>
      <item row="0" column="6">
-      <widget class="QDoubleSpinBox" name="doubleSpinBox_3"/>
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_PosZ"/>
      </item>
      <item row="0" column="1">
       <widget class="QLabel" name="label_3">
@@ -91,10 +91,10 @@
       </widget>
      </item>
      <item row="0" column="2">
-      <widget class="QDoubleSpinBox" name="doubleSpinBox"/>
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_PosX"/>
      </item>
      <item row="1" column="6">
-      <widget class="QDoubleSpinBox" name="doubleSpinBox_6"/>
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_RotZ"/>
      </item>
      <item row="1" column="0">
       <widget class="QLabel" name="label_6">
@@ -132,7 +132,7 @@
       </widget>
      </item>
      <item row="2" column="2">
-      <widget class="QDoubleSpinBox" name="doubleSpinBox_7"/>
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_ScaX"/>
      </item>
      <item row="2" column="3">
       <widget class="QLabel" name="label_12">
@@ -142,7 +142,7 @@
       </widget>
      </item>
      <item row="2" column="4">
-      <widget class="QDoubleSpinBox" name="doubleSpinBox_8"/>
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_ScaY"/>
      </item>
      <item row="2" column="5">
       <widget class="QLabel" name="label_13">
@@ -152,7 +152,7 @@
       </widget>
      </item>
      <item row="2" column="6">
-      <widget class="QDoubleSpinBox" name="doubleSpinBox_9"/>
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_ScaZ"/>
      </item>
     </layout>
    </item>

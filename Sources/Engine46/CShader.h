@@ -36,7 +36,7 @@ namespace Engine46 {
 
 		std::string										m_shaderName;
 
-		std::unique_ptr<char[]>							m_pBuf;
+		std::unique_ptr<BYTE[]>							m_pBuf;
 		int												m_bufSize;
 
 		SHADER_TYPE										m_shaderType;

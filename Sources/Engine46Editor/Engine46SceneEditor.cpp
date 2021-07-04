@@ -8,6 +8,7 @@
 #include "Engine46SceneEditor.h"
 
 #include <QHBoxLayout>
+#include <QDebug>
 
 #include "../Engine46/CRendererSystem.h"
 #include "../Engine46/CScene.h"
@@ -16,19 +17,11 @@
 Engine46SceneEditor::Engine46SceneEditor(QWidget* parent)
 	: QWidget(parent)
 {
-    QHBoxLayout* pHorizonalLayout = new QHBoxLayout(this);
+    ui.setupUi(this);
 
-    // シーンツリービュー
-    pSceneTreeView = new QTreeView;
-    pSceneTreeView->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    pSceneTreeView->setMaximumWidth(200);
+    ui.sceneRenderWidget->resize(QSize(1280, 720));
 
-    // レンダーウェジット
-    pSceneRenderWidget = new QWidget;
-    pSceneRenderWidget->resize(QSize(1080, 720));
-
-    pHorizonalLayout->addWidget(pSceneTreeView);
-    pHorizonalLayout->addWidget(pSceneRenderWidget);
+    ui.sceneTreeView->setMaximumWidth(200);
 }
 
 // デストラクタ
@@ -48,20 +41,46 @@ void Engine46SceneEditor::RecursiveActor(Engine46::CActorBase* pRootActor, QStan
     }
 }
 
+// 選択しているアイテムの名前変更を反映
+void Engine46SceneEditor::ChangeValueReflectToName(const QString& string) {
+    if (selectIndex.isValid()) {
+        if (selectIndex.data().toString() == string) return;
+
+        ui.sceneTreeView->model()->setData(selectIndex, string);
+    }
+}
+
+// 選択しているアイテムを設定
+void Engine46SceneEditor::SetSelectItem(const QModelIndex& index) {
+    if (selectIndex != index) {
+        selectIndex = index;
+    }
+}
+
 // シーンツリービューの更新
 void Engine46SceneEditor::UpdateSceneTreeView() {
     Engine46::CSceneBase* pScene = Engine46::CRendererSystem::GetRendererSystem().GetRenderScene();
-    Engine46::CActorBase* pRootActor = pScene->GetRootActor();
+    if (pScene) {
+        Engine46::CActorBase* pRootActor = pScene->GetRootActor();
 
-    QStandardItemModel* pItemModel = new QStandardItemModel;
-    QStandardItem* pRootItem = new QStandardItem(pRootActor->GetActorName());
-    this->RecursiveActor(pRootActor, pItemModel, pRootItem);
-    pItemModel->appendRow(pRootItem);
+        if (pRootActor) {
+            ui.sceneTreeView->reset();
 
-    QStringList stringList = {
-        QString::fromLocal8Bit(pScene->GetSceneName())
-    };
-    pItemModel->setHorizontalHeaderLabels(stringList);
+            QStandardItemModel* pItemModel = new QStandardItemModel;
+            QStandardItem* pRootItem = new QStandardItem(pRootActor->GetActorName());
+            this->RecursiveActor(pRootActor, pItemModel, pRootItem);
+            pItemModel->appendRow(pRootItem);
 
-    pSceneTreeView->setModel(pItemModel);
+            QStringList stringList = {
+                QString(pScene->GetSceneName())
+            };
+            pItemModel->setHorizontalHeaderLabels(stringList);
+
+            ui.sceneTreeView->setModel(pItemModel);
+
+            ui.sceneTreeView->setTreePosition(0);
+
+            ui.sceneTreeView->expandAll();
+        }
+    }
 }

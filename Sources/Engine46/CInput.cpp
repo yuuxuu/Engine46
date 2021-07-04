@@ -11,7 +11,8 @@ namespace Engine46 {
 
 	// コンストラクタ
 	CInput::CInput(HWND hwnd) :
-		m_hWnd(hwnd)
+		m_hWnd(hwnd),
+		m_isUpdate(false)
 	{}
 
 	// デストラクタ
@@ -100,6 +101,8 @@ namespace Engine46 {
 	// デバイス更新
 	void CInput::UpdateInput() {
 
+		if (!m_isUpdate) return;
+
 		if (!UpdateKeyBoard()) {
 			
 		}
@@ -109,14 +112,28 @@ namespace Engine46 {
 		}
 	}
 
+	// 更新ステートを変更
+	void CInput::ChangeUpdateState(bool state) { 
+		m_isUpdate = state; 
+
+		if (!m_isUpdate) {
+			m_key = {};
+			m_oldKey = {};
+
+			m_mouse = {};
+			m_oldMouse = {};
+		}
+	}
+
 	// キーボード更新
 	bool CInput::UpdateKeyBoard() {
 
-		memcpy_s(m_oldKey, sizeof(m_oldKey), m_key, sizeof(m_key));
+		std::copy(m_key.begin(), m_key.end(), m_oldKey.begin());
 
 		HRESULT hr = m_pDirectDeviceKeyboard->GetDeviceState(sizeof(m_key), &m_key);
 		if (FAILED(hr)) {
 			m_pDirectDeviceKeyboard->Acquire();
+
 			return false;
 		}
 
@@ -134,6 +151,7 @@ namespace Engine46 {
 		HRESULT hr = m_pDirectDeviceMouse->GetDeviceState(sizeof(m_mouse), &m_mouse);
 		if (FAILED(hr)) {
 			m_pDirectDeviceMouse->Acquire();
+
 			return false;
 		}
 

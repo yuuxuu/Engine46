@@ -115,7 +115,7 @@ namespace Engine46 {
 	}
 
 	// コンストラクタ
-	CBufDataRecord::CBufDataRecord(std::unique_ptr<char[]>& pBuf, int& bufSize) :
+	CBufDataRecord::CBufDataRecord(std::unique_ptr<BYTE[]>& pBuf, int& bufSize) :
 		CDataRecordBase(DATA_TYPE::TYPE_BUF, 0, 0),
 		m_pBuf(pBuf),
 		m_bufSize(bufSize)
@@ -127,14 +127,14 @@ namespace Engine46 {
 
 	// データの書き込み
 	void CBufDataRecord::WriteData(std::ofstream& ofs, char* p) {
-		ofs.write(m_pBuf.get(), m_bufSize);
+		ofs.write((char*)m_pBuf.get(), m_bufSize);
 	}
 
 	// データの読み込み
 	void CBufDataRecord::ReadData(std::ifstream& ifs, char* p) {
-		m_pBuf.reset(new char[m_bufSize]);
+		m_pBuf.reset(new BYTE[m_bufSize]);
 		
-		ifs.read(m_pBuf.get(), m_bufSize);
+		ifs.read((char*)m_pBuf.get(), m_bufSize);
 	}
 
 } // namespace

@@ -59,6 +59,9 @@ namespace Engine46 {
 		void SetRootActor(CActorBase* pRootActor) { this->pRootActor = pRootActor; }
 		CActorBase* GetRootActor() const { return pRootActor; }
 
+		CActorBase* RecursiveActor(CActorBase* pRootActor, std::string& actorName);
+		CActorBase* GetActorFromActorName(std::string& actorName);
+
 		const char* GetSceneName() const { return m_SceneName.c_str(); }
 	};
 

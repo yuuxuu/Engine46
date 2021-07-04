@@ -36,6 +36,12 @@ Engine46MainEditor::Engine46MainEditor(QWidget *parent)
     QVBoxLayout* pVerticalLayout = new QVBoxLayout(ui.centralwidget);
     pVerticalLayout->addLayout(pHorizonalLayout);
     pVerticalLayout->addWidget(pFileTreeView);
+
+    // 接続
+    connect(pEngine46SceneEditor->ui.sceneTreeView, &QAbstractItemView::clicked, pEngine46ActorEditor, &Engine46ActorEditor::SetSelectActor);
+    connect(pEngine46SceneEditor->ui.sceneTreeView, &QAbstractItemView::clicked, pEngine46SceneEditor, &Engine46SceneEditor::SetSelectItem);
+
+    connect(pEngine46ActorEditor->ui.lineEdit_ActorName, &QLineEdit::returnPressed, this, &Engine46MainEditor::ChangeValueActorName);
 }
 
 // デストラクタ
@@ -44,9 +50,17 @@ Engine46MainEditor::~Engine46MainEditor()
 
 // 初期化
 void Engine46MainEditor::Initialize() {
-    emit this->UpdateFileTreeView();
+    UpdateFileTreeView();
 
-    emit pEngine46SceneEditor->UpdateSceneTreeView();
+    pEngine46SceneEditor->UpdateSceneTreeView();
+}
+
+// アクター名変更を各エディタへ知らせる
+void Engine46MainEditor::ChangeValueActorName() {
+    QString string = pEngine46ActorEditor->ui.lineEdit_ActorName->text();
+
+    pEngine46SceneEditor->ChangeValueReflectToName(string);
+    pEngine46ActorEditor->ChangeValueReflectToName(string);
 }
 
 // ファイルツリービューの更新

@@ -34,5 +34,7 @@ private:
     QTreeView* pFileTreeView;
 
 public slots:
+    void ChangeValueActorName();
+
     void UpdateFileTreeView();
 };

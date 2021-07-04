@@ -45,7 +45,7 @@ namespace Engine46 {
 
 		void AddActorToVec(std::unique_ptr<CActorBase>& pActor) { m_pVecActor.emplace_back(std::move(pActor)); }
 
-		CActorBase* GetActor(const char* name);
+		CActorBase* GetActorFromActorName(const char* name);
 
 		bool SaveActor();
 		bool LoadActor();

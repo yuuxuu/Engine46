@@ -43,6 +43,12 @@
     <ClCompile Include="Engine46ActorEditor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="QMyRenderWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="QMyTreeView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="Engine46SceneEditor.h">
@@ -51,12 +57,21 @@
     <QtMoc Include="Engine46ActorEditor.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="QMyRenderWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="QMyTreeView.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="Engine46ActorEditor.ui">
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="Engine46MainEditor.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="Engine46SceneEditor.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

@@ -65,7 +65,7 @@ namespace Engine46 {
 	}
 
 	// オブジェクト取得
-	CActorBase* CActorManager::GetActor(const char* name) {
+	CActorBase* CActorManager::GetActorFromActorName(const char* name) {
 		for (const auto& actor : m_pVecActor) {
 			if (actor->GetActorName() == name) return actor.get();
 		}

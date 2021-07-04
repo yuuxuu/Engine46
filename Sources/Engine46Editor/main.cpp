@@ -32,10 +32,9 @@ int main(int argc, char *argv[])
     }
 
     hwnd = (HWND)w.winId();
-    rect = Engine46::RECT(w.width(), w.height());
 
     Engine46::CGameSystem& gameSystem = Engine46::CGameSystem::GetGameSystem();
-    if (!gameSystem.Initialize(rendererSystem.GetRenderer(), hwnd, rect)) {
+    if (!gameSystem.Initialize(rendererSystem.GetRenderer(), hwnd)) {
         MessageBoxA(NULL, "ゲームシステム初期化：失敗", "MessageBox", MB_OK);
         return -1;
     }

@@ -9,6 +9,8 @@
 
 #include <QWidget>
 
+#include "../Engine46/CActor.h"
+
 #include "ui_Engine46ActorEditor.h"
 
 class Engine46ActorEditor : public QWidget {
@@ -17,10 +19,20 @@ public:
 	Engine46ActorEditor(QWidget* parent = Q_NULLPTR);
 	~Engine46ActorEditor();
 
+	void SelectActorReflectToEditor();
+	void EditorReflectToSelectActor();
+
+	void ChangeValueReflectToName(const QString& string);
 public:
 	Ui::Engine46ActorEditor ui;
 
-public slots:
+	Engine46::CActorBase* pSelectActor = nullptr;
 
+public slots:
+	void SetSelectActor(const QModelIndex& index);
+
+	void ChangeValueReflectToPos(double value);
+	void ChangeValueReflectToRotation(double value);
+	void ChangeValueReflectToScale(double value);
 };
 

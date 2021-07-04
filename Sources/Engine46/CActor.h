@@ -98,7 +98,20 @@ namespace Engine46 {
 
 		UINT GetClassID() const { return m_classID; }
 
+		void SetActorName(const std::string& actorName) { m_actorName = actorName; }
 		const char* GetActorName() const { return m_actorName.c_str(); }
+
+		void SetTransform(const Transform& transform) { m_transform = transform; }
+		Transform GetTransform() const { return m_transform; }
+
+		void SetPos(const VECTOR3& pos) { m_transform.pos = pos; }
+		VECTOR3 GetPos() const { return m_transform.pos; }
+
+		void SetRotation(const VECTOR3& rotation) { m_transform.rotation = rotation; }
+		VECTOR3 GetRotation() const { return m_transform.rotation; }
+
+		void SetScale(const VECTOR3& scale) { m_transform.scale = scale; }
+		VECTOR3 GetScale() const { return m_transform.scale; }
 
 		Matrix GetWorldMatrix();
 

@@ -8,10 +8,11 @@
 #pragma once
 
 #include <QWidget>
-#include <QTreeView>
 #include <QStandardItem>
 
 #include "../Engine46/CActor.h"
+
+#include "ui_Engine46SceneEditor.h"
 
 class Engine46SceneEditor : public QWidget {
 	Q_OBJECT
@@ -21,14 +22,18 @@ public:
 
 	void RecursiveActor(Engine46::CActorBase* pRootActor, QStandardItemModel* pItemModel, QStandardItem* pRootItem);
 
-	QWidget* GetRenderWidget() const { return pSceneRenderWidget; }
+	QWidget* GetRenderWidget() const { return ui.sceneRenderWidget; }
+
+	void ChangeValueReflectToName(const QString& string);
 
 public:
-	QWidget* pSceneRenderWidget;
+	Ui::Engine46SceneEditor ui;
 
-	QTreeView* pSceneTreeView;
+	QModelIndex selectIndex;
 
 public slots:
+	void SetSelectItem(const QModelIndex& index);
+
 	void UpdateSceneTreeView();
 };
 

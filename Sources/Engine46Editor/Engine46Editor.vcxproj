@@ -199,6 +199,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="QMyRenderWidget.cpp" />
+    <ClCompile Include="QMyTreeView.cpp" />
     <QtRcc Include="Engine46Editor.qrc" />
     <QtUic Include="Engine46ActorEditor.ui" />
     <QtMoc Include="Engine46MainEditor.h" />
@@ -207,12 +209,19 @@
     <ClCompile Include="Engine46ActorEditor.cpp" />
     <ClCompile Include="main.cpp" />
     <QtUic Include="Engine46MainEditor.ui" />
+    <QtUic Include="Engine46SceneEditor.ui" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="Engine46SceneEditor.h" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="Engine46ActorEditor.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="QMyRenderWidget.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="QMyTreeView.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

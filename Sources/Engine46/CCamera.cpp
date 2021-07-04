@@ -46,6 +46,8 @@ namespace Engine46 {
 	// 更新
 	void CCamera::Update() {
 		if (pInput) {
+			pInput->UpdateInput();
+
 			m_speed = this->GetCameraSpeed(m_speed);
 
 			VECTOR3 forward = GetCameraForwardVector() * m_speed;

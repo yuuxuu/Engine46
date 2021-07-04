@@ -66,7 +66,7 @@ namespace Engine46 {
 	// データを設定
 	void CShaderBase::SetData(ComPtr<ID3DBlob>& pBlob) {
 		m_bufSize = pBlob->GetBufferSize();
-		m_pBuf.reset(new char[m_bufSize]);
+		m_pBuf.reset(new BYTE[m_bufSize]);
 
 		char* p = (char*)pBlob->GetBufferPointer();
 		std::memcpy(m_pBuf.get(), p, m_bufSize);
