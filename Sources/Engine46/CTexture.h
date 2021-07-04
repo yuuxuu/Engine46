@@ -35,9 +35,9 @@ namespace Engine46 {
 
 	class CTextureBase {
 	protected:
-		const char*		m_textureName;
+		std::string	m_textureName;
 
-		TextureData		m_textureData;
+		TextureData	m_textureData;
 
 	public:
 		CTextureBase();
@@ -51,7 +51,7 @@ namespace Engine46 {
 		virtual void Create() {};
 		virtual void Set(UINT slot) {};
 
-		const char* GetTextureName() const { return m_textureName; }
+		const char* GetTextureName() const { return m_textureName.c_str(); }
 	};
 
 } // namespace

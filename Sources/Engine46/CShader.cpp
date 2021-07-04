@@ -20,13 +20,10 @@ namespace Engine46 {
 	// コンストラクタ
 	CShaderBase::CShaderBase(const char* name, ComPtr<ID3DBlob>& pBlob, SHADER_TYPE type) :
 		m_bufSize(0),
+		m_shaderName(name),
 		m_shaderType(type)
 	{
-		std::string str = name;
-		int size = (int)str.size() + 1;
-		m_shaderName.reset(new char[size]);
-		str.resize(size);
-		str.copy(m_shaderName.get(), size);
+		m_shaderName.resize(m_shaderName.size());
 
 		this->SetData(pBlob);
 
@@ -69,7 +66,7 @@ namespace Engine46 {
 	// データを設定
 	void CShaderBase::SetData(ComPtr<ID3DBlob>& pBlob) {
 		m_bufSize = pBlob->GetBufferSize();
-		m_pBuf.reset(new char[m_bufSize]);
+		m_pBuf.reset(new BYTE[m_bufSize]);
 
 		char* p = (char*)pBlob->GetBufferPointer();
 		std::memcpy(m_pBuf.get(), p, m_bufSize);

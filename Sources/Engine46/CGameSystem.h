@@ -10,12 +10,11 @@
 #ifndef _CGAME_SYSTEM_H_
 #define _CGAME_SYSTEM_H_
 
-#pragma comment(lib, "GraphicsAPI.lib")
+#include "math.h"
 
 namespace Engine46 {
 
 	// 前方宣言
-	class CWindow;
 	class CRendererBase;
 	class CActorManager;
 	class CShaderManager;
@@ -29,10 +28,6 @@ namespace Engine46 {
 	private:
 		std::thread							m_gameSystemThread;
 		HANDLE								m_hGame;
-
-		std::unique_ptr<CWindow>			m_pMainWindow;
-
-		std::unique_ptr<CRendererBase>		m_pRenderer;
 
 		std::unique_ptr<CActorManager>		m_pActorManager;
 
@@ -52,13 +47,12 @@ namespace Engine46 {
 		CGameSystem();
 		~CGameSystem();
 
-		void				Loop();
-		void				Update();
-		void				Draw();
+		void Loop();
+		void Update();
 
 	public:
 
-		bool				Initialize(HINSTANCE hInstance);
+		bool				Initialize(CRendererBase* pRenderer, HWND hwnd);
 		void				Finalize();
 
 		static CGameSystem& GetGameSystem() {
@@ -71,6 +65,7 @@ namespace Engine46 {
 		CMeshManager*		GetMeshManager() const { return m_pMeshManager.get(); }
 		CMaterialManager*	GetMaterialManager() const { return m_pMaterialManager.get(); }
 		CTextureManager*	GetTextureManager() const { return m_pTextureManager.get(); }
+		CSceneManager*		GetSceneManager() const { return m_pSceneManager.get(); }
 
 		CInput*				GetInput() const { return m_pInput.get(); }
 	};

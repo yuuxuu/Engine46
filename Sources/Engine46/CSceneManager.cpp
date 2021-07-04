@@ -7,6 +7,9 @@
 
 #include "CSceneManager.h"
 #include "CScene.h"
+#include "CGameSystem.h"
+#include "CActor.h"
+#include "CActorManager.h"
 
 namespace Engine46 {
 
@@ -29,6 +32,10 @@ namespace Engine46 {
 		scene->Initialize();
 
 		CSceneBase* pScene = scene.get();
+
+		CActorManager* actorManager = CGameSystem::GetGameSystem().GetActorManager();
+
+		pScene->SetRootActor(actorManager->GetRootActor());
 
 		if (id != 0) {
 			pRootScene->AddChiledSceneList(pScene);

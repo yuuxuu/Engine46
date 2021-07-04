@@ -15,8 +15,8 @@ namespace Engine46 {
 	constexpr float Z_FAR = 1000.0f;
 
 	// コンストラクタ
-	CCamera::CCamera(const int sWidth, const int sHeight) :
-		CActorBase((int)ClassType::Camera, "Camera", Transform()),
+	CCamera::CCamera(const char* actorName, const int sWidth, const int sHeight) :
+		CActorBase((int)ClassType::Camera, actorName, Transform()),
 		m_eye(0.0f, 0.0f, -10.0f),
 		m_forcus(),
 		m_up(0.0f, 1.0f, 0.0f),
@@ -36,16 +36,18 @@ namespace Engine46 {
 	// 初期化
 	void CCamera::Initialize() {
 
-		vecDataRecords.emplace_back(std::make_unique<CDataRecordBase>(offsetof(CCamera, m_eye), sizeof(m_eye)));
-		vecDataRecords.emplace_back(std::make_unique<CDataRecordBase>(offsetof(CCamera, m_forcus), sizeof(m_forcus)));
-		vecDataRecords.emplace_back(std::make_unique<CDataRecordBase>(offsetof(CCamera, m_up), sizeof(m_up)));
-		vecDataRecords.emplace_back(std::make_unique<CDataRecordBase>(offsetof(CCamera, m_matView), sizeof(m_matView)));
-		vecDataRecords.emplace_back(std::make_unique<CDataRecordBase>(offsetof(CCamera, m_matProj), sizeof(m_matProj)));
+		vecDataRecords.emplace_back(CDataRecordBase(offsetof(CCamera, m_eye), sizeof(m_eye)));
+		vecDataRecords.emplace_back(CDataRecordBase(offsetof(CCamera, m_forcus), sizeof(m_forcus)));
+		vecDataRecords.emplace_back(CDataRecordBase(offsetof(CCamera, m_up), sizeof(m_up)));
+		vecDataRecords.emplace_back(CDataRecordBase(offsetof(CCamera, m_matView), sizeof(m_matView)));
+		vecDataRecords.emplace_back(CDataRecordBase(offsetof(CCamera, m_matProj), sizeof(m_matProj)));
 	}
 
 	// 更新
 	void CCamera::Update() {
 		if (pInput) {
+			pInput->UpdateInput();
+
 			m_speed = this->GetCameraSpeed(m_speed);
 
 			VECTOR3 forward = GetCameraForwardVector() * m_speed;

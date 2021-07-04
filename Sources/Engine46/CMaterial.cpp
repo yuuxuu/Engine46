@@ -9,8 +9,6 @@
 
 namespace Engine46 {
 
-	static UINT g_materialCount = 0;
-
 	// コンストラクタ
 	CMaterialBase::CMaterialBase() :
 		m_diffuse(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),
@@ -20,17 +18,14 @@ namespace Engine46 {
 		m_brightness(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),
 		pTexture(nullptr),
 		pShaderPackage(nullptr),
-		m_materialID(g_materialCount++)
+		m_materialID(0),
+		m_materialName("Material_" + std::to_string(m_materialID))
 	{
-		std::string str = "material_" + std::to_string(g_materialCount);
-		int size = (int)str.size() + 1;
-		m_materialName.reset(new char[size]);
-		str.resize(size);
-		str.copy(m_materialName.get(), size);
+		m_materialName.resize(m_materialName.size());
 	}
 
 	// コンストラクタ
-	CMaterialBase::CMaterialBase(const char* name) :
+	CMaterialBase::CMaterialBase(const char* materialName) :
 		m_diffuse(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),
 		m_specular(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),
 		m_ambient(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),
@@ -38,13 +33,10 @@ namespace Engine46 {
 		m_brightness(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),
 		pTexture(nullptr),
 		pShaderPackage(nullptr),
-		m_materialID(g_materialCount++)
+		m_materialID(0),
+		m_materialName(materialName)
 	{
-		std::string str = name;
-		int size = (int)str.size() + 1;
-		m_materialName.reset(new char[size]);
-		str.resize(size);
-		str.copy(m_materialName.get(), size);
+		m_materialName.resize(m_materialName.size());
 	}
 
 	// デストラクタ

@@ -12,11 +12,13 @@ namespace Engine46 {
 
 	// コンストラクタ
 	CTextureBase::CTextureBase() :
+		m_textureData(),
 		m_textureName()
 	{}
 
 	// コンストラクタ
 	CTextureBase::CTextureBase(const char* textureName) :
+		m_textureData(),
 		m_textureName(textureName)
 	{}
 

@@ -6,19 +6,19 @@
  */
 
 #include "CActor.h"
+#include "CGameSystem.h"
 #include "CCamera.h"
-
 #include "CDataRecord.h"
 #include "CConstantBuffer.h"
 #include "CMesh.h"
 #include "CMaterial.h"
 #include "CTexture.h"
 #include "CShaderPackage.h"
+#include "CShaderManager.h"
+#include "CTextureManager.h"
 #include "CInput.h"
 
 namespace Engine46 {
-
-	static UINT g_ActorCount = 0;
 
 	struct mainCB {
 		Matrix	wvp;
@@ -29,33 +29,25 @@ namespace Engine46 {
 	// コンストラクタ
 	CActorBase::CActorBase() :
 		m_classID((int)ClassType::Root),
-		m_actorID(g_ActorCount++),
-		m_actorName(),
+		m_actorID(0),
+		m_actorName("Actor_" + std::to_string(m_actorID)),
 		m_transform(Transform()),
 		pParentActor(nullptr),
 		m_parentActorID(-1)
 	{
-		std::string str = "Object_" + std::to_string(m_actorID);
-		int size = (int)str.size() + 1;
-		m_actorName.reset(new char[size]);
-		str.resize(size);
-		str.copy(m_actorName.get(), size);
+		m_actorName.resize(m_actorName.size());
 	}
 
 	// コンストラクタ
-	CActorBase::CActorBase(const UINT classID, const char* ActorName, const Transform transform) :
+	CActorBase::CActorBase(const UINT classID, const char* actorName, const Transform transform) :
 		m_classID(classID),
-		m_actorID(g_ActorCount++),
-		m_actorName(),
+		m_actorID(0),
+		m_actorName(actorName),
 		m_transform(transform),
 		pParentActor(nullptr),
 		m_parentActorID(-1)
 	{
-		std::string str = ActorName;
-		int size = (int)str.size() + 1;
-		m_actorName.reset(new char[size]);
-		str.resize(size);
-		str.copy(m_actorName.get(), size);
+		m_actorName.resize(m_actorName.size());
 	}
 
 	// デストラクタ
@@ -67,17 +59,17 @@ namespace Engine46 {
 
 		vecDataRecords.clear();
 
-		vecDataRecords.emplace_back(std::make_unique<CDataRecordBase>(offsetof(CActorBase, m_classID), sizeof(m_classID)));
-		vecDataRecords.emplace_back(std::make_unique<CDataRecordBase>(offsetof(CActorBase, m_actorID), sizeof(m_actorID)));
-		vecDataRecords.emplace_back(std::make_unique<CStrDataRecord>(offsetof(CActorBase, m_actorName), m_actorName));
-		vecDataRecords.emplace_back(std::make_unique<CDataRecordBase>(offsetof(CActorBase, m_transform), sizeof(m_transform)));
-		vecDataRecords.emplace_back(std::make_unique<CPtrDataRecord>(m_parentActorID));
-		vecDataRecords.emplace_back(std::make_unique<CListDataRecord>(m_chiledActorIDList));
+		vecDataRecords.emplace_back(CDataRecordBase(offsetof(CActorBase, m_classID), sizeof(m_classID)));
+		vecDataRecords.emplace_back(CDataRecordBase(offsetof(CActorBase, m_actorID), sizeof(m_actorID)));
+		vecDataRecords.emplace_back(CStrDataRecord(offsetof(CActorBase, m_actorName), m_actorName));
+		vecDataRecords.emplace_back(CDataRecordBase(offsetof(CActorBase, m_transform), sizeof(m_transform)));
+		vecDataRecords.emplace_back(CPtrDataRecord(m_parentActorID));
+		vecDataRecords.emplace_back(CListDataRecord(m_childActorIDList));
 	}
 
 	// 更新
 	void CActorBase::Update() {
-		for(auto& chiled : pChiledActorList) {
+		for(auto& chiled : pChildActorList) {
 			chiled->Update();
 		}
 	}
@@ -91,7 +83,7 @@ namespace Engine46 {
 
 		if (m_pConstantBuffer) {
 			if (pParentActor) {
-				for (auto& chiled : pParentActor->pChiledActorList) {
+				for (auto& chiled : pParentActor->pChildActorList) {
 					if (chiled->m_classID == (UINT)ClassType::Camera) {
 						CCamera* camera = dynamic_cast<CCamera*>(chiled);
 
@@ -124,7 +116,7 @@ namespace Engine46 {
 			m_pMesh->Draw();
 		}
 
-		for (auto& chiled : pChiledActorList) {
+		for (auto& chiled : pChildActorList) {
 			chiled->Draw();
 		}
 	}
@@ -132,7 +124,7 @@ namespace Engine46 {
 	// オブジェクトを保存
 	bool CActorBase::Save(std::ofstream& ofs) {
 		for (auto& record : vecDataRecords) {
-			record->WriteData(ofs, (char*)this);
+			record.WriteData(ofs, (char*)this);
 		}
 
 		return true;
@@ -142,8 +134,8 @@ namespace Engine46 {
 	bool CActorBase::Load(std::ifstream& ifs) {
 		for (auto& record : vecDataRecords) {
 			if (&record == &vecDataRecords[0]) continue;
-
-			record->ReadData(ifs, (char*)this);
+		
+			record.ReadData(ifs, (char*)this);
 		}
 
 		return true;
@@ -152,23 +144,27 @@ namespace Engine46 {
 	// コンスタントバッファを作成
 	void CActorBase::SetConstantBuffer(std::unique_ptr<CConstantBufferBase>& pConstantBuffer) {
 		if (pConstantBuffer) {
-			m_pConstantBuffer.swap(pConstantBuffer);
+			pConstantBuffer->CreateConstantBuffer(sizeof(mainCB));
 
-			m_pConstantBuffer->CreateConstantBuffer(sizeof(mainCB));
+			m_pConstantBuffer.swap(pConstantBuffer);
 		}
 	}
 
 	// メッシュを設定
-	void CActorBase::SetMesh(CMeshBase* pMesh) {
+	void CActorBase::SetMesh(std::unique_ptr<CMeshBase>& pMesh) {
 		if (pMesh) {
-			m_pMesh = pMesh;
+			pMesh->Create();
+
+			m_pMesh.swap(pMesh);
 		}
 	}
 
 	// マテリアルを設定
-	void CActorBase::SetMaterial(CMaterialBase* pMaterial) {
+	void CActorBase::SetMaterial(std::unique_ptr<CMaterialBase>& pMaterial) {
 		if (pMaterial) {
-			m_pMaterial = pMaterial;
+			pMaterial->Create();
+
+			m_pMaterial.swap(pMaterial);
 		}
 	}
 
@@ -179,11 +175,23 @@ namespace Engine46 {
 		}
 	}
 
+	// マテリアルにテクスチャを設定
+	void CActorBase::SetTexture(const char* textureName) {
+		CTextureManager* textureManager = CGameSystem::GetGameSystem().GetTextureManager();
+		textureManager->SetTextureToActor(this, textureName);
+	}
+
 	// シェーダーパッケージを設定
 	void CActorBase::SetShaderPackage(CShaderPackage* pShaderPackage) {
 		if (m_pMaterial) {
 			m_pMaterial->SetShaderPackage(pShaderPackage);
 		}
+	}
+
+	// シェーダーパッケージを設定
+	void CActorBase::SetShaderPackage(const char* shaderPackageName) {
+		CShaderManager* shaderManager = CGameSystem::GetGameSystem().GetShaderManager();
+		shaderManager->SetShaderPackageToActor(this, shaderPackageName);
 	}
 
 	// インプットを設定
@@ -198,7 +206,9 @@ namespace Engine46 {
 
 		if (this->pParentActor == pParentActor) return;
 
-		this->pParentActor = pParentActor;
+		if (this->pParentActor) {
+			this->DisconnectParentActor(this->pParentActor);
+		}
 
 		if (pParentActor) {
 			m_parentActorID = pParentActor->m_actorID;
@@ -206,20 +216,41 @@ namespace Engine46 {
 		else {
 			m_parentActorID = -1;
 		}
+
+		this->pParentActor = pParentActor;
+
+		this->pParentActor->AddChiledActorList(this);
+	}
+
+	// 親アクターを解除
+	void CActorBase::DisconnectParentActor(CActorBase* pParentActor) {
+		if (pParentActor) {
+			auto actorItr = std::find(pParentActor->pChildActorList.begin(), pParentActor->pChildActorList.end(), this);
+			if (actorItr != pParentActor->pChildActorList.end()) {
+				pParentActor->pChildActorList.erase(actorItr);
+			}
+
+			auto idItr = std::find(pParentActor->m_childActorIDList.begin(), pParentActor->m_childActorIDList.end(), m_actorID);
+			if (idItr != pParentActor->m_childActorIDList.end()) {
+				pParentActor->m_childActorIDList.erase(idItr);
+			}
+		}
 	}
 
 	// 子アクターを追加
 	void CActorBase::AddChiledActorList(CActorBase* pChiledActor) {
 		if (pChiledActor) {
-			auto it = std::find(m_chiledActorIDList.begin(), m_chiledActorIDList.end(), pChiledActor->m_actorID);
-
-			if (it == m_chiledActorIDList.end()) {
-				pChiledActor->ConnectParentActor(this);
-
-				pChiledActorList.emplace_back(pChiledActor);
-
-				m_chiledActorIDList.emplace_back(pChiledActor->m_actorID);
+			auto actorItr = std::find(pChildActorList.begin(), pChildActorList.end(), pChiledActor);
+			if (actorItr == pChildActorList.end()) {
+				pChildActorList.emplace_back(pChiledActor);
 			}
+
+			auto idItr = std::find(m_childActorIDList.begin(), m_childActorIDList.end(), pChiledActor->m_actorID);
+			if (idItr == m_childActorIDList.end()) {
+				m_childActorIDList.emplace_back(pChiledActor->m_actorID);
+			}
+
+			pChiledActor->ConnectParentActor(this);
 		}
 	}
 

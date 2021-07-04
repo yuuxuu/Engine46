@@ -19,10 +19,10 @@ namespace Engine46 {
 
 
 	public:
-		CSprite();
+		explicit CSprite(const char* actorName);
 		~CSprite();
 
-		void Initialize() override;
+		void InitializeResource(CRendererBase* pRenderer) override;
 
 		void Update() override;
 	};

@@ -14,21 +14,27 @@
 
 namespace Engine46 {
 
+	// 前方宣言
+	class CInput;
+
 	class CCamera : public CActorBase {
 	private:
-		VECTOR3 m_eye;
-		VECTOR3 m_forcus;
-		VECTOR3 m_up;
+		VECTOR3					m_eye;
+		VECTOR3					m_forcus;
+		VECTOR3					m_up;
 
-		Matrix	m_matView;
-		Matrix	m_matProj;
+		Matrix					m_matView;
+		Matrix					m_matProj;
 
-		float	m_speed;
+		float					m_speed;
 
+		std::unique_ptr<CInput> m_pInput;
+
+	private:
 		float GetCameraSpeed(float nowSpeed);
 
 	public:
-		CCamera(const int sWidth, const int sHeight);
+		CCamera(const char* actorName, const int sWidth, const int sHeight);
 		~CCamera();
 
 		void Initialize() override;

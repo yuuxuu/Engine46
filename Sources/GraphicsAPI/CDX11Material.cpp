@@ -65,7 +65,9 @@ namespace Engine46 {
 			pTexture->Set(0);
 		}
 
-		m_pConstantBuffer->Set(slot);
+		if (m_pConstantBuffer) {
+			m_pConstantBuffer->Set(slot);
+		}
 	}
 
 } // namespace

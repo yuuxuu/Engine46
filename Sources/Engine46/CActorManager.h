@@ -16,12 +16,26 @@ namespace Engine46 {
 	class CActorBase;
 	class CRendererBase;
 
+	struct classCount {
+		int rootCount;
+		int cameraCount;
+		int spriteCount;
+
+		classCount() :
+			rootCount(0),
+			cameraCount(0),
+			spriteCount(0)
+		{}
+	};
+
 	class CActorManager {
 	private:
 		std::vector<std::unique_ptr<CActorBase>>	m_pVecActor;
 		CActorBase*									pRootActor;
 
 		CRendererBase*								pRenderer;
+
+		classCount									classCount;
 
 	public:
 		explicit CActorManager(CRendererBase* pRenderer);
@@ -31,7 +45,7 @@ namespace Engine46 {
 
 		void AddActorToVec(std::unique_ptr<CActorBase>& pActor) { m_pVecActor.emplace_back(std::move(pActor)); }
 
-		CActorBase* GetActor(const char* name);
+		CActorBase* GetActorFromActorName(const char* name);
 
 		bool SaveActor();
 		bool LoadActor();

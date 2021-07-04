@@ -25,14 +25,17 @@ namespace Engine46 {
 		ComPtr<IDirectInputDevice8A>	m_pDirectDeviceKeyboard;
 		ComPtr<IDirectInputDevice8A>	m_pDirectDeviceMouse;
 
-		BYTE							m_key[MAX_KEY];
-		BYTE							m_oldKey[MAX_KEY];
+		std::array<BYTE, MAX_KEY>		m_key;
+		std::array<BYTE, MAX_KEY>		m_oldKey;
 
 		DIMOUSESTATE					m_mouse;
 		DIMOUSESTATE					m_oldMouse;
 
 		POINT							m_mousePos;
 
+		bool							m_isUpdate;
+
+	private:
 		bool InitializeKeyBoard(HWND hwnd);
 		bool InitializeMouse(HWND hwnd);
 		
@@ -45,6 +48,8 @@ namespace Engine46 {
 		bool Initialize(HINSTANCE hInstance);
 
 		void UpdateInput();
+
+		void ChangeUpdateState(bool state);
 
 		bool IsPressKey(UINT key);
 		bool IsTriggerKey(UINT key);

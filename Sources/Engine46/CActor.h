@@ -16,6 +16,7 @@
 namespace Engine46 {
 
 	// 前方宣言
+	class CRendererBase;
 	class CDataRecordBase;
 	class CConstantBufferBase;
 	class CMeshBase;
@@ -32,33 +33,33 @@ namespace Engine46 {
 
 	class CActorBase : public IObject {
 	protected:
-		std::vector<std::unique_ptr<CDataRecordBase>>	vecDataRecords;
+		std::vector<CDataRecordBase>			vecDataRecords;
 
-		UINT											m_classID;
+		UINT									m_classID;
 
-		int												m_actorID;
+		int										m_actorID;
 
-		std::unique_ptr<char[]>							m_actorName;
+		std::string								m_actorName;
 
-		Transform										m_transform;
+		Transform								m_transform;
 		
-		CMeshBase*										m_pMesh;
+		std::unique_ptr<CMeshBase>				m_pMesh;
 
-		CMaterialBase*									m_pMaterial;
+		std::unique_ptr<CMaterialBase>			m_pMaterial;
 
-		std::unique_ptr<CConstantBufferBase>			m_pConstantBuffer;
+		std::unique_ptr<CConstantBufferBase>	m_pConstantBuffer;
 
-		CInput*											pInput;
+		CInput*									pInput;
 
-		CActorBase*										pParentActor;
-		int												m_parentActorID;
+		CActorBase*								pParentActor;
+		int										m_parentActorID;
 
-		std::list<CActorBase*>							pChiledActorList;
-		std::vector<int>								m_chiledActorIDList;
+		std::list<CActorBase*>					pChildActorList;
+		std::vector<int>						m_childActorIDList;
 
 	public:
 		CActorBase();
-		CActorBase(const UINT classID, const char* ActorName, const Transform transform);
+		CActorBase(const UINT classID, const char* actorName, const Transform transform);
 		virtual ~CActorBase();
 
 		virtual void Initialize() override;
@@ -68,31 +69,49 @@ namespace Engine46 {
 		virtual bool Save(std::ofstream& ofs) override;
 		virtual bool Load(std::ifstream& ifs) override;
 
+		virtual void InitializeResource(CRendererBase* pRenderer) {};
+
 		void SetConstantBuffer(std::unique_ptr<CConstantBufferBase>& pConstantBuffer);
 
-		void SetMesh(CMeshBase* pMesh);
+		void SetMesh(std::unique_ptr<CMeshBase>& pMesh);
 
-		void SetMaterial(CMaterialBase* pMaterial);
+		void SetMaterial(std::unique_ptr<CMaterialBase>& pMaterial);
 
 		void SetTexture(CTextureBase* pTex);
+		void SetTexture(const char* textureName);
 
 		void SetShaderPackage(CShaderPackage* pShaderPackage);
+		void SetShaderPackage(const char* shaderPackageName);
 
 		void SetInput(CInput* pInput);
 
 		void ConnectParentActor(CActorBase* pParentActor);
+		void DisconnectParentActor(CActorBase* pParentActor);
 
 		CActorBase* GetParentActor() const { return pParentActor; }
 		int GetParentActorID() const { return m_parentActorID; }
 
 		void AddChiledActorList(CActorBase* pChiledObject);
 
-		std::list<CActorBase*> GetChiledActorList() const { return pChiledActorList; }
-		std::vector<int> GetChiledActorIDList() const { return m_chiledActorIDList; }
+		std::list<CActorBase*> GetChildActorList() const { return pChildActorList; }
+		std::vector<int> GetChildActorIDList() const { return m_childActorIDList; }
 
 		UINT GetClassID() const { return m_classID; }
 
-		char* GetActorName() const { return m_actorName.get(); }
+		void SetActorName(const std::string& actorName) { m_actorName = actorName; }
+		const char* GetActorName() const { return m_actorName.c_str(); }
+
+		void SetTransform(const Transform& transform) { m_transform = transform; }
+		Transform GetTransform() const { return m_transform; }
+
+		void SetPos(const VECTOR3& pos) { m_transform.pos = pos; }
+		VECTOR3 GetPos() const { return m_transform.pos; }
+
+		void SetRotation(const VECTOR3& rotation) { m_transform.rotation = rotation; }
+		VECTOR3 GetRotation() const { return m_transform.rotation; }
+
+		void SetScale(const VECTOR3& scale) { m_transform.scale = scale; }
+		VECTOR3 GetScale() const { return m_transform.scale; }
 
 		Matrix GetWorldMatrix();
 

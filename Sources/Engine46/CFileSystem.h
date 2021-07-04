@@ -12,12 +12,14 @@
 
 namespace Engine46 {
 
+	constexpr const char* RESOURCE_ROOT_PATH = "D:/Engine46/Assets/";
+
 	struct FileInfo {
-		std::unique_ptr<char[]> filePath;
-		std::unique_ptr<char[]> driveName;
-		std::unique_ptr<char[]> directryName;
-		std::unique_ptr<char[]> fileName;
-		std::unique_ptr<char[]> extensionName;
+		std::string filePath;
+		std::string driveName;
+		std::string directryName;
+		std::string fileName;
+		std::string extensionName;
 
 		DWORD lastWriteTime;
 		DWORD lastAccessTime;
@@ -31,9 +33,12 @@ namespace Engine46 {
 	class CFileSystem {
 	private:
 		std::map<std::string, std::unique_ptr<FileInfo>>	m_pMapFileInfo;
-	public:
+
+	private:
 		CFileSystem();
 		~CFileSystem();
+
+	public:
 
 		bool Initialize();
 
@@ -45,8 +50,12 @@ namespace Engine46 {
 
 		bool WriteFile(const char* writeFileName, std::ios::openmode mode, void* pBuffers, size_t size);
 		bool ReadFile(const char* readFileName, std::ios::openmode mode, void*& pBuffers, size_t size);
-	};
 
+		static CFileSystem& GetFileSystem() {
+			static CFileSystem fileSystem;
+			return fileSystem;
+		}
+	};
 } // namespace
 
 #endif
