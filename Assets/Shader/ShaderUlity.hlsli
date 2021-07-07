@@ -8,6 +8,8 @@
 #ifndef _SHADER_ULITY_H_
 #define _SHADER_ULITY_H_
 
+#define PI 3.141592
+
 float4x4 GetScaleMatrix(float3 scale) {
 	float4x4 mat = {
 		float4(scale.x,       0,       0,    0),
@@ -28,12 +30,12 @@ float4x4 GetTransMatrix(float3 pos) {
 	return mat;
 }
 
-float4x4 GetQuaternionMatrix(float4x4 quaternionMat) {
+float4x4 GetRotationMatrix(float4x4 rotationMat) {
 	float4x4 mat = {
-		float4(quaternionMat._11, quaternionMat._12, quaternionMat._13,    0),
-		float4(quaternionMat._21, quaternionMat._22, quaternionMat._23,    0),
-		float4(quaternionMat._31, quaternionMat._32, quaternionMat._33,    0),
-		float4(                  0,                   0,             0, 1.0f),
+		float4(rotationMat._11, rotationMat._12, rotationMat._13,    0),
+		float4(rotationMat._21, rotationMat._22, rotationMat._23,    0),
+		float4(rotationMat._31, rotationMat._32, rotationMat._33,    0),
+		float4(              0,               0,               0, 1.0f),
 	};
 	return mat;
 }

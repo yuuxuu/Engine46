@@ -43,6 +43,8 @@ namespace Engine46 {
 
 		std::unique_ptr<CInput>				m_pInput;
 
+		bool								m_isInitialize;
+
 	private:
 		CGameSystem();
 		~CGameSystem();
@@ -68,6 +70,8 @@ namespace Engine46 {
 		CSceneManager*		GetSceneManager() const { return m_pSceneManager.get(); }
 
 		CInput*				GetInput() const { return m_pInput.get(); }
+
+		bool				IsInitialize() const { return m_isInitialize; }
 	};
 
 } // namespace

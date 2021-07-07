@@ -17,20 +17,25 @@ namespace Engine46 {
 	class CRendererBase;
 
 	struct classCount {
+		int allCount;
 		int rootCount;
 		int cameraCount;
 		int spriteCount;
+		int lightCount;
 
 		classCount() :
+			allCount(0),
 			rootCount(0),
 			cameraCount(0),
-			spriteCount(0)
+			spriteCount(0),
+			lightCount(0)
 		{}
 	};
 
 	class CActorManager {
 	private:
 		std::vector<std::unique_ptr<CActorBase>>	m_pVecActor;
+		
 		CActorBase*									pRootActor;
 
 		CRendererBase*								pRenderer;

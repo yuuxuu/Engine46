@@ -6,13 +6,20 @@
  */
 
 #include "CCamera.h"
+#include "CRenderer.h"
 #include "CDataRecord.h"
 #include "CInput.h"
+#include "CConstantBuffer.h"
 
 namespace Engine46 {
 
 	constexpr float Z_NEAR = 0.1f;
 	constexpr float Z_FAR = 1000.0f;
+
+	struct CameraCB {
+		Matrix	matVP;
+		VECTOR3	cameraPos;
+	};
 
 	// コンストラクタ
 	CCamera::CCamera(const char* actorName, const int sWidth, const int sHeight) :
@@ -32,6 +39,14 @@ namespace Engine46 {
 	// デストラクタ
 	CCamera::~CCamera()
 	{}
+
+	// リソースの初期化
+	void CCamera::InitializeResource(CRendererBase* pRenderer) {
+		if (pRenderer) {
+			pRenderer->CreateConstantBuffer(m_pCameraConstantBuffer);
+			m_pCameraConstantBuffer->CreateConstantBuffer(sizeof(CameraCB));
+		}
+	}
 
 	// 初期化
 	void CCamera::Initialize() {
@@ -100,6 +115,23 @@ namespace Engine46 {
 		DirectX::XMVECTOR up = { m_up.x, m_up.y, m_up.z };
 
 		m_matView.dx_m = DirectX::XMMatrixLookAtLH(eye, forcus, up);
+	}
+
+	// カメラコンスタントバッファを設定
+	void CCamera::SetCameraConstantBuffer() {
+		if (m_pCameraConstantBuffer) {
+			Matrix matVP = GetViewProjectionMatrix();
+			matVP.dx_m = DirectX::XMMatrixTranspose(matVP.dx_m);
+
+			CameraCB cb = {
+				matVP,
+				m_eye,
+			};
+
+			m_pCameraConstantBuffer->Update(&cb);
+
+			m_pCameraConstantBuffer->Set((int)CB_TYPE::CAMERA);
+		}
 	}
 
 	// ビュー行列とプロジェクション行列を合成し取得

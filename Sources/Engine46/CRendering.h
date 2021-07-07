@@ -14,9 +14,12 @@
 
 namespace Engine46 {
 
+	// 前方宣言
+	class CConstantBufferBase;
+
 	class CRenderingBase {
 	protected:
-		std::unique_ptr<CTextureBase> m_pRenderTex;
+		std::unique_ptr<CTextureBase>			m_pRenderTex;
 
 	public:
 		CRenderingBase();

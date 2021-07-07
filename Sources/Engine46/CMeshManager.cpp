@@ -63,7 +63,7 @@ namespace Engine46 {
 
 		if (pMesh) {
 			//pActor->SetMesh(pMesh);
-			this->AddMeshToMap(pMesh->GetMeshName(), pMesh);
+			this->AddMeshToMap(pMesh->GetMeshName().c_str(), pMesh);
 		}
 	}
 

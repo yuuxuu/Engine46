@@ -51,7 +51,7 @@ namespace Engine46 {
 
 		void SetShaderPackage(CShaderPackage* pSp) { pShaderPackage = pSp; }
 
-		const char* GetMaterialName() const { return m_materialName.c_str(); }
+		std::string GetMaterialName() const { return m_materialName.c_str(); }
 	};
 
 } // namespace

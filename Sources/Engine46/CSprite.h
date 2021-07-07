@@ -17,7 +17,6 @@ namespace Engine46 {
 	class CSprite : public CActorBase {
 	private:
 
-
 	public:
 		explicit CSprite(const char* actorName);
 		~CSprite();

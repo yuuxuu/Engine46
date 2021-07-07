@@ -17,6 +17,8 @@ namespace Engine46 {
 	// 前方宣言
 	class CDataRecordBase;
 	class CActorBase;
+	class CCamera;
+	class CLight;
 
 	class CSceneBase : public IObject {
 	protected:
@@ -59,10 +61,22 @@ namespace Engine46 {
 		void SetRootActor(CActorBase* pRootActor) { this->pRootActor = pRootActor; }
 		CActorBase* GetRootActor() const { return pRootActor; }
 
-		CActorBase* RecursiveActor(CActorBase* pRootActor, std::string& actorName);
 		CActorBase* GetActorFromActorName(std::string& actorName);
+		
+		CCamera* GetCameraFromScene();
+		CLight* GetLightFromScene();
 
-		const char* GetSceneName() const { return m_SceneName.c_str(); }
+		std::vector<CCamera*> GetCamerasFromScene();
+		std::vector<CLight*> GetLightsFromScene();
+
+		std::string GetSceneName() const { return m_SceneName.c_str(); }
+
+	private:
+		CActorBase* GetActorRecursiveInName(CActorBase* pRootActor, std::string& actorName);
+		CActorBase* GetActorRecursiveInClass(CActorBase* pRootActor, int classID);
+
+		void GetActorsRecursiveInName(std::vector<CActorBase*>& pActors, CActorBase* pRootActor, std::string& actorName);
+		void GetActorsRecursiveInClass(std::vector<CActorBase*>& pActors, CActorBase* pRootActor, int classID);
 	};
 
 } // namespace

@@ -56,7 +56,7 @@ namespace Engine46 {
 
 		void SetData(ComPtr<ID3DBlob>& pBlob);
 
-		const char* GetShaderName() const { return m_shaderName.c_str(); }
+		std::string GetShaderName() const { return m_shaderName.c_str(); }
 
 		SHADER_TYPE GetShaderType() const { return m_shaderType; }
 	};

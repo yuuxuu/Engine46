@@ -24,7 +24,7 @@ namespace Engine46 {
 		CDX11Device*							pDX11Device;
 		CDX11DeviceContext*						pDX11DeviceContext;
 
-		std::unique_ptr<CConstantBufferBase>	m_pConstantBuffer;
+		std::unique_ptr<CConstantBufferBase>	m_pMaterialConstantBuffer;
 
 	public:
 		CDX11Material(CDX11Device* pDevice, CDX11DeviceContext* pDeviceContext);

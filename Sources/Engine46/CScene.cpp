@@ -8,6 +8,8 @@
 #include "CScene.h"
 #include "CDataRecord.h"
 #include "CActor.h"
+#include "CCamera.h"
+#include "CLight.h"
 
 namespace Engine46 {
 
@@ -112,31 +114,134 @@ namespace Engine46 {
 		}
 	}
 
-	// アクターの子アクターを再帰検索
-	CActorBase* CSceneBase::RecursiveActor(CActorBase* pRootActor, std::string& actorName) {
+	// シーン内のアクターを名前で取得
+	CActorBase* CSceneBase::GetActorFromActorName(std::string& actorName) {
 		if (pRootActor) {
-			for (const auto& pChild : pRootActor->GetChildActorList()) {
+			if (pRootActor->GetActorName() == actorName) {
+				return pRootActor;
+			}
+			return this->GetActorRecursiveInName(pRootActor, actorName);
+		}
+
+		return nullptr;
+	}
+
+	// シーン内のカメラを取得
+	CCamera* CSceneBase::GetCameraFromScene() {
+		if (pRootActor) {
+			if (pRootActor->GetClassID() == (int)ClassType::Camera) {
+				return static_cast<CCamera*>(pRootActor);
+			}
+			CActorBase* pCamera = this->GetActorRecursiveInClass(pRootActor, (int)ClassType::Camera);
+			return static_cast<CCamera*>(pCamera);
+		}
+
+		return nullptr;
+	}
+
+	// シーン内のライトを取得
+	CLight* CSceneBase::GetLightFromScene() {
+		if (pRootActor) {
+			if (pRootActor->GetClassID() == (int)ClassType::Light) {
+				return static_cast<CLight*>(pRootActor);
+			}
+			CActorBase* pLight = this->GetActorRecursiveInClass(pRootActor, (int)ClassType::Light);
+			return static_cast<CLight*>(pLight);
+		}
+
+		return nullptr;
+	}
+
+	// シーン内カメラを全て取得
+	std::vector<CCamera*> CSceneBase::GetCamerasFromScene() {
+		std::vector<CCamera*> pCameras;
+
+		if (pRootActor) {
+			std::vector<CActorBase*> pActors;
+			this->GetActorsRecursiveInClass(pActors, pRootActor, (int)ClassType::Camera);
+
+			if (!pActors.empty()) {
+				for (const auto pActor : pActors) {
+					pCameras.emplace_back(static_cast<CCamera*>(pActor));
+				}
+			}
+		}
+
+		return pCameras;
+	}
+
+	// シーン内のライトを全て取得
+	std::vector<CLight*> CSceneBase::GetLightsFromScene() {
+		std::vector<CLight*> pLights;
+
+		if (pRootActor) {
+			std::vector<CActorBase*> pActors;
+			this->GetActorsRecursiveInClass(pActors, pRootActor, (int)ClassType::Light);
+
+			if (!pActors.empty()) {
+				for (const auto pActor : pActors) {
+					pLights.emplace_back(static_cast<CLight*>(pActor));
+				}
+			}
+		}
+
+		return pLights;
+	}
+
+	// 指定アクター名のアクターを再帰検索して取得
+	CActorBase* CSceneBase::GetActorRecursiveInName(CActorBase* pRootActor, std::string& actorName) {
+		if (pRootActor) {
+			for (const auto pChild : pRootActor->GetChildActorList()) {
 				if (pChild->GetActorName() == actorName) {
 					return pChild;
 				}
 
-				this->RecursiveActor(pChild, actorName);
+				this->GetActorRecursiveInName(pChild, actorName);
 			}
 		}
 
 		return nullptr;
 	}
 
-	// アクター名でアクターを取得
-	CActorBase* CSceneBase::GetActorFromActorName(std::string& actorName) {
+	// 指定クラスのアクターを再帰検索して取得
+	CActorBase* CSceneBase::GetActorRecursiveInClass(CActorBase* pRootActor, int classID) {
 		if (pRootActor) {
-			if (pRootActor->GetActorName() == actorName) {
-				return pRootActor;
+			for (const auto pChild : pRootActor->GetChildActorList()) {
+				if (pChild->GetClassID() == classID) {
+					return pChild;
+				}
+
+				this->GetActorRecursiveInClass(pChild, classID);
 			}
-			return this->RecursiveActor(pRootActor, actorName);
 		}
 
 		return nullptr;
+	}
+
+	// 指定アクター名のアクター全てを再帰検索して取得
+	void CSceneBase::GetActorsRecursiveInName(std::vector<CActorBase*>& pActors, CActorBase* pRootActor, std::string& actorName) {
+		if (pRootActor) {
+			for (const auto pChild : pRootActor->GetChildActorList()) {
+				if (pChild->GetActorName() == actorName) {
+					pActors.emplace_back(pChild);
+				}
+
+				this->GetActorsRecursiveInName(pActors, pChild, actorName);
+			}
+		}
+	}
+
+	// 指定クラスのアクター全てを再帰検索して取得
+	void CSceneBase::GetActorsRecursiveInClass(std::vector<CActorBase*>& pActors, CActorBase* pRootActor, int classID) {
+		if (pRootActor) {
+			for (const auto pChild : pRootActor->GetChildActorList()) {
+				if (pChild->GetClassID() == classID) {
+					pActors.emplace_back(pChild);
+				}
+
+				this->GetActorsRecursiveInClass(pActors, pChild, classID);
+			}
+		}
 	}
 
 } // namespace
