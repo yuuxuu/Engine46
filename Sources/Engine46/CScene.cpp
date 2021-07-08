@@ -130,10 +130,10 @@ namespace Engine46 {
 	CCamera* CSceneBase::GetCameraFromScene() {
 		if (pRootActor) {
 			if (pRootActor->GetClassID() == (int)ClassType::Camera) {
-				return static_cast<CCamera*>(pRootActor);
+				return dynamic_cast<CCamera*>(pRootActor);
 			}
 			CActorBase* pCamera = this->GetActorRecursiveInClass(pRootActor, (int)ClassType::Camera);
-			return static_cast<CCamera*>(pCamera);
+			return dynamic_cast<CCamera*>(pCamera);
 		}
 
 		return nullptr;
@@ -143,10 +143,10 @@ namespace Engine46 {
 	CLight* CSceneBase::GetLightFromScene() {
 		if (pRootActor) {
 			if (pRootActor->GetClassID() == (int)ClassType::Light) {
-				return static_cast<CLight*>(pRootActor);
+				return dynamic_cast<CLight*>(pRootActor);
 			}
 			CActorBase* pLight = this->GetActorRecursiveInClass(pRootActor, (int)ClassType::Light);
-			return static_cast<CLight*>(pLight);
+			return dynamic_cast<CLight*>(pLight);
 		}
 
 		return nullptr;
@@ -162,7 +162,7 @@ namespace Engine46 {
 
 			if (!pActors.empty()) {
 				for (const auto pActor : pActors) {
-					pCameras.emplace_back(static_cast<CCamera*>(pActor));
+					pCameras.emplace_back(dynamic_cast<CCamera*>(pActor));
 				}
 			}
 		}
@@ -180,7 +180,7 @@ namespace Engine46 {
 
 			if (!pActors.empty()) {
 				for (const auto pActor : pActors) {
-					pLights.emplace_back(static_cast<CLight*>(pActor));
+					pLights.emplace_back(dynamic_cast<CLight*>(pActor));
 				}
 			}
 		}
