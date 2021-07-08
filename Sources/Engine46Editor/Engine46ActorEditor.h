@@ -14,7 +14,6 @@
 #include "ui_Engine46ActorEditor.h"
 
 class Engine46ActorEditor : public QWidget {
-	Q_OBJECT
 public:
 	Engine46ActorEditor(QWidget* parent = Q_NULLPTR);
 	~Engine46ActorEditor();

@@ -9,9 +9,7 @@
 
 #include <QWidget>
 
-class QMyRenderWidget : public QWidget
-{
-	Q_OBJECT
+class QMyRenderWidget : public QWidget {
 public:
 	QMyRenderWidget(QWidget* parent = Q_NULLPTR);
 	~QMyRenderWidget();

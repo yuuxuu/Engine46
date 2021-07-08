@@ -19,9 +19,7 @@ Engine46SceneEditor::Engine46SceneEditor(QWidget* parent)
 {
     ui.setupUi(this);
 
-    ui.sceneRenderWidget->resize(QSize(1280, 720));
-
-    ui.sceneTreeView->setMaximumWidth(200);
+    this->setMaximumWidth(200);
 }
 
 // デストラクタ

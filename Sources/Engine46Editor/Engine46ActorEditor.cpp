@@ -8,7 +8,7 @@
 #include "Engine46ActorEditor.h"
 
 #include <QStandardItem>
-#include <QSpinBox>
+#include <QDoubleSpinBox>
 
 #include "../Engine46/CActor.h"
 #include "../Engine46/CScene.h"
@@ -22,19 +22,18 @@ Engine46ActorEditor::Engine46ActorEditor(QWidget* parent)
 
     this->setMaximumWidth(300);
 
-    QLineEdit;
     // 接続
-    connect(ui.doubleSpinBox_PosX, SIGNAL(valueChanged(double)), this, SLOT(ChangeValueReflectToPos(double)));
-    connect(ui.doubleSpinBox_PosY, SIGNAL(valueChanged(double)), this, SLOT(ChangeValueReflectToPos(double)));
-    connect(ui.doubleSpinBox_PosZ, SIGNAL(valueChanged(double)), this, SLOT(ChangeValueReflectToPos(double)));
-
-    connect(ui.doubleSpinBox_RotX, SIGNAL(valueChanged(double)), this, SLOT(ChangeValueReflectToRotation(double)));
-    connect(ui.doubleSpinBox_RotY, SIGNAL(valueChanged(double)), this, SLOT(ChangeValueReflectToRotation(double)));
-    connect(ui.doubleSpinBox_RotZ, SIGNAL(valueChanged(double)), this, SLOT(ChangeValueReflectToRotation(double)));
-
-    connect(ui.doubleSpinBox_ScaX, SIGNAL(valueChanged(double)), this, SLOT(ChangeValueReflectToScale(double)));
-    connect(ui.doubleSpinBox_ScaY, SIGNAL(valueChanged(double)), this, SLOT(ChangeValueReflectToScale(double)));
-    connect(ui.doubleSpinBox_ScaZ, SIGNAL(valueChanged(double)), this, SLOT(ChangeValueReflectToScale(double)));
+    connect(ui.doubleSpinBox_PosX, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &Engine46ActorEditor::ChangeValueReflectToPos);
+    connect(ui.doubleSpinBox_PosY, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &Engine46ActorEditor::ChangeValueReflectToPos);
+    connect(ui.doubleSpinBox_PosZ, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &Engine46ActorEditor::ChangeValueReflectToPos);
+                                                                  
+    connect(ui.doubleSpinBox_RotX, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &Engine46ActorEditor::ChangeValueReflectToRotation);
+    connect(ui.doubleSpinBox_RotY, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &Engine46ActorEditor::ChangeValueReflectToRotation);
+    connect(ui.doubleSpinBox_RotZ, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &Engine46ActorEditor::ChangeValueReflectToRotation);
+                                                                  
+    connect(ui.doubleSpinBox_ScaX, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &Engine46ActorEditor::ChangeValueReflectToScale);
+    connect(ui.doubleSpinBox_ScaY, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &Engine46ActorEditor::ChangeValueReflectToScale);
+    connect(ui.doubleSpinBox_ScaZ, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &Engine46ActorEditor::ChangeValueReflectToScale);
 }
 
 // デストラクタ

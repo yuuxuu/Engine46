@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    QWidget* pRenderWidget = w.GetSceneRenderWidget();
+    QWidget* pRenderWidget = w.GetRenderWidget();
     HWND hwnd = (HWND)pRenderWidget->winId();
     Engine46::RECT rect = Engine46::RECT(pRenderWidget->width(), pRenderWidget->height());
 

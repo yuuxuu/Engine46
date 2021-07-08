@@ -9,9 +9,7 @@
 
 #include <QTreeView>
 
-class QMyTreeView : public QTreeView
-{
-	Q_OBJECT
+class QMyTreeView : public QTreeView {
 public:
 	QMyTreeView(QWidget* parent = Q_NULLPTR);
 	~QMyTreeView();
