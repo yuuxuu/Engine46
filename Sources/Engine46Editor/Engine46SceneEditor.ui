@@ -6,26 +6,16 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>740</width>
-    <height>550</height>
+    <width>465</width>
+    <height>499</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QHBoxLayout" name="horizontalLayout">
+  <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QMyTreeView" name="sceneTreeView">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QMyRenderWidget" name="sceneRenderWidget" native="true">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
        <horstretch>0</horstretch>
@@ -37,12 +27,6 @@
   </layout>
  </widget>
  <customwidgets>
-  <customwidget>
-   <class>QMyRenderWidget</class>
-   <extends>QWidget</extends>
-   <header>qmyrenderwidget.h</header>
-   <container>1</container>
-  </customwidget>
   <customwidget>
    <class>QMyTreeView</class>
    <extends>QTreeView</extends>
