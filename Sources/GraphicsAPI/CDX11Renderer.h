@@ -38,6 +38,8 @@ namespace Engine46 {
 		
 		void Finalize() override;
 
+		void Begine(CSceneBase* pScene) override;
+
 		bool Render(CSceneBase* pScene) override;
 
 		void CreateConstantBuffer(std::unique_ptr<CConstantBufferBase>& pConstantBuffer) override;

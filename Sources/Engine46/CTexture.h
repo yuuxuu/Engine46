@@ -51,7 +51,7 @@ namespace Engine46 {
 		virtual void Create() {};
 		virtual void Set(UINT slot) {};
 
-		const char* GetTextureName() const { return m_textureName.c_str(); }
+		std::string GetTextureName() const { return m_textureName.c_str(); }
 	};
 
 } // namespace

@@ -26,6 +26,7 @@ namespace Engine46 {
 		CDX11DeviceContext*				pDX11DeviceContext;
 
 		ComPtr<ID3D11RenderTargetView>	m_pRtv;
+		ComPtr<ID3D11DepthStencilView>	m_pDsv;
 
 	public:
 		CDX11ForwardRendering(CDX11Device* pDX11Device, CDX11DeviceContext* pDX11DeviceContext);

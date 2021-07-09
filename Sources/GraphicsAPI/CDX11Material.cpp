@@ -33,10 +33,10 @@ namespace Engine46 {
 	// 作成
 	void CDX11Material::Create() {
 
-		if (!m_pConstantBuffer) {
-			m_pConstantBuffer = std::make_unique<CDX11ConstantBuffer>(pDX11Device, pDX11DeviceContext);
+		if (!m_pMaterialConstantBuffer) {
+			m_pMaterialConstantBuffer = std::make_unique<CDX11ConstantBuffer>(pDX11Device, pDX11DeviceContext);
 
-			m_pConstantBuffer->CreateConstantBuffer(sizeof(materialCB));
+			m_pMaterialConstantBuffer->CreateConstantBuffer(sizeof(materialCB));
 
 			this->Update();
 		}
@@ -52,7 +52,7 @@ namespace Engine46 {
 			m_brightness,
 		};
 
-		m_pConstantBuffer->Update(&cb);
+		m_pMaterialConstantBuffer->Update(&cb);
 	}
 
 	// マテリアルをシェーダーへ設定
@@ -65,8 +65,8 @@ namespace Engine46 {
 			pTexture->Set(0);
 		}
 
-		if (m_pConstantBuffer) {
-			m_pConstantBuffer->Set(slot);
+		if (m_pMaterialConstantBuffer) {
+			m_pMaterialConstantBuffer->Set(slot);
 		}
 	}
 

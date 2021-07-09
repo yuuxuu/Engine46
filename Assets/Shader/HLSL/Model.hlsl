@@ -7,17 +7,21 @@
 
 #include "../ConstantBuffer.hlsli"
 #include "../RootSignature.hlsli"
+#include "../ShaderUlity.hlsli"
 
 struct VS_IN {
 	float3 pos		: POSITION;
 	float4 color	: COLOR;
 	float2 uv		: TEXCOORD;
+	float3 normal	: NORMAL;
 };
 
 struct VS_OUT {
 	float4 pos		: SV_POSITION;
 	float4 color	: COLOR;
 	float2 uv		: TEXCOORD;
+	float3 normal	: NORMAL;
+	float4 posw		: POSITION0;
 };
 
 struct PS_OUT {
@@ -28,11 +32,13 @@ struct PS_OUT {
 VS_OUT VS_main(VS_IN input) {
 	VS_OUT output = (VS_OUT)0;
 
-	output.pos = mul(float4(input.pos, 1.0f), matWVP);
-	//output.pos = float4(input.pos, 1.0f);
+	output.posw = mul(float4(input.pos, 1.0f), matW);
+	output.pos = mul(output.posw, matVP);
 
 	output.color = input.color;
 	output.uv = input.uv;
+
+	output.normal = mul(input.normal, (float3x3)matW);
 
 	return output;
 }
@@ -44,7 +50,22 @@ PS_OUT PS_main(PS_IN input) {
 
 	output.color = diffuseTex.Sample(sampleState, input.uv);
 
-	//output.color = input.color;
+	float4 lightColor;
+	for (int i = 0; i < lightNum; ++i) {
+		float3 l = lightPos[i].xyz - input.posw.xyz;
+		float3 n = normalize(input.normal);
+		float len = length(l);
+
+		l = normalize(l);
+		// ŒõŒ¹‚Æ–@ü‚Ì“àÏ‚ðŒvŽZ
+		float d = Lambert(n, l);
+		// Œ¸Š
+		float4 att = saturate(1.0f / (attenuation[i].x + attenuation[i].y * len + attenuation[i].z * len * len));
+
+		lightColor += (lightDiffuse[i] * d) * att;
+	}
+
+	output.color *= lightColor;
 
 	return output;
 }

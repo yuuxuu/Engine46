@@ -31,7 +31,7 @@ void Engine46SceneEditor::RecursiveActor(Engine46::CActorBase* pRootActor, QStan
 
     int rowIndex = 0;
     for (auto& pChildActor : pRootActor->GetChildActorList()) {
-        QStandardItem* pChildItem = new QStandardItem(pChildActor->GetActorName());
+        QStandardItem* pChildItem = new QStandardItem(pChildActor->GetActorName().c_str());
 
         pRootItem->setChild(rowIndex++, 0, pChildItem);
 
@@ -65,12 +65,12 @@ void Engine46SceneEditor::UpdateSceneTreeView() {
             ui.sceneTreeView->reset();
 
             QStandardItemModel* pItemModel = new QStandardItemModel;
-            QStandardItem* pRootItem = new QStandardItem(pRootActor->GetActorName());
+            QStandardItem* pRootItem = new QStandardItem(pRootActor->GetActorName().c_str());
             this->RecursiveActor(pRootActor, pItemModel, pRootItem);
             pItemModel->appendRow(pRootItem);
 
             QStringList stringList = {
-                QString(pScene->GetSceneName())
+                QString(pScene->GetSceneName().c_str())
             };
             pItemModel->setHorizontalHeaderLabels(stringList);
 

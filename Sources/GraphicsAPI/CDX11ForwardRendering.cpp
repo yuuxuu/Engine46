@@ -58,6 +58,32 @@ namespace Engine46 {
 		}
 
 		{
+			D3D11_TEXTURE2D_DESC texDesc = {};
+			texDesc.Width				= width;
+			texDesc.Height				= height;
+			texDesc.MipLevels			= 1;
+			texDesc.ArraySize			= 1;
+			texDesc.Format				= DXGI_FORMAT_R24G8_TYPELESS;
+			texDesc.SampleDesc.Count	= 1;
+			texDesc.SampleDesc.Quality	= 0;
+			texDesc.Usage				= D3D11_USAGE_DEFAULT;
+			texDesc.BindFlags			= D3D11_BIND_DEPTH_STENCIL;
+			texDesc.CPUAccessFlags		= 0;
+			texDesc.MiscFlags			= 0;
+
+			ComPtr<ID3D11Texture2D> pTex;
+			if (!pDX11Device->CreateTexture2D(pTex, texDesc)) return false;
+
+			D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
+			dsvDesc.ViewDimension				= D3D11_DSV_DIMENSION_TEXTURE2D;
+			dsvDesc.Format						= DXGI_FORMAT_D24_UNORM_S8_UINT;
+			dsvDesc.Texture2D.MipSlice			= 0;
+			dsvDesc.Texture2DArray.ArraySize	= texDesc.ArraySize;
+
+			if (!pDX11Device->CreateDepthStencilView(m_pDsv, pTex.Get(), dsvDesc)) return false;
+		}
+
+		{
 			D3D11_SAMPLER_DESC sDesc = {};
 			sDesc.Filter			= D3D11_FILTER_MIN_MAG_MIP_LINEAR;
 			sDesc.AddressU			= D3D11_TEXTURE_ADDRESS_CLAMP;
@@ -138,15 +164,14 @@ namespace Engine46 {
 
 	// レンダリング開始
 	void CDX11ForwardRendering::Begine() {
-
 		pDX11DeviceContext->ClearRenderTargetView(m_pRtv.Get());
-
-		pDX11DeviceContext->SetRenderTargetView(m_pRtv.Get(), nullptr);
+		pDX11DeviceContext->ClearDespthStencilView(m_pDsv.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL);
+		pDX11DeviceContext->SetRenderTargetView(m_pRtv.Get(), m_pDsv.Get());
 	}
 
 	// レンダリング終了
 	void CDX11ForwardRendering::End() {
-
+		pDX11DeviceContext->SetPSShaderResources(0, 1, nullptr);
 	}
 
 } // namespace

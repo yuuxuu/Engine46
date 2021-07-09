@@ -25,6 +25,8 @@ namespace Engine46 {
 		
 		virtual void Finalize() = 0;
 
+		virtual void Begine(CSceneBase* pScene) = 0;
+
 		virtual bool Render(CSceneBase* pScene) = 0;
 	};
 

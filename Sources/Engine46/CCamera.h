@@ -19,16 +19,18 @@ namespace Engine46 {
 
 	class CCamera : public CActorBase {
 	private:
-		VECTOR3					m_eye;
-		VECTOR3					m_forcus;
-		VECTOR3					m_up;
+		VECTOR3									m_eye;
+		VECTOR3									m_forcus;
+		VECTOR3									m_up;
 
-		Matrix					m_matView;
-		Matrix					m_matProj;
+		Matrix									m_matView;
+		Matrix									m_matProj;
 
-		float					m_speed;
+		float									m_speed;
 
-		std::unique_ptr<CInput> m_pInput;
+		std::unique_ptr<CConstantBufferBase>	m_pCameraConstantBuffer;
+
+		std::unique_ptr<CInput>					m_pInput;
 
 	private:
 		float GetCameraSpeed(float nowSpeed);
@@ -37,8 +39,12 @@ namespace Engine46 {
 		CCamera(const char* actorName, const int sWidth, const int sHeight);
 		~CCamera();
 
+		void InitializeResource(CRendererBase* pRenderer) override;
+
 		void Initialize() override;
 		void Update() override;
+
+		void SetCameraConstantBuffer();
 
 		Matrix GetViewProjectionMatrix();
 

@@ -9,7 +9,6 @@
 #include "CRendererSystem.h"
 #include "CWinow.h"
 #include "CInput.h"
-#include "CTimer.h"
 #include "CActor.h"
 #include "CScene.h"
 
@@ -26,7 +25,9 @@ namespace Engine46 {
 
 	// コンストラクタ
 	CGameSystem::CGameSystem() :
-		m_hGame(nullptr)
+		m_hGame(nullptr),
+		m_isInitialize(false)
+		
 	{}
 
 	// デストラクタ
@@ -36,6 +37,9 @@ namespace Engine46 {
 
 	// 初期化
 	bool CGameSystem::Initialize(CRendererBase* pRenderer, HWND hwnd) {
+		
+		if (m_isInitialize) return true;
+		
 		// 乱数生成
 		srand((unsigned)time(NULL));
 		// ロケール設定
@@ -65,12 +69,18 @@ namespace Engine46 {
 
 		{
 			CActorBase* pCamera = m_pActorManager->CreateActor((int)ClassType::Camera);
+			pCamera->InitializeResource(pRenderer);
 			pCamera->SetInput(m_pInput.get());
 
 			CActorBase* pSprite = m_pActorManager->CreateActor((int)ClassType::Sprite);
 			pSprite->InitializeResource(pRenderer);
 			pSprite->SetTexture("E3g6p9QUYAMTSbT.jpg");
 			pSprite->SetShaderPackage("Model.hlsl");
+
+			for (int i = 0; i < 10; ++i) {
+				CActorBase* pLight = m_pActorManager->CreateActor((int)ClassType::Light);
+				pLight->InitializeResource(pRenderer);
+			}
 		}
 
 		// イベントハンドル生成
@@ -85,6 +95,8 @@ namespace Engine46 {
 			std::cout << "ゲームメインスレッド生成:失敗" << std::endl;
 			return false;
 		}
+
+		m_isInitialize = true;
 
 		return true;
 	}
@@ -116,8 +128,6 @@ namespace Engine46 {
 			if (sts == WAIT_FAILED) {
 				break;
 			}
-
-			CTimer timer;
 
 			this->Update();
 		}

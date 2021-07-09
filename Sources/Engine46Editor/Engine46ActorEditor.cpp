@@ -22,6 +22,22 @@ Engine46ActorEditor::Engine46ActorEditor(QWidget* parent)
 
     this->setMaximumWidth(300);
 
+    QDoubleSpinBox* pSpinBoxs[] = {
+            ui.doubleSpinBox_PosX,
+            ui.doubleSpinBox_PosY,
+            ui.doubleSpinBox_PosZ,
+            ui.doubleSpinBox_RotX,
+            ui.doubleSpinBox_RotY,
+            ui.doubleSpinBox_RotZ,
+            ui.doubleSpinBox_ScaX,
+            ui.doubleSpinBox_ScaY,
+            ui.doubleSpinBox_ScaZ,
+    };
+
+    for (auto spinBox : pSpinBoxs) {
+        spinBox->setRange(-1000, 1000);
+    }
+
     // 接続
     connect(ui.doubleSpinBox_PosX, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &Engine46ActorEditor::ChangeValueReflectToPos);
     connect(ui.doubleSpinBox_PosY, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &Engine46ActorEditor::ChangeValueReflectToPos);
@@ -43,7 +59,7 @@ Engine46ActorEditor::~Engine46ActorEditor()
 // 選択中アクターをエディターへ反映
 void Engine46ActorEditor::SelectActorReflectToEditor() {
     if (pSelectActor) {
-        ui.lineEdit_ActorName->setText(pSelectActor->GetActorName());
+        ui.lineEdit_ActorName->setText(pSelectActor->GetActorName().c_str());
 
         Engine46::Transform transform = pSelectActor->GetTransform();
 
@@ -64,21 +80,21 @@ void Engine46ActorEditor::SelectActorReflectToEditor() {
 // エディターを選択中アクターへ反映
 void Engine46ActorEditor::EditorReflectToSelectActor() {
     if (pSelectActor) {
-        ui.lineEdit_ActorName->setText(pSelectActor->GetActorName());
+        ui.lineEdit_ActorName->setText(pSelectActor->GetActorName().c_str());
 
         Engine46::Transform transform;
 
-        transform.pos.x = ui.doubleSpinBox_PosX->value();
-        transform.pos.y = ui.doubleSpinBox_PosY->value();
-        transform.pos.z = ui.doubleSpinBox_PosZ->value();
+        transform.pos.x = (float)ui.doubleSpinBox_PosX->value();
+        transform.pos.y = (float)ui.doubleSpinBox_PosY->value();
+        transform.pos.z = (float)ui.doubleSpinBox_PosZ->value();
 
-        transform.rotation.x = ui.doubleSpinBox_RotX->value();
-        transform.rotation.y = ui.doubleSpinBox_RotY->value();
-        transform.rotation.z = ui.doubleSpinBox_RotZ->value();
+        transform.rotation.x = (float)ui.doubleSpinBox_RotX->value();
+        transform.rotation.y = (float)ui.doubleSpinBox_RotY->value();
+        transform.rotation.z = (float)ui.doubleSpinBox_RotZ->value();
 
-        transform.scale.x = ui.doubleSpinBox_ScaX->value();
-        transform.scale.y = ui.doubleSpinBox_ScaY->value();
-        transform.scale.z = ui.doubleSpinBox_ScaZ->value();
+        transform.scale.x = (float)ui.doubleSpinBox_ScaX->value();
+        transform.scale.y = (float)ui.doubleSpinBox_ScaY->value();
+        transform.scale.z = (float)ui.doubleSpinBox_ScaZ->value();
 
         pSelectActor->SetTransform(transform);
     }
@@ -115,9 +131,9 @@ void Engine46ActorEditor::ChangeValueReflectToPos(double value) {
     if (pSelectActor) {
         Engine46::VECTOR3 pos;
 
-        pos.x = ui.doubleSpinBox_PosX->value();
-        pos.y = ui.doubleSpinBox_PosY->value();
-        pos.z = ui.doubleSpinBox_PosZ->value();
+        pos.x = (float)ui.doubleSpinBox_PosX->value();
+        pos.y = (float)ui.doubleSpinBox_PosY->value();
+        pos.z = (float)ui.doubleSpinBox_PosZ->value();
 
         pSelectActor->SetPos(pos);
     }
@@ -128,9 +144,9 @@ void Engine46ActorEditor::ChangeValueReflectToRotation(double value) {
     if (pSelectActor) {
         Engine46::VECTOR3 rotation;
 
-        rotation.x = ui.doubleSpinBox_RotX->value();
-        rotation.y = ui.doubleSpinBox_RotY->value();
-        rotation.z = ui.doubleSpinBox_RotZ->value();
+        rotation.x = (float)ui.doubleSpinBox_RotX->value();
+        rotation.y = (float)ui.doubleSpinBox_RotY->value();
+        rotation.z = (float)ui.doubleSpinBox_RotZ->value();
 
         pSelectActor->SetRotation(rotation);
     }
@@ -141,9 +157,9 @@ void Engine46ActorEditor::ChangeValueReflectToScale(double value) {
     if (pSelectActor) {
         Engine46::VECTOR3 scale;
 
-        scale.x = ui.doubleSpinBox_ScaX->value();
-        scale.y = ui.doubleSpinBox_ScaY->value();
-        scale.z = ui.doubleSpinBox_ScaZ->value();
+        scale.x = (float)ui.doubleSpinBox_ScaX->value();
+        scale.y = (float)ui.doubleSpinBox_ScaY->value();
+        scale.z = (float)ui.doubleSpinBox_ScaZ->value();
 
         pSelectActor->SetScale(scale);
     }

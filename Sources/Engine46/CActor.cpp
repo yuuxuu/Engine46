@@ -13,6 +13,7 @@
 #include "CMesh.h"
 #include "CMaterial.h"
 #include "CTexture.h"
+#include "CActorManager.h"
 #include "CShaderPackage.h"
 #include "CShaderManager.h"
 #include "CTextureManager.h"
@@ -20,10 +21,8 @@
 
 namespace Engine46 {
 
-	struct mainCB {
-		Matrix	wvp;
-		Matrix	lwvp;
-		VECTOR3 cameraPos;
+	struct worldCB {
+		Matrix	matW;
 	};
 
 	// コンストラクタ
@@ -77,39 +76,10 @@ namespace Engine46 {
 	// 描画
 	void CActorBase::Draw() {
 
+		this->SetWorldConstantBuffer();
+
 		if (m_pMaterial) {
-			m_pMaterial->Set(1);
-		}
-
-		if (m_pConstantBuffer) {
-			if (pParentActor) {
-				for (auto& chiled : pParentActor->pChildActorList) {
-					if (chiled->m_classID == (UINT)ClassType::Camera) {
-						CCamera* camera = dynamic_cast<CCamera*>(chiled);
-
-						Matrix matW = this->GetWorldMatrix();
-
-						Matrix matVP = camera->GetViewProjectionMatrix();
-
-						Matrix matWVP;
-						matWVP.dx_m = matW.dx_m * matVP.dx_m;
-						Matrix matTranspose;
-						matTranspose.dx_m = DirectX::XMMatrixTranspose(matWVP.dx_m);
-
-						mainCB cb = {
-							matTranspose,
-							Matrix(),
-							chiled->m_transform.pos,
-						};
-
-						m_pConstantBuffer->Update(&cb);
-
-						m_pConstantBuffer->Set(0);
-
-						break;
-					}
-				}
-			}
+			m_pMaterial->Set((int)CB_TYPE::MATERIAL);
 		}
 
 		if (m_pMesh) {
@@ -144,9 +114,9 @@ namespace Engine46 {
 	// コンスタントバッファを作成
 	void CActorBase::SetConstantBuffer(std::unique_ptr<CConstantBufferBase>& pConstantBuffer) {
 		if (pConstantBuffer) {
-			pConstantBuffer->CreateConstantBuffer(sizeof(mainCB));
+			pConstantBuffer->CreateConstantBuffer(sizeof(worldCB));
 
-			m_pConstantBuffer.swap(pConstantBuffer);
+			m_pWorldConstantBuffer.swap(pConstantBuffer);
 		}
 	}
 
@@ -251,6 +221,22 @@ namespace Engine46 {
 			}
 
 			pChiledActor->ConnectParentActor(this);
+		}
+	}
+
+	// ワールドコンスタントバッファを設定
+	void CActorBase::SetWorldConstantBuffer() {
+		if (m_pWorldConstantBuffer) {
+			Matrix matW = GetWorldMatrix();
+			matW.dx_m = DirectX::XMMatrixTranspose(matW.dx_m);
+
+			worldCB cb = {
+				matW,
+			};
+
+			m_pWorldConstantBuffer->Update(&cb);
+
+			m_pWorldConstantBuffer->Set((int)CB_TYPE::WORLD);
 		}
 	}
 
