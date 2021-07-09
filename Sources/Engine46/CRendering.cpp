@@ -6,6 +6,10 @@
  */
 
 #include "CRendering.h"
+#include "CRendererSystem.h"
+#include "CScene.h"
+#include "CCamera.h"
+#include "CLight.h"
 
 namespace Engine46 {
 

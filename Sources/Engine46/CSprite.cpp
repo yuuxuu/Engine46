@@ -6,10 +6,10 @@
  */
 
 #include "CSprite.h"
+#include "CRenderer.h"
 #include "CMesh.h"
 #include "CMaterial.h"
 #include "CConstantBuffer.h"
-#include "CRenderer.h"
 
 namespace Engine46 {
 
@@ -22,7 +22,7 @@ namespace Engine46 {
 	CSprite::~CSprite()
 	{}
 
-	// 初期化
+	// リソースの初期化
 	void CSprite::InitializeResource(CRendererBase* pRenderer) {
 
 		if (pRenderer) {
@@ -38,23 +38,27 @@ namespace Engine46 {
 			vertexInfo info;
 
 			info.vertex = VECTOR3(-1.0f, 1.0f, 0.0f);
-			info.color = VECTOR4(1.0f, 0.0f, 0.0f, 1.0f);
-			info.uv = VECTOR2(0.0f, 0.0f);
+			info.color	= VECTOR4(1.0f, 0.0f, 0.0f, 1.0f);
+			info.uv		= VECTOR2(0.0f, 0.0f);
+			info.normal = VECTOR3(0.0f, 0.0f, -1.0f);
 			pMesh->AddVertexInfo(info);
 
 			info.vertex = VECTOR3(1.0f, 1.0f, 0.0f);
-			info.color = VECTOR4(0.0f, 1.0f, 0.0f, 1.0f);
-			info.uv = VECTOR2(1.0f, 0.0f);
+			info.color	= VECTOR4(0.0f, 1.0f, 0.0f, 1.0f);
+			info.uv		= VECTOR2(1.0f, 0.0f);
+			info.normal = VECTOR3(0.0f, 0.0f, -1.0f);
 			pMesh->AddVertexInfo(info);
 
 			info.vertex = VECTOR3(-1.0f, -1.0f, 0.0f);
-			info.color = VECTOR4(0.0f, 0.0f, 1.0f, 1.0f);
-			info.uv = VECTOR2(0.0f, 1.0f);
+			info.color	= VECTOR4(0.0f, 0.0f, 1.0f, 1.0f);
+			info.uv		= VECTOR2(0.0f, 1.0f);
+			info.normal = VECTOR3(0.0f, 0.0f, -1.0f);
 			pMesh->AddVertexInfo(info);
 
 			info.vertex = VECTOR3(1.0f, -1.0f, 0.0f);
-			info.color = VECTOR4(1.0f, 0.0f, 0.0f, 1.0f);
-			info.uv = VECTOR2(1.0f, 1.0f);
+			info.color	= VECTOR4(1.0f, 0.0f, 0.0f, 1.0f);
+			info.uv		= VECTOR2(1.0f, 1.0f);
+			info.normal = VECTOR3(0.0f, 0.0f, -1.0f);
 			pMesh->AddVertexInfo(info);
 
 			pMesh->ReserveIndex(6);

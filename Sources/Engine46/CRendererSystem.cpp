@@ -14,7 +14,8 @@
 namespace Engine46 {
 
 	// コンストラクタ
-	CRendererSystem::CRendererSystem()
+	CRendererSystem::CRendererSystem() :
+		m_isInitialize(false)
 	{}
 
 	// デストラクタ
@@ -24,6 +25,8 @@ namespace Engine46 {
 
 	// 初期化
 	bool CRendererSystem::Initialize(HWND hwnd, RECT rect) {
+
+		if (m_isInitialize) return true;
 
 		m_pRenderer = std::make_unique<CDX11Renderer>();
 		if (!m_pRenderer->Initialize(hwnd, rect.w, rect.h)) return false;
@@ -40,6 +43,8 @@ namespace Engine46 {
 			std::cout << "レンダラーメインスレッド生成:失敗" << std::endl;
 			return false;
 		}
+
+		m_isInitialize = true;
 
 		return true;
 	}
@@ -58,6 +63,10 @@ namespace Engine46 {
 
 	// ループ
 	void CRendererSystem::Loop() {
+		while (1) {
+			if (CGameSystem::GetGameSystem().IsInitialize()) break;
+		}
+
 		DWORD sts;
 		DWORD ms = 1000 / 60; // 1000ms/60spd = 0.16ms
 
@@ -74,6 +83,8 @@ namespace Engine46 {
 	// 描画
 	void CRendererSystem::Draw() {
 		if (pRenderScene) {
+			m_pRenderer->Begine(pRenderScene);
+
 			m_pRenderer->Render(pRenderScene);
 		}
 	}

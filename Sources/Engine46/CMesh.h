@@ -48,7 +48,7 @@ namespace Engine46 {
 
 		void AddIndex(const DWORD index) { m_vecIndexes.emplace_back(index); }
 
-		const char* GetMeshName() const { return m_meshName.c_str(); }
+		std::string GetMeshName() const { return m_meshName.c_str(); }
 	};
 
 } // namespace

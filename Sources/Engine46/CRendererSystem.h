@@ -29,6 +29,8 @@ namespace Engine46 {
 
 		CSceneBase*						pRenderScene;
 
+		bool							m_isInitialize;
+
 	private:
 		CRendererSystem();
 		~CRendererSystem();

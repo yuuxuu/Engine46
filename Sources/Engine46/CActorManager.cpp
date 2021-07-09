@@ -10,6 +10,7 @@
 #include "CRenderer.h"
 #include "CSprite.h"
 #include "CCamera.h"
+#include "CLight.h"
 
 namespace Engine46 {
 
@@ -49,7 +50,14 @@ namespace Engine46 {
 
 			actor = std::make_unique<CSprite>(actorName.c_str());
 			break;
+		case ClassType::Light:
+			actorName = "Light_" + std::to_string(classCount.lightCount++);
+
+			actor = std::make_unique<CLight>(actorName.c_str());
+			break;
 		}
+
+		actor->SetActorID(classCount.allCount++);
 
 		actor->CActorBase::Initialize();
 

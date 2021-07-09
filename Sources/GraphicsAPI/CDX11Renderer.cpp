@@ -19,6 +19,8 @@
 #include "../Engine46/CFileSystem.h"
 #include "../Engine46/CShaderManager.h"
 #include "../Engine46/CSprite.h"
+#include "../Engine46/CLight.h"
+#include "../Engine46/CCamera.h"
 
 namespace Engine46 {
 
@@ -85,6 +87,11 @@ namespace Engine46 {
 			if (!m_pDX11Device->CreateDepthStencilView(m_pDsv, pTex.Get(), dsvDesc)) return false;
 		}
 
+		{
+			this->CreateConstantBuffer(m_pLightConstantBuffer);
+			m_pLightConstantBuffer->CreateConstantBuffer(sizeof(LightCB));
+		}
+
 		m_windowRect = RECT(width, height);
 
 		return true;
@@ -95,6 +102,35 @@ namespace Engine46 {
 
 	}
 
+	// 描画準備開始
+	void CDX11Renderer::Begine(CSceneBase* pScene) {
+		if (pScene) {
+			CCamera* pCamera = pScene->GetCameraFromScene();
+			if (pCamera) {
+				pCamera->SetCameraConstantBuffer();
+			}
+
+			std::vector<CLight*> pLights = pScene->GetLightsFromScene();
+			if (!pLights.empty()) {
+				LightCB cb = {};
+
+				cb.lightNum = pLights.size();
+				for (int i = 0; i < cb.lightNum; ++i) {
+					VECTOR3 pos = pLights[i]->GetPos();
+					cb.lightPos[i] = VECTOR4(pos.x, pos.y, pos.z, 1.0f);
+
+					cb.lightDiffuse[i] = pLights[i]->GetLightDiffuse();
+					cb.lightSpecular[i] = pLights[i]->GetLightSpecular();
+					cb.lightAttenuation[i] = pLights[i]->GetLightAttenuation();
+				}
+
+				m_pLightConstantBuffer->Update(&cb);
+
+				m_pLightConstantBuffer->Set((int)CB_TYPE::LIGHT);
+			}
+		}
+	}
+
 	// 描画
 	bool CDX11Renderer::Render(CSceneBase* pScene) {
 
@@ -103,8 +139,6 @@ namespace Engine46 {
 		m_pRendering->Begine();
 		
 		pScene->Draw();
-		
-		m_pRendering->End();
 
 		m_pDX11DeviceContext->ClearRenderTargetView(m_pRtv.Get());
 		m_pDX11DeviceContext->ClearDespthStencilView(m_pDsv.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL);
@@ -115,6 +149,8 @@ namespace Engine46 {
 		sprite.SetTexture(m_pRendering->GetRenderTexture());
 		sprite.SetShaderPackage("Sprite.hlsl");
 		sprite.Draw();
+
+		m_pRendering->End();
 
 		return m_pDX11Device->Present();
 	}
@@ -161,10 +197,12 @@ namespace Engine46 {
 
 					pShaderPackage->AddShaderToVec(shader);
 
-					if (m_layoutBufSize < pBlob->GetBufferSize()) {
-						m_layoutBufSize = pBlob->GetBufferSize();
+					if (info.shadeType == SHADER_TYPE::TYPE_VERTEX) {
+						if (m_layoutBufSize < pBlob->GetBufferSize()) {
+							m_layoutBufSize = pBlob->GetBufferSize();
 
-						m_pDX11Device->CreateInputLayout(m_pInputLayout, pBlob->GetBufferPointer(), pBlob->GetBufferSize());
+							m_pDX11Device->CreateInputLayout(m_pInputLayout, pBlob->GetBufferPointer(), pBlob->GetBufferSize());
+						}
 					}
 				}
 			}

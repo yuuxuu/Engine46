@@ -14,20 +14,22 @@
 #include "math.h"
 #include "CRendering.h"
 #include "CShaderPackage.h"
+#include "CConstantBuffer.h"
 
 namespace Engine46 {
 
 	// 前方宣言
-	class CConstantBufferBase;
 	class CMeshBase;
 	class CMaterialBase;
 	class CTextureBase;
 
 	class CRendererBase : public IRenderer {
 	protected:
-		std::unique_ptr<CRenderingBase> m_pRendering;
+		std::unique_ptr<CRenderingBase>			m_pRendering;
 
-		RECT							m_windowRect;
+		RECT									m_windowRect;
+
+		std::unique_ptr<CConstantBufferBase>	m_pLightConstantBuffer;
 
 	public:
 		CRendererBase();
@@ -35,6 +37,7 @@ namespace Engine46 {
 
 		virtual bool Initialize(HWND hwnd, UINT width, UINT height) override { return true; };
 		virtual void Finalize() override {};
+		virtual void Begine(CSceneBase* pScene) override {};
 		virtual bool Render(CSceneBase* pScene) override { return true; };
 
 		virtual void CreateConstantBuffer(std::unique_ptr<CConstantBufferBase>& pConstantBuffer) {};

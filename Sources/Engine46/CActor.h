@@ -29,6 +29,7 @@ namespace Engine46 {
 		Root,
 		Camera,
 		Sprite,
+		Light,
 	};
 
 	class CActorBase : public IObject {
@@ -47,7 +48,7 @@ namespace Engine46 {
 
 		std::unique_ptr<CMaterialBase>			m_pMaterial;
 
-		std::unique_ptr<CConstantBufferBase>	m_pConstantBuffer;
+		std::unique_ptr<CConstantBufferBase>	m_pWorldConstantBuffer;
 
 		CInput*									pInput;
 
@@ -98,8 +99,10 @@ namespace Engine46 {
 
 		UINT GetClassID() const { return m_classID; }
 
+		void SetActorID(const int id) { m_actorID = id; }
+
 		void SetActorName(const std::string& actorName) { m_actorName = actorName; }
-		const char* GetActorName() const { return m_actorName.c_str(); }
+		std::string GetActorName() const { return m_actorName.c_str(); }
 
 		void SetTransform(const Transform& transform) { m_transform = transform; }
 		Transform GetTransform() const { return m_transform; }
@@ -112,6 +115,8 @@ namespace Engine46 {
 
 		void SetScale(const VECTOR3& scale) { m_transform.scale = scale; }
 		VECTOR3 GetScale() const { return m_transform.scale; }
+
+		void SetWorldConstantBuffer();
 
 		Matrix GetWorldMatrix();
 

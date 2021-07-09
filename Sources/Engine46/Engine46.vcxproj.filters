@@ -16,6 +16,9 @@
     <Filter Include="リソース ファイル\HLSL">
       <UniqueIdentifier>{64bef308-45d1-4ebc-9db7-618343f0f103}</UniqueIdentifier>
     </Filter>
+    <Filter Include="リソース ファイル\HLSLI">
+      <UniqueIdentifier>{0702e011-fae0-46d8-8b09-8986e6aed9a6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="math.cpp">
@@ -103,6 +106,9 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="CRendererSystem.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="CLight.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -197,6 +203,9 @@
     <ClInclude Include="CRendererSystem.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="CLight.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\..\Assets\Shader\HLSL\CPUParticle.hlsl">
@@ -235,13 +244,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Assets\Shader\ConstantBuffer.hlsli">
-      <Filter>リソース ファイル\HLSL</Filter>
+      <Filter>リソース ファイル\HLSLI</Filter>
     </None>
     <None Include="..\..\Assets\Shader\RootSignature.hlsli">
-      <Filter>リソース ファイル\HLSL</Filter>
+      <Filter>リソース ファイル\HLSLI</Filter>
     </None>
     <None Include="..\..\Assets\Shader\ShaderUlity.hlsli">
-      <Filter>リソース ファイル\HLSL</Filter>
+      <Filter>リソース ファイル\HLSLI</Filter>
     </None>
   </ItemGroup>
 </Project>

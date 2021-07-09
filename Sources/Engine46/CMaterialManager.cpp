@@ -63,7 +63,7 @@ namespace Engine46 {
 
 		if (pMaterial) {
 			//pActor->SetMaterial(pMaterial);
-			this->AddMaterialToMap(pMaterial->GetMaterialName(), pMaterial);
+			this->AddMaterialToMap(pMaterial->GetMaterialName().c_str(), pMaterial);
 		}
 	}
 

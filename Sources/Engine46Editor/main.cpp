@@ -14,6 +14,7 @@ int main(int argc, char *argv[])
     
     Engine46MainEditor w;
     w.resize(QSize(1600, 900));
+    w.show();
 
     Engine46::CFileSystem& fileSystem = Engine46::CFileSystem::GetFileSystem();
     if (!fileSystem.Initialize()) {
@@ -40,7 +41,6 @@ int main(int argc, char *argv[])
     }
 
     w.Initialize();
-    w.show();
 
     return a.exec();
 }
