@@ -13,7 +13,6 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     
     Engine46MainEditor w;
-    w.resize(QSize(1600, 900));
     w.show();
 
     Engine46::CFileSystem& fileSystem = Engine46::CFileSystem::GetFileSystem();
@@ -40,7 +39,7 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    w.Initialize();
+    w.InitializeMainEditor();
 
     return a.exec();
 }

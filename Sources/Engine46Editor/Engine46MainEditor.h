@@ -23,7 +23,7 @@ public:
     Engine46MainEditor(QWidget* parent = Q_NULLPTR);
     ~Engine46MainEditor();
 
-    void Initialize();
+    void InitializeMainEditor();
 
     QWidget* GetRenderWidget() const { return pRenderWidget; }
 

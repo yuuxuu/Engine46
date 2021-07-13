@@ -19,6 +19,8 @@ Engine46MainEditor::Engine46MainEditor(QWidget *parent)
 {
     ui.setupUi(this);
 
+    this->resize(QSize(1600, 900));
+
     // シーンエディタ
     pEngine46SceneEditor = new Engine46SceneEditor(this);
     // アクターエディタ
@@ -41,7 +43,7 @@ Engine46MainEditor::Engine46MainEditor(QWidget *parent)
 
     // 接続
     connect(pEngine46SceneEditor->ui.sceneTreeView, &QAbstractItemView::clicked, pEngine46ActorEditor, &Engine46ActorEditor::SetSelectActor);
-    connect(pEngine46SceneEditor->ui.sceneTreeView, &QAbstractItemView::clicked, pEngine46SceneEditor, &Engine46SceneEditor::SetSelectItem);
+    connect(pEngine46SceneEditor->ui.sceneTreeView, &QAbstractItemView::clicked, pEngine46SceneEditor, &Engine46SceneEditor::SelectItem);
 
     connect(pEngine46ActorEditor->ui.lineEdit_ActorName, &QLineEdit::returnPressed, this, &Engine46MainEditor::ChangeValueActorName);
 }
@@ -50,11 +52,11 @@ Engine46MainEditor::Engine46MainEditor(QWidget *parent)
 Engine46MainEditor::~Engine46MainEditor()
 {}
 
-// 初期化
-void Engine46MainEditor::Initialize() {
-    pEngine46FileEditor->UpdateFileTreeView();
+// メインエディタの初期化
+void Engine46MainEditor::InitializeMainEditor() {
+    pEngine46SceneEditor->InitializeSceneEditor();
 
-    pEngine46SceneEditor->UpdateSceneTreeView();
+    pEngine46FileEditor->InitializeFileEditor();
 }
 
 // アクター名変更を各エディタへ知らせる

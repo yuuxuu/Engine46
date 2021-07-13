@@ -25,6 +25,7 @@ public:
 public:
 	Ui::Engine46ActorEditor ui;
 
+private:
 	Engine46::CActorBase* pSelectActor = nullptr;
 
 public slots:

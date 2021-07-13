@@ -26,37 +26,8 @@ Engine46SceneEditor::Engine46SceneEditor(QWidget* parent)
 Engine46SceneEditor::~Engine46SceneEditor()
 {}
 
-// アクターの子アクターを再帰検索
-void Engine46SceneEditor::RecursiveActor(Engine46::CActorBase* pRootActor, QStandardItemModel* pItemModel, QStandardItem* pRootItem){
-
-    int rowIndex = 0;
-    for (auto& pChildActor : pRootActor->GetChildActorList()) {
-        QStandardItem* pChildItem = new QStandardItem(pChildActor->GetActorName().c_str());
-
-        pRootItem->setChild(rowIndex++, 0, pChildItem);
-
-        this->RecursiveActor(pChildActor, pItemModel, pChildItem);
-    }
-}
-
-// 選択しているアイテムの名前変更を反映
-void Engine46SceneEditor::ChangeValueReflectToName(const QString& string) {
-    if (selectIndex.isValid()) {
-        if (selectIndex.data().toString() == string) return;
-
-        ui.sceneTreeView->model()->setData(selectIndex, string);
-    }
-}
-
-// 選択しているアイテムを設定
-void Engine46SceneEditor::SetSelectItem(const QModelIndex& index) {
-    if (selectIndex != index) {
-        selectIndex = index;
-    }
-}
-
-// シーンツリービューの更新
-void Engine46SceneEditor::UpdateSceneTreeView() {
+// シーンエディタを初期化
+void Engine46SceneEditor::InitializeSceneEditor() {
     Engine46::CSceneBase* pScene = Engine46::CRendererSystem::GetRendererSystem().GetRenderScene();
     if (pScene) {
         Engine46::CActorBase* pRootActor = pScene->GetRootActor();
@@ -80,5 +51,34 @@ void Engine46SceneEditor::UpdateSceneTreeView() {
 
             ui.sceneTreeView->expandAll();
         }
+    }
+}
+
+// アクターの子アクターを再帰検索
+void Engine46SceneEditor::RecursiveActor(Engine46::CActorBase* pRootActor, QStandardItemModel* pItemModel, QStandardItem* pRootItem){
+
+    int rowIndex = 0;
+    for (auto& pChildActor : pRootActor->GetChildActorList()) {
+        QStandardItem* pChildItem = new QStandardItem(pChildActor->GetActorName().c_str());
+
+        pRootItem->setChild(rowIndex++, 0, pChildItem);
+
+        this->RecursiveActor(pChildActor, pItemModel, pChildItem);
+    }
+}
+
+// 選択しているアイテムの名前変更を反映
+void Engine46SceneEditor::ChangeValueReflectToName(const QString& string) {
+    if (selectIndex.isValid()) {
+        if (selectIndex.data().toString() == string) return;
+
+        ui.sceneTreeView->model()->setData(selectIndex, string);
+    }
+}
+
+// 選択しているアイテムを設定
+void Engine46SceneEditor::SelectItem(const QModelIndex& index) {
+    if (selectIndex != index) {
+        selectIndex = index;
     }
 }
