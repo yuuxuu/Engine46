@@ -16,10 +16,12 @@ public:
 	Engine46FileEditor(QWidget* parent = Q_NULLPTR);
 	~Engine46FileEditor();
 
+	void InitializeFileEditor();
+
 public:
 	Ui::Engine46FileEditor ui;
 
 public slots:
-	void UpdateFileTreeView();
+	void SelectItem(const QModelIndex& index);
 };
 

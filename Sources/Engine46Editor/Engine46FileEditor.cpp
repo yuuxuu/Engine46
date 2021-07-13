@@ -19,21 +19,38 @@ Engine46FileEditor::Engine46FileEditor(QWidget* parent)
 
 	ui.treeView->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 	ui.treeView->setMaximumHeight(200);
+	ui.treeView->setMaximumWidth(parent->width() / 3);
 
 	ui.listView->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 	ui.listView->setMaximumHeight(200);
+	ui.listView->setMaximumWidth(parent->width() / 2);
+
+	ui.listView->setViewMode(QListView::IconMode);
+	ui.listView->setFlow(QListView::LeftToRight);
+
+	// 接続
+	connect(ui.treeView, &QAbstractItemView::clicked, this, &Engine46FileEditor::SelectItem);
+	connect(ui.listView, &QAbstractItemView::doubleClicked, this, &Engine46FileEditor::SelectItem);
 }
 
 // デストラクタ
 Engine46FileEditor::~Engine46FileEditor()
 {}
 
-// ファイルツリービューの更新
-void Engine46FileEditor::UpdateFileTreeView(){
+// ファイルエディタの初期化
+void Engine46FileEditor::InitializeFileEditor() {
 	QFileSystemModel* pFileModel = new QFileSystemModel;
 
 	QModelIndex rootIndex = pFileModel->setRootPath(Engine46::RESOURCE_ROOT_PATH);
-	ui.treeView->setModel(pFileModel);
 
+	ui.treeView->setModel(pFileModel);
 	ui.treeView->setRootIndex(rootIndex);
+
+	ui.listView->setModel(pFileModel);
+	ui.listView->setRootIndex(rootIndex);
+}
+
+// 選択しているアイテムを設定
+void Engine46FileEditor::SelectItem(const QModelIndex& index) {
+	ui.listView->setRootIndex(index);
 }

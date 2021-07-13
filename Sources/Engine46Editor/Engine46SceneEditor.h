@@ -19,6 +19,8 @@ public:
 	Engine46SceneEditor(QWidget* parent = Q_NULLPTR);
 	~Engine46SceneEditor();
 
+	void InitializeSceneEditor();
+
 	void RecursiveActor(Engine46::CActorBase* pRootActor, QStandardItemModel* pItemModel, QStandardItem* pRootItem);
 
 	void ChangeValueReflectToName(const QString& string);
@@ -26,11 +28,10 @@ public:
 public:
 	Ui::Engine46SceneEditor ui;
 
+private:
 	QModelIndex selectIndex;
 
 public slots:
-	void SetSelectItem(const QModelIndex& index);
-
-	void UpdateSceneTreeView();
+	void SelectItem(const QModelIndex& index);
 };
 
