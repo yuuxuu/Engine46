@@ -20,11 +20,6 @@
    <item>
     <widget class="QListView" name="listView"/>
    </item>
-   <item>
-    <widget class="QDockWidget" name="dockWidget">
-     <widget class="QWidget" name="dockWidgetContents"/>
-    </widget>
-   </item>
   </layout>
  </widget>
  <resources/>
