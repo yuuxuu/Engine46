@@ -7,6 +7,7 @@
 
 #include "Engine46MainEditor.h"
 
+#include <QDockWidget>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QFileSystemModel>
@@ -14,12 +15,18 @@
 #include "../Engine46/CFileSystem.h"
 
 // コンストラクタ
-Engine46MainEditor::Engine46MainEditor(QWidget *parent)
+Engine46MainEditor::Engine46MainEditor(QWidget* parent)
     : QMainWindow(parent)
 {
     ui.setupUi(this);
 
     this->resize(QSize(1600, 900));
+
+    this->setStyleSheet(
+        "QWidget {"
+            "border: 2px solid grey;"
+        "}"
+    );
 
     // シーンエディタ
     pEngine46SceneEditor = new Engine46SceneEditor(this);
@@ -28,18 +35,15 @@ Engine46MainEditor::Engine46MainEditor(QWidget *parent)
     // ファイルエディタ
     pEngine46FileEditor = new Engine46FileEditor(this);
 
+    ui.dockWidget_Scene->setWidget(pEngine46SceneEditor);
+    ui.dockWidget_Actor->setWidget(pEngine46ActorEditor);
+    ui.dockWidget_File->setWidget(pEngine46FileEditor);
+
     // レンダーウェジット
-    pRenderWidget = new QMyRenderWidget(ui.centralwidget);
+    pRenderWidget = new QMyRenderWidget(this);
     pRenderWidget->resize(QSize(1280, 720));
 
-    QHBoxLayout* pHorizonalLayout = new QHBoxLayout;
-    pHorizonalLayout->addWidget(pEngine46SceneEditor);
-    pHorizonalLayout->addWidget(pRenderWidget);
-    pHorizonalLayout->addWidget(pEngine46ActorEditor);
-
-    QVBoxLayout* pVerticalLayout = new QVBoxLayout(ui.centralwidget);
-    pVerticalLayout->addLayout(pHorizonalLayout);
-    pVerticalLayout->addWidget(pEngine46FileEditor);
+    ui.tabWidget->addTab(pRenderWidget, "RenderWidget");
 
     // 接続
     connect(pEngine46SceneEditor->ui.sceneTreeView, &QAbstractItemView::clicked, pEngine46ActorEditor, &Engine46ActorEditor::SetSelectActor);

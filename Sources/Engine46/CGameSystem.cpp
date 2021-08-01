@@ -77,10 +77,8 @@ namespace Engine46 {
 			pSprite->SetTexture("E3g6p9QUYAMTSbT.jpg");
 			pSprite->SetShaderPackage("Model.hlsl");
 
-			for (int i = 0; i < 10; ++i) {
-				CActorBase* pLight = m_pActorManager->CreateActor((int)ClassType::Light);
-				pLight->InitializeResource(pRenderer);
-			}
+			CActorBase* pLight = m_pActorManager->CreateActor((int)ClassType::Light);
+			pLight->InitializeResource(pRenderer);
 		}
 
 		// イベントハンドル生成

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>665</width>
-    <height>519</height>
+    <width>502</width>
+    <height>265</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,8 +16,20 @@
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
+     <property name="spacing">
+      <number>6</number>
+     </property>
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
      <item>
       <widget class="QLabel" name="label">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="text">
         <string>アクター名</string>
        </property>
@@ -45,29 +57,68 @@
     <layout class="QGridLayout" name="gridLayout">
      <item row="0" column="0">
       <widget class="QLabel" name="label_2">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="text">
         <string>位置</string>
        </property>
       </widget>
      </item>
      <item row="0" column="4">
-      <widget class="QDoubleSpinBox" name="doubleSpinBox_PosY"/>
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_PosY">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
      </item>
      <item row="0" column="5">
       <widget class="QLabel" name="label_5">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="text">
         <string>Z</string>
        </property>
       </widget>
      </item>
      <item row="1" column="2">
-      <widget class="QDoubleSpinBox" name="doubleSpinBox_RotX"/>
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_RotX">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
      </item>
      <item row="1" column="4">
-      <widget class="QDoubleSpinBox" name="doubleSpinBox_RotY"/>
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_RotY">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
      </item>
      <item row="1" column="1">
       <widget class="QLabel" name="label_7">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="text">
         <string>X</string>
        </property>
@@ -75,29 +126,68 @@
      </item>
      <item row="0" column="3">
       <widget class="QLabel" name="label_4">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="text">
         <string>Y</string>
        </property>
       </widget>
      </item>
      <item row="0" column="6">
-      <widget class="QDoubleSpinBox" name="doubleSpinBox_PosZ"/>
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_PosZ">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
      </item>
      <item row="0" column="1">
       <widget class="QLabel" name="label_3">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="text">
         <string>X</string>
        </property>
       </widget>
      </item>
      <item row="0" column="2">
-      <widget class="QDoubleSpinBox" name="doubleSpinBox_PosX"/>
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_PosX">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
      </item>
      <item row="1" column="6">
-      <widget class="QDoubleSpinBox" name="doubleSpinBox_RotZ"/>
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_RotZ">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
      </item>
      <item row="1" column="0">
       <widget class="QLabel" name="label_6">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="text">
         <string>回転</string>
        </property>
@@ -105,6 +195,12 @@
      </item>
      <item row="1" column="5">
       <widget class="QLabel" name="label_9">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="text">
         <string>Z</string>
        </property>
@@ -112,6 +208,12 @@
      </item>
      <item row="1" column="3">
       <widget class="QLabel" name="label_8">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="text">
         <string>Y</string>
        </property>
@@ -119,6 +221,12 @@
      </item>
      <item row="2" column="0">
       <widget class="QLabel" name="label_10">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="text">
         <string>拡縮</string>
        </property>
@@ -126,33 +234,72 @@
      </item>
      <item row="2" column="1">
       <widget class="QLabel" name="label_11">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="text">
         <string>X</string>
        </property>
       </widget>
      </item>
      <item row="2" column="2">
-      <widget class="QDoubleSpinBox" name="doubleSpinBox_ScaX"/>
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_ScaX">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
      </item>
      <item row="2" column="3">
       <widget class="QLabel" name="label_12">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="text">
         <string>Y</string>
        </property>
       </widget>
      </item>
      <item row="2" column="4">
-      <widget class="QDoubleSpinBox" name="doubleSpinBox_ScaY"/>
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_ScaY">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
      </item>
      <item row="2" column="5">
       <widget class="QLabel" name="label_13">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="text">
         <string>Z</string>
        </property>
       </widget>
      </item>
      <item row="2" column="6">
-      <widget class="QDoubleSpinBox" name="doubleSpinBox_ScaZ"/>
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_ScaZ">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
@@ -171,6 +318,18 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>lineEdit_ActorName</tabstop>
+  <tabstop>doubleSpinBox_PosX</tabstop>
+  <tabstop>doubleSpinBox_PosY</tabstop>
+  <tabstop>doubleSpinBox_PosZ</tabstop>
+  <tabstop>doubleSpinBox_RotX</tabstop>
+  <tabstop>doubleSpinBox_RotY</tabstop>
+  <tabstop>doubleSpinBox_RotZ</tabstop>
+  <tabstop>doubleSpinBox_ScaX</tabstop>
+  <tabstop>doubleSpinBox_ScaY</tabstop>
+  <tabstop>doubleSpinBox_ScaZ</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

@@ -20,8 +20,6 @@ Engine46ActorEditor::Engine46ActorEditor(QWidget* parent)
 {
     ui.setupUi(this);
 
-    this->setMaximumWidth(300);
-
     QDoubleSpinBox* pSpinBoxs[] = {
             ui.doubleSpinBox_PosX,
             ui.doubleSpinBox_PosY,
