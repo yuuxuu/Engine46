@@ -29,7 +29,9 @@ namespace Engine46 {
 
 		RECT									m_windowRect;
 
-		std::unique_ptr<CConstantBufferBase>	m_pLightConstantBuffer;
+		std::unique_ptr<CConstantBufferBase>	m_pDirectionalLightCB;
+		std::unique_ptr<CConstantBufferBase>	m_pPointLightCB;
+		std::unique_ptr<CConstantBufferBase>	m_pSpotLightCB;
 
 	public:
 		CRendererBase();

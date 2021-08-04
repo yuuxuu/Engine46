@@ -10,6 +10,7 @@
 #include "CWinow.h"
 #include "CInput.h"
 #include "CActor.h"
+#include "CLight.h"
 #include "CScene.h"
 
 #include "CSceneManager.h"
@@ -77,10 +78,11 @@ namespace Engine46 {
 			pSprite->SetTexture("E3g6p9QUYAMTSbT.jpg");
 			pSprite->SetShaderPackage("Model.hlsl");
 
-			for (int i = 0; i < 10; ++i) {
-				CActorBase* pLight = m_pActorManager->CreateActor((int)ClassType::Light);
-				pLight->InitializeResource(pRenderer);
-			}
+			CLight* pDirectionalLight = m_pActorManager->CreateLight((int)LightType::Directional);
+			pDirectionalLight->InitializeResource(pRenderer);
+
+			CLight* pPointLight = m_pActorManager->CreateLight((int)LightType::Point);
+			pPointLight->InitializeResource(pRenderer);
 		}
 
 		// イベントハンドル生成

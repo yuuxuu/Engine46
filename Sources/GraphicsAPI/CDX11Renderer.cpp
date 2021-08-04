@@ -88,8 +88,14 @@ namespace Engine46 {
 		}
 
 		{
-			this->CreateConstantBuffer(m_pLightConstantBuffer);
-			m_pLightConstantBuffer->CreateConstantBuffer(sizeof(LightCB));
+			this->CreateConstantBuffer(m_pDirectionalLightCB);
+			m_pDirectionalLightCB->CreateConstantBuffer(sizeof(DirectionalLightCB));
+
+			this->CreateConstantBuffer(m_pPointLightCB);
+			m_pPointLightCB->CreateConstantBuffer(sizeof(PointLightCB));
+
+			this->CreateConstantBuffer(m_pSpotLightCB);
+			m_pSpotLightCB->CreateConstantBuffer(sizeof(SpotLightCB));
 		}
 
 		m_windowRect = RECT(width, height);
@@ -112,21 +118,50 @@ namespace Engine46 {
 
 			std::vector<CLight*> pLights = pScene->GetLightsFromScene();
 			if (!pLights.empty()) {
-				LightCB cb = {};
 
-				cb.lightNum = pLights.size();
-				for (int i = 0; i < cb.lightNum; ++i) {
-					VECTOR3 pos = pLights[i]->GetPos();
-					cb.lightPos[i] = VECTOR4(pos.x, pos.y, pos.z, 1.0f);
+				DirectionalLightCB directionalLightCb = {};
+				PointLightCB pointLightCb = {};
+				SpotLightCB spotLightCb = {};
 
-					cb.lightDiffuse[i] = pLights[i]->GetLightDiffuse();
-					cb.lightSpecular[i] = pLights[i]->GetLightSpecular();
-					cb.lightAttenuation[i] = pLights[i]->GetLightAttenuation();
+				for (const auto& light : pLights)
+				{
+					switch (light->GetLightType())
+					{
+					case LightType::Directional:
+						directionalLightCb.pos = light->GetPos();
+						directionalLightCb.diffuse = light->GetLightDiffuse();
+						directionalLightCb.specular = light->GetLightSpecular();
+						break;
+					case LightType::Point:
+						pointLightCb.pointLights[pointLightCb.numPointLight].pos = light->GetPos();
+						pointLightCb.pointLights[pointLightCb.numPointLight].diffuse = light->GetLightDiffuse();
+						pointLightCb.pointLights[pointLightCb.numPointLight].specular = light->GetLightSpecular();
+						pointLightCb.pointLights[pointLightCb.numPointLight].attenuation = light->GetLightAttenuation();
+						
+						pointLightCb.numPointLight++;
+						break;
+					case LightType::Spot:
+						spotLightCb.spotLights[spotLightCb.numSpotLight].pos = light->GetPos();
+						spotLightCb.spotLights[spotLightCb.numSpotLight].diffuse = light->GetLightDiffuse();
+						spotLightCb.spotLights[spotLightCb.numSpotLight].specular = light->GetLightSpecular();
+						spotLightCb.spotLights[spotLightCb.numSpotLight].attenuation = light->GetLightAttenuation();
+
+						spotLightCb.numSpotLight++;
+						break;
+					}
 				}
 
-				m_pLightConstantBuffer->Update(&cb);
-
-				m_pLightConstantBuffer->Set((int)CB_TYPE::LIGHT);
+				m_pDirectionalLightCB->Update(&directionalLightCb);
+				m_pDirectionalLightCB->Set((int)CB_TYPE::DIRECTIONAL_LIGHT);
+				
+				if (pointLightCb.numPointLight > 0) {
+					m_pPointLightCB->Update(&pointLightCb);
+					m_pPointLightCB->Set((int)CB_TYPE::POINT_LIGHT);
+				}
+				if (spotLightCb.numSpotLight > 0) {
+					m_pSpotLightCB->Update(&spotLightCb);
+					m_pSpotLightCB->Set((int)CB_TYPE::SPOT_LIGHT);
+				}
 			}
 		}
 	}

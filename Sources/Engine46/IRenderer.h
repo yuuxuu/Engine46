@@ -30,49 +30,6 @@ namespace Engine46 {
 		virtual bool Render(CSceneBase* pScene) = 0;
 	};
 
-	enum class RENDERER_TYPE {
-		FORWARD,
-		DEFERRED,
-		TOONMAP,
-		POSTEFFECT,
-		DYNAMICCUBE,
-		MAX,
-	};
-
-	enum class SRV_ID {
-		DIFFUSE,
-		SPECULAR,
-		NORMAL,
-		POSITION,
-		LIGHTMAP,
-		DEPTH,
-		STENCIL,
-		CUBE,
-		DYNAMICCUBE,
-		ALBEDO,
-		DISPLACEMENT,
-		ROUGHNESS,
-		HDR,
-		TOONMAP,
-		BLUR,
-		MAX = BLUR + 4,
-	};
-
-	enum class CB_ID {
-		MAIN,
-		MATERIAL,
-		LIGHT,
-		MATRIX,
-		DYNAMICCUBE,
-		PBR_PARAM,
-		BLUR,
-		TESS_PARAM,
-		WAVE_PARAM,
-		PARTICLE_PARAM,
-		TONEMAP_PARAM,
-		MAX,
-	};
-
 	enum class BUFFER_TYPE {
 		VERTEX,
 		INDEX,

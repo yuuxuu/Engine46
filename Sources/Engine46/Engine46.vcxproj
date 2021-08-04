@@ -41,6 +41,7 @@
     <ClCompile Include="CActorManager.cpp" />
     <ClCompile Include="CCamera.cpp" />
     <ClCompile Include="CConstantBuffer.cpp" />
+    <ClCompile Include="CDirectionalLight.cpp" />
     <ClCompile Include="CFileSystem.cpp" />
     <ClCompile Include="CGameSystem.cpp" />
     <ClCompile Include="CInput.cpp" />
@@ -49,6 +50,7 @@
     <ClCompile Include="CMaterialManager.cpp" />
     <ClCompile Include="CMesh.cpp" />
     <ClCompile Include="CMeshManager.cpp" />
+    <ClCompile Include="CPointLight.cpp" />
     <ClCompile Include="CRenderer.cpp" />
     <ClCompile Include="CRendererSystem.cpp" />
     <ClCompile Include="CRendering.cpp" />
@@ -57,6 +59,7 @@
     <ClCompile Include="CShader.cpp" />
     <ClCompile Include="CShaderManager.cpp" />
     <ClCompile Include="CShaderPackage.cpp" />
+    <ClCompile Include="CSpotLight.cpp" />
     <ClCompile Include="CSprite.cpp" />
     <ClCompile Include="CTexture.cpp" />
     <ClCompile Include="CTextureManager.cpp" />
@@ -73,6 +76,7 @@
     <ClInclude Include="CActorManager.h" />
     <ClInclude Include="CCamera.h" />
     <ClInclude Include="CConstantBuffer.h" />
+    <ClInclude Include="CDirectionalLight.h" />
     <ClInclude Include="CFileSystem.h" />
     <ClInclude Include="CGameSystem.h" />
     <ClInclude Include="CInput.h" />
@@ -81,6 +85,7 @@
     <ClInclude Include="CMaterialManager.h" />
     <ClInclude Include="CMesh.h" />
     <ClInclude Include="CMeshManager.h" />
+    <ClInclude Include="CPointLight.h" />
     <ClInclude Include="CRenderer.h" />
     <ClInclude Include="CRendererSystem.h" />
     <ClInclude Include="CRendering.h" />
@@ -89,6 +94,7 @@
     <ClInclude Include="CShader.h" />
     <ClInclude Include="CShaderManager.h" />
     <ClInclude Include="CShaderPackage.h" />
+    <ClInclude Include="CSpotLight.h" />
     <ClInclude Include="CSprite.h" />
     <ClInclude Include="CTexture.h" />
     <ClInclude Include="CTextureManager.h" />

@@ -80,61 +80,103 @@ cbuffer CbLight : register(b3)
 	int			lightNum;						// ライト数
 }
 
-// 行列コンスタントバッファ
-cbuffer CbMatrix : register(b4)
+struct DirectionalLight {
+	float4 pos;
+	float4 diffuse;
+	float4 specular;
+};
+
+// ディレクショナルライト
+cbuffer CbDirectionalLight : register(b3)
 {
-	float4x4	insWorldMatrix[INSTANCE_MAX];	// インスタンスワールド変換行列
+	DirectionalLight directionalLight;
 }
 
-cbuffer cbDynamicCube : register(b5)
+struct PointLight {
+	float3	pos;
+	float	radius;
+	float4	diffuse;
+	float4	specular;
+	float4	attenuation;
+};
+
+cbuffer CbPointLight : register(b4)
 {
-	float4x4	views[6];				// 動的キューブマップビュー変換行列
+	PointLight pointLights[LIGHT_MAX];
+
+	int numPointLight;
 }
 
-// PBRパラメーターコンスタントバッファ
-cbuffer CbPBRParam : register(b6)
+struct SpotLight {
+	float3	pos;
+	float	angle;
+	float4	diffuse;
+	float4	specular;
+	float4	attenuation;
+};
+
+cbuffer CbSpotLight : register(b5)
 {
-	float4		PBRParam;				// PBRパラメーター(x:metallic, y:roughness, z:reflectance)
+	SpotLight spotLights[LIGHT_MAX];
+
+	int numSpotLight;
 }
 
-// ブラーコンスタントバッファ
-cbuffer CbBlur : register(b7)
-{
-	float4		offset[OFFSET_MAX];
-}
-
-// Tessパラメーターコンスタントバッファ
-cbuffer CbTessParam : register(b8)
-{
-	float4		tessParam;
-}
-
-// 波パラメーターコンスタントバッファ
-cbuffer CbWaveParam : register(b9)
-{
-	float4		wavePos;		// 波の原点位置
-	float4		waveParam;		// 波パラメーター(x:振幅, y:波長, z:角度, w:波のエッジ)
-}
-
-// パーティクルパラメーターコンスタントバッファ
-cbuffer CbParticleParam : register(b10)
-{
-	float		particleSize;
-	float		particleLifeTime;
-	float		particleVelocity;
-	float		dummy;
-
-	float4		particleStartColor;
-	float4		particleLerpColor;
-}
-
-cbuffer CbToneMapParam : register(b11)
-{
-	float		keyValue;
-	float		avgBrightness;
-	float		targetAvgBrightness;
-
-	float		alpha;
-}
+//// 行列コンスタントバッファ
+//cbuffer CbMatrix : register(b4)
+//{
+//	float4x4	insWorldMatrix[INSTANCE_MAX];	// インスタンスワールド変換行列
+//}
+//
+//cbuffer cbDynamicCube : register(b5)
+//{
+//	float4x4	views[6];				// 動的キューブマップビュー変換行列
+//}
+//
+//// PBRパラメーターコンスタントバッファ
+//cbuffer CbPBRParam : register(b6)
+//{
+//	float4		PBRParam;				// PBRパラメーター(x:metallic, y:roughness, z:reflectance)
+//}
+//
+//// ブラーコンスタントバッファ
+//cbuffer CbBlur : register(b7)
+//{
+//	float4		offset[OFFSET_MAX];
+//}
+//
+//// Tessパラメーターコンスタントバッファ
+//cbuffer CbTessParam : register(b8)
+//{
+//	float4		tessParam;
+//}
+//
+//// 波パラメーターコンスタントバッファ
+//cbuffer CbWaveParam : register(b9)
+//{
+//	float4		wavePos;		// 波の原点位置
+//	float4		waveParam;		// 波パラメーター(x:振幅, y:波長, z:角度, w:波のエッジ)
+//}
+//
+//// パーティクルパラメーターコンスタントバッファ
+//cbuffer CbParticleParam : register(b10)
+//{
+//	float		particleSize;
+//	float		particleLifeTime;
+//	float		particleVelocity;
+//	float		dummy;
+//
+//	float4		particleStartColor;
+//	float4		particleLerpColor;
+//}
+//
+//cbuffer CbToneMapParam : register(b11)
+//{
+//	float		keyValue;
+//	float		avgBrightness;
+//	float		targetAvgBrightness;
+//
+//	float		alpha;
+//}
 
 #endif

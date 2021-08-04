@@ -17,7 +17,8 @@ namespace Engine46 {
 	// コンストラクタ
 	CLight::CLight(const char* lightName) :
 		CActorBase((int)ClassType::Light, lightName, Transform()),
-		m_lightDiffuse(VECTOR4(0.2f, 0.0f, 0.0f, 1.0f)),
+		m_lightID(0),
+		m_lightDiffuse(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),
 		m_lightSpecular(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),
 		m_lightAmbinet(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),
 		m_lightEmissive(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),

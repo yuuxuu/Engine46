@@ -6,11 +6,14 @@
  */
 
 #include "CActorManager.h"
-#include "CActor.h"
 #include "CRenderer.h"
+
 #include "CSprite.h"
 #include "CCamera.h"
-#include "CLight.h"
+
+#include "CDirectionalLight.h"
+#include "CPointLight.h"
+#include "CSpotLight.h"
 
 namespace Engine46 {
 
@@ -28,48 +31,84 @@ namespace Engine46 {
 	{}
 
 	// オブジェクト作成
-	CActorBase* CActorManager::CreateActor(int classID) {
+	CActorBase* CActorManager::CreateActor(int classType) {
 		std::unique_ptr<CActorBase> actor;
 		RECT rect;
 		std::string actorName;
 
-		switch ((ClassType)classID) {
+		switch ((ClassType)classType) {
 		case ClassType::Root:
-			actorName = "Root_" + std::to_string(classCount.rootCount++);
+			actorName = "Root_" + std::to_string(m_classCount.rootCount++);
 
-			actor = std::make_unique<CActorBase>(classID, actorName.c_str(), Transform());
+			actor = std::make_unique<CActorBase>(classType, actorName.c_str(), Transform());
 			break;
 		case ClassType::Camera:
 			rect = pRenderer->GetWindowRect();
-			actorName = "Camera_" + std::to_string(classCount.cameraCount++);
+			actorName = "Camera_" + std::to_string(m_classCount.cameraCount++);
 
 			actor = std::make_unique<CCamera>(actorName.c_str(), rect.w, rect.h);
 			break;
 		case ClassType::Sprite:
-			actorName = "Sprite_" + std::to_string(classCount.spriteCount++);
+			actorName = "Sprite_" + std::to_string(m_classCount.spriteCount++);
 
 			actor = std::make_unique<CSprite>(actorName.c_str());
 			break;
 		case ClassType::Light:
-			actorName = "Light_" + std::to_string(classCount.lightCount++);
-
-			actor = std::make_unique<CLight>(actorName.c_str());
-			break;
+			return nullptr;
 		}
 
-		actor->SetActorID(classCount.allCount++);
+		actor->SetActorID(m_classCount.allCount++);
 
 		actor->CActorBase::Initialize();
 
 		CActorBase* pActor = actor.get();
 
-		if (classID != (int)ClassType::Root) {
+		if (classType != (int)ClassType::Root) {
 			pRootActor->AddChiledActorList(pActor);
 		}
 
 		this->AddActorToVec(actor);
 
 		return pActor;
+	}
+
+	// ライト作成
+	CLight* CActorManager::CreateLight(int lightType) {
+		std::unique_ptr<CLight> light;
+		std::string lightName;
+
+		switch ((LightType)lightType)
+		{
+		case LightType::Directional:
+			lightName = "DirectionalLight_" + std::to_string(m_classCount.lightCount);
+
+			light = std::make_unique<CDirectionalLight>(lightName.c_str());
+			break;
+		case LightType::Point:
+			lightName = "PointLight_" + std::to_string(m_classCount.lightCount);
+
+			light = std::make_unique<CPointLight>(lightName.c_str());
+			break;
+		case LightType::Spot:
+			lightName = "SpotLight_" + std::to_string(m_classCount.lightCount);
+
+			light = std::make_unique<CSpotLight>(lightName.c_str());
+			break;
+		}
+
+		light->SetLightType((LightType)lightType);
+		light->SetActorID(m_classCount.allCount++);
+		light->SetLightID(m_classCount.lightCount++);
+
+		light->CActorBase::Initialize();
+
+		CLight* pLight = light.get();
+
+		pRootActor->AddChiledActorList(pLight);
+
+		this->AddLightToVec(light);
+
+		return pLight;
 	}
 
 	// オブジェクト取得
