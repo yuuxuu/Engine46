@@ -12,7 +12,8 @@
 namespace Engine46 {
 
 	// コンストラクタ
-	CDX11Mesh::CDX11Mesh(CDX11Device* pDevice, CDX11DeviceContext* pDeviceContext) :
+	CDX11Mesh::CDX11Mesh(CDX11Device* pDevice, CDX11DeviceContext* pDeviceContext, const char* meshName) :
+		CMeshBase(meshName),
 		pDX11Device(pDevice),
 		pDX11DeviceContext(pDeviceContext)
 	{}
@@ -23,6 +24,8 @@ namespace Engine46 {
 
 	// メッシュ作成
 	void CDX11Mesh::Create() {
+
+		if (m_isInitialize) return;
 
 		D3D11_BUFFER_DESC bufDesc = {};
 		bufDesc.ByteWidth			= sizeof(vertexInfo) * m_vecVertexInfo.size();
@@ -43,6 +46,8 @@ namespace Engine46 {
 		subData.pSysMem = &m_vecIndexes[0];
 
 		pDX11Device->CreateBuffer(m_pIndexBuffer, bufDesc, &subData);
+
+		m_isInitialize = true;
 	}
 
 	// メッシュ描画

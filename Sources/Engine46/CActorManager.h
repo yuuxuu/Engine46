@@ -10,10 +10,13 @@
 #ifndef _CACTOR_MANAGER_H_
 #define _CACTOR_MANAGER_H_
 
+#include "CLight.h"
+
 namespace Engine46 {
 	
 	// 前方宣言
 	class CActorBase;
+	class CLight;
 	class CRendererBase;
 
 	struct classCount {
@@ -35,20 +38,23 @@ namespace Engine46 {
 	class CActorManager {
 	private:
 		std::vector<std::unique_ptr<CActorBase>>	m_pVecActor;
+		std::vector<std::unique_ptr<CLight>>		m_pVecLight;
 		
 		CActorBase*									pRootActor;
 
 		CRendererBase*								pRenderer;
 
-		classCount									classCount;
+		classCount									m_classCount;
 
 	public:
 		explicit CActorManager(CRendererBase* pRenderer);
 		~CActorManager();
 
-		CActorBase* CreateActor(int classID);
+		CActorBase* CreateActor(int classType);
+		CLight* CreateLight(int lightType);
 
 		void AddActorToVec(std::unique_ptr<CActorBase>& pActor) { m_pVecActor.emplace_back(std::move(pActor)); }
+		void AddLightToVec(std::unique_ptr<CLight>& pLight) { m_pVecLight.emplace_back(std::move(pLight)); }
 
 		CActorBase* GetActorFromActorName(const char* name);
 

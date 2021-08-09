@@ -14,7 +14,8 @@ namespace Engine46 {
 
 	// コンストラクタ
 	CMaterialManager::CMaterialManager(CRendererBase* pRenderer) :
-		pRenderer(pRenderer)
+		pRenderer(pRenderer),
+		m_materialCount(0)
 	{}
 
 	// デストラクタ
@@ -25,15 +26,19 @@ namespace Engine46 {
 	CMaterialBase* CMaterialManager::CreateMaterial(const char* materialName) {
 		CMaterialBase* pMaterial = GetMaterialFromMap(materialName);
 
-		if (!pMaterial) {
-			std::unique_ptr<CMaterialBase> material = std::make_unique<CMaterialBase>();
+		if (pMaterial) return pMaterial;
 
+		std::unique_ptr<CMaterialBase> material = std::make_unique<CMaterialBase>(materialName);
+
+		if (material) {
 			pMaterial = material.get();
 
 			this->AddMaterialToMap(materialName, material);
+
+			return pMaterial;
 		}
 
-		return pMaterial;
+		return nullptr;
 	}
 
 	// マテリアルをマップへ追加
@@ -56,14 +61,18 @@ namespace Engine46 {
 	}
 
 	// アクターへマテリアルを設定
-	void CMaterialManager::SetMaterialToActor(CActorBase* pActor) {
-		std::unique_ptr<CMaterialBase> pMaterial;
+	void CMaterialManager::SetMaterialToActor(CActorBase* pActor, const char* materialName) {
+		CMaterialBase* pMaterial = GetMaterialFromMap(materialName);
 
-		pRenderer->CreateMaterial(pMaterial);
+		if (pMaterial){
+			pActor->SetMaterial(pMaterial);
+			return;
+		}
+
+		pMaterial = CreateMaterial(materialName);
 
 		if (pMaterial) {
-			//pActor->SetMaterial(pMaterial);
-			this->AddMaterialToMap(pMaterial->GetMaterialName().c_str(), pMaterial);
+			pActor->SetMaterial(pMaterial);
 		}
 	}
 

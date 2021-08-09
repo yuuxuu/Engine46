@@ -33,7 +33,7 @@ namespace Engine46 {
 
 		CMeshBase* GetMeshFromMap(const char* name);
 
-		void SetMeshToActor(CActorBase* pActor);
+		void SetMeshToActor(CActorBase* pActor, const char* meshName);
 	};
 
 } // namespace

@@ -10,6 +10,7 @@
 #include "CWinow.h"
 #include "CInput.h"
 #include "CActor.h"
+#include "CLight.h"
 #include "CScene.h"
 
 #include "CSceneManager.h"
@@ -69,16 +70,20 @@ namespace Engine46 {
 
 		{
 			CActorBase* pCamera = m_pActorManager->CreateActor((int)ClassType::Camera);
-			pCamera->InitializeResource(pRenderer);
 			pCamera->SetInput(m_pInput.get());
 
 			CActorBase* pSprite = m_pActorManager->CreateActor((int)ClassType::Sprite);
-			pSprite->InitializeResource(pRenderer);
+			pSprite->SetMesh("SpriteMesh");
+			pSprite->SetMaterial("SpriteMaterial");
 			pSprite->SetTexture("E3g6p9QUYAMTSbT.jpg");
 			pSprite->SetShaderPackage("Model.hlsl");
+			pSprite->InitializeResource(pRenderer);
 
-			CActorBase* pLight = m_pActorManager->CreateActor((int)ClassType::Light);
-			pLight->InitializeResource(pRenderer);
+			CLight* pDirectionalLight = m_pActorManager->CreateLight((int)LightType::Directional);
+			pDirectionalLight->InitializeResource(pRenderer);
+
+			CLight* pPointLight = m_pActorManager->CreateLight((int)LightType::Point);
+			pPointLight->InitializeResource(pRenderer);
 		}
 
 		// イベントハンドル生成

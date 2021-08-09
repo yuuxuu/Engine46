@@ -33,6 +33,8 @@ namespace Engine46 {
 
 		std::string				m_meshName;
 
+		bool					m_isInitialize;
+
 	public:
 		CMeshBase();
 		explicit CMeshBase(const char* meshName);
@@ -49,6 +51,8 @@ namespace Engine46 {
 		void AddIndex(const DWORD index) { m_vecIndexes.emplace_back(index); }
 
 		std::string GetMeshName() const { return m_meshName.c_str(); }
+
+		bool IsInitialize() const { return m_isInitialize; }
 	};
 
 } // namespace

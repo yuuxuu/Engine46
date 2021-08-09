@@ -18,21 +18,63 @@ namespace Engine46 {
 		WORLD,
 		CAMERA,
 		MATERIAL,
-		LIGHT,
+		DIRECTIONAL_LIGHT,
+		POINT_LIGHT,
+		SPOT_LIGHT,
+	};
+
+	struct CameraCB {
+		Matrix	matVP;
+		VECTOR3	cameraPos;
 	};
 
 	constexpr int LIGHT_MAX = 1024 / 2;
 
-	struct LightCB {
-		VECTOR4 lightPos[LIGHT_MAX];
-		VECTOR4 lightDiffuse[LIGHT_MAX];
-		VECTOR4 lightSpecular[LIGHT_MAX];
-		VECTOR4 lightAttenuation[LIGHT_MAX];
+	struct DirectionalLightCB {
+		VECTOR3 pos;
+		float	dummy;
+		VECTOR4 diffuse;
+		VECTOR4 specular;
+	};
 
-		int		lightNum;
-		int		dumy_01;
-		int		dumy_02;
-		int		dumy_03;
+	struct PointLightCB {
+		struct PointLight {
+			VECTOR3 pos;
+			float	radius;
+			VECTOR4 diffuse;
+			VECTOR4 specular;
+			VECTOR4 attenuation;
+		};
+
+		PointLightCB() :
+			numPointLight(0)
+		{}
+
+		PointLight pointLights[LIGHT_MAX];
+		int numPointLight;
+		int dummy1;
+		int dummy2;
+		int dummy3;
+	};
+
+	struct SpotLightCB {
+		struct SpotLight {
+			VECTOR3 pos;
+			float	angle;
+			VECTOR4 diffuse;
+			VECTOR4 specular;
+			VECTOR4 attenuation;
+		};
+
+		SpotLightCB() :
+			numSpotLight(0)
+		{}
+
+		SpotLight spotLights[LIGHT_MAX];
+		int numSpotLight;
+		int dummy1;
+		int dummy2;
+		int dummy3;
 	};
 
 	class CConstantBufferBase {

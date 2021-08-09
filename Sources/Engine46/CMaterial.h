@@ -13,45 +13,52 @@
 #include "math.h"
 #include "CTexture.h"
 #include "CShaderPackage.h"
+#include "CConstantBuffer.h"
 
 namespace Engine46 {
 
 	class CMaterialBase {
 	protected:
-		CTextureBase*	pTexture;
+		CTextureBase*							pTexture;
+		std::vector<CTextureBase*>				pVecTexture;
 
-		CShaderPackage*	pShaderPackage;
+		CShaderPackage*							pShaderPackage;
 
-		VECTOR4			m_diffuse;
-		VECTOR4			m_specular;
-		VECTOR4			m_ambient;
-		VECTOR4			m_emissive;
-		VECTOR4			m_brightness;
+		std::unique_ptr<CConstantBufferBase>	m_pMaterialConstantBuffer;
 
-		int				m_materialID;
+		VECTOR4									m_diffuse;
+		VECTOR4									m_specular;
+		VECTOR4									m_ambient;
+		VECTOR4									m_emissive;
 
-		std::string		m_materialName;
+		int										m_materialID;
+
+		std::string								m_materialName;
+
+		bool									m_isInitialize;
 
 	public:
 		CMaterialBase();
 		explicit CMaterialBase(const char* materialName);
 		virtual ~CMaterialBase();
 
-		virtual void Create() {};
-		virtual void Update() {};
-		virtual void Set(UINT slot) {};
+		virtual void Update();
+		virtual void Set(UINT slot);
+
+		void SetMaterialConstantBuffer(std::unique_ptr<CConstantBufferBase>& pConstantBuffer);
 
 		void SetDiffuse(const VECTOR4& diffuse) { m_diffuse = diffuse; }
 		void SetSpecular(const VECTOR4& specular) { m_diffuse = specular; }
 		void SetAmbient(const VECTOR4& ambient) { m_diffuse = ambient; }
 		void SetEmissive(const VECTOR4& emissive) { m_diffuse = emissive; }
-		void SetBrightness(const VECTOR4& brightness) { m_diffuse = brightness; }
 
 		void SetTexture(CTextureBase* pTexture) { this->pTexture = pTexture; }
 
 		void SetShaderPackage(CShaderPackage* pSp) { pShaderPackage = pSp; }
 
 		std::string GetMaterialName() const { return m_materialName.c_str(); }
+
+		bool IsInitialize() const { return m_isInitialize; }
 	};
 
 } // namespace

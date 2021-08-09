@@ -28,8 +28,6 @@ namespace Engine46 {
 
 		float									m_speed;
 
-		std::unique_ptr<CConstantBufferBase>	m_pCameraConstantBuffer;
-
 		std::unique_ptr<CInput>					m_pInput;
 
 	private:
@@ -43,8 +41,6 @@ namespace Engine46 {
 
 		void Initialize() override;
 		void Update() override;
-
-		void SetCameraConstantBuffer();
 
 		Matrix GetViewProjectionMatrix();
 

@@ -17,7 +17,8 @@ namespace Engine46 {
 	// コンストラクタ
 	CLight::CLight(const char* lightName) :
 		CActorBase((int)ClassType::Light, lightName, Transform()),
-		m_lightDiffuse(VECTOR4(0.2f, 0.0f, 0.0f, 1.0f)),
+		m_lightID(0),
+		m_lightDiffuse(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),
 		m_lightSpecular(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),
 		m_lightAmbinet(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),
 		m_lightEmissive(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),
@@ -32,9 +33,11 @@ namespace Engine46 {
 	void CLight::InitializeResource(CRendererBase* pRenderer) {
 		if (pRenderer) {
 			m_pSprite = std::make_unique<CSprite>("LightSprite");
-			m_pSprite->InitializeResource(pRenderer);
+			m_pSprite->SetMesh("LightMesh");
+			m_pSprite->SetMaterial("LightMaterial");
 			m_pSprite->SetTexture("particle.png");
 			m_pSprite->SetShaderPackage("CPUParticle.hlsl");
+			m_pSprite->InitializeResource(pRenderer);
 		}
 	}
 

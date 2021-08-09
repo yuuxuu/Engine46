@@ -17,25 +17,39 @@ namespace Engine46 {
 	// 前方宣言
 	class CSprite;
 
+	enum class LightType {
+		Directional,
+		Point,
+		Spot,
+	};
+
 	class CLight : public CActorBase {
-	private:
-		std::unique_ptr<CSprite>				m_pSprite;
+	protected:
+		std::unique_ptr<CSprite>	m_pSprite;
 
-		VECTOR4									m_lightDiffuse;
-		VECTOR4									m_lightSpecular;
-		VECTOR4									m_lightAmbinet;
-		VECTOR4									m_lightEmissive;
+		LightType					m_lightType;
 
-		VECTOR4									m_lightAttenuation;
+		int							m_lightID;
+
+		VECTOR4						m_lightDiffuse;
+		VECTOR4						m_lightSpecular;
+		VECTOR4						m_lightAmbinet;
+		VECTOR4						m_lightEmissive;
+		VECTOR4						m_lightAttenuation;
 
 	public:
 		explicit CLight(const char* lightName);
-		~CLight();
+		virtual ~CLight();
 
 		void InitializeResource(CRendererBase* pRenderer) override;
 
-		void Update() override;
-		void Draw() override;
+		virtual void Update() override;
+		virtual void Draw() override;
+
+		void SetLightType(LightType type) { m_lightType = type; }
+		LightType GetLightType() const { return m_lightType; }
+
+		void SetLightID(const int id) { m_lightID = id; }
 
 		void SetLightDiffuse(const VECTOR4& diffuse) { m_lightDiffuse = diffuse; }
 		void SetLightSpecular(const VECTOR4& specular) { m_lightSpecular = specular; }

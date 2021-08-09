@@ -44,9 +44,9 @@ namespace Engine46 {
 
 		Transform								m_transform;
 		
-		std::unique_ptr<CMeshBase>				m_pMesh;
+		CMeshBase*								m_pMesh;
 
-		std::unique_ptr<CMaterialBase>			m_pMaterial;
+		CMaterialBase*							m_pMaterial;
 
 		std::unique_ptr<CConstantBufferBase>	m_pWorldConstantBuffer;
 
@@ -72,11 +72,13 @@ namespace Engine46 {
 
 		virtual void InitializeResource(CRendererBase* pRenderer) {};
 
-		void SetConstantBuffer(std::unique_ptr<CConstantBufferBase>& pConstantBuffer);
+		void SetWorldConstantBuffer(std::unique_ptr<CConstantBufferBase>& pConstantBuffer);
 
-		void SetMesh(std::unique_ptr<CMeshBase>& pMesh);
+		void SetMesh(CMeshBase* pMesh);
+		void SetMesh(const char* meshName);
 
-		void SetMaterial(std::unique_ptr<CMaterialBase>& pMaterial);
+		void SetMaterial(CMaterialBase* pMaterial);
+		void SetMaterial(const char* materialName);
 
 		void SetTexture(CTextureBase* pTex);
 		void SetTexture(const char* textureName);
@@ -115,8 +117,6 @@ namespace Engine46 {
 
 		void SetScale(const VECTOR3& scale) { m_transform.scale = scale; }
 		VECTOR3 GetScale() const { return m_transform.scale; }
-
-		void SetWorldConstantBuffer();
 
 		Matrix GetWorldMatrix();
 

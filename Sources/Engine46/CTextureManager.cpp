@@ -25,15 +25,21 @@ namespace Engine46 {
 	CTextureBase* CTextureManager::CreateTexture(const char* textureName) {
 		CTextureBase* pTexture = GetTextureFromMap(textureName);
 
-		if (!pTexture) {
-			std::unique_ptr<CTextureBase> texture = std::make_unique<CTextureBase>();
+		if (pTexture) return pTexture;
 
+		std::unique_ptr<CTextureBase> texture;
+
+		pRenderer->CreateTexture(texture, textureName);
+
+		if (texture) {
 			pTexture = texture.get();
 
 			this->AddTextureToMap(textureName, texture);
+
+			return pTexture;
 		}
 
-		return pTexture;
+		return nullptr;
 	}
 
 	// テクスチャをマップへ追加
@@ -64,14 +70,10 @@ namespace Engine46 {
 			return;
 		}
 
-		std::unique_ptr<CTextureBase> texture;
+		pTexture = CreateTexture(textureName);
 
-		pRenderer->CreateTexture(texture, textureName);
-
-		if (texture) {
-			pActor->SetTexture(texture.get());
-
-			this->AddTextureToMap(textureName, texture);
+		if (pTexture) {
+			pActor->SetTexture(pTexture);
 		}
 	}
 

@@ -50,22 +50,26 @@ PS_OUT PS_main(PS_IN input) {
 
 	output.color = diffuseTex.Sample(sampleState, input.uv);
 
-	float4 lightColor;
-	for (int i = 0; i < lightNum; ++i) {
-		float3 l = lightPos[i].xyz - input.posw.xyz;
-		float3 n = normalize(input.normal);
+	float3 l = normalize(directionalLight.pos);
+	float3 n = normalize(input.normal);
+	float d = Lambert(n, l);
+	float4 dLight = directionalLight.diffuse * d;
+
+	float4 pLight;
+	for (int i = 0; i < numPointLight; ++i) {
+		float3 l = pointLights[i].pos - input.posw.xyz;
 		float len = length(l);
 
 		l = normalize(l);
 		// ŒõŒ¹‚Æ–@ü‚Ì“àÏ‚ðŒvŽZ
 		float d = Lambert(n, l);
 		// Œ¸Š
-		float4 att = saturate(1.0f / (attenuation[i].x + attenuation[i].y * len + attenuation[i].z * len * len));
+		float4 att = saturate(1.0f / (pointLights[i].attenuation.x + pointLights[i].attenuation.y * len + pointLights[i].attenuation.z * len * len));
 
-		lightColor += (lightDiffuse[i] * d) * att;
+		pLight += (pointLights[i].diffuse * d) * att;
 	}
 
-	output.color *= lightColor;
+	output.color *= dLight + pLight;
 
 	return output;
 }

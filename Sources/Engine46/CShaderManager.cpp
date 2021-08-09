@@ -27,15 +27,21 @@ namespace Engine46 {
 	CShaderPackage* CShaderManager::CreateShaderPackage(const char* packageName) {
 		CShaderPackage* pSp = GetShaderPackageFromMap(packageName);
 
-		if (!pSp) {
-			std::unique_ptr<CShaderPackage> sp = std::make_unique<CShaderPackage>(packageName);
+		if (pSp) return pSp;
 
+		std::unique_ptr<CShaderPackage> sp = std::make_unique<CShaderPackage>(packageName);
+
+		pRenderer->CreateShader(sp, packageName);
+
+		if (sp) {
 			pSp = sp.get();
 
 			this->AddShaderPackageToMap(packageName, sp);
+
+			return pSp;
 		}
 
-		return pSp;
+		return nullptr;
 	}
 
 	// シェーダーパッケージをマップへ追加
@@ -109,17 +115,11 @@ namespace Engine46 {
 			pActor->SetShaderPackage(pSp);
 			return;
 		}
-		
-		std::unique_ptr<CShaderPackage> sp = std::make_unique<CShaderPackage>(shaderPackageName);
 
-		pRenderer->CreateShader(sp, shaderPackageName);
+		pSp = CreateShaderPackage(shaderPackageName);
 
-		if (sp) {
-			if (sp->IsCompile()) {
-				pActor->SetShaderPackage(sp.get());
-
-				this->AddShaderPackageToMap(sp->GetPackageName(), sp);
-			}
+		if (pSp && pSp->IsCompile()) {
+			pActor->SetShaderPackage(pSp);
 		}
 	}
 

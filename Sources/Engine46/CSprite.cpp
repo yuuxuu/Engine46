@@ -28,53 +28,56 @@ namespace Engine46 {
 		if (pRenderer) {
 			std::unique_ptr<CConstantBufferBase> pConstantBuffer;
 			pRenderer->CreateConstantBuffer(pConstantBuffer);
-			SetConstantBuffer(pConstantBuffer);
+			SetWorldConstantBuffer(pConstantBuffer);
 
-			std::unique_ptr<CMeshBase> pMesh;
-			pRenderer->CreateMesh(pMesh);
+			if (m_pMaterial && !m_pMaterial->IsInitialize()) {
+				std::unique_ptr<CConstantBufferBase> pMaterialConstantBuffer;
+				pRenderer->CreateConstantBuffer(pMaterialConstantBuffer);
 
-			pMesh->ReserveVertex(4);
+				m_pMaterial->SetMaterialConstantBuffer(pMaterialConstantBuffer);
+			}
+
+		}
+
+		if (m_pMesh && !m_pMesh->IsInitialize()) {
+			m_pMesh->ReserveVertex(4);
 
 			vertexInfo info;
 
 			info.vertex = VECTOR3(-1.0f, 1.0f, 0.0f);
-			info.color	= VECTOR4(1.0f, 0.0f, 0.0f, 1.0f);
-			info.uv		= VECTOR2(0.0f, 0.0f);
+			info.color = VECTOR4(1.0f, 0.0f, 0.0f, 1.0f);
+			info.uv = VECTOR2(0.0f, 0.0f);
 			info.normal = VECTOR3(0.0f, 0.0f, -1.0f);
-			pMesh->AddVertexInfo(info);
+			m_pMesh->AddVertexInfo(info);
 
 			info.vertex = VECTOR3(1.0f, 1.0f, 0.0f);
-			info.color	= VECTOR4(0.0f, 1.0f, 0.0f, 1.0f);
-			info.uv		= VECTOR2(1.0f, 0.0f);
+			info.color = VECTOR4(0.0f, 1.0f, 0.0f, 1.0f);
+			info.uv = VECTOR2(1.0f, 0.0f);
 			info.normal = VECTOR3(0.0f, 0.0f, -1.0f);
-			pMesh->AddVertexInfo(info);
+			m_pMesh->AddVertexInfo(info);
 
 			info.vertex = VECTOR3(-1.0f, -1.0f, 0.0f);
-			info.color	= VECTOR4(0.0f, 0.0f, 1.0f, 1.0f);
-			info.uv		= VECTOR2(0.0f, 1.0f);
+			info.color = VECTOR4(0.0f, 0.0f, 1.0f, 1.0f);
+			info.uv = VECTOR2(0.0f, 1.0f);
 			info.normal = VECTOR3(0.0f, 0.0f, -1.0f);
-			pMesh->AddVertexInfo(info);
+			m_pMesh->AddVertexInfo(info);
 
 			info.vertex = VECTOR3(1.0f, -1.0f, 0.0f);
-			info.color	= VECTOR4(1.0f, 0.0f, 0.0f, 1.0f);
-			info.uv		= VECTOR2(1.0f, 1.0f);
+			info.color = VECTOR4(1.0f, 0.0f, 0.0f, 1.0f);
+			info.uv = VECTOR2(1.0f, 1.0f);
 			info.normal = VECTOR3(0.0f, 0.0f, -1.0f);
-			pMesh->AddVertexInfo(info);
+			m_pMesh->AddVertexInfo(info);
 
-			pMesh->ReserveIndex(6);
+			m_pMesh->ReserveIndex(6);
 
-			pMesh->AddIndex(0);
-			pMesh->AddIndex(1);
-			pMesh->AddIndex(3);
-			pMesh->AddIndex(0);
-			pMesh->AddIndex(3);
-			pMesh->AddIndex(2);
+			m_pMesh->AddIndex(0);
+			m_pMesh->AddIndex(1);
+			m_pMesh->AddIndex(3);
+			m_pMesh->AddIndex(0);
+			m_pMesh->AddIndex(3);
+			m_pMesh->AddIndex(2);
 
-			SetMesh(pMesh);
-
-			std::unique_ptr<CMaterialBase> pMaterial;
-			pRenderer->CreateMaterial(pMaterial);
-			SetMaterial(pMaterial);
+			m_pMesh->Create();
 		}
 	}
 
