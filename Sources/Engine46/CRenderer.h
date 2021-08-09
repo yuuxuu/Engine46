@@ -29,6 +29,7 @@ namespace Engine46 {
 
 		RECT									m_windowRect;
 
+		std::unique_ptr<CConstantBufferBase>	m_pCameraCB;
 		std::unique_ptr<CConstantBufferBase>	m_pDirectionalLightCB;
 		std::unique_ptr<CConstantBufferBase>	m_pPointLightCB;
 		std::unique_ptr<CConstantBufferBase>	m_pSpotLightCB;
@@ -43,8 +44,7 @@ namespace Engine46 {
 		virtual bool Render(CSceneBase* pScene) override { return true; };
 
 		virtual void CreateConstantBuffer(std::unique_ptr<CConstantBufferBase>& pConstantBuffer) {};
-		virtual void CreateMesh(std::unique_ptr<CMeshBase>& pMesh) {};
-		virtual void CreateMaterial(std::unique_ptr<CMaterialBase>& pMaterial) {};
+		virtual void CreateMesh(std::unique_ptr<CMeshBase>& pMesh, const char* meshName) {};
 		virtual void CreateTexture(std::unique_ptr<CTextureBase>& pTexture, const char* textureName) {};
 		virtual void CreateShader(std::unique_ptr<CShaderPackage>& pShaderPackage, const char* shaderName) {};
 

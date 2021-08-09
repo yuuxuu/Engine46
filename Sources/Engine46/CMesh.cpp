@@ -13,7 +13,8 @@ namespace Engine46 {
 	// コンストラクタ
 	CMeshBase::CMeshBase() :
 		m_meshID(0),
-		m_meshName("Mesh_" + std::to_string(m_meshID))
+		m_meshName("Mesh_" + std::to_string(m_meshID)),
+		m_isInitialize(false)
 	{
 		m_meshName.resize(m_meshName.size());
 	}
@@ -21,7 +22,8 @@ namespace Engine46 {
 	// コンストラクタ
 	CMeshBase::CMeshBase(const char* meshName) :
 		m_meshID(0),
-		m_meshName(meshName)
+		m_meshName(meshName),
+		m_isInitialize(false)
 	{
 		m_meshName.resize(m_meshName.size());
 	}

@@ -9,17 +9,24 @@
 
 namespace Engine46 {
 
+	struct materialCB {
+		VECTOR4	diffuse;
+		VECTOR4	specular;
+		VECTOR4	ambient;
+		VECTOR4	emissive;
+	};
+
 	// コンストラクタ
 	CMaterialBase::CMaterialBase() :
 		m_diffuse(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),
 		m_specular(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),
 		m_ambient(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),
 		m_emissive(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),
-		m_brightness(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),
 		pTexture(nullptr),
 		pShaderPackage(nullptr),
 		m_materialID(0),
-		m_materialName("Material_" + std::to_string(m_materialID))
+		m_materialName("Material_" + std::to_string(m_materialID)),
+		m_isInitialize(false)
 	{
 		m_materialName.resize(m_materialName.size());
 	}
@@ -30,11 +37,11 @@ namespace Engine46 {
 		m_specular(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),
 		m_ambient(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),
 		m_emissive(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),
-		m_brightness(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),
 		pTexture(nullptr),
 		pShaderPackage(nullptr),
 		m_materialID(0),
-		m_materialName(materialName)
+		m_materialName(materialName),
+		m_isInitialize(false)
 	{
 		m_materialName.resize(m_materialName.size());
 	}
@@ -42,5 +49,51 @@ namespace Engine46 {
 	// デストラクタ
 	CMaterialBase::~CMaterialBase()
 	{}
+
+	// 更新
+	void CMaterialBase::Update() {
+		if (m_pMaterialConstantBuffer) {
+			materialCB cb = {
+			m_diffuse,
+			m_specular,
+			m_ambient,
+			m_emissive,
+			};
+
+			m_pMaterialConstantBuffer->Update(&cb);
+		}
+	}
+
+	// マテリアルをシェーダーへ設定
+	void CMaterialBase::Set(UINT slot) {
+
+		if (m_pMaterialConstantBuffer) {
+			m_pMaterialConstantBuffer->Set(slot);
+		}
+
+		if (pShaderPackage) {
+			pShaderPackage->SetShader();
+		}
+
+		if (pTexture) {
+			pTexture->Set(0);
+		}
+	}
+
+	// コンスタントバッファを設定
+	void CMaterialBase::SetMaterialConstantBuffer(std::unique_ptr<CConstantBufferBase>& pConstantBuffer) {
+		
+		if (m_isInitialize) return;
+		
+		if (pConstantBuffer) {
+			pConstantBuffer->CreateConstantBuffer(sizeof(materialCB));
+
+			m_pMaterialConstantBuffer.swap(pConstantBuffer);
+
+			this->Update();
+
+			m_isInitialize = true;
+		}
+	}
 
 } // namespace

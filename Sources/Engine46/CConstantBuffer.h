@@ -23,6 +23,11 @@ namespace Engine46 {
 		SPOT_LIGHT,
 	};
 
+	struct CameraCB {
+		Matrix	matVP;
+		VECTOR3	cameraPos;
+	};
+
 	constexpr int LIGHT_MAX = 1024 / 2;
 
 	struct DirectionalLightCB {

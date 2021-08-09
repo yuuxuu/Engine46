@@ -14,6 +14,8 @@
 #include "CMaterial.h"
 #include "CTexture.h"
 #include "CActorManager.h"
+#include "CMaterialManager.h"
+#include "CMeshManager.h"
 #include "CShaderPackage.h"
 #include "CShaderManager.h"
 #include "CTextureManager.h"
@@ -76,7 +78,18 @@ namespace Engine46 {
 	// 描画
 	void CActorBase::Draw() {
 
-		this->SetWorldConstantBuffer();
+		if (m_pWorldConstantBuffer) {
+			Matrix matW = GetWorldMatrix();
+			matW.dx_m = DirectX::XMMatrixTranspose(matW.dx_m);
+
+			worldCB cb = {
+				matW,
+			};
+
+			m_pWorldConstantBuffer->Update(&cb);
+
+			m_pWorldConstantBuffer->Set((int)CB_TYPE::WORLD);
+		}
 
 		if (m_pMaterial) {
 			m_pMaterial->Set((int)CB_TYPE::MATERIAL);
@@ -111,8 +124,8 @@ namespace Engine46 {
 		return true;
 	}
 
-	// コンスタントバッファを作成
-	void CActorBase::SetConstantBuffer(std::unique_ptr<CConstantBufferBase>& pConstantBuffer) {
+	// コンスタントバッファを設定
+	void CActorBase::SetWorldConstantBuffer(std::unique_ptr<CConstantBufferBase>& pConstantBuffer) {
 		if (pConstantBuffer) {
 			pConstantBuffer->CreateConstantBuffer(sizeof(worldCB));
 
@@ -121,21 +134,29 @@ namespace Engine46 {
 	}
 
 	// メッシュを設定
-	void CActorBase::SetMesh(std::unique_ptr<CMeshBase>& pMesh) {
+	void CActorBase::SetMesh(CMeshBase* pMesh) {
 		if (pMesh) {
-			pMesh->Create();
+			m_pMesh = pMesh;
+		}
+	}
 
-			m_pMesh.swap(pMesh);
+	// メッシュを設定
+	void CActorBase::SetMesh(const char* meshName) {
+		CMeshManager* meshManager = CGameSystem::GetGameSystem().GetMeshManager();
+		meshManager->SetMeshToActor(this, meshName);
+	}
+
+	// マテリアルを設定
+	void CActorBase::SetMaterial(CMaterialBase* pMaterial) {
+		if (pMaterial) {
+			m_pMaterial = pMaterial;
 		}
 	}
 
 	// マテリアルを設定
-	void CActorBase::SetMaterial(std::unique_ptr<CMaterialBase>& pMaterial) {
-		if (pMaterial) {
-			pMaterial->Create();
-
-			m_pMaterial.swap(pMaterial);
-		}
+	void CActorBase::SetMaterial(const char* materialName) {
+		CMaterialManager* materialManager = CGameSystem::GetGameSystem().GetMaterialManager();
+		materialManager->SetMaterialToActor(this, materialName);
 	}
 
 	// マテリアルにテクスチャを設定
@@ -221,22 +242,6 @@ namespace Engine46 {
 			}
 
 			pChiledActor->ConnectParentActor(this);
-		}
-	}
-
-	// ワールドコンスタントバッファを設定
-	void CActorBase::SetWorldConstantBuffer() {
-		if (m_pWorldConstantBuffer) {
-			Matrix matW = GetWorldMatrix();
-			matW.dx_m = DirectX::XMMatrixTranspose(matW.dx_m);
-
-			worldCB cb = {
-				matW,
-			};
-
-			m_pWorldConstantBuffer->Update(&cb);
-
-			m_pWorldConstantBuffer->Set((int)CB_TYPE::WORLD);
 		}
 	}
 

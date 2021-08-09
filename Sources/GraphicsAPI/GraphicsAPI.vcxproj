@@ -22,7 +22,6 @@
     <ClInclude Include="CDX11ConstantBuffer.h" />
     <ClInclude Include="CDX11Device.h" />
     <ClInclude Include="CDX11DeviceContext.h" />
-    <ClInclude Include="CDX11Material.h" />
     <ClInclude Include="CDX11Mesh.h" />
     <ClInclude Include="CDX11Renderer.h" />
     <ClInclude Include="CDX11Shader.h" />
@@ -33,7 +32,6 @@
     <ClCompile Include="CDX11ConstantBuffer.cpp" />
     <ClCompile Include="CDX11Device.cpp" />
     <ClCompile Include="CDX11DeviceContext.cpp" />
-    <ClCompile Include="CDX11Material.cpp" />
     <ClCompile Include="CDX11Mesh.cpp" />
     <ClCompile Include="CDX11Renderer.cpp" />
     <ClCompile Include="CDX11Shader.cpp" />

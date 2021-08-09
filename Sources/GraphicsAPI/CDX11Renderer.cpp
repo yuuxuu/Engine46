@@ -88,6 +88,9 @@ namespace Engine46 {
 		}
 
 		{
+			this->CreateConstantBuffer(m_pCameraCB);
+			m_pCameraCB->CreateConstantBuffer(sizeof(CameraCB));
+
 			this->CreateConstantBuffer(m_pDirectionalLightCB);
 			m_pDirectionalLightCB->CreateConstantBuffer(sizeof(DirectionalLightCB));
 
@@ -113,7 +116,18 @@ namespace Engine46 {
 		if (pScene) {
 			CCamera* pCamera = pScene->GetCameraFromScene();
 			if (pCamera) {
-				pCamera->SetCameraConstantBuffer();
+
+				Matrix matVP = pCamera->GetViewProjectionMatrix();
+				matVP.dx_m = DirectX::XMMatrixTranspose(matVP.dx_m);
+
+				CameraCB cb = {
+					matVP,
+					pCamera->GetPos(),
+				};
+
+				m_pCameraCB->Update(&cb);
+
+				m_pCameraCB->Set((int)CB_TYPE::CAMERA);
 			}
 
 			std::vector<CLight*> pLights = pScene->GetLightsFromScene();
@@ -123,7 +137,7 @@ namespace Engine46 {
 				PointLightCB pointLightCb = {};
 				SpotLightCB spotLightCb = {};
 
-				for (const auto& light : pLights)
+				for (const auto light : pLights)
 				{
 					switch (light->GetLightType())
 					{
@@ -180,9 +194,11 @@ namespace Engine46 {
 		m_pDX11DeviceContext->SetRenderTargetView(m_pRtv.Get(), m_pDsv.Get());
 
 		CSprite sprite("RenderSprite");
-		sprite.InitializeResource(this);
+		sprite.SetMesh("RenderSpriteMesh");
+		sprite.SetMaterial("RenderSpriteMaterial");
 		sprite.SetTexture(m_pRendering->GetRenderTexture());
 		sprite.SetShaderPackage("Sprite.hlsl");
+		sprite.InitializeResource(this);
 		sprite.Draw();
 
 		m_pRendering->End();
@@ -196,13 +212,8 @@ namespace Engine46 {
 	}
 
 	// メッシュ作成
-	void CDX11Renderer::CreateMesh(std::unique_ptr<CMeshBase>& pMesh) {
-		pMesh = std::make_unique<CDX11Mesh>(m_pDX11Device.get(), m_pDX11DeviceContext.get());
-	}
-
-	// マテリアル作成
-	void CDX11Renderer::CreateMaterial(std::unique_ptr<CMaterialBase>& pMaterial) {
-		pMaterial = std::make_unique<CDX11Material>(m_pDX11Device.get(), m_pDX11DeviceContext.get());
+	void CDX11Renderer::CreateMesh(std::unique_ptr<CMeshBase>& pMesh, const char* meshName) {
+		pMesh = std::make_unique<CDX11Mesh>(m_pDX11Device.get(), m_pDX11DeviceContext.get(), meshName);
 	}
 
 	// テクスチャ作成

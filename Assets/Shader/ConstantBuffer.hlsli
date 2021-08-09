@@ -65,19 +65,6 @@ cbuffer CbMaterial : register(b2)
 	float4		specular;	// マテリアルスペキュラー色
 	float4		ambinet;	// マテリアルアンビエント色
 	float4		emissive;	// マテリアルエミッシブ色
-	float4		brightness;	// 輝度の色
-}
-
-// ライトコンスタントバッファ
-cbuffer CbLight : register(b3)
-{
-	float4		lightPos[LIGHT_MAX];			// ライトの位置
-	float4		lightDiffuse[LIGHT_MAX];		// ライトディフューズ色
-	float4		lightSpecular[LIGHT_MAX];		// ライトスペキュラー色
-	
-	float4		attenuation[LIGHT_MAX];			// ライトの減衰パラメーター
-
-	int			lightNum;						// ライト数
 }
 
 struct DirectionalLight {

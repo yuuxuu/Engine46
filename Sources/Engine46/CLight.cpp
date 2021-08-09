@@ -33,9 +33,11 @@ namespace Engine46 {
 	void CLight::InitializeResource(CRendererBase* pRenderer) {
 		if (pRenderer) {
 			m_pSprite = std::make_unique<CSprite>("LightSprite");
-			m_pSprite->InitializeResource(pRenderer);
+			m_pSprite->SetMesh("LightMesh");
+			m_pSprite->SetMaterial("LightMaterial");
 			m_pSprite->SetTexture("particle.png");
 			m_pSprite->SetShaderPackage("CPUParticle.hlsl");
+			m_pSprite->InitializeResource(pRenderer);
 		}
 	}
 

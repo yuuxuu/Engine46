@@ -25,15 +25,21 @@ namespace Engine46 {
 	CMeshBase* CMeshManager::CreateMesh(const char* meshName) {
 		CMeshBase* pMesh = GetMeshFromMap(meshName);
 
-		if (!pMesh) {
-			std::unique_ptr<CMeshBase> mesh = std::make_unique<CMeshBase>();
+		if (pMesh) return pMesh;
 
+		std::unique_ptr<CMeshBase> mesh;
+
+		pRenderer->CreateMesh(mesh, meshName);
+
+		if (mesh) {
 			pMesh = mesh.get();
 
 			this->AddMeshToMap(meshName, mesh);
+
+			return pMesh;
 		}
 
-		return pMesh;
+		return nullptr;
 	}
 
 	// メッシュをマップへ追加
@@ -56,14 +62,18 @@ namespace Engine46 {
 	}
 
 	// アクターへメッシュを設定
-	void CMeshManager::SetMeshToActor(CActorBase* pActor) {
-		std::unique_ptr<CMeshBase> pMesh;
-
-		pRenderer->CreateMesh(pMesh);
+	void CMeshManager::SetMeshToActor(CActorBase* pActor, const char* meshName) {
+		CMeshBase* pMesh = GetMeshFromMap(meshName);
 
 		if (pMesh) {
-			//pActor->SetMesh(pMesh);
-			this->AddMeshToMap(pMesh->GetMeshName().c_str(), pMesh);
+			pActor->SetMesh(pMesh);
+			return;
+		}
+
+		pMesh = CreateMesh(meshName);
+
+		if (pMesh) {
+			pActor->SetMesh(pMesh);
 		}
 	}
 

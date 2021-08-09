@@ -23,6 +23,8 @@ namespace Engine46 {
 
 		CRendererBase*											pRenderer;
 
+		int														m_materialCount;
+
 	public:
 		explicit CMaterialManager(CRendererBase* pRenderer);
 		~CMaterialManager();
@@ -33,7 +35,7 @@ namespace Engine46 {
 
 		CMaterialBase* GetMaterialFromMap(const char* name);
 
-		void SetMaterialToActor(CActorBase* pActor);
+		void SetMaterialToActor(CActorBase* pActor, const char* materialName);
 	};
 
 } // namespace

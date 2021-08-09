@@ -39,9 +39,6 @@
     <ClInclude Include="CDX11ConstantBuffer.h">
       <Filter>DX11\ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="CDX11Material.h">
-      <Filter>DX11\ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="CDX11Mesh.h">
       <Filter>DX11\ヘッダー ファイル</Filter>
     </ClInclude>
@@ -66,9 +63,6 @@
       <Filter>DX11\ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="CDX11ConstantBuffer.cpp">
-      <Filter>DX11\ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="CDX11Material.cpp">
       <Filter>DX11\ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="CDX11Mesh.cpp">
