@@ -23,6 +23,14 @@ namespace Engine46 {
 		VECTOR3	binormal;
 	};
 
+	enum class PRIMITIVE_TOPOLOGY_TYPE {
+		POINTLIST,
+		LINELIST,
+		LINESTRIP,
+		TRIANGLELIST,
+		TRIANGLESTRIP,
+	};
+
 	class CMeshBase {
 	protected:
 		std::vector<vertexInfo>	m_vecVertexInfo;
@@ -35,12 +43,14 @@ namespace Engine46 {
 
 		bool					m_isInitialize;
 
+		UINT					m_primitiveTopologyType;
+
 	public:
 		CMeshBase();
 		explicit CMeshBase(const char* meshName);
 		virtual ~CMeshBase();
 
-		virtual void Create() {};
+		virtual void Create(PRIMITIVE_TOPOLOGY_TYPE type) {};
 		virtual void Draw() {};
 
 		void ReserveVertex(int reserveSize);

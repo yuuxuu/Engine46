@@ -77,7 +77,7 @@ namespace Engine46 {
 			m_pMesh->AddIndex(3);
 			m_pMesh->AddIndex(2);
 
-			m_pMesh->Create();
+			m_pMesh->Create(PRIMITIVE_TOPOLOGY_TYPE::TRIANGLESTRIP);
 		}
 	}
 

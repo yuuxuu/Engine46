@@ -58,13 +58,16 @@ cbuffer CbCamera : register(b1)
 	float3		cameraPos;	// カメラの位置
 }
 
+struct Material {
+	float4	diffuse;	// マテリアルディフューズ色
+	float4	specular;	// マテリアルスペキュラー色
+	float4	ambinet;	// マテリアルアンビエント色
+};	float4	emissive;	// マテリアルエミッシブ色
+
 // マテリアル
 cbuffer CbMaterial : register(b2)
 {
-	float4		diffuse;	// マテリアルディフューズ色
-	float4		specular;	// マテリアルスペキュラー色
-	float4		ambinet;	// マテリアルアンビエント色
-	float4		emissive;	// マテリアルエミッシブ色
+	Material material;
 }
 
 struct DirectionalLight {

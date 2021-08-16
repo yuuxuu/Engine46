@@ -66,7 +66,8 @@ namespace Engine46 {
 		if (!m_pInput->Initialize(hInstance)) return false;
 
 		// レンダーシステムにシーンを設定
-		CRendererSystem::GetRendererSystem().SetRenderScene(m_pSceneManager->GetRootScene());
+		CSceneBase* pScene = m_pSceneManager->CreateScene();
+		CRendererSystem::GetRendererSystem().SetRenderScene(pScene);
 
 		{
 			CActorBase* pCamera = m_pActorManager->CreateActor((int)ClassType::Camera);
@@ -138,10 +139,10 @@ namespace Engine46 {
 
 	// 更新
 	void CGameSystem::Update() {
-		CSceneBase* pRootScene = m_pSceneManager->GetRootScene();
+		CSceneBase* pRenderScene = CRendererSystem::GetRendererSystem().GetRenderScene();
 
-		if (pRootScene) {
-			pRootScene->Update();
+		if (pRenderScene) {
+			pRenderScene->Update();
 		}
 	}
 

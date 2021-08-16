@@ -20,19 +20,13 @@ namespace Engine46 {
 	class CCamera;
 	class CLight;
 
-	class CSceneBase : public IObject {
+	class CSceneBase {
 	protected:
 		std::vector<CDataRecordBase>	vecDataRecords;
 
 		CActorBase*						pRootActor;
 
-		CSceneBase*						pParentScene;
-		int								m_parentSceneID;
-
-		std::list<CSceneBase*>			pChiledSceneList;
-		std::vector<int>				m_chiledSceneIDList;
-
-		int								m_SceneID;
+		UINT							m_SceneID;
 
 		std::string						m_SceneName;
 
@@ -41,22 +35,12 @@ namespace Engine46 {
 		explicit CSceneBase(const char* sceneName);
 		virtual ~CSceneBase();
 
-		virtual void Initialize() override;
-		virtual void Update() override;
-		virtual void Draw() override;
+		virtual void Initialize();
+		virtual void Update();
+		virtual void Draw();
 
-		virtual bool Save(std::ofstream& ofs) override;
-		virtual bool Load(std::ifstream& ifs) override;
-
-		void ConnectParentScene(CSceneBase* pParentScene);
-
-		CSceneBase* GetParentScene() const { return pParentScene; }
-		int GetParentSceneID() const { return m_parentSceneID; }
-
-		void AddChiledSceneList(CSceneBase* pChiledScene);
-
-		std::list<CSceneBase*> GetChildSceneList() const { return pChiledSceneList; }
-		std::vector<int> GetChiledSceneIDList() const { return m_chiledSceneIDList; }
+		virtual bool Save(std::ofstream& ofs);
+		virtual bool Load(std::ifstream& ifs);
 
 		void SetRootActor(CActorBase* pRootActor) { this->pRootActor = pRootActor; }
 		CActorBase* GetRootActor() const { return pRootActor; }
@@ -69,6 +53,9 @@ namespace Engine46 {
 		std::vector<CCamera*> GetCamerasFromScene();
 		std::vector<CLight*> GetLightsFromScene();
 
+		void SetSceneID(const int id) { m_SceneID = id; }
+
+		void SetSceneName(const std::string& sceneName) { m_SceneName = sceneName; }
 		std::string GetSceneName() const { return m_SceneName.c_str(); }
 
 	private:

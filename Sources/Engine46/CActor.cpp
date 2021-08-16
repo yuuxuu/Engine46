@@ -7,7 +7,6 @@
 
 #include "CActor.h"
 #include "CGameSystem.h"
-#include "CCamera.h"
 #include "CDataRecord.h"
 #include "CConstantBuffer.h"
 #include "CMesh.h"
@@ -19,7 +18,6 @@
 #include "CShaderPackage.h"
 #include "CShaderManager.h"
 #include "CTextureManager.h"
-#include "CInput.h"
 
 namespace Engine46 {
 

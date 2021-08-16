@@ -17,31 +17,33 @@ namespace Engine46 {
 
 	// コンストラクタ
 	CSceneManager::CSceneManager()
-	{
-		pRootScene = this->CreateScene(0);
-	}
+	{}
 
 	// デストラクタ
 	CSceneManager::~CSceneManager()
 	{}
 
 	// シーン作成
-	CSceneBase* CSceneManager::CreateScene(int id) {
-		std::unique_ptr<CSceneBase> scene = std::make_unique<CSceneBase>();
+	CSceneBase* CSceneManager::CreateScene(const char* sceneName) {
+		std::unique_ptr<CSceneBase> scene;
+
+		if (sceneName) {
+			scene = std::make_unique<CSceneBase>(sceneName);
+		}
+		else {
+			scene = std::make_unique<CSceneBase>();
+		}
+
+		scene->SetSceneID((UINT)m_pVecScene.size());
 
 		scene->Initialize();
 
 		CSceneBase* pScene = scene.get();
 
-		CActorManager* actorManager = CGameSystem::GetGameSystem().GetActorManager();
-
-		pScene->SetRootActor(actorManager->GetRootActor());
-
-		if (id != 0) {
-			pRootScene->AddChiledSceneList(pScene);
-		}
-
 		this->AddSceneToVec(scene);
+
+		CActorManager* actorManager = CGameSystem::GetGameSystem().GetActorManager();
+		pScene->SetRootActor(actorManager->GetRootActor());
 
 		return pScene;
 	}
@@ -75,33 +77,14 @@ namespace Engine46 {
 
 			if (ifs.eof()) break;
 
-			int id = -1;
-			ifs.read((char*)&id, sizeof(int));
-
-			CSceneBase* pScene = CreateScene(id);
+			CSceneBase* pScene = CreateScene();
 
 			pScene->Load(ifs);
 		}
 
 		std::cout << g_sceneListFileName << "を読み込みしました。" << std::endl;
 
-		this->ConnectScene();
-
 		return true;
-	}
-
-	// シーン同士の接続
-	void CSceneManager::ConnectScene() {
-		for (auto& scene : m_pVecScene) {
-			int id = scene->GetParentSceneID();
-			if (id > -1) {
-				scene->ConnectParentScene(m_pVecScene[id].get());
-			}
-
-			for (auto id : scene->GetChiledSceneIDList()) {
-				scene->AddChiledSceneList(m_pVecScene[id].get());
-			}
-		}
 	}
 
 } // namespace

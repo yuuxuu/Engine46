@@ -18,23 +18,18 @@ namespace Engine46 {
 	class CSceneManager {
 	private:
 		std::vector<std::unique_ptr<CSceneBase>>	m_pVecScene;
-		CSceneBase*									pRootScene;
+
 
 	public:
 		CSceneManager();
 		~CSceneManager();
 
-		CSceneBase* CreateScene(int id);
+		CSceneBase* CreateScene(const char* sceneName = nullptr);
 
 		void AddSceneToVec(std::unique_ptr<CSceneBase>& pScene) { m_pVecScene.emplace_back(std::move(pScene)); }
 		
-		CSceneBase* GetRootScene() const { return pRootScene; };
-
 		bool SaveScene();
 		bool LoadScene();
-
-	private:
-		void ConnectScene();
 	};
 
 } // namespace

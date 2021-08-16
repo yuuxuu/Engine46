@@ -50,6 +50,7 @@
     <ClCompile Include="CMaterialManager.cpp" />
     <ClCompile Include="CMesh.cpp" />
     <ClCompile Include="CMeshManager.cpp" />
+    <ClCompile Include="COBB.cpp" />
     <ClCompile Include="CPointLight.cpp" />
     <ClCompile Include="CRenderer.cpp" />
     <ClCompile Include="CRendererSystem.cpp" />
@@ -85,6 +86,7 @@
     <ClInclude Include="CMaterialManager.h" />
     <ClInclude Include="CMesh.h" />
     <ClInclude Include="CMeshManager.h" />
+    <ClInclude Include="COBB.h" />
     <ClInclude Include="CPointLight.h" />
     <ClInclude Include="CRenderer.h" />
     <ClInclude Include="CRendererSystem.h" />

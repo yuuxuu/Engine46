@@ -15,8 +15,6 @@ namespace Engine46 {
 
 	// コンストラクタ
 	CSceneBase::CSceneBase() :
-		pParentScene(nullptr),
-		m_parentSceneID(-1),
 		m_SceneID(0),
 		m_SceneName("Scene_" + std::to_string(m_SceneID))
 	{
@@ -25,8 +23,6 @@ namespace Engine46 {
 
 	// コンストラクタ
 	CSceneBase::CSceneBase(const char* sceneName) :
-		pParentScene(nullptr),
-		m_parentSceneID(-1),
 		m_SceneID(0),
 		m_SceneName(sceneName)
 	{
@@ -44,8 +40,6 @@ namespace Engine46 {
 
 		vecDataRecords.emplace_back(CDataRecordBase(offsetof(CSceneBase, m_SceneID), sizeof(m_SceneID)));
 		vecDataRecords.emplace_back(CStrDataRecord(offsetof(CSceneBase, m_SceneName), m_SceneName));
-		vecDataRecords.emplace_back(CPtrDataRecord(m_parentSceneID));
-		vecDataRecords.emplace_back(CListDataRecord(m_chiledSceneIDList));
 	}
 
 	// シーン更新
@@ -82,36 +76,6 @@ namespace Engine46 {
 		}
 
 		return true;
-	}
-
-	// 親シーンを接続
-	void CSceneBase::ConnectParentScene(CSceneBase* pParentScene) {
-		
-		if (this->pParentScene == pParentScene) return;
-		
-		this->pParentScene = pParentScene;
-
-		if (pParentScene) {
-			m_parentSceneID = pParentScene->m_SceneID;
-		}
-		else {
-			m_parentSceneID = -1;
-		}
-	}
-
-	// 子シーンを追加
-	void CSceneBase::AddChiledSceneList(CSceneBase* pChiledScene) {
-		if (pChiledScene) {
-			auto it = std::find(m_chiledSceneIDList.begin(), m_chiledSceneIDList.end(), pChiledScene->m_SceneID);
-
-			if (it == m_chiledSceneIDList.end()) {
-				pChiledScene->ConnectParentScene(this);
-
-				pChiledSceneList.emplace_back(pChiledScene);
-
-				m_chiledSceneIDList.emplace_back(pChiledScene->m_SceneID);
-			}
-		}
 	}
 
 	// シーン内のアクターを名前で取得

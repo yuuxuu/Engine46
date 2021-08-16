@@ -32,7 +32,7 @@ namespace Engine46 {
 		CDX11Mesh(CDX11Device* pDevice, CDX11DeviceContext* pDeviceContext, const char* meshName);
 		~CDX11Mesh();
 
-		void Create() override;
+		void Create(PRIMITIVE_TOPOLOGY_TYPE type) override;
 		void Draw() override;
 	};
 

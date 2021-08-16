@@ -149,12 +149,12 @@ namespace Engine46 {
 
 		while (true) {
 
-			int id = -1;
-			ifs.read((char*)&id, sizeof(int));
+			int classType = -1;
+			ifs.read((char*)&classType, sizeof(int));
 
 			if (ifs.eof()) break;
 
-			CActorBase* pActor = this->CreateActor(id);
+			CActorBase* pActor = this->CreateActor(classType);
 
 			pActor->Load(ifs);
 		}

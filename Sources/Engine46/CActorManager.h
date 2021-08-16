@@ -20,11 +20,11 @@ namespace Engine46 {
 	class CRendererBase;
 
 	struct classCount {
-		int allCount;
-		int rootCount;
-		int cameraCount;
-		int spriteCount;
-		int lightCount;
+		UINT allCount;
+		UINT rootCount;
+		UINT cameraCount;
+		UINT spriteCount;
+		UINT lightCount;
 
 		classCount() :
 			allCount(0),

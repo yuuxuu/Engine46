@@ -23,31 +23,53 @@ namespace Engine46 {
 	{}
 
 	// メッシュ作成
-	void CDX11Mesh::Create() {
+	void CDX11Mesh::Create(PRIMITIVE_TOPOLOGY_TYPE type) {
 
 		if (m_isInitialize) return;
 
-		D3D11_BUFFER_DESC bufDesc = {};
-		bufDesc.ByteWidth			= sizeof(vertexInfo) * m_vecVertexInfo.size();
-		bufDesc.Usage				= D3D11_USAGE_DEFAULT;
-		bufDesc.BindFlags			= D3D11_BIND_VERTEX_BUFFER;
-		bufDesc.CPUAccessFlags		= 0;
-		bufDesc.MiscFlags			= 0;
-		bufDesc.StructureByteStride = 0;
+		if (!m_vecVertexInfo.empty()){
+			D3D11_BUFFER_DESC bufDesc = {};
+			bufDesc.ByteWidth			= sizeof(m_vecVertexInfo[0]) * m_vecVertexInfo.size();
+			bufDesc.Usage				= D3D11_USAGE_DEFAULT;
+			bufDesc.BindFlags			= D3D11_BIND_VERTEX_BUFFER;
+			bufDesc.CPUAccessFlags		= 0;
+			bufDesc.MiscFlags			= 0;
+			bufDesc.StructureByteStride = 0;
+			
+			D3D11_SUBRESOURCE_DATA subData = {};
+			subData.pSysMem = &m_vecVertexInfo[0];
+			
+			pDX11Device->CreateBuffer(m_pVertexBuffer, bufDesc, &subData);
 
-		D3D11_SUBRESOURCE_DATA subData = {};
-		subData.pSysMem = &m_vecVertexInfo[0];
+			if (!m_vecIndexes.empty()) {
+				bufDesc.ByteWidth = sizeof(m_vecIndexes[0]) * m_vecIndexes.size();
+				bufDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 
-		pDX11Device->CreateBuffer(m_pVertexBuffer, bufDesc, &subData);
+				subData.pSysMem = &m_vecIndexes[0];
 
-		bufDesc.ByteWidth = sizeof(m_vecIndexes[0]) * m_vecIndexes.size();
-		bufDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+				pDX11Device->CreateBuffer(m_pIndexBuffer, bufDesc, &subData);
+			}
 
-		subData.pSysMem = &m_vecIndexes[0];
+			switch (type) {
+			case PRIMITIVE_TOPOLOGY_TYPE::POINTLIST:
+				m_primitiveTopologyType = D3D_PRIMITIVE_TOPOLOGY_POINTLIST;
+				break;
+			case PRIMITIVE_TOPOLOGY_TYPE::LINELIST:
+				m_primitiveTopologyType = D3D_PRIMITIVE_TOPOLOGY_LINELIST;
+				break;
+			case PRIMITIVE_TOPOLOGY_TYPE::LINESTRIP:
+				m_primitiveTopologyType = D3D_PRIMITIVE_TOPOLOGY_LINESTRIP;
+				break;
+			case PRIMITIVE_TOPOLOGY_TYPE::TRIANGLELIST:
+				m_primitiveTopologyType = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+				break;
+			case PRIMITIVE_TOPOLOGY_TYPE::TRIANGLESTRIP:
+				m_primitiveTopologyType = D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
+				break;
+			}
 
-		pDX11Device->CreateBuffer(m_pIndexBuffer, bufDesc, &subData);
-
-		m_isInitialize = true;
+			m_isInitialize = true;
+		}
 	}
 
 	// メッシュ描画
@@ -55,7 +77,7 @@ namespace Engine46 {
 
 		pDX11DeviceContext->SetBuffer(m_pVertexBuffer.Get(), m_pIndexBuffer.Get(), sizeof(vertexInfo), 0);
 
-		pDX11DeviceContext->DrawIndexed(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, m_vecIndexes.size());
+		pDX11DeviceContext->DrawIndexed((D3D_PRIMITIVE_TOPOLOGY)m_primitiveTopologyType, m_vecIndexes.size());
 	}
 
 } // namespace

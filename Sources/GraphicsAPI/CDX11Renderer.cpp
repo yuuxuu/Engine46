@@ -11,7 +11,6 @@
 #include "CDX11ForwardRendering.h"
 #include "CDX11ConstantBuffer.h"
 #include "CDX11Mesh.h"
-#include "CDX11Material.h"
 #include "CDX11Shader.h"
 #include "CDX11Texture.h"
 

@@ -38,7 +38,7 @@ namespace Engine46 {
 
 		UINT									m_classID;
 
-		int										m_actorID;
+		UINT									m_actorID;
 
 		std::string								m_actorName;
 
@@ -101,7 +101,7 @@ namespace Engine46 {
 
 		UINT GetClassID() const { return m_classID; }
 
-		void SetActorID(const int id) { m_actorID = id; }
+		void SetActorID(const UINT id) { m_actorID = id; }
 
 		void SetActorName(const std::string& actorName) { m_actorName = actorName; }
 		std::string GetActorName() const { return m_actorName.c_str(); }
