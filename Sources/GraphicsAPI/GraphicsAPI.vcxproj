@@ -27,6 +27,9 @@
     <ClInclude Include="CDX11Shader.h" />
     <ClInclude Include="CDX11Texture.h" />
     <ClInclude Include="CDX11ForwardRendering.h" />
+    <ClInclude Include="CDX12Command.h" />
+    <ClInclude Include="CDX12Device.h" />
+    <ClInclude Include="CDX12Renderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CDX11ConstantBuffer.cpp" />
@@ -37,6 +40,9 @@
     <ClCompile Include="CDX11Shader.cpp" />
     <ClCompile Include="CDX11Texture.cpp" />
     <ClCompile Include="CDX11ForwardRendering.cpp" />
+    <ClCompile Include="CDX12Command.cpp" />
+    <ClCompile Include="CDX12Device.cpp" />
+    <ClCompile Include="CDX12Renderer.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

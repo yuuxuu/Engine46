@@ -35,11 +35,8 @@ namespace Engine46 {
 		~CDX11Renderer();
 
 		bool Initialize(HWND hwnd, UINT width, UINT height) override;
-		
 		void Finalize() override;
-
 		void Begine(CSceneBase* pScene) override;
-
 		bool Render(CSceneBase* pScene) override;
 
 		void CreateConstantBuffer(std::unique_ptr<CConstantBufferBase>& pConstantBuffer) override;
