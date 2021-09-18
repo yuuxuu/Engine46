@@ -45,12 +45,12 @@ namespace Engine46 {
 			srvDesc.Texture2D.MipLevels = texDesc.MipLevels;
 
 			std::unique_ptr<CDX11Texture> pRenderTex = std::make_unique<CDX11Texture>(pDX11Device, pDX11DeviceContext);
-			pRenderTex->Create(texDesc, srvDesc);
+			pRenderTex->CreateTexture(texDesc);
+			pRenderTex->CreateShaderResourceView();
 
 			D3D11_RENDER_TARGET_VIEW_DESC rtvDesc = {};
 			rtvDesc.ViewDimension				= D3D11_RTV_DIMENSION_TEXTURE2D;
 			rtvDesc.Format						= texDesc.Format;
-			rtvDesc.Texture2DArray.ArraySize	= texDesc.ArraySize;
 
 			if (!pDX11Device->CreateRenderTargetView(m_pRtv, pRenderTex->GetTexture2D(), rtvDesc)) return false;
 
@@ -112,10 +112,10 @@ namespace Engine46 {
 			for (int i = 0; i < 8; ++i) {
 				bDesc.RenderTarget[i].BlendEnable			= TRUE;
 				bDesc.RenderTarget[i].SrcBlend				= D3D11_BLEND_ONE;
-				bDesc.RenderTarget[i].DestBlend				= D3D11_BLEND_ONE;
+				bDesc.RenderTarget[i].DestBlend				= D3D11_BLEND_ZERO;
 				bDesc.RenderTarget[i].BlendOp				= D3D11_BLEND_OP_ADD;
 				bDesc.RenderTarget[i].SrcBlendAlpha			= D3D11_BLEND_ONE;
-				bDesc.RenderTarget[i].DestBlendAlpha		= D3D11_BLEND_ONE;
+				bDesc.RenderTarget[i].DestBlendAlpha		= D3D11_BLEND_ZERO;
 				bDesc.RenderTarget[i].BlendOpAlpha			= D3D11_BLEND_OP_ADD;
 				bDesc.RenderTarget[i].RenderTargetWriteMask	= D3D11_COLOR_WRITE_ENABLE_ALL;
 			}

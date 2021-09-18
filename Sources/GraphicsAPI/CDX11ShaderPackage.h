@@ -1,5 +1,5 @@
 ﻿/**
- * @file CDX11Shader.h
+ * @file CDX11ShaderPackage.h
  * @brief
  * @author 木村優
  * @date 2021/05/22
@@ -7,10 +7,10 @@
 
 #pragma once
 
-#ifndef _CDX11_SHADER_
-#define _CDX11_SHADER_
+#ifndef _CDX11_SHADER_PACKAGE_H_
+#define _CDX11_SHADER_PACKAGE_H_
 
-#include "../Engine46/CShader.h"
+#include "../Engine46/CShaderPackage.h"
 
 namespace Engine46 {
 
@@ -18,7 +18,7 @@ namespace Engine46 {
 	class CDX11Device;
 	class CDX11DeviceContext;
 
-	class CDX11Shader : public CShaderBase {
+	class CDX11ShaderPackage : public CShaderPackage {
 	private:
 		CDX11Device*					pDX11Device;
 		CDX11DeviceContext*				pDX11DeviceContext;
@@ -31,11 +31,12 @@ namespace Engine46 {
 		ComPtr<ID3D11ComputeShader>		m_pCS;
 
 	public:
-		CDX11Shader(CDX11Device* pDevice, CDX11DeviceContext* pDeviceContext, const char* shaderName, ComPtr<ID3DBlob>& pBlob, SHADER_TYPE type);
-		~CDX11Shader();
+		CDX11ShaderPackage(CDX11Device* pDevice, CDX11DeviceContext* pDeviceContext, const char* shaderName);
+		~CDX11ShaderPackage();
 
-		void Create() override;
-		void Set() override;
+		bool Initialize() override;
+
+		void SetShader() override;
 	};
 } // namespace
 

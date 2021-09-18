@@ -79,6 +79,14 @@ namespace Engine46 {
 		return true;
 	}
 
+	bool CDX12Device::GetBackBuffer(ComPtr<ID3D12Resource>& pResource, UINT index) {
+
+		HRESULT hr = m_pSwapChain->GetBuffer(index, IID_PPV_ARGS(&pResource));
+		if (FAILED(hr)) return false;
+
+		return true;
+	}
+
 	bool CDX12Device::Present() {
 
 		HRESULT hr = m_pSwapChain->Present(1, 0);
@@ -187,16 +195,19 @@ namespace Engine46 {
 	}
 
 	// リソース作成
-	bool CDX12Device::CreateResource(ComPtr<ID3D12Resource>& pResource, D3D12_RESOURCE_DESC& rDesc, D3D12_CLEAR_VALUE& clearValue) {
-
-		CD3DX12_HEAP_PROPERTIES prop = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
+	bool CDX12Device::CreateResource(
+		ComPtr<ID3D12Resource>& pResource,
+		D3D12_HEAP_PROPERTIES& prop,
+		D3D12_RESOURCE_DESC& rDesc,
+		D3D12_CLEAR_VALUE* clearValue,
+		D3D12_RESOURCE_STATES states) {
 
 		HRESULT hr = m_pDevice->CreateCommittedResource(
 			&prop,
 			D3D12_HEAP_FLAG_NONE,
 			&rDesc,
-			D3D12_RESOURCE_STATE_GENERIC_READ,
-			&clearValue,
+			states,
+			clearValue,
 			IID_PPV_ARGS(&pResource)
 		);
 		if (FAILED(hr)) return false;
@@ -205,23 +216,13 @@ namespace Engine46 {
 	}
 
 	// レンダーターゲットビュー作成
-	bool CDX12Device::CreateRenderTargetView(
-		ComPtr<ID3D12Resource>& pResource,
+	void CDX12Device::CreateRenderTargetView(
+		ID3D12Resource* pResource,
 		D3D12_RENDER_TARGET_VIEW_DESC* pRtvDesc,
-		D3D12_CPU_DESCRIPTOR_HANDLE handle,
-		UINT index) {
+		D3D12_CPU_DESCRIPTOR_HANDLE handle) {
 
-		if (pResource) {
-			m_pDevice->CreateRenderTargetView(pResource.Get(), pRtvDesc, handle);
-			return true;
-		}
+		m_pDevice->CreateRenderTargetView(pResource, pRtvDesc, handle);
 
-		HRESULT hr = m_pSwapChain->GetBuffer(index, IID_PPV_ARGS(&pResource));
-		if (FAILED(hr)) return false;
-
-		m_pDevice->CreateRenderTargetView(pResource.Get(), pRtvDesc, handle);
-
-		return true;
 	}
 
 	// デプスステンシルビュー作成
@@ -238,11 +239,6 @@ namespace Engine46 {
 		ID3D12Resource* pResource,
 		D3D12_CONSTANT_BUFFER_VIEW_DESC& cbvDesc,
 		D3D12_CPU_DESCRIPTOR_HANDLE handle) {
-
-		//D3D12_CONSTANT_BUFFER_VIEW_DESC CBVDesc = {};
-		//
-		//CBVDesc.SizeInBytes = (size + 0xff) & ~0xff;
-		//CBVDesc.BufferLocation = pResource->GetGPUVirtualAddress();
 
 		m_pDevice->CreateConstantBufferView(&cbvDesc, handle);
 	}
@@ -287,6 +283,19 @@ namespace Engine46 {
 		//sDesc.MaxLOD			=  FLT_MAX;
 
 		m_pDevice->CreateSampler(&sDesc, handle);
+	}
+
+	void CDX12Device::CopyDescriptorsSimple(
+		UINT numDescriptors,
+		D3D12_CPU_DESCRIPTOR_HANDLE destHandle,
+		D3D12_CPU_DESCRIPTOR_HANDLE srcHandle,
+		D3D12_DESCRIPTOR_HEAP_TYPE heapType) {
+
+		m_pDevice->CopyDescriptorsSimple(
+			1,
+			destHandle,
+			srcHandle,
+			heapType);
 	}
 
 } // namespace

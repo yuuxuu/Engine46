@@ -27,16 +27,14 @@ namespace Engine46 {
 
 		if (pRenderer) {
 			std::unique_ptr<CConstantBufferBase> pConstantBuffer;
-			pRenderer->CreateConstantBuffer(pConstantBuffer);
+			pRenderer->CreateConstantBuffer(pConstantBuffer, sizeof(worldCB));
 			SetWorldConstantBuffer(pConstantBuffer);
 
 			if (m_pMaterial && !m_pMaterial->IsInitialize()) {
 				std::unique_ptr<CConstantBufferBase> pMaterialConstantBuffer;
-				pRenderer->CreateConstantBuffer(pMaterialConstantBuffer);
-
+				pRenderer->CreateConstantBuffer(pMaterialConstantBuffer, sizeof(materialCB));
 				m_pMaterial->SetMaterialConstantBuffer(pMaterialConstantBuffer);
 			}
-
 		}
 
 		if (m_pMesh && !m_pMesh->IsInitialize()) {
@@ -45,28 +43,30 @@ namespace Engine46 {
 			vertexInfo info;
 
 			info.vertex = VECTOR3(-1.0f, 1.0f, 0.0f);
-			info.color = VECTOR4(1.0f, 0.0f, 0.0f, 1.0f);
+			info.color = VECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
 			info.uv = VECTOR2(0.0f, 0.0f);
 			info.normal = VECTOR3(0.0f, 0.0f, -1.0f);
 			m_pMesh->AddVertexInfo(info);
 
 			info.vertex = VECTOR3(1.0f, 1.0f, 0.0f);
-			info.color = VECTOR4(0.0f, 1.0f, 0.0f, 1.0f);
+			info.color = VECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
 			info.uv = VECTOR2(1.0f, 0.0f);
 			info.normal = VECTOR3(0.0f, 0.0f, -1.0f);
 			m_pMesh->AddVertexInfo(info);
 
 			info.vertex = VECTOR3(-1.0f, -1.0f, 0.0f);
-			info.color = VECTOR4(0.0f, 0.0f, 1.0f, 1.0f);
+			info.color = VECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
 			info.uv = VECTOR2(0.0f, 1.0f);
 			info.normal = VECTOR3(0.0f, 0.0f, -1.0f);
 			m_pMesh->AddVertexInfo(info);
 
 			info.vertex = VECTOR3(1.0f, -1.0f, 0.0f);
-			info.color = VECTOR4(1.0f, 0.0f, 0.0f, 1.0f);
+			info.color = VECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
 			info.uv = VECTOR2(1.0f, 1.0f);
 			info.normal = VECTOR3(0.0f, 0.0f, -1.0f);
 			m_pMesh->AddVertexInfo(info);
+
+			m_pMesh->CreateVertexBuffer(PRIMITIVE_TOPOLOGY_TYPE::TRIANGLESTRIP);
 
 			m_pMesh->ReserveIndex(6);
 
@@ -77,7 +77,7 @@ namespace Engine46 {
 			m_pMesh->AddIndex(3);
 			m_pMesh->AddIndex(2);
 
-			m_pMesh->Create(PRIMITIVE_TOPOLOGY_TYPE::TRIANGLESTRIP);
+			m_pMesh->CreateIndexBuffer();
 		}
 	}
 

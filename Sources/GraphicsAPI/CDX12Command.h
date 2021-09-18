@@ -49,6 +49,10 @@ namespace Engine46 {
 
 		void ClearDepthStencilView(D3D12_CPU_DESCRIPTOR_HANDLE handle, D3D12_CLEAR_FLAGS clearFlags);
 
+		void SetBuffer(D3D12_VERTEX_BUFFER_VIEW& vbView, D3D12_INDEX_BUFFER_VIEW& ibView);
+
+		void DrawIndexed(D3D12_PRIMITIVE_TOPOLOGY topology, UINT numIndexes);
+
 		void SetRect(UINT width, UINT height);
 
 		void SetViewPort(UINT width, UINT height);
@@ -70,6 +74,9 @@ namespace Engine46 {
 		void SetRootShaderResourceView(UINT index, D3D12_GPU_VIRTUAL_ADDRESS address);
 		
 		void SetRootUnorderdAccessView(UINT index, D3D12_GPU_VIRTUAL_ADDRESS address);
+
+		ID3D12GraphicsCommandList* GetCommandList() const { return m_pCommandList.Get(); }
+		ID3D12CommandQueue* GetCommandQueue() const { return m_pCommandQueue.Get(); }
 	};
 
 } // namespace

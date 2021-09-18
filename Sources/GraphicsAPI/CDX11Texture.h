@@ -32,9 +32,11 @@ namespace Engine46 {
 		CDX11Texture(CDX11Device* pDevice, CDX11DeviceContext* pDeviceContext, const char* name = "");
 		~CDX11Texture();
 
-		void Create(D3D11_TEXTURE2D_DESC& texDesc, D3D11_SHADER_RESOURCE_VIEW_DESC& srvDesc);
-		void Create() override;
+		void CreateTexture() override;
+		void CreateShaderResourceView() override;
 		void Set(UINT slot) override;
+
+		void CreateTexture(D3D11_TEXTURE2D_DESC& texDesc);
 
 		ID3D11Texture2D* GetTexture2D() const { return m_pTex2D.Get(); }
 	};

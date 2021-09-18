@@ -51,13 +51,6 @@ cbuffer CbWorld : register(b0)
 	float4x4	matW;	// ワールド行列
 }
 
-cbuffer CbCamera : register(b1)
-{
-	float4x4	matVP;		// ワールドビュープロジェクション行列
-
-	float3		cameraPos;	// カメラの位置
-}
-
 struct Material {
 	float4	diffuse;	// マテリアルディフューズ色
 	float4	specular;	// マテリアルスペキュラー色
@@ -65,9 +58,16 @@ struct Material {
 };	float4	emissive;	// マテリアルエミッシブ色
 
 // マテリアル
-cbuffer CbMaterial : register(b2)
+cbuffer CbMaterial : register(b1)
 {
 	Material material;
+}
+
+cbuffer CbCamera : register(b2)
+{
+	float4x4	matVP;		// ワールドビュープロジェクション行列
+
+	float3		cameraPos;	// カメラの位置
 }
 
 struct DirectionalLight {

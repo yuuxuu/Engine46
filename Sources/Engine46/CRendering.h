@@ -19,7 +19,7 @@ namespace Engine46 {
 
 	class CRenderingBase {
 	protected:
-		std::unique_ptr<CTextureBase>			m_pRenderTex;
+		std::unique_ptr<CTextureBase> m_pRenderTex;
 
 	public:
 		CRenderingBase();

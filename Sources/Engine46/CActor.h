@@ -48,6 +48,8 @@ namespace Engine46 {
 
 		CMaterialBase*							m_pMaterial;
 
+		CShaderPackage*							m_pShaderPackage;
+
 		std::unique_ptr<CConstantBufferBase>	m_pWorldConstantBuffer;
 
 		CInput*									pInput;

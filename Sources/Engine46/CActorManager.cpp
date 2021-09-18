@@ -22,9 +22,7 @@ namespace Engine46 {
 	// コンストラクタ
 	CActorManager::CActorManager(CRendererBase* pRenderer) :
 		pRenderer(pRenderer)
-	{
-		pRootActor = this->CreateActor((int)ClassType::Root);
-	}
+	{}
 
 	// デストラクタ
 	CActorManager::~CActorManager()
@@ -63,10 +61,6 @@ namespace Engine46 {
 
 		CActorBase* pActor = actor.get();
 
-		if (classType != (int)ClassType::Root) {
-			pRootActor->AddChiledActorList(pActor);
-		}
-
 		this->AddActorToVec(actor);
 
 		return pActor;
@@ -103,8 +97,6 @@ namespace Engine46 {
 		light->CActorBase::Initialize();
 
 		CLight* pLight = light.get();
-
-		pRootActor->AddChiledActorList(pLight);
 
 		this->AddLightToVec(light);
 

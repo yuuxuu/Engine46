@@ -16,11 +16,22 @@ namespace Engine46 {
 
 	enum class CB_TYPE {
 		WORLD,
-		CAMERA,
 		MATERIAL,
+		CAMERA,
 		DIRECTIONAL_LIGHT,
 		POINT_LIGHT,
 		SPOT_LIGHT,
+	};
+
+	struct worldCB {
+		Matrix	matW;
+	};
+
+	struct materialCB {
+		VECTOR4	diffuse;
+		VECTOR4	specular;
+		VECTOR4	ambient;
+		VECTOR4	emissive;
 	};
 
 	struct CameraCB {
@@ -85,6 +96,7 @@ namespace Engine46 {
 		virtual ~CConstantBufferBase();
 
 		virtual void CreateConstantBuffer(UINT byteWidth) {};
+		virtual void CreateConstantBufferView() {};
 		virtual void Update(void* srcData) {};
 		virtual void Set(UINT slot) {};
 	};

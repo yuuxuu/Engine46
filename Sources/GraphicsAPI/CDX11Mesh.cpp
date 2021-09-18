@@ -23,7 +23,7 @@ namespace Engine46 {
 	{}
 
 	// メッシュ作成
-	void CDX11Mesh::Create(PRIMITIVE_TOPOLOGY_TYPE type) {
+	void CDX11Mesh::CreateVertexBuffer(PRIMITIVE_TOPOLOGY_TYPE type) {
 
 		if (m_isInitialize) return;
 
@@ -40,15 +40,6 @@ namespace Engine46 {
 			subData.pSysMem = &m_vecVertexInfo[0];
 			
 			pDX11Device->CreateBuffer(m_pVertexBuffer, bufDesc, &subData);
-
-			if (!m_vecIndexes.empty()) {
-				bufDesc.ByteWidth = sizeof(m_vecIndexes[0]) * m_vecIndexes.size();
-				bufDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-
-				subData.pSysMem = &m_vecIndexes[0];
-
-				pDX11Device->CreateBuffer(m_pIndexBuffer, bufDesc, &subData);
-			}
 
 			switch (type) {
 			case PRIMITIVE_TOPOLOGY_TYPE::POINTLIST:
@@ -69,6 +60,23 @@ namespace Engine46 {
 			}
 
 			m_isInitialize = true;
+		}
+	}
+
+	void CDX11Mesh::CreateIndexBuffer() {
+		if (!m_vecIndexes.empty()) {
+			D3D11_BUFFER_DESC bufDesc = {};
+			bufDesc.ByteWidth			= sizeof(m_vecIndexes[0]) * m_vecIndexes.size();
+			bufDesc.Usage				= D3D11_USAGE_DEFAULT;
+			bufDesc.BindFlags			= D3D11_BIND_INDEX_BUFFER;
+			bufDesc.CPUAccessFlags		= 0;
+			bufDesc.MiscFlags			= 0;
+			bufDesc.StructureByteStride = 0;
+
+			D3D11_SUBRESOURCE_DATA subData = {};
+			subData.pSysMem = &m_vecIndexes[0];
+
+			pDX11Device->CreateBuffer(m_pIndexBuffer, bufDesc, &subData);
 		}
 	}
 

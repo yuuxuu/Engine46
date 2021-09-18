@@ -24,12 +24,17 @@
     <ClInclude Include="CDX11DeviceContext.h" />
     <ClInclude Include="CDX11Mesh.h" />
     <ClInclude Include="CDX11Renderer.h" />
-    <ClInclude Include="CDX11Shader.h" />
+    <ClInclude Include="CDX11ShaderPackage.h" />
     <ClInclude Include="CDX11Texture.h" />
     <ClInclude Include="CDX11ForwardRendering.h" />
     <ClInclude Include="CDX12Command.h" />
+    <ClInclude Include="CDX12ConstantBuffer.h" />
     <ClInclude Include="CDX12Device.h" />
+    <ClInclude Include="CDX12ForwardRendering.h" />
+    <ClInclude Include="CDX12Mesh.h" />
     <ClInclude Include="CDX12Renderer.h" />
+    <ClInclude Include="CDX12ShaderPackage.h" />
+    <ClInclude Include="CDX12Texture.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CDX11ConstantBuffer.cpp" />
@@ -37,12 +42,17 @@
     <ClCompile Include="CDX11DeviceContext.cpp" />
     <ClCompile Include="CDX11Mesh.cpp" />
     <ClCompile Include="CDX11Renderer.cpp" />
-    <ClCompile Include="CDX11Shader.cpp" />
+    <ClCompile Include="CDX11ShaderPackage.cpp" />
     <ClCompile Include="CDX11Texture.cpp" />
     <ClCompile Include="CDX11ForwardRendering.cpp" />
     <ClCompile Include="CDX12Command.cpp" />
+    <ClCompile Include="CDX12ConstantBuffer.cpp" />
     <ClCompile Include="CDX12Device.cpp" />
+    <ClCompile Include="CDX12ForwardRendering.cpp" />
+    <ClCompile Include="CDX12Mesh.cpp" />
     <ClCompile Include="CDX12Renderer.cpp" />
+    <ClCompile Include="CDX12ShaderPackage.cpp" />
+    <ClCompile Include="CDX12Texture.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

@@ -39,8 +39,6 @@ namespace Engine46 {
 	private:
 		std::vector<std::unique_ptr<CActorBase>>	m_pVecActor;
 		std::vector<std::unique_ptr<CLight>>		m_pVecLight;
-		
-		CActorBase*									pRootActor;
 
 		CRendererBase*								pRenderer;
 
@@ -60,8 +58,6 @@ namespace Engine46 {
 
 		bool SaveActor();
 		bool LoadActor();
-
-		CActorBase* GetRootActor() const { return pRootActor; }
 
 	private:
 		void ConnectActor();

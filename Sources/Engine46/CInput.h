@@ -10,6 +10,11 @@
 #ifndef _CINPUT_H_
 #define _CINPUT_H_
 
+#include <dinput.h>
+
+#pragma comment(lib, "dinput8.lib")
+#pragma comment(lib, "dxguid.lib")
+
 using Microsoft::WRL::ComPtr;
 
 namespace Engine46 {

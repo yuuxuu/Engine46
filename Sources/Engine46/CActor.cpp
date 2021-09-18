@@ -18,12 +18,13 @@
 #include "CShaderPackage.h"
 #include "CShaderManager.h"
 #include "CTextureManager.h"
+#include "CRendererSystem.h"
+
+#include "../GraphicsAPI/CDX12Renderer.h"
+#include "../GraphicsAPI/CDX12ConstantBuffer.h"
+#include "../GraphicsAPI/CDX12ShaderPackage.h"
 
 namespace Engine46 {
-
-	struct worldCB {
-		Matrix	matW;
-	};
 
 	// コンストラクタ
 	CActorBase::CActorBase() :
@@ -76,6 +77,15 @@ namespace Engine46 {
 	// 描画
 	void CActorBase::Draw() {
 
+		if (m_pShaderPackage) {
+			m_pShaderPackage->SetShader();
+
+			CDX12Renderer* pRenderer = dynamic_cast<CDX12Renderer*>(CRendererSystem::GetRendererSystem().GetRenderer());
+			if (pRenderer) {
+				pRenderer->SetConstantBuffers();
+			}
+		}
+
 		if (m_pWorldConstantBuffer) {
 			Matrix matW = GetWorldMatrix();
 			matW.dx_m = DirectX::XMMatrixTranspose(matW.dx_m);
@@ -85,12 +95,11 @@ namespace Engine46 {
 			};
 
 			m_pWorldConstantBuffer->Update(&cb);
-
-			m_pWorldConstantBuffer->Set((int)CB_TYPE::WORLD);
+			m_pWorldConstantBuffer->Set((UINT)CB_TYPE::WORLD);
 		}
 
 		if (m_pMaterial) {
-			m_pMaterial->Set((int)CB_TYPE::MATERIAL);
+			m_pMaterial->Set((UINT)CB_TYPE::MATERIAL);
 		}
 
 		if (m_pMesh) {
@@ -125,8 +134,6 @@ namespace Engine46 {
 	// コンスタントバッファを設定
 	void CActorBase::SetWorldConstantBuffer(std::unique_ptr<CConstantBufferBase>& pConstantBuffer) {
 		if (pConstantBuffer) {
-			pConstantBuffer->CreateConstantBuffer(sizeof(worldCB));
-
 			m_pWorldConstantBuffer.swap(pConstantBuffer);
 		}
 	}
@@ -172,8 +179,8 @@ namespace Engine46 {
 
 	// シェーダーパッケージを設定
 	void CActorBase::SetShaderPackage(CShaderPackage* pShaderPackage) {
-		if (m_pMaterial) {
-			m_pMaterial->SetShaderPackage(pShaderPackage);
+		if (pShaderPackage) {
+			m_pShaderPackage = pShaderPackage;
 		}
 	}
 

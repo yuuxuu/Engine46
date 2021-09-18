@@ -28,6 +28,8 @@ namespace Engine46 {
 
 		bool Initialize(ComPtr<ID3D12CommandQueue>& pCommandQueue, HWND hwnd, UINT width, UINT height);
 
+		bool GetBackBuffer(ComPtr<ID3D12Resource>& pResource, UINT index);
+
 		bool Present();
 
 		bool CreateFence(ComPtr<ID3D12Fence>& pFence);
@@ -46,9 +48,9 @@ namespace Engine46 {
 
 		bool CreateDescriptorHeap(ComPtr<ID3D12DescriptorHeap>& pDescriptorHeap, D3D12_DESCRIPTOR_HEAP_DESC& dhDesc);
 
-		bool CreateResource(ComPtr<ID3D12Resource>& pResource, D3D12_RESOURCE_DESC& rDesc, D3D12_CLEAR_VALUE& clearValue);
+		bool CreateResource(ComPtr<ID3D12Resource>& pResource, D3D12_HEAP_PROPERTIES& prop, D3D12_RESOURCE_DESC& rDesc, D3D12_CLEAR_VALUE* clearValue = nullptr, D3D12_RESOURCE_STATES states = D3D12_RESOURCE_STATE_GENERIC_READ);
 
-		bool CreateRenderTargetView(ComPtr<ID3D12Resource>& pResource, D3D12_RENDER_TARGET_VIEW_DESC* rtvDesc, D3D12_CPU_DESCRIPTOR_HANDLE handle, UINT index);
+		void CreateRenderTargetView(ID3D12Resource* pResource, D3D12_RENDER_TARGET_VIEW_DESC* rtvDesc, D3D12_CPU_DESCRIPTOR_HANDLE handle);
 
 		void CreateDepthStencilView(ID3D12Resource* pResource, D3D12_DEPTH_STENCIL_VIEW_DESC* dsvDesc, D3D12_CPU_DESCRIPTOR_HANDLE handle);
 			 
@@ -60,13 +62,13 @@ namespace Engine46 {
 		
 		void CreateSampler(D3D12_CPU_DESCRIPTOR_HANDLE handle, D3D12_SAMPLER_DESC& sDesc);
 
-		UINT GetCurrentBackBufferIndex() {
-			return m_pSwapChain->GetCurrentBackBufferIndex();
-		}
+		void CopyDescriptorsSimple(UINT numDescriptors, D3D12_CPU_DESCRIPTOR_HANDLE destHandle, D3D12_CPU_DESCRIPTOR_HANDLE srcHandle, D3D12_DESCRIPTOR_HEAP_TYPE heapType);
 
-		UINT GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE type) {
-			return m_pDevice->GetDescriptorHandleIncrementSize(type);
-		}
+		ID3D12Device* GetDevice() const { return m_pDevice.Get(); }
+
+		UINT GetCurrentBackBufferIndex() { return m_pSwapChain->GetCurrentBackBufferIndex();}
+
+		UINT GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE type) { return m_pDevice->GetDescriptorHandleIncrementSize(type); }
 	};
 
 } // namespace

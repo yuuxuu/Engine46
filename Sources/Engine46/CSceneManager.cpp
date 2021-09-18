@@ -42,9 +42,6 @@ namespace Engine46 {
 
 		this->AddSceneToVec(scene);
 
-		CActorManager* actorManager = CGameSystem::GetGameSystem().GetActorManager();
-		pScene->SetRootActor(actorManager->GetRootActor());
-
 		return pScene;
 	}
 

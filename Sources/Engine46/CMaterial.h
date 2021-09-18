@@ -12,7 +12,6 @@
 
 #include "math.h"
 #include "CTexture.h"
-#include "CShaderPackage.h"
 #include "CConstantBuffer.h"
 
 namespace Engine46 {
@@ -21,8 +20,6 @@ namespace Engine46 {
 	protected:
 		CTextureBase*							pTexture;
 		std::vector<CTextureBase*>				pVecTexture;
-
-		CShaderPackage*							pShaderPackage;
 
 		std::unique_ptr<CConstantBufferBase>	m_pMaterialConstantBuffer;
 
@@ -52,9 +49,9 @@ namespace Engine46 {
 		void SetAmbient(const VECTOR4& ambient) { m_diffuse = ambient; }
 		void SetEmissive(const VECTOR4& emissive) { m_diffuse = emissive; }
 
-		void SetTexture(CTextureBase* pTexture) { this->pTexture = pTexture; }
+		CConstantBufferBase* GetMaterialConstantBuffer() const { return m_pMaterialConstantBuffer.get(); }
 
-		void SetShaderPackage(CShaderPackage* pSp) { pShaderPackage = pSp; }
+		void SetTexture(CTextureBase* pTexture) { this->pTexture = pTexture; }
 
 		std::string GetMaterialName() const { return m_materialName.c_str(); }
 

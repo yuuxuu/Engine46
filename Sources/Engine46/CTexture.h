@@ -48,7 +48,8 @@ namespace Engine46 {
 
 		bool LoadTexture(const char* filePath);
 
-		virtual void Create() {};
+		virtual void CreateTexture() {};
+		virtual void CreateShaderResourceView() {};
 		virtual void Set(UINT slot) {};
 
 		std::string GetTextureName() const { return m_textureName.c_str(); }

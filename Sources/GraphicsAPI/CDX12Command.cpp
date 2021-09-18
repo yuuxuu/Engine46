@@ -95,6 +95,20 @@ namespace Engine46 {
 		m_pCommandList->ClearDepthStencilView(handle, clearFlags, 1.0f, 0, 0, nullptr);
 	}
 
+	// バッファを設定
+	void CDX12Command::SetBuffer(D3D12_VERTEX_BUFFER_VIEW& vbView, D3D12_INDEX_BUFFER_VIEW& ibView) {
+		m_pCommandList->IASetVertexBuffers(0, 1, &vbView);
+
+		m_pCommandList->IASetIndexBuffer(&ibView);
+	}
+
+	// インデックス描画
+	void CDX12Command::DrawIndexed(D3D12_PRIMITIVE_TOPOLOGY topology, UINT numIndexes) {
+		m_pCommandList->IASetPrimitiveTopology(topology);
+
+		m_pCommandList->DrawIndexedInstanced(numIndexes, 1, 0, 0, 0);
+	}
+
 	// Rectを設定
 	void CDX12Command::SetRect(UINT width, UINT height) {
 		D3D12_RECT rect = { 0, 0, (long)width, (long)height };
@@ -137,7 +151,12 @@ namespace Engine46 {
 
 	// デスクリプターヒープを設定
 	void CDX12Command::SetDescriptorHeaps(ID3D12DescriptorHeap* pDescriptorHeap) {
-		m_pCommandList->SetDescriptorHeaps(1, &pDescriptorHeap);
+		if (pDescriptorHeap) {
+			m_pCommandList->SetDescriptorHeaps(1, &pDescriptorHeap);
+		}
+		else {
+			m_pCommandList->SetDescriptorHeaps(0, &pDescriptorHeap);
+		}
 	}
 
 	// ルートシグネチャを設定
