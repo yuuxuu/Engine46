@@ -86,10 +86,18 @@ namespace Engine46 {
 			pScene->AddActorToScene(pSprite);
 
 			CLight* pDirectionalLight = m_pActorManager->CreateLight((int)LightType::Directional);
+			pDirectionalLight->SetMesh("LightMesh");
+			pDirectionalLight->SetMaterial("LightMaterial");
+			pDirectionalLight->SetTexture("particle.png");
+			pDirectionalLight->SetShaderPackage("CPUParticle.hlsl");
 			pDirectionalLight->InitializeResource(pRenderer);
 			pScene->AddActorToScene(pDirectionalLight);
 
 			CLight* pPointLight = m_pActorManager->CreateLight((int)LightType::Point);
+			pPointLight->SetMesh("LightMesh");
+			pPointLight->SetMaterial("LightMaterial");
+			pPointLight->SetTexture("particle.png");
+			pPointLight->SetShaderPackage("CPUParticle.hlsl");
 			pPointLight->InitializeResource(pRenderer);
 			pScene->AddActorToScene(pPointLight);
 		}

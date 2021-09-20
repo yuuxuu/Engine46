@@ -124,6 +124,22 @@ namespace Engine46 {
 		m_textureData.format = rDesc.Format;
 	}
 
+	// デプステクスチャ作成
+	void CDX12Texture::CreateDepthTexture(D3D12_RESOURCE_DESC& rDesc, D3D12_CLEAR_VALUE clearValue) {
+
+		CreateTexture(rDesc, clearValue);
+
+		m_textureData.format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
+	}
+
+	// ステンシルテクスチャ作成
+	void CDX12Texture::CreateStencilTexture(D3D12_RESOURCE_DESC& rDesc, D3D12_CLEAR_VALUE clearValue) {
+
+		CreateTexture(rDesc, clearValue);
+
+		m_textureData.format = DXGI_FORMAT_X24_TYPELESS_G8_UINT;
+	}
+
 	// シェーダーリソースビュー作成
 	void CDX12Texture::CreateShaderResourceView(ID3D12DescriptorHeap* pDescriptorHeap, UINT heapIndex) {
 		D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};

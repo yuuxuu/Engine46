@@ -29,6 +29,8 @@
     <ClInclude Include="CDX11ForwardRendering.h" />
     <ClInclude Include="CDX12Command.h" />
     <ClInclude Include="CDX12ConstantBuffer.h" />
+    <ClInclude Include="CDX12DeferredRenderig.h" />
+    <ClInclude Include="CDX12DepthRendering.h" />
     <ClInclude Include="CDX12Device.h" />
     <ClInclude Include="CDX12ForwardRendering.h" />
     <ClInclude Include="CDX12Mesh.h" />
@@ -47,6 +49,8 @@
     <ClCompile Include="CDX11ForwardRendering.cpp" />
     <ClCompile Include="CDX12Command.cpp" />
     <ClCompile Include="CDX12ConstantBuffer.cpp" />
+    <ClCompile Include="CDX12DeferredRenderig.cpp" />
+    <ClCompile Include="CDX12DepthRendering.cpp" />
     <ClCompile Include="CDX12Device.cpp" />
     <ClCompile Include="CDX12ForwardRendering.cpp" />
     <ClCompile Include="CDX12Mesh.cpp" />

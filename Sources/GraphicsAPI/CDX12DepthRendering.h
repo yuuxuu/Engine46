@@ -1,14 +1,14 @@
 ﻿/**
- * @file CDX12ForwardRendering.h
+ * @file CDX12DepthRendering.h
  * @brief
  * @author 木村優
- * @date 2021/09/16
+ * @date 2021/05/23
  */
 
 #pragma once
 
-#ifndef _CDX12_FORWARD_RENDERING_H_
-#define _CDX12_FORWARD_RENDERING_H_
+#ifndef _CDX12_DEPTH_RENDERING_H_
+#define _CDX12_DEPTH_RENDERING_H_
 
 #include "../Engine46/CRendering.h"
 
@@ -21,32 +21,29 @@ namespace Engine46 {
 	class CDX12Command;
 	class CDX12Texture;
 
-	class CDX12ForwardRendering : public CRenderingBase {
+	class CDX12DepthRendering : public CRenderingBase {
 	private:
 		CDX12Device*					pDX12Device;
 		CDX12Command*					pDX12Command;
 
-		CDX12Texture*					pDX12RenderTexture;
+		CDX12Texture*					pDX12DepthTexture;
 
-		ComPtr<ID3D12DescriptorHeap>	m_pRtvDescriptorHeap;
-		D3D12_CPU_DESCRIPTOR_HANDLE		m_rtvHandle;
-
-		ComPtr<ID3D12Resource>			m_pDsvResource;
 		ComPtr<ID3D12DescriptorHeap>	m_pDsvDescriptorHeap;
 		D3D12_CPU_DESCRIPTOR_HANDLE		m_dsvHandle;
 
 	public:
-		CDX12ForwardRendering(CDX12Device* pDX12Device, CDX12Command* pCommand);
-		~CDX12ForwardRendering();
+		CDX12DepthRendering(CDX12Device* pDevice, CDX12Command* pCommnad);
+		~CDX12DepthRendering();
 
 		bool Initialize(UINT width, UINT height) override;
 		void Begine() override;
 		void End() override;
 
-		void Rendering(CSceneBase* pScene) override;
+		void Rendering(CSceneBase* pScene);
 		void DrawForRenderScene(CSprite* pSprite, UINT x, UINT y, UINT width, UINT height) override;
 	};
 
-} // namespace
+} // namespace 
 
 #endif
+

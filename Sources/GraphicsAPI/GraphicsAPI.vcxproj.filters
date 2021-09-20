@@ -81,6 +81,12 @@
     <ClInclude Include="CDX12ForwardRendering.h">
       <Filter>DX12\ヘッダーファイル</Filter>
     </ClInclude>
+    <ClInclude Include="CDX12DepthRendering.h">
+      <Filter>DX12\ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="CDX12DeferredRenderig.h">
+      <Filter>DX12\ヘッダーファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CDX11Device.cpp">
@@ -129,6 +135,12 @@
       <Filter>DX12\ソースファイル</Filter>
     </ClCompile>
     <ClCompile Include="CDX12ForwardRendering.cpp">
+      <Filter>DX12\ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="CDX12DepthRendering.cpp">
+      <Filter>DX12\ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="CDX12DeferredRenderig.cpp">
       <Filter>DX12\ソースファイル</Filter>
     </ClCompile>
   </ItemGroup>

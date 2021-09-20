@@ -30,15 +30,15 @@ namespace Engine46 {
 			pRenderer->CreateConstantBuffer(pConstantBuffer, sizeof(worldCB));
 			SetWorldConstantBuffer(pConstantBuffer);
 
-			if (m_pMaterial && !m_pMaterial->IsInitialize()) {
+			if (pMaterial && !pMaterial->IsInitialize()) {
 				std::unique_ptr<CConstantBufferBase> pMaterialConstantBuffer;
 				pRenderer->CreateConstantBuffer(pMaterialConstantBuffer, sizeof(materialCB));
-				m_pMaterial->SetMaterialConstantBuffer(pMaterialConstantBuffer);
+				pMaterial->SetMaterialConstantBuffer(pMaterialConstantBuffer);
 			}
 		}
 
-		if (m_pMesh && !m_pMesh->IsInitialize()) {
-			m_pMesh->ReserveVertex(4);
+		if (pMesh && !pMesh->IsInitialize()) {
+			pMesh->ReserveVertex(4);
 
 			vertexInfo info;
 
@@ -46,38 +46,38 @@ namespace Engine46 {
 			info.color = VECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
 			info.uv = VECTOR2(0.0f, 0.0f);
 			info.normal = VECTOR3(0.0f, 0.0f, -1.0f);
-			m_pMesh->AddVertexInfo(info);
+			pMesh->AddVertexInfo(info);
 
 			info.vertex = VECTOR3(1.0f, 1.0f, 0.0f);
 			info.color = VECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
 			info.uv = VECTOR2(1.0f, 0.0f);
 			info.normal = VECTOR3(0.0f, 0.0f, -1.0f);
-			m_pMesh->AddVertexInfo(info);
+			pMesh->AddVertexInfo(info);
 
 			info.vertex = VECTOR3(-1.0f, -1.0f, 0.0f);
 			info.color = VECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
 			info.uv = VECTOR2(0.0f, 1.0f);
 			info.normal = VECTOR3(0.0f, 0.0f, -1.0f);
-			m_pMesh->AddVertexInfo(info);
+			pMesh->AddVertexInfo(info);
 
 			info.vertex = VECTOR3(1.0f, -1.0f, 0.0f);
 			info.color = VECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
 			info.uv = VECTOR2(1.0f, 1.0f);
 			info.normal = VECTOR3(0.0f, 0.0f, -1.0f);
-			m_pMesh->AddVertexInfo(info);
+			pMesh->AddVertexInfo(info);
 
-			m_pMesh->CreateVertexBuffer(PRIMITIVE_TOPOLOGY_TYPE::TRIANGLESTRIP);
+			pMesh->CreateVertexBuffer(PRIMITIVE_TOPOLOGY_TYPE::TRIANGLESTRIP);
 
-			m_pMesh->ReserveIndex(6);
+			pMesh->ReserveIndex(6);
 
-			m_pMesh->AddIndex(0);
-			m_pMesh->AddIndex(1);
-			m_pMesh->AddIndex(3);
-			m_pMesh->AddIndex(0);
-			m_pMesh->AddIndex(3);
-			m_pMesh->AddIndex(2);
+			pMesh->AddIndex(0);
+			pMesh->AddIndex(1);
+			pMesh->AddIndex(3);
+			pMesh->AddIndex(0);
+			pMesh->AddIndex(3);
+			pMesh->AddIndex(2);
 
-			m_pMesh->CreateIndexBuffer();
+			pMesh->CreateIndexBuffer();
 		}
 	}
 

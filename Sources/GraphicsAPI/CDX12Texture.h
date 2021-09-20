@@ -40,6 +40,8 @@ namespace Engine46 {
 		void Set(UINT slot) override;
 
 		void CreateTexture(D3D12_RESOURCE_DESC& rDesc, D3D12_CLEAR_VALUE clearValue);
+		void CreateDepthTexture(D3D12_RESOURCE_DESC& rDesc, D3D12_CLEAR_VALUE clearValue);
+		void CreateStencilTexture(D3D12_RESOURCE_DESC& rDesc, D3D12_CLEAR_VALUE clearValue);
 		void CreateShaderResourceView(ID3D12DescriptorHeap* pDescriptorHeap, UINT heapIndex);
 
 		ID3D12Resource* GetResource() const { return m_pTextureResource.Get(); }

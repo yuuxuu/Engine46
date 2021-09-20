@@ -42,11 +42,7 @@ namespace Engine46 {
 		SetDepthStencilState(gpsDesc);
 		SetBlendState(gpsDesc);
 		SetRasterizerState(gpsDesc);
-
-		std::vector<DXGI_FORMAT> formats = {
-			DXGI_FORMAT_B8G8R8A8_UNORM
-		};
-		SetRTVFormats(gpsDesc, formats);
+		SetRTVFormats(gpsDesc);
 
 		D3D12_INPUT_ELEMENT_DESC IEDesc[] = {
 			{ "POSITION" , 0, DXGI_FORMAT_R32G32B32_FLOAT	, 0,  0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
@@ -119,6 +115,11 @@ namespace Engine46 {
 		if (m_pComputePiplineState) {
 			pDX12Command->SetPipelineState(m_pComputePiplineState.Get());
 		}
+
+		CDX12Renderer* pRenderer = dynamic_cast<CDX12Renderer*>(CRendererSystem::GetRendererSystem().GetRenderer());
+		if (pRenderer) {
+			pRenderer->SetConstantBuffers();
+		}
 	}
 
 	void CDX12ShaderPackage::CopyDescriptorHandle(D3D12_CPU_DESCRIPTOR_HANDLE srcHandle, UINT destIndex) {
@@ -158,12 +159,12 @@ namespace Engine46 {
 		}
 	}
 
-	void CDX12ShaderPackage::SetRTVFormats(D3D12_GRAPHICS_PIPELINE_STATE_DESC& gpsDesc, std::vector<DXGI_FORMAT> formats) {
+	void CDX12ShaderPackage::SetRTVFormats(D3D12_GRAPHICS_PIPELINE_STATE_DESC& gpsDesc) {
 
-		gpsDesc.NumRenderTargets = formats.size();
+		gpsDesc.NumRenderTargets = RENDER_TARGET_SIZE;
 
-		for (UINT i = 0; i < gpsDesc.NumRenderTargets; ++i) {
-			gpsDesc.RTVFormats[i] = formats[i];
+		for (UINT i = 0; i < RENDER_TARGET_SIZE; ++i) {
+			gpsDesc.RTVFormats[i] = RENDER_TARGET_FORMATS[i];
 		}
 
 		gpsDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;

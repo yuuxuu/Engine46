@@ -55,9 +55,11 @@ namespace Engine46 {
 
 		void SetRect(UINT width, UINT height);
 
-		void SetViewPort(UINT width, UINT height);
+		void SetViewPort(UINT x, UINT y, UINT width, UINT height);
 
-		void SetRenderTargetView(D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle, D3D12_CPU_DESCRIPTOR_HANDLE dsHandle);
+		void SetRenderTargetView(D3D12_CPU_DESCRIPTOR_HANDLE* rtvHandle, D3D12_CPU_DESCRIPTOR_HANDLE* dsHandle);
+		
+		void SetRenderTargetViews(std::vector<D3D12_CPU_DESCRIPTOR_HANDLE>& rtvHandle, D3D12_CPU_DESCRIPTOR_HANDLE* dsHandle);
 
 		void SetResourceBarrier(ID3D12Resource* pResource, D3D12_RESOURCE_STATES before, D3D12_RESOURCE_STATES after);
 

@@ -34,7 +34,6 @@ namespace Engine46 {
 
 		ComPtr<ID3D12DescriptorHeap>			m_pCbDescriptorHeap;
 
-		UINT									m_descriptorHeapMaxIndex;
 		UINT									m_descriptorHeapOffsetIndex;
 
 	public:
@@ -54,7 +53,7 @@ namespace Engine46 {
 		void CreateTexture(std::unique_ptr<CTextureBase>& pTexture, const char* textureName) override;
 		void CreateShader(std::unique_ptr<CShaderPackage>& pShaderPackage, const char* shaderName) override;
 		
-		void CreateRenderTexture(std::unique_ptr<CDX12Texture>& pTexture, D3D12_RESOURCE_DESC& rDesc, D3D12_CLEAR_VALUE& clearValue);
+		void CreateRenderTexture(std::unique_ptr<CDX12Texture>& pDX12RenderTexture, D3D12_RESOURCE_DESC& rDesc, D3D12_CLEAR_VALUE& clearValue, TextureType type = TextureType::Render);
 	};
 }
 

@@ -26,7 +26,9 @@ namespace Engine46 {
 
 	class CRendererBase : public IRenderer {
 	protected:
-		std::unique_ptr<CRenderingBase>			m_pRendering;
+		std::unique_ptr<CRenderingBase>			m_pForwardRendering;
+		std::unique_ptr<CRenderingBase>			m_pDeferredRendering;
+		std::unique_ptr<CRenderingBase>			m_pDepthRendring;
 
 		RECT									m_windowRect;
 
@@ -35,7 +37,7 @@ namespace Engine46 {
 		std::unique_ptr<CConstantBufferBase>	m_pPointLightCB;
 		std::unique_ptr<CConstantBufferBase>	m_pSpotLightCB;
 
-		std::unique_ptr<CSprite>				m_pRendererSprite;
+		std::unique_ptr<CSprite>				m_pRenderSprite;
 
 	public:
 		CRendererBase();
@@ -52,6 +54,7 @@ namespace Engine46 {
 		virtual void CreateShader(std::unique_ptr<CShaderPackage>& pShaderPackage, const char* shaderName) {};
 
 		RECT GetWindowRect() const { return m_windowRect; }
+		CSprite* GetRenderSprite() const { return m_pRenderSprite.get(); }
 	};
 
 } // namespace

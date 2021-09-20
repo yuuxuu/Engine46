@@ -28,8 +28,9 @@ namespace Engine46 {
 		CBV_PointLight,
 		CBV_SpotLight,
 		SRV_diffuse,
-		Static_MAX = 4,
 	};
+
+	const UINT STATIC_MAX = 4;
 
 	class CDX12ShaderPackage : public CShaderPackage {
 	private:
@@ -58,7 +59,7 @@ namespace Engine46 {
 		void CopyDescriptorHandle(D3D12_CPU_DESCRIPTOR_HANDLE srcHandle, UINT destIndex);
 
 		void SetShaderByteCode(D3D12_GRAPHICS_PIPELINE_STATE_DESC& gpsDesc);
-		void SetRTVFormats(D3D12_GRAPHICS_PIPELINE_STATE_DESC& gpsDesc, std::vector<DXGI_FORMAT> formats);
+		void SetRTVFormats(D3D12_GRAPHICS_PIPELINE_STATE_DESC& gpsDesc);
 		void SetDepthStencilState(D3D12_GRAPHICS_PIPELINE_STATE_DESC& gpsDesc);
 		void SetRasterizerState(D3D12_GRAPHICS_PIPELINE_STATE_DESC& gpsDesc);
 		void SetBlendState(D3D12_GRAPHICS_PIPELINE_STATE_DESC& gpsDesc);

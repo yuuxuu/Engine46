@@ -118,8 +118,6 @@ namespace Engine46 {
 		pSp = CreateShaderPackage(shaderPackageName);
 
 		if (pSp && pSp->IsCompile()) {
-
-
 			pActor->SetShaderPackage(pSp);
 		}
 	}

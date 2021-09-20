@@ -29,6 +29,7 @@ namespace Engine46 {
 	bool CDX12ForwardRendering::Initialize(UINT width, UINT height) {
 
 		CDX12Renderer* pRenderer = dynamic_cast<CDX12Renderer*>(CRendererSystem::GetRendererSystem().GetRenderer());
+		if (!pRenderer) return false;
 
 		{
 			D3D12_DESCRIPTOR_HEAP_DESC dhDesc = {};
@@ -60,27 +61,19 @@ namespace Engine46 {
 			clearValue.Color[1]	= 0.0f;
 			clearValue.Color[2]	= 0.0f;
 			clearValue.Color[3]	= 1.0f;
-
-			//std::unique_ptr<CDX12Texture> pRenderTex = std::make_unique<CDX12Texture>(pDX12Device, pDX12Command);
-			//pRenderTex->CreateTexture(rDesc, clearValue);
-			//pRenderTex->CreateShaderResourceView();
-
-			std::unique_ptr<CDX12Texture> pRenderTex;
-			if (pRenderer) {
-				pRenderer->CreateRenderTexture(pRenderTex, rDesc, clearValue);
-			}
 			
 			D3D12_RENDER_TARGET_VIEW_DESC rtvDesc = {};
 
 			rtvDesc.ViewDimension		= D3D12_RTV_DIMENSION_TEXTURE2D;
 			rtvDesc.Format				= rDesc.Format;
 
+			std::unique_ptr<CDX12Texture> pRenderTex;
+			pRenderer->CreateRenderTexture(pRenderTex, rDesc, clearValue);
+
 			pDX12Device->CreateRenderTargetView(pRenderTex->GetResource(), &rtvDesc, m_rtvHandle);
 
-			if (pRenderTex) {
-				pDX12Texture = pRenderTex.get();
-				m_pRenderTex = std::move(pRenderTex);
-			}
+			pDX12RenderTexture = pRenderTex.get();
+			m_pRenderTex = std::move(pRenderTex);
 		}
 
 		{
@@ -131,18 +124,39 @@ namespace Engine46 {
 
 	// レンダリング開始
 	void CDX12ForwardRendering::Begine() {
-		pDX12Command->SetResourceBarrier(pDX12Texture->GetResource(), D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_RENDER_TARGET);
+		pDX12Command->SetResourceBarrier(pDX12RenderTexture->GetResource(), D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_RENDER_TARGET);
 		pDX12Command->SetResourceBarrier(m_pDsvResource.Get(), D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_DEPTH_WRITE);
 
 		pDX12Command->ClearRenderTargetView(m_rtvHandle);
 		pDX12Command->ClearDepthStencilView(m_dsvHandle, D3D12_CLEAR_FLAG_DEPTH);
-		pDX12Command->SetRenderTargetView(m_rtvHandle, m_dsvHandle);
+		pDX12Command->SetRenderTargetView(&m_rtvHandle, &m_dsvHandle);
 	}
 
 	// レンダリング終了
 	void CDX12ForwardRendering::End() {
-		pDX12Command->SetResourceBarrier(pDX12Texture->GetResource(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_GENERIC_READ);
+		pDX12Command->SetResourceBarrier(pDX12RenderTexture->GetResource(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_GENERIC_READ);
 		pDX12Command->SetResourceBarrier(m_pDsvResource.Get(), D3D12_RESOURCE_STATE_DEPTH_WRITE, D3D12_RESOURCE_STATE_GENERIC_READ);
+	}
+
+	// シーン描画
+	void CDX12ForwardRendering::Rendering(CSceneBase* pScene) {
+
+		Begine();
+
+		pScene->Draw();
+
+		End();
+	}
+
+	// 描画したシーン描画
+	void CDX12ForwardRendering::DrawForRenderScene(CSprite* pSprite, UINT x, UINT y, UINT width, UINT height) {
+		
+		if (!pSprite) return;
+
+		pDX12Command->SetViewPort(x, y, width, height);
+
+		pSprite->SetTexture(pDX12RenderTexture);
+		pSprite->Draw();
 	}
 
 } // namespace

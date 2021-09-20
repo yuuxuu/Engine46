@@ -19,7 +19,7 @@ namespace Engine46 {
 	class CMaterialBase {
 	protected:
 		CTextureBase*							pTexture;
-		std::vector<CTextureBase*>				pVecTexture;
+		std::vector<CTextureBase*>				pVecRenderTexture;
 
 		std::unique_ptr<CConstantBufferBase>	m_pMaterialConstantBuffer;
 
@@ -37,10 +37,10 @@ namespace Engine46 {
 	public:
 		CMaterialBase();
 		explicit CMaterialBase(const char* materialName);
-		virtual ~CMaterialBase();
+		~CMaterialBase();
 
-		virtual void Update();
-		virtual void Set(UINT slot);
+		void Update();
+		void Set(UINT slot);
 
 		void SetMaterialConstantBuffer(std::unique_ptr<CConstantBufferBase>& pConstantBuffer);
 
@@ -52,6 +52,8 @@ namespace Engine46 {
 		CConstantBufferBase* GetMaterialConstantBuffer() const { return m_pMaterialConstantBuffer.get(); }
 
 		void SetTexture(CTextureBase* pTexture) { this->pTexture = pTexture; }
+
+		void AddRenderTexture(CTextureBase* pTexture) { pVecRenderTexture.emplace_back(pTexture); };
 
 		std::string GetMaterialName() const { return m_materialName.c_str(); }
 

@@ -117,11 +117,11 @@ namespace Engine46 {
 	}
 
 	// ビューポートを設定
-	void CDX12Command::SetViewPort(UINT width, UINT height) {
+	void CDX12Command::SetViewPort(UINT x, UINT y, UINT width, UINT height) {
 		D3D12_VIEWPORT vp = {};
 
-		vp.TopLeftX	= 0;
-		vp.TopLeftY	= 0;
+		vp.TopLeftX	= (float)x;
+		vp.TopLeftY	= (float)y;
 		vp.Width	= (float)width;
 		vp.Height	= (float)height;
 		vp.MinDepth	= 0;
@@ -131,8 +131,23 @@ namespace Engine46 {
 	}
 
 	// レンダーターゲットビューを設定
-	void CDX12Command::SetRenderTargetView(D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle, D3D12_CPU_DESCRIPTOR_HANDLE dsHandle) {
-		m_pCommandList->OMSetRenderTargets(1, &rtvHandle, TRUE, &dsHandle);
+	void CDX12Command::SetRenderTargetView(D3D12_CPU_DESCRIPTOR_HANDLE* rtvHandle, D3D12_CPU_DESCRIPTOR_HANDLE* dsHandle) {
+		if (rtvHandle) {
+			m_pCommandList->OMSetRenderTargets(1, rtvHandle, TRUE, dsHandle);
+		}
+		else {
+			m_pCommandList->OMSetRenderTargets(0, rtvHandle, TRUE, dsHandle);
+		}
+	}
+
+	// レンダーターゲットビューを設定
+	void CDX12Command::SetRenderTargetViews(std::vector<D3D12_CPU_DESCRIPTOR_HANDLE>& rtvHandles, D3D12_CPU_DESCRIPTOR_HANDLE* dsHandle) {
+		if (!rtvHandles.empty()) {
+			m_pCommandList->OMSetRenderTargets(rtvHandles.size(), &rtvHandles[0], TRUE, dsHandle);
+		}
+		else {
+			m_pCommandList->OMSetRenderTargets(0, nullptr, TRUE, dsHandle);
+		}
 	}
 
 	// リソースバリアを設定

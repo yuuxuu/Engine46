@@ -17,6 +17,7 @@ namespace Engine46 {
 	// 前方宣言
 	class CDX11Device;
 	class CDX11DeviceContext;
+	class CDX11Texture;
 
 	class CDX11Renderer : public CRendererBase {
 	private:
@@ -43,6 +44,8 @@ namespace Engine46 {
 		void CreateMesh(std::unique_ptr<CMeshBase>& pMesh, const char* meshName) override;
 		void CreateTexture(std::unique_ptr<CTextureBase>& pTexture, const char* textureName) override;
 		void CreateShader(std::unique_ptr<CShaderPackage>& pShaderPackage, const char* shaderName) override;
+
+		void CreateRenderTexture(std::unique_ptr<CDX11Texture>& pDX11Texture, D3D11_TEXTURE2D_DESC& texDesc);
 
 		CDX11Device* GetDX11Device() const { return m_pDX11Device.get(); }
 

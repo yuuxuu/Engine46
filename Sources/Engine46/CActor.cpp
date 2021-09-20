@@ -77,14 +77,9 @@ namespace Engine46 {
 	// 描画
 	void CActorBase::Draw() {
 
-		if (m_pShaderPackage) {
-			m_pShaderPackage->SetShader();
+		if (!pShaderPackage) return;
 
-			CDX12Renderer* pRenderer = dynamic_cast<CDX12Renderer*>(CRendererSystem::GetRendererSystem().GetRenderer());
-			if (pRenderer) {
-				pRenderer->SetConstantBuffers();
-			}
-		}
+		pShaderPackage->SetShader();
 
 		if (m_pWorldConstantBuffer) {
 			Matrix matW = GetWorldMatrix();
@@ -98,12 +93,12 @@ namespace Engine46 {
 			m_pWorldConstantBuffer->Set((UINT)CB_TYPE::WORLD);
 		}
 
-		if (m_pMaterial) {
-			m_pMaterial->Set((UINT)CB_TYPE::MATERIAL);
+		if (pMaterial) {
+			pMaterial->Set((UINT)CB_TYPE::MATERIAL);
 		}
 
-		if (m_pMesh) {
-			m_pMesh->Draw();
+		if (pMesh) {
+			pMesh->Draw();
 		}
 
 		for (auto& chiled : pChildActorList) {
@@ -141,7 +136,7 @@ namespace Engine46 {
 	// メッシュを設定
 	void CActorBase::SetMesh(CMeshBase* pMesh) {
 		if (pMesh) {
-			m_pMesh = pMesh;
+			this->pMesh = pMesh;
 		}
 	}
 
@@ -154,7 +149,7 @@ namespace Engine46 {
 	// マテリアルを設定
 	void CActorBase::SetMaterial(CMaterialBase* pMaterial) {
 		if (pMaterial) {
-			m_pMaterial = pMaterial;
+			this->pMaterial = pMaterial;
 		}
 	}
 
@@ -166,8 +161,8 @@ namespace Engine46 {
 
 	// マテリアルにテクスチャを設定
 	void CActorBase::SetTexture(CTextureBase* pTex) {
-		if (m_pMaterial) {
-			m_pMaterial->SetTexture(pTex);
+		if (pMaterial) {
+			pMaterial->SetTexture(pTex);
 		}
 	}
 
@@ -180,7 +175,7 @@ namespace Engine46 {
 	// シェーダーパッケージを設定
 	void CActorBase::SetShaderPackage(CShaderPackage* pShaderPackage) {
 		if (pShaderPackage) {
-			m_pShaderPackage = pShaderPackage;
+			this->pShaderPackage = pShaderPackage;
 		}
 	}
 

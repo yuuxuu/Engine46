@@ -20,7 +20,7 @@ namespace Engine46 {
 		SHADER_TYPE shadeType;
 	};
 
-	static const std::vector<ShaderInfo> vecShaderInfo = {
+	static const std::vector<ShaderInfo> SHADER_INFOS = {
 		{ "VS_main", "vs_5_0", SHADER_TYPE::TYPE_VERTEX },
 		{ "PS_main", "ps_5_0", SHADER_TYPE::TYPE_PIXEL },
 		{ "HS_main", "hs_5_0", SHADER_TYPE::TYPE_HULL },

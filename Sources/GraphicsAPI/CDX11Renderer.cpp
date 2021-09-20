@@ -89,8 +89,8 @@ namespace Engine46 {
 			this->CreateConstantBuffer(m_pSpotLightCB, sizeof(SpotLightCB));
 		}
 
-		m_pRendering = std::make_unique<CDX11ForwardRendering>(m_pDX11Device.get(), m_pDX11DeviceContext.get());
-		if (!m_pRendering->Initialize(width, height)) return false;
+		m_pForwardRendering = std::make_unique<CDX11ForwardRendering>(m_pDX11Device.get(), m_pDX11DeviceContext.get());
+		if (!m_pForwardRendering->Initialize(width, height)) return false;
 
 		m_windowRect = RECT(width, height);
 
@@ -104,13 +104,12 @@ namespace Engine46 {
 
 	// 描画準備開始
 	void CDX11Renderer::Begine(CSceneBase* pScene) {
-		if (!m_pRendererSprite) {
-			m_pRendererSprite = std::make_unique<CSprite>("RenderSprite");
-			m_pRendererSprite->SetMesh("RenderSpriteMesh");
-			m_pRendererSprite->SetMaterial("RenderSpriteMaterial");
-			m_pRendererSprite->SetTexture(m_pRendering->GetRenderTexture());
-			m_pRendererSprite->SetShaderPackage("Sprite.hlsl");
-			m_pRendererSprite->InitializeResource(this);
+		if (!m_pRenderSprite) {
+			m_pRenderSprite = std::make_unique<CSprite>("RenderSprite");
+			m_pRenderSprite->SetMesh("RenderSpriteMesh");
+			m_pRenderSprite->SetMaterial("RenderSpriteMaterial");
+			m_pRenderSprite->SetShaderPackage("Sprite.hlsl");
+			m_pRenderSprite->InitializeResource(this);
 		}
 		
 		if (pScene) {
@@ -185,17 +184,19 @@ namespace Engine46 {
 
 		m_pDX11DeviceContext->SetInputLayout(m_pInputLayout.Get());
 
-		m_pRendering->Begine();
-		
-		pScene->Draw();
+		if (m_pForwardRendering) {
+			m_pForwardRendering->Rendering(pScene);
+		}
 
 		m_pDX11DeviceContext->ClearRenderTargetView(m_pRtv.Get());
 		m_pDX11DeviceContext->ClearDespthStencilView(m_pDsv.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL);
 		m_pDX11DeviceContext->SetRenderTargetView(m_pRtv.Get(), m_pDsv.Get());
 
-		m_pRendererSprite->Draw();
+		if (m_pForwardRendering) {
+			m_pForwardRendering->DrawForRenderScene(m_pRenderSprite.get(), 0, 0, m_windowRect.w, m_windowRect.h);
+		}
 
-		m_pRendering->End();
+		m_pDX11DeviceContext->SetPSShaderResources(0, 1, nullptr);
 
 		return m_pDX11Device->Present();
 	}
@@ -234,7 +235,7 @@ namespace Engine46 {
 
 		pShaderPackage = std::make_unique<CDX11ShaderPackage>(m_pDX11Device.get(), m_pDX11DeviceContext.get(), shaderName);
 
-		for (const auto& info : vecShaderInfo) {
+		for (const auto& info : SHADER_INFOS) {
 			ComPtr<ID3DBlob> pBlob;
 
 			if (pShaderPackage->CompileShader(pBlob, fileInfo->filePath.c_str(), info.entryPoint, info.shaderModel)) {
@@ -255,6 +256,14 @@ namespace Engine46 {
 		if (pShaderPackage->IsCompile()) {
 			pShaderPackage->Initialize();
 		}
+	}
+
+	//レンダーテクスチャ作成
+	void CDX11Renderer::CreateRenderTexture(std::unique_ptr<CDX11Texture>& pDX11Texture, D3D11_TEXTURE2D_DESC& texDesc) {
+		pDX11Texture = std::make_unique<CDX11Texture>(m_pDX11Device.get(), m_pDX11DeviceContext.get());
+
+		pDX11Texture->CreateTexture(texDesc);
+		pDX11Texture->CreateShaderResourceView();
 	}
 
 } // namespace

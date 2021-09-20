@@ -65,6 +65,16 @@ namespace Engine46 {
 		if (pTexture) {
 			pTexture->Set(0);
 		}
+
+		if (!pVecRenderTexture.empty()) {
+			UINT size = pVecRenderTexture.size();
+			
+			for (UINT i = 0; i < size; ++i) {
+				pVecRenderTexture[i]->Set(i);
+			}
+
+			pVecRenderTexture.clear();
+		}
 	}
 
 	// コンスタントバッファを設定

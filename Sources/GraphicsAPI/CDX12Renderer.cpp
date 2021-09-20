@@ -1,5 +1,5 @@
 ﻿/**
- * @file CDX12Renderer.h
+ * @file CDX12Renderer.height
  * @brief
  * @author 木村優
  * @date 2021/08/19
@@ -13,6 +13,8 @@
 #include "CDX12Texture.h"
 #include "CDX12ShaderPackage.h"
 #include "CDX12ForwardRendering.h"
+#include "CDX12DepthRendering.h"
+#include "CDX12DeferredRenderig.h"
 
 #include "../Engine46/CFileSystem.h"
 #include "../Engine46/CLight.h"
@@ -20,10 +22,11 @@
 
 namespace Engine46 {
 
+	constexpr UINT DESCRIPTORHEAP_MAX = STATIC_MAX + 100;
+
 	// コンストラクタ
 	CDX12Renderer::CDX12Renderer() :
-		m_descriptorHeapOffsetIndex(0),
-		m_descriptorHeapMaxIndex(0)
+		m_descriptorHeapOffsetIndex(0)
 	{}
 
 	// デストラクタ
@@ -105,12 +108,10 @@ namespace Engine46 {
 		}
 
 		{
-			m_descriptorHeapMaxIndex = (UINT)MyRootSignature_01::Static_MAX + 100;
-
 			D3D12_DESCRIPTOR_HEAP_DESC dhDesc = {};
 
 			dhDesc.Type				= D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-			dhDesc.NumDescriptors	= m_descriptorHeapMaxIndex;
+			dhDesc.NumDescriptors	= DESCRIPTORHEAP_MAX;
 			dhDesc.Flags			= D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 
 			m_pDX12Device->CreateDescriptorHeap(m_pCbDescriptorHeap, dhDesc);
@@ -121,8 +122,14 @@ namespace Engine46 {
 			this->CreateConstantBuffer(m_pSpotLightCB, sizeof(SpotLightCB));
 		}
 
-		m_pRendering = std::make_unique<CDX12ForwardRendering>(m_pDX12Device.get(), m_pDX12Command.get());
-		if (!m_pRendering->Initialize(width, height)) return false;
+		//m_pForwardRendering = std::make_unique<CDX12ForwardRendering>(m_pDX12Device.get(), m_pDX12Command.get());
+		//if (!m_pForwardRendering->Initialize(width, height)) return false;
+		
+		m_pDeferredRendering = std::make_unique<CDX12DeferredRenderig>(m_pDX12Device.get(), m_pDX12Command.get());
+		if (!m_pDeferredRendering->Initialize(width, height)) return false;
+
+		m_pDepthRendring = std::make_unique<CDX12DepthRendering>(m_pDX12Device.get(), m_pDX12Command.get());
+		if (!m_pDepthRendring->Initialize(width, height)) return false;
 
 		m_pDX12Command->CloseCommandList();
 
@@ -138,13 +145,12 @@ namespace Engine46 {
 
 	// 描画準備開始
 	void CDX12Renderer::Begine(CSceneBase* pScene) {
-		if (!m_pRendererSprite) {
-			m_pRendererSprite = std::make_unique<CSprite>("RenderSprite");
-			m_pRendererSprite->SetMesh("RenderSpriteMesh");
-			m_pRendererSprite->SetMaterial("RenderSpriteMaterial");
-			m_pRendererSprite->SetTexture(m_pRendering->GetRenderTexture());
-			m_pRendererSprite->SetShaderPackage("Sprite.hlsl");
-			m_pRendererSprite->InitializeResource(this);
+		if (!m_pRenderSprite) {
+			m_pRenderSprite = std::make_unique<CSprite>("RenderSprite");
+			m_pRenderSprite->SetMesh("RenderSpriteMesh");
+			m_pRenderSprite->SetMaterial("RenderSpriteMaterial");
+			m_pRenderSprite->SetShaderPackage("Sprite.hlsl");
+			m_pRenderSprite->InitializeResource(this);
 		}
 
 		if (pScene) {
@@ -215,20 +221,17 @@ namespace Engine46 {
 		m_pDX12Command->ResetCommandList();
 
 		m_pDX12Command->SetRect(m_windowRect.w, m_windowRect.h);
-		m_pDX12Command->SetViewPort(m_windowRect.w, m_windowRect.h);
+		m_pDX12Command->SetViewPort(0, 0, m_windowRect.w, m_windowRect.h);
 
-		m_pRendering->Begine();
+		if (m_pDepthRendring) {
+			m_pDepthRendring->Rendering(pScene);
+			Reset();
+		}
 
-		pScene->Draw();
-
-		m_pRendering->End();
-
-		m_pDX12Command->ExecuteComandLists();
-
-		m_pDX12Command->ResetCommandList();
-
-		m_pDX12Command->SetRect(m_windowRect.w, m_windowRect.h);
-		m_pDX12Command->SetViewPort(m_windowRect.w, m_windowRect.h);
+		if (m_pDeferredRendering) {
+			m_pDeferredRendering->Rendering(pScene);
+			Reset();
+		}
 
 		UINT index = m_pDX12Device->GetCurrentBackBufferIndex();
 
@@ -237,9 +240,23 @@ namespace Engine46 {
 
 		m_pDX12Command->ClearRenderTargetView(m_rtvHandle[index]);
 		m_pDX12Command->ClearDepthStencilView(m_dsvHandle, D3D12_CLEAR_FLAG_DEPTH);
-		m_pDX12Command->SetRenderTargetView(m_rtvHandle[index], m_dsvHandle);
+		m_pDX12Command->SetRenderTargetView(&m_rtvHandle[index], &m_dsvHandle);
 
-		m_pRendererSprite->Draw();
+		UINT width = (UINT)m_windowRect.w / (RENDER_TARGET_SIZE + 1);
+		UINT height = m_windowRect.h / (RENDER_TARGET_SIZE + 1);
+		UINT x = 0;
+		UINT y = (UINT)m_windowRect.h - height;
+
+		if (m_pDeferredRendering) {
+			m_pDeferredRendering->DrawForSceneLighting(m_pRenderSprite.get());
+
+			m_pDeferredRendering->DrawForRenderScene(m_pRenderSprite.get(), x, y, width, height);
+		}
+
+		if (m_pDepthRendring) {
+			x += width * RENDER_TARGET_SIZE;
+			m_pDepthRendring->DrawForRenderScene(m_pRenderSprite.get(), x, y, width, height);
+		}
 
 		m_pDX12Command->SetResourceBarrier(m_pRtvResource[index].Get(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
 		m_pDX12Command->SetResourceBarrier(m_pDsvResource.Get(), D3D12_RESOURCE_STATE_DEPTH_WRITE, D3D12_RESOURCE_STATE_GENERIC_READ);
@@ -249,15 +266,15 @@ namespace Engine46 {
 		return m_pDX12Device->Present();
 	}
 
+	// コマンドを発行しリセット
 	void CDX12Renderer::Reset() {
 
 		m_pDX12Command->ExecuteComandLists();
 
 		m_pDX12Command->ResetCommandList();
 
-		UINT index = m_pDX12Device->GetCurrentBackBufferIndex();
-
-		m_pDX12Command->SetRenderTargetView(m_rtvHandle[index], m_dsvHandle);
+		m_pDX12Command->SetRect(m_windowRect.w, m_windowRect.h);
+		m_pDX12Command->SetViewPort(0, 0, m_windowRect.w, m_windowRect.h);
 	}
 
 	void CDX12Renderer::SetConstantBuffers() {
@@ -273,7 +290,7 @@ namespace Engine46 {
 
 		pConstantBuffer->CreateConstantBuffer(byteWidth);
 
-		if (m_descriptorHeapOffsetIndex <= m_descriptorHeapMaxIndex) {
+		if (m_descriptorHeapOffsetIndex <= DESCRIPTORHEAP_MAX) {
 			dynamic_cast<CDX12ConstantBuffer*>(pConstantBuffer.get())->CreateConstantBufferView(m_pCbDescriptorHeap.Get(), m_descriptorHeapOffsetIndex++);
 		}
 
@@ -307,7 +324,7 @@ namespace Engine46 {
 
 		pShaderPackage = std::make_unique<CDX12ShaderPackage>(m_pDX12Device.get(), m_pDX12Command.get(), shaderName);
 
-		for (const auto& info : vecShaderInfo) {
+		for (const auto& info : SHADER_INFOS) {
 			ComPtr<ID3DBlob> pBlob;
 
 			if (pShaderPackage->CompileShader(pBlob, fileInfo->filePath.c_str(), info.entryPoint, info.shaderModel)) {
@@ -329,11 +346,22 @@ namespace Engine46 {
 	}
 
 	// レンダーテクスチャ作成
-	void CDX12Renderer::CreateRenderTexture(std::unique_ptr<CDX12Texture>& pTexture, D3D12_RESOURCE_DESC& rDesc, D3D12_CLEAR_VALUE& clearValue) {
-		pTexture = std::make_unique<CDX12Texture>(m_pDX12Device.get(), m_pDX12Command.get());
-		pTexture->CreateTexture(rDesc, clearValue);
+	void CDX12Renderer::CreateRenderTexture(std::unique_ptr<CDX12Texture>& pDX12RenderTexture, D3D12_RESOURCE_DESC& rDesc, D3D12_CLEAR_VALUE& clearValue, TextureType type) {
+		pDX12RenderTexture = std::make_unique<CDX12Texture>(m_pDX12Device.get(), m_pDX12Command.get());
+		
+		switch (type) {
+		case TextureType::Render:
+			pDX12RenderTexture->CreateTexture(rDesc, clearValue);
+			break;
+		case TextureType::Depth:
+			pDX12RenderTexture->CreateDepthTexture(rDesc, clearValue);
+			break;
+		case TextureType::Stencil:
+			pDX12RenderTexture->CreateStencilTexture(rDesc, clearValue);
+			break;
+		}
 
-		pTexture.get()->CreateShaderResourceView(m_pCbDescriptorHeap.Get(), m_descriptorHeapOffsetIndex++);
+		pDX12RenderTexture.get()->CreateShaderResourceView(m_pCbDescriptorHeap.Get(), m_descriptorHeapOffsetIndex++);
 	}
 
 } // namespace

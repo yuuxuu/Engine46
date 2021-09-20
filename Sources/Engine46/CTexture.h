@@ -33,6 +33,13 @@ namespace Engine46 {
 		{}
 	};
 
+	enum class TextureType {
+		Render,
+		Depth,
+		Stencil,
+		Image,
+	};
+
 	class CTextureBase {
 	protected:
 		std::string	m_textureName;
