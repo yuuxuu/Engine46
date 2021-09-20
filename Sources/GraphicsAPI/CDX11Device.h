@@ -16,9 +16,9 @@ namespace Engine46 {
 
 	class CDX11Device {
 	private:
-		ComPtr<IDXGISwapChain>			m_pSwapChain;
+		ComPtr<IDXGISwapChain>	m_pSwapChain;
 
-		ComPtr<ID3D11Device>			m_pDevice;
+		ComPtr<ID3D11Device>	m_pDevice;
 
 	public:
 		CDX11Device();

@@ -9,13 +9,6 @@
 
 namespace Engine46 {
 
-	struct materialCB {
-		VECTOR4	diffuse;
-		VECTOR4	specular;
-		VECTOR4	ambient;
-		VECTOR4	emissive;
-	};
-
 	// コンストラクタ
 	CMaterialBase::CMaterialBase() :
 		m_diffuse(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),
@@ -23,7 +16,6 @@ namespace Engine46 {
 		m_ambient(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),
 		m_emissive(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),
 		pTexture(nullptr),
-		pShaderPackage(nullptr),
 		m_materialID(0),
 		m_materialName("Material_" + std::to_string(m_materialID)),
 		m_isInitialize(false)
@@ -38,7 +30,6 @@ namespace Engine46 {
 		m_ambient(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),
 		m_emissive(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),
 		pTexture(nullptr),
-		pShaderPackage(nullptr),
 		m_materialID(0),
 		m_materialName(materialName),
 		m_isInitialize(false)
@@ -71,12 +62,18 @@ namespace Engine46 {
 			m_pMaterialConstantBuffer->Set(slot);
 		}
 
-		if (pShaderPackage) {
-			pShaderPackage->SetShader();
-		}
-
 		if (pTexture) {
 			pTexture->Set(0);
+		}
+
+		if (!pVecRenderTexture.empty()) {
+			UINT size = pVecRenderTexture.size();
+			
+			for (UINT i = 0; i < size; ++i) {
+				pVecRenderTexture[i]->Set(i);
+			}
+
+			pVecRenderTexture.clear();
 		}
 	}
 
@@ -86,8 +83,6 @@ namespace Engine46 {
 		if (m_isInitialize) return;
 		
 		if (pConstantBuffer) {
-			pConstantBuffer->CreateConstantBuffer(sizeof(materialCB));
-
 			m_pMaterialConstantBuffer.swap(pConstantBuffer);
 
 			this->Update();

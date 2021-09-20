@@ -78,6 +78,19 @@ namespace Engine46 {
 		return true;
 	}
 
+	// シーンにアクターを追加
+	void CSceneBase::AddActorToScene(CActorBase* pActor) {
+		
+		if (!pActor) return;
+
+		if (!pRootActor) {
+			pRootActor = pActor;
+			return;
+		}
+
+		pRootActor->AddChiledActorList(pActor);
+	}
+
 	// シーン内のアクターを名前で取得
 	CActorBase* CSceneBase::GetActorFromActorName(std::string& actorName) {
 		if (pRootActor) {

@@ -24,20 +24,20 @@ Texture2D			diffuseTex		: register(t0);
 Texture2D			specularTex		: register(t1);
 Texture2D			normalTex		: register(t2);
 Texture2D			posTex			: register(t3);
-Texture2D			lightMapTex		: register(t4);
-Texture2D<float>	depthTex		: register(t5);
-Texture2D<uint2>	stencilTex		: register(t6);
-TextureCube			cubeTex			: register(t7);
-TextureCube			dynamicCubeTex	: register(t8);
-Texture2D			albedoTex		: register(t9);
-Texture2D			displacementTex	: register(t10);
-Texture2D			roughnessTex	: register(t11);
-Texture2D			hdrTex			: register(t12);
-Texture2D			toneMapTex		: register(t13);
-Texture2D			BlurTex0		: register(t14);
-Texture2D			BlurTex1		: register(t15);
-Texture2D			BlurTex2		: register(t16);
-Texture2D			BlurTex3		: register(t17);
+
+Texture2D<float>	depthTex		: register(t4);
+Texture2D<uint2>	stencilTex		: register(t5);
+TextureCube			cubeTex			: register(t6);
+TextureCube			dynamicCubeTex	: register(t7);
+Texture2D			albedoTex		: register(t8);
+Texture2D			displacementTex	: register(t9);
+Texture2D			roughnessTex	: register(t10);
+Texture2D			hdrTex			: register(t11);
+Texture2D			toneMapTex		: register(t12);
+Texture2D			BlurTex0		: register(t13);
+Texture2D			BlurTex1		: register(t14);
+Texture2D			BlurTex2		: register(t15);
+Texture2D			BlurTex3		: register(t16);
 
 // サンプラー
 SamplerState sampleState					: register(s0);
@@ -51,13 +51,6 @@ cbuffer CbWorld : register(b0)
 	float4x4	matW;	// ワールド行列
 }
 
-cbuffer CbCamera : register(b1)
-{
-	float4x4	matVP;		// ワールドビュープロジェクション行列
-
-	float3		cameraPos;	// カメラの位置
-}
-
 struct Material {
 	float4	diffuse;	// マテリアルディフューズ色
 	float4	specular;	// マテリアルスペキュラー色
@@ -65,9 +58,16 @@ struct Material {
 };	float4	emissive;	// マテリアルエミッシブ色
 
 // マテリアル
-cbuffer CbMaterial : register(b2)
+cbuffer CbMaterial : register(b1)
 {
 	Material material;
+}
+
+cbuffer CbCamera : register(b2)
+{
+	float4x4	matVP;		// ワールドビュープロジェクション行列
+
+	float3		cameraPos;	// カメラの位置
 }
 
 struct DirectionalLight {

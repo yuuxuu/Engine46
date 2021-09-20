@@ -18,12 +18,13 @@
 #include "CShaderPackage.h"
 #include "CShaderManager.h"
 #include "CTextureManager.h"
+#include "CRendererSystem.h"
+
+#include "../GraphicsAPI/CDX12Renderer.h"
+#include "../GraphicsAPI/CDX12ConstantBuffer.h"
+#include "../GraphicsAPI/CDX12ShaderPackage.h"
 
 namespace Engine46 {
-
-	struct worldCB {
-		Matrix	matW;
-	};
 
 	// コンストラクタ
 	CActorBase::CActorBase() :
@@ -76,6 +77,10 @@ namespace Engine46 {
 	// 描画
 	void CActorBase::Draw() {
 
+		if (!pShaderPackage) return;
+
+		pShaderPackage->SetShader();
+
 		if (m_pWorldConstantBuffer) {
 			Matrix matW = GetWorldMatrix();
 			matW.dx_m = DirectX::XMMatrixTranspose(matW.dx_m);
@@ -85,16 +90,15 @@ namespace Engine46 {
 			};
 
 			m_pWorldConstantBuffer->Update(&cb);
-
-			m_pWorldConstantBuffer->Set((int)CB_TYPE::WORLD);
+			m_pWorldConstantBuffer->Set((UINT)CB_TYPE::WORLD);
 		}
 
-		if (m_pMaterial) {
-			m_pMaterial->Set((int)CB_TYPE::MATERIAL);
+		if (pMaterial) {
+			pMaterial->Set((UINT)CB_TYPE::MATERIAL);
 		}
 
-		if (m_pMesh) {
-			m_pMesh->Draw();
+		if (pMesh) {
+			pMesh->Draw();
 		}
 
 		for (auto& chiled : pChildActorList) {
@@ -125,8 +129,6 @@ namespace Engine46 {
 	// コンスタントバッファを設定
 	void CActorBase::SetWorldConstantBuffer(std::unique_ptr<CConstantBufferBase>& pConstantBuffer) {
 		if (pConstantBuffer) {
-			pConstantBuffer->CreateConstantBuffer(sizeof(worldCB));
-
 			m_pWorldConstantBuffer.swap(pConstantBuffer);
 		}
 	}
@@ -134,7 +136,7 @@ namespace Engine46 {
 	// メッシュを設定
 	void CActorBase::SetMesh(CMeshBase* pMesh) {
 		if (pMesh) {
-			m_pMesh = pMesh;
+			this->pMesh = pMesh;
 		}
 	}
 
@@ -147,7 +149,7 @@ namespace Engine46 {
 	// マテリアルを設定
 	void CActorBase::SetMaterial(CMaterialBase* pMaterial) {
 		if (pMaterial) {
-			m_pMaterial = pMaterial;
+			this->pMaterial = pMaterial;
 		}
 	}
 
@@ -159,8 +161,8 @@ namespace Engine46 {
 
 	// マテリアルにテクスチャを設定
 	void CActorBase::SetTexture(CTextureBase* pTex) {
-		if (m_pMaterial) {
-			m_pMaterial->SetTexture(pTex);
+		if (pMaterial) {
+			pMaterial->SetTexture(pTex);
 		}
 	}
 
@@ -172,8 +174,8 @@ namespace Engine46 {
 
 	// シェーダーパッケージを設定
 	void CActorBase::SetShaderPackage(CShaderPackage* pShaderPackage) {
-		if (m_pMaterial) {
-			m_pMaterial->SetShaderPackage(pShaderPackage);
+		if (pShaderPackage) {
+			this->pShaderPackage = pShaderPackage;
 		}
 	}
 

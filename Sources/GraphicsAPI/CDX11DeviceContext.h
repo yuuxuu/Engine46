@@ -30,7 +30,7 @@ namespace Engine46 {
 		void ClearDespthStencilView(ID3D11DepthStencilView* pDsv, UINT clearFlags);
 
 		void SetRenderTargetView(ID3D11RenderTargetView* pSrv, ID3D11DepthStencilView* pDsv);
-		void SetRenderTargetViews(std::vector<ComPtr<ID3D11RenderTargetView>>& vecRtv, ID3D11DepthStencilView* pDsv);
+		void SetRenderTargetViews(std::vector<ID3D11RenderTargetView*>& vecRtv, ID3D11DepthStencilView* pDsv);
 
 		void SetVsShader(ID3D11VertexShader* pVs);
 		void SetPsShader(ID3D11PixelShader* pPs);
@@ -52,7 +52,7 @@ namespace Engine46 {
 		void SetRasterizerState(ID3D11RasterizerState* pRSstate);
 		void SetDepthStencilState(ID3D11DepthStencilState* pDSstate, UINT ref = 0x00);
 
-		void SetViewPort(int width, int height);
+		void SetViewPort(UINT x, UINT y, UINT width, UINT height);
 
 	};
 

@@ -56,6 +56,10 @@ namespace Engine46 {
 
 		void SetData(ComPtr<ID3DBlob>& pBlob);
 
+		ID3DBlob* GetBlob() const { return m_pBlob.Get(); }
+		BYTE* GetBuffer() const { return m_pBuf.get(); }
+		int GetBufferSize() const { return m_bufSize; }
+
 		std::string GetShaderName() const { return m_shaderName.c_str(); }
 
 		SHADER_TYPE GetShaderType() const { return m_shaderType; }

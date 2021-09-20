@@ -44,9 +44,11 @@ namespace Engine46 {
 
 		Transform								m_transform;
 		
-		CMeshBase*								m_pMesh;
+		CMeshBase*								pMesh;
 
-		CMaterialBase*							m_pMaterial;
+		CMaterialBase*							pMaterial;
+
+		CShaderPackage*							pShaderPackage;
 
 		std::unique_ptr<CConstantBufferBase>	m_pWorldConstantBuffer;
 
@@ -77,12 +79,14 @@ namespace Engine46 {
 		void SetMesh(CMeshBase* pMesh);
 		void SetMesh(const char* meshName);
 
+		CMaterialBase* GetMaterial() const { return pMaterial; }
 		void SetMaterial(CMaterialBase* pMaterial);
 		void SetMaterial(const char* materialName);
 
 		void SetTexture(CTextureBase* pTex);
 		void SetTexture(const char* textureName);
 
+		CShaderPackage* GetShaderPackage() const { return pShaderPackage; }
 		void SetShaderPackage(CShaderPackage* pShaderPackage);
 		void SetShaderPackage(const char* shaderPackageName);
 

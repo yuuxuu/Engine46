@@ -48,11 +48,16 @@ namespace Engine46 {
 
 	// レンダーターゲットビューを設定
 	void CDX11DeviceContext::SetRenderTargetView(ID3D11RenderTargetView* pRtv, ID3D11DepthStencilView* pDsv) {
-		m_pDeviceContext->OMSetRenderTargets(1, &pRtv, pDsv);
+		if (pRtv) {
+			m_pDeviceContext->OMSetRenderTargets(1, &pRtv, pDsv);
+		}
+		else {
+			m_pDeviceContext->OMSetRenderTargets(0, nullptr, nullptr);
+		}
 	}
 
 	// レンダーターゲットビューを複数設定
-	void CDX11DeviceContext::SetRenderTargetViews(std::vector<ComPtr<ID3D11RenderTargetView>>& vecRtv, ID3D11DepthStencilView* pDsv) {
+	void CDX11DeviceContext::SetRenderTargetViews(std::vector<ID3D11RenderTargetView*>& vecRtv, ID3D11DepthStencilView* pDsv) {
 		m_pDeviceContext->OMSetRenderTargets(vecRtv.size(), &vecRtv[0], pDsv);
 	}
 
@@ -133,12 +138,12 @@ namespace Engine46 {
 	}
 
 	// ビューポートを設定
-	void CDX11DeviceContext::SetViewPort(int width, int height) {
+	void CDX11DeviceContext::SetViewPort(UINT x, UINT y, UINT width, UINT height) {
 		D3D11_VIEWPORT vp = {};
 		vp.Width = (float)width;
 		vp.Height = (float)height;
-		vp.TopLeftX = 0;
-		vp.TopLeftY = 0;
+		vp.TopLeftX = (float)x;
+		vp.TopLeftY = (float)y;
 		vp.MinDepth = 0.0f;
 		vp.MaxDepth = 1.0f;
 

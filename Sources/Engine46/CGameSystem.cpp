@@ -70,8 +70,12 @@ namespace Engine46 {
 		CRendererSystem::GetRendererSystem().SetRenderScene(pScene);
 
 		{
+			CActorBase* pRoot = m_pActorManager->CreateActor((int)ClassType::Root);
+			pScene->SetRootActor(pRoot);
+
 			CActorBase* pCamera = m_pActorManager->CreateActor((int)ClassType::Camera);
 			pCamera->SetInput(m_pInput.get());
+			pScene->AddActorToScene(pCamera);
 
 			CActorBase* pSprite = m_pActorManager->CreateActor((int)ClassType::Sprite);
 			pSprite->SetMesh("SpriteMesh");
@@ -79,12 +83,23 @@ namespace Engine46 {
 			pSprite->SetTexture("E3g6p9QUYAMTSbT.jpg");
 			pSprite->SetShaderPackage("Model.hlsl");
 			pSprite->InitializeResource(pRenderer);
+			pScene->AddActorToScene(pSprite);
 
 			CLight* pDirectionalLight = m_pActorManager->CreateLight((int)LightType::Directional);
+			pDirectionalLight->SetMesh("LightMesh");
+			pDirectionalLight->SetMaterial("LightMaterial");
+			pDirectionalLight->SetTexture("particle.png");
+			pDirectionalLight->SetShaderPackage("CPUParticle.hlsl");
 			pDirectionalLight->InitializeResource(pRenderer);
+			pScene->AddActorToScene(pDirectionalLight);
 
 			CLight* pPointLight = m_pActorManager->CreateLight((int)LightType::Point);
+			pPointLight->SetMesh("LightMesh");
+			pPointLight->SetMaterial("LightMaterial");
+			pPointLight->SetTexture("particle.png");
+			pPointLight->SetShaderPackage("CPUParticle.hlsl");
 			pPointLight->InitializeResource(pRenderer);
+			pScene->AddActorToScene(pPointLight);
 		}
 
 		// イベントハンドル生成
@@ -139,10 +154,10 @@ namespace Engine46 {
 
 	// 更新
 	void CGameSystem::Update() {
-		CSceneBase* pRenderScene = CRendererSystem::GetRendererSystem().GetRenderScene();
+		CSceneBase* pScene = CRendererSystem::GetRendererSystem().GetRenderScene();
 
-		if (pRenderScene) {
-			pRenderScene->Update();
+		if (pScene) {
+			pScene->Update();
 		}
 	}
 

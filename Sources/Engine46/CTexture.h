@@ -33,6 +33,13 @@ namespace Engine46 {
 		{}
 	};
 
+	enum class TextureType {
+		Render,
+		Depth,
+		Stencil,
+		Image,
+	};
+
 	class CTextureBase {
 	protected:
 		std::string	m_textureName;
@@ -48,7 +55,8 @@ namespace Engine46 {
 
 		bool LoadTexture(const char* filePath);
 
-		virtual void Create() {};
+		virtual void CreateTexture() {};
+		virtual void CreateShaderResourceView() {};
 		virtual void Set(UINT slot) {};
 
 		std::string GetTextureName() const { return m_textureName.c_str(); }

@@ -12,7 +12,6 @@
 
 #include "math.h"
 #include "CTexture.h"
-#include "CShaderPackage.h"
 #include "CConstantBuffer.h"
 
 namespace Engine46 {
@@ -20,9 +19,7 @@ namespace Engine46 {
 	class CMaterialBase {
 	protected:
 		CTextureBase*							pTexture;
-		std::vector<CTextureBase*>				pVecTexture;
-
-		CShaderPackage*							pShaderPackage;
+		std::vector<CTextureBase*>				pVecRenderTexture;
 
 		std::unique_ptr<CConstantBufferBase>	m_pMaterialConstantBuffer;
 
@@ -40,10 +37,10 @@ namespace Engine46 {
 	public:
 		CMaterialBase();
 		explicit CMaterialBase(const char* materialName);
-		virtual ~CMaterialBase();
+		~CMaterialBase();
 
-		virtual void Update();
-		virtual void Set(UINT slot);
+		void Update();
+		void Set(UINT slot);
 
 		void SetMaterialConstantBuffer(std::unique_ptr<CConstantBufferBase>& pConstantBuffer);
 
@@ -52,9 +49,11 @@ namespace Engine46 {
 		void SetAmbient(const VECTOR4& ambient) { m_diffuse = ambient; }
 		void SetEmissive(const VECTOR4& emissive) { m_diffuse = emissive; }
 
+		CConstantBufferBase* GetMaterialConstantBuffer() const { return m_pMaterialConstantBuffer.get(); }
+
 		void SetTexture(CTextureBase* pTexture) { this->pTexture = pTexture; }
 
-		void SetShaderPackage(CShaderPackage* pSp) { pShaderPackage = pSp; }
+		void AddRenderTexture(CTextureBase* pTexture) { pVecRenderTexture.emplace_back(pTexture); };
 
 		std::string GetMaterialName() const { return m_materialName.c_str(); }
 

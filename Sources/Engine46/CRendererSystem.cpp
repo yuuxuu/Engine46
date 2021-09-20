@@ -10,6 +10,7 @@
 #include "CScene.h"
 
 #include "../GraphicsAPI/CDX11Renderer.h"
+#include "../GraphicsAPI/CDX12Renderer.h"
 
 namespace Engine46 {
 
@@ -28,7 +29,7 @@ namespace Engine46 {
 
 		if (m_isInitialize) return true;
 
-		m_pRenderer = std::make_unique<CDX11Renderer>();
+		m_pRenderer = std::make_unique<CDX12Renderer>();
 		if (!m_pRenderer->Initialize(hwnd, rect.w, rect.h)) return false;
 
 		// イベントハンドル生成

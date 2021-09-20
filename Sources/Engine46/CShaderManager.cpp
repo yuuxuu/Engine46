@@ -29,8 +29,7 @@ namespace Engine46 {
 
 		if (pSp) return pSp;
 
-		std::unique_ptr<CShaderPackage> sp = std::make_unique<CShaderPackage>(packageName);
-
+		std::unique_ptr<CShaderPackage> sp;
 		pRenderer->CreateShader(sp, packageName);
 
 		if (sp) {

@@ -12,8 +12,6 @@
 
 #include "CScene.h"
 
-using Microsoft::WRL::ComPtr;
-
 namespace Engine46 {
 
 	class IRenderer {
@@ -28,55 +26,6 @@ namespace Engine46 {
 		virtual void Begine(CSceneBase* pScene) = 0;
 
 		virtual bool Render(CSceneBase* pScene) = 0;
-	};
-
-	enum class BUFFER_TYPE {
-		VERTEX,
-		INDEX,
-		UNORDERED,
-		NONE,
-	};
-
-	enum class DIRECTX_TYPE {
-		DIRECTX11,
-		DIRECTX12,
-		NONE,
-	};
-
-	enum class RS_TYPE {
-		RS_01,
-		RS_02,
-		RS_03,
-		RS_NONE,
-	};
-
-	enum class RS01_Param {
-		CBV_0,
-		CBV_1,
-		CBV_2,
-		CBV_9,
-		SRV_0,
-		SRV_1,
-		SRV_2,
-		SRV_3,
-		SRV_4,
-		SRV_D0,
-		SRV_S0,
-		RS01_MAX,
-	};
-
-	enum class RS02_Param {
-		CBV_9,
-		UAV_0,
-		RS02_MAX,
-	};
-
-	enum class RS03_Param {
-		CBV_0,
-		CBV_1,
-		CBV_3,
-		SRV_0,
-		RS03_MAX,
 	};
 
 } // namespace

@@ -9,6 +9,9 @@
 #include "CDX11Device.h"
 #include "CDX11DeviceContext.h"
 #include "CDX11Texture.h"
+#include "CDX11Renderer.h"
+
+#include "../Engine46/CRendererSystem.h"
 
 namespace Engine46 {
 
@@ -25,8 +28,11 @@ namespace Engine46 {
 	// 初期化
 	bool CDX11ForwardRendering::Initialize(UINT width, UINT height) {
 
+		CDX11Renderer* pRenderer = dynamic_cast<CDX11Renderer*>(CRendererSystem::GetRendererSystem().GetRenderer());
+
 		{
 			D3D11_TEXTURE2D_DESC texDesc = {};
+
 			texDesc.Width				= width;
 			texDesc.Height				= height;
 			texDesc.MipLevels			= 1;
@@ -39,26 +45,24 @@ namespace Engine46 {
 			texDesc.CPUAccessFlags		= 0;
 			texDesc.MiscFlags			= 0;
 
-			D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
-			srvDesc.ViewDimension		= D3D11_SRV_DIMENSION_TEXTURE2D;
-			srvDesc.Format				= texDesc.Format;
-			srvDesc.Texture2D.MipLevels = texDesc.MipLevels;
-
-			std::unique_ptr<CDX11Texture> pRenderTex = std::make_unique<CDX11Texture>(pDX11Device, pDX11DeviceContext);
-			pRenderTex->Create(texDesc, srvDesc);
-
 			D3D11_RENDER_TARGET_VIEW_DESC rtvDesc = {};
-			rtvDesc.ViewDimension				= D3D11_RTV_DIMENSION_TEXTURE2D;
-			rtvDesc.Format						= texDesc.Format;
-			rtvDesc.Texture2DArray.ArraySize	= texDesc.ArraySize;
 
-			if (!pDX11Device->CreateRenderTargetView(m_pRtv, pRenderTex->GetTexture2D(), rtvDesc)) return false;
+			rtvDesc.ViewDimension	= D3D11_RTV_DIMENSION_TEXTURE2D;
+			rtvDesc.Format			= texDesc.Format;
 
-			m_pRenderTex = std::move(pRenderTex);
+			std::unique_ptr<CDX11Texture> pRenderTex;
+			if (pRenderer) {
+				pRenderer->CreateRenderTexture(pRenderTex, texDesc);
+
+				if (!pDX11Device->CreateRenderTargetView(m_pRtv, pRenderTex->GetTexture2D(), rtvDesc)) return false;
+
+				m_pRenderTex = std::move(pRenderTex);
+			}
 		}
 
 		{
 			D3D11_TEXTURE2D_DESC texDesc = {};
+
 			texDesc.Width				= width;
 			texDesc.Height				= height;
 			texDesc.MipLevels			= 1;
@@ -75,6 +79,7 @@ namespace Engine46 {
 			if (!pDX11Device->CreateTexture2D(pTex, texDesc)) return false;
 
 			D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
+
 			dsvDesc.ViewDimension				= D3D11_DSV_DIMENSION_TEXTURE2D;
 			dsvDesc.Format						= DXGI_FORMAT_D24_UNORM_S8_UINT;
 			dsvDesc.Texture2D.MipSlice			= 0;
@@ -85,6 +90,7 @@ namespace Engine46 {
 
 		{
 			D3D11_SAMPLER_DESC sDesc = {};
+
 			sDesc.Filter			= D3D11_FILTER_MIN_MAG_MIP_LINEAR;
 			sDesc.AddressU			= D3D11_TEXTURE_ADDRESS_CLAMP;
 			sDesc.AddressV			= D3D11_TEXTURE_ADDRESS_CLAMP;
@@ -106,16 +112,17 @@ namespace Engine46 {
 
 		{
 			D3D11_BLEND_DESC bDesc = {};
+
 			bDesc.AlphaToCoverageEnable		= FALSE;
 			bDesc.IndependentBlendEnable	= FALSE;
 
 			for (int i = 0; i < 8; ++i) {
 				bDesc.RenderTarget[i].BlendEnable			= TRUE;
 				bDesc.RenderTarget[i].SrcBlend				= D3D11_BLEND_ONE;
-				bDesc.RenderTarget[i].DestBlend				= D3D11_BLEND_ONE;
+				bDesc.RenderTarget[i].DestBlend				= D3D11_BLEND_ZERO;
 				bDesc.RenderTarget[i].BlendOp				= D3D11_BLEND_OP_ADD;
 				bDesc.RenderTarget[i].SrcBlendAlpha			= D3D11_BLEND_ONE;
-				bDesc.RenderTarget[i].DestBlendAlpha		= D3D11_BLEND_ONE;
+				bDesc.RenderTarget[i].DestBlendAlpha		= D3D11_BLEND_ZERO;
 				bDesc.RenderTarget[i].BlendOpAlpha			= D3D11_BLEND_OP_ADD;
 				bDesc.RenderTarget[i].RenderTargetWriteMask	= D3D11_COLOR_WRITE_ENABLE_ALL;
 			}
@@ -127,6 +134,7 @@ namespace Engine46 {
 
 		{
 			D3D11_RASTERIZER_DESC rsDesc = {};
+
 			rsDesc.FillMode = D3D11_FILL_SOLID;
 			rsDesc.CullMode = D3D11_CULL_NONE;
 			
@@ -137,6 +145,7 @@ namespace Engine46 {
 
 		{
 			D3D11_DEPTH_STENCIL_DESC dsDesc = {};
+
 			dsDesc.DepthEnable					= true;
 			dsDesc.DepthWriteMask				= D3D11_DEPTH_WRITE_MASK_ALL;
 			dsDesc.DepthFunc					= D3D11_COMPARISON_LESS_EQUAL;
@@ -157,7 +166,7 @@ namespace Engine46 {
 			pDX11DeviceContext->SetDepthStencilState(pDSState.Get(), 0x00);
 		}
 
-		pDX11DeviceContext->SetViewPort(width, height);
+		pDX11DeviceContext->SetViewPort(0, 0, width, height);
 
 		return true;
 	}
@@ -171,7 +180,29 @@ namespace Engine46 {
 
 	// レンダリング終了
 	void CDX11ForwardRendering::End() {
-		pDX11DeviceContext->SetPSShaderResources(0, 1, nullptr);
+		pDX11DeviceContext->SetRenderTargetView(nullptr, nullptr);
+	}
+
+	// 描画
+	void CDX11ForwardRendering::Rendering(CSceneBase* pScene) {
+
+		Begine();
+
+		pScene->Draw();
+
+		End();
+	}
+
+	// 描画したシーンを描画
+	void CDX11ForwardRendering::DrawForRenderScene(CSprite* pSprite, UINT x, UINT y, UINT width, UINT height) {
+
+		if (!pSprite) return;
+
+		pDX11DeviceContext->SetViewPort(x, y, width, height);
+
+		pSprite->SetTexture(m_pRenderTex.get());
+
+		pSprite->Draw();
 	}
 
 } // namespace

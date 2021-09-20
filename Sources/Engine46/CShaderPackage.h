@@ -20,7 +20,7 @@ namespace Engine46 {
 		SHADER_TYPE shadeType;
 	};
 
-	static const std::vector<ShaderInfo> vecShaderInfo = {
+	static const std::vector<ShaderInfo> SHADER_INFOS = {
 		{ "VS_main", "vs_5_0", SHADER_TYPE::TYPE_VERTEX },
 		{ "PS_main", "ps_5_0", SHADER_TYPE::TYPE_PIXEL },
 		{ "HS_main", "hs_5_0", SHADER_TYPE::TYPE_HULL },
@@ -30,25 +30,28 @@ namespace Engine46 {
 	};
 
 	class CShaderPackage {
-	private:
+	protected:
 		std::vector<std::unique_ptr<CShaderBase>>	m_pVecShader;
 
 		const char*									m_PakageName;
+
 	public:
 		explicit CShaderPackage(const char* name);
 		CShaderPackage();
 		~CShaderPackage();
 
-		void SetShader();
+		virtual void SetShader() {};
+
+		virtual bool Initialize() { return true; };
 
 		bool CompileShader(ComPtr<ID3DBlob>& pBlob, const char* fileName, const char* entrPoint, const char* shaderModel);
 
 		void AddShaderToVec(std::unique_ptr<CShaderBase>& pShader) { m_pVecShader.emplace_back(move(pShader)); }
 
-		CShaderBase* GetShader(SHADER_TYPE type);
-
 		bool SavePackage(std::ofstream& ofs);
 		bool LoadPackage(std::ifstream& ifs);
+
+		CShaderBase* GetShader(SHADER_TYPE type);
 
 		const char* GetPackageName() const { return m_PakageName; }
 

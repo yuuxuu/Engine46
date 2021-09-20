@@ -50,7 +50,7 @@ PS_OUT PS_main(PS_IN input) {
 
 	output.color = diffuseTex.Sample(sampleState, input.uv);
 
-	float3 l = normalize(directionalLight.pos);
+	float3 l = normalize(directionalLight.pos.xyz);
 	float3 n = normalize(input.normal);
 	float d = Lambert(n, l);
 	float4 dLight = directionalLight.diffuse * d;

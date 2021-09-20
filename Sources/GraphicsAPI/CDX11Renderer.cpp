@@ -11,13 +11,12 @@
 #include "CDX11ForwardRendering.h"
 #include "CDX11ConstantBuffer.h"
 #include "CDX11Mesh.h"
-#include "CDX11Shader.h"
+#include "CDX11ShaderPackage.h"
 #include "CDX11Texture.h"
 
 #include "../Engine46/CGameSystem.h"
 #include "../Engine46/CFileSystem.h"
 #include "../Engine46/CShaderManager.h"
-#include "../Engine46/CSprite.h"
 #include "../Engine46/CLight.h"
 #include "../Engine46/CCamera.h"
 
@@ -41,9 +40,6 @@ namespace Engine46 {
 		if (!m_pDX11Device->Initialize(pDeviceContext, hwnd, width, height)) return false;
 
 		m_pDX11DeviceContext = std::make_unique<CDX11DeviceContext>(pDeviceContext);
-
-		m_pRendering = std::make_unique<CDX11ForwardRendering>(m_pDX11Device.get(), m_pDX11DeviceContext.get());
-		if (!m_pRendering->Initialize(width, height)) return false;
 
 		{
 			ID3D11Texture2D* pTex2D;
@@ -87,18 +83,14 @@ namespace Engine46 {
 		}
 
 		{
-			this->CreateConstantBuffer(m_pCameraCB);
-			m_pCameraCB->CreateConstantBuffer(sizeof(CameraCB));
-
-			this->CreateConstantBuffer(m_pDirectionalLightCB);
-			m_pDirectionalLightCB->CreateConstantBuffer(sizeof(DirectionalLightCB));
-
-			this->CreateConstantBuffer(m_pPointLightCB);
-			m_pPointLightCB->CreateConstantBuffer(sizeof(PointLightCB));
-
-			this->CreateConstantBuffer(m_pSpotLightCB);
-			m_pSpotLightCB->CreateConstantBuffer(sizeof(SpotLightCB));
+			this->CreateConstantBuffer(m_pCameraCB, sizeof(CameraCB));
+			this->CreateConstantBuffer(m_pDirectionalLightCB, sizeof(DirectionalLightCB));
+			this->CreateConstantBuffer(m_pPointLightCB, sizeof(PointLightCB));
+			this->CreateConstantBuffer(m_pSpotLightCB, sizeof(SpotLightCB));
 		}
+
+		m_pForwardRendering = std::make_unique<CDX11ForwardRendering>(m_pDX11Device.get(), m_pDX11DeviceContext.get());
+		if (!m_pForwardRendering->Initialize(width, height)) return false;
 
 		m_windowRect = RECT(width, height);
 
@@ -112,6 +104,14 @@ namespace Engine46 {
 
 	// 描画準備開始
 	void CDX11Renderer::Begine(CSceneBase* pScene) {
+		if (!m_pRenderSprite) {
+			m_pRenderSprite = std::make_unique<CSprite>("RenderSprite");
+			m_pRenderSprite->SetMesh("RenderSpriteMesh");
+			m_pRenderSprite->SetMaterial("RenderSpriteMaterial");
+			m_pRenderSprite->SetShaderPackage("Sprite.hlsl");
+			m_pRenderSprite->InitializeResource(this);
+		}
+		
 		if (pScene) {
 			CCamera* pCamera = pScene->GetCameraFromScene();
 			if (pCamera) {
@@ -184,30 +184,28 @@ namespace Engine46 {
 
 		m_pDX11DeviceContext->SetInputLayout(m_pInputLayout.Get());
 
-		m_pRendering->Begine();
-		
-		pScene->Draw();
+		if (m_pForwardRendering) {
+			m_pForwardRendering->Rendering(pScene);
+		}
 
 		m_pDX11DeviceContext->ClearRenderTargetView(m_pRtv.Get());
 		m_pDX11DeviceContext->ClearDespthStencilView(m_pDsv.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL);
 		m_pDX11DeviceContext->SetRenderTargetView(m_pRtv.Get(), m_pDsv.Get());
 
-		CSprite sprite("RenderSprite");
-		sprite.SetMesh("RenderSpriteMesh");
-		sprite.SetMaterial("RenderSpriteMaterial");
-		sprite.SetTexture(m_pRendering->GetRenderTexture());
-		sprite.SetShaderPackage("Sprite.hlsl");
-		sprite.InitializeResource(this);
-		sprite.Draw();
+		if (m_pForwardRendering) {
+			m_pForwardRendering->DrawForRenderScene(m_pRenderSprite.get(), 0, 0, m_windowRect.w, m_windowRect.h);
+		}
 
-		m_pRendering->End();
+		m_pDX11DeviceContext->SetPSShaderResources(0, 1, nullptr);
 
 		return m_pDX11Device->Present();
 	}
 
 	// コンスタントバッファ作成
-	void CDX11Renderer::CreateConstantBuffer(std::unique_ptr<CConstantBufferBase>& pConstantBuffer) {
+	void CDX11Renderer::CreateConstantBuffer(std::unique_ptr<CConstantBufferBase>& pConstantBuffer, UINT byteWidth) {
 		pConstantBuffer = std::make_unique<CDX11ConstantBuffer>(m_pDX11Device.get(), m_pDX11DeviceContext.get());
+
+		pConstantBuffer->CreateConstantBuffer(byteWidth);
 	}
 
 	// メッシュ作成
@@ -219,12 +217,13 @@ namespace Engine46 {
 	void CDX11Renderer::CreateTexture(std::unique_ptr<CTextureBase>& pTexture, const char* textureName) {
 		FileInfo* fileInfo = CFileSystem::GetFileSystem().GetFileInfoFromMap(textureName);
 		
-		if (fileInfo) {
-			pTexture = std::make_unique<CDX11Texture>(m_pDX11Device.get(), m_pDX11DeviceContext.get(), textureName);
+		if (!fileInfo) return;
 
-			if (pTexture->LoadTexture(fileInfo->filePath.c_str())) {
-				pTexture->Create();
-			}
+		pTexture = std::make_unique<CDX11Texture>(m_pDX11Device.get(), m_pDX11DeviceContext.get(), textureName);
+
+		if (pTexture->LoadTexture(fileInfo->filePath.c_str())) {
+			pTexture->CreateTexture();
+			pTexture->CreateShaderResourceView();
 		}
 	}
 
@@ -232,26 +231,39 @@ namespace Engine46 {
 	void CDX11Renderer::CreateShader(std::unique_ptr<CShaderPackage>& pShaderPackage, const char* shaderName) {
 		FileInfo* fileInfo = CFileSystem::GetFileSystem().GetFileInfoFromMap(shaderName);
 		
-		if (fileInfo) {
-			for (const auto& info : vecShaderInfo) {
-				ComPtr<ID3DBlob> pBlob;
+		if (!fileInfo) return;
 
-				if (pShaderPackage->CompileShader(pBlob, fileInfo->filePath.c_str(), info.entryPoint, info.shaderModel)) {
-					std::unique_ptr<CShaderBase> shader = std::make_unique<CDX11Shader>(m_pDX11Device.get(), m_pDX11DeviceContext.get(), shaderName, pBlob, info.shadeType);
-					shader->Create();
+		pShaderPackage = std::make_unique<CDX11ShaderPackage>(m_pDX11Device.get(), m_pDX11DeviceContext.get(), shaderName);
 
-					pShaderPackage->AddShaderToVec(shader);
+		for (const auto& info : SHADER_INFOS) {
+			ComPtr<ID3DBlob> pBlob;
 
-					if (info.shadeType == SHADER_TYPE::TYPE_VERTEX) {
-						if (m_layoutBufSize < pBlob->GetBufferSize()) {
-							m_layoutBufSize = pBlob->GetBufferSize();
+			if (pShaderPackage->CompileShader(pBlob, fileInfo->filePath.c_str(), info.entryPoint, info.shaderModel)) {
+				std::unique_ptr<CShaderBase> shader = std::make_unique<CShaderBase>(shaderName, pBlob, info.shadeType);
 
-							m_pDX11Device->CreateInputLayout(m_pInputLayout, pBlob->GetBufferPointer(), pBlob->GetBufferSize());
-						}
+				pShaderPackage->AddShaderToVec(shader);
+
+				if (info.shadeType == SHADER_TYPE::TYPE_VERTEX) {
+					if (m_layoutBufSize < pBlob->GetBufferSize()) {
+						m_layoutBufSize = pBlob->GetBufferSize();
+
+						m_pDX11Device->CreateInputLayout(m_pInputLayout, pBlob->GetBufferPointer(), pBlob->GetBufferSize());
 					}
 				}
 			}
 		}
+
+		if (pShaderPackage->IsCompile()) {
+			pShaderPackage->Initialize();
+		}
+	}
+
+	//レンダーテクスチャ作成
+	void CDX11Renderer::CreateRenderTexture(std::unique_ptr<CDX11Texture>& pDX11Texture, D3D11_TEXTURE2D_DESC& texDesc) {
+		pDX11Texture = std::make_unique<CDX11Texture>(m_pDX11Device.get(), m_pDX11DeviceContext.get());
+
+		pDX11Texture->CreateTexture(texDesc);
+		pDX11Texture->CreateShaderResourceView();
 	}
 
 } // namespace

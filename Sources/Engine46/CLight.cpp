@@ -31,28 +31,66 @@ namespace Engine46 {
 
 	// リソースの初期化
 	void CLight::InitializeResource(CRendererBase* pRenderer) {
+		
 		if (pRenderer) {
-			m_pSprite = std::make_unique<CSprite>("LightSprite");
-			m_pSprite->SetMesh("LightMesh");
-			m_pSprite->SetMaterial("LightMaterial");
-			m_pSprite->SetTexture("particle.png");
-			m_pSprite->SetShaderPackage("CPUParticle.hlsl");
-			m_pSprite->InitializeResource(pRenderer);
+			std::unique_ptr<CConstantBufferBase> pConstantBuffer;
+			pRenderer->CreateConstantBuffer(pConstantBuffer, sizeof(worldCB));
+			SetWorldConstantBuffer(pConstantBuffer);
+
+			if (pMaterial && !pMaterial->IsInitialize()) {
+				std::unique_ptr<CConstantBufferBase> pMaterialConstantBuffer;
+				pRenderer->CreateConstantBuffer(pMaterialConstantBuffer, sizeof(materialCB));
+				pMaterial->SetMaterialConstantBuffer(pMaterialConstantBuffer);
+			}
+		}
+
+		if (pMesh && !pMesh->IsInitialize()) {
+			pMesh->ReserveVertex(4);
+
+			vertexInfo info;
+
+			info.vertex = VECTOR3(-1.0f, 1.0f, 0.0f);
+			info.color = VECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
+			info.uv = VECTOR2(0.0f, 0.0f);
+			info.normal = VECTOR3(0.0f, 0.0f, -1.0f);
+			pMesh->AddVertexInfo(info);
+
+			info.vertex = VECTOR3(1.0f, 1.0f, 0.0f);
+			info.color = VECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
+			info.uv = VECTOR2(1.0f, 0.0f);
+			info.normal = VECTOR3(0.0f, 0.0f, -1.0f);
+			pMesh->AddVertexInfo(info);
+
+			info.vertex = VECTOR3(-1.0f, -1.0f, 0.0f);
+			info.color = VECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
+			info.uv = VECTOR2(0.0f, 1.0f);
+			info.normal = VECTOR3(0.0f, 0.0f, -1.0f);
+			pMesh->AddVertexInfo(info);
+
+			info.vertex = VECTOR3(1.0f, -1.0f, 0.0f);
+			info.color = VECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
+			info.uv = VECTOR2(1.0f, 1.0f);
+			info.normal = VECTOR3(0.0f, 0.0f, -1.0f);
+			pMesh->AddVertexInfo(info);
+
+			pMesh->CreateVertexBuffer(PRIMITIVE_TOPOLOGY_TYPE::TRIANGLESTRIP);
+
+			pMesh->ReserveIndex(6);
+
+			pMesh->AddIndex(0);
+			pMesh->AddIndex(1);
+			pMesh->AddIndex(3);
+			pMesh->AddIndex(0);
+			pMesh->AddIndex(3);
+			pMesh->AddIndex(2);
+
+			pMesh->CreateIndexBuffer();
 		}
 	}
 
 	// 更新
 	void CLight::Update() {
-		if (m_pSprite) {
-			m_pSprite->SetTransform(m_transform);
-		}
-	}
 
-	// 更新
-	void CLight::Draw() {
-		if (m_pSprite) {
-			m_pSprite->Draw();
-		}
 	}
 
 } // namespace

@@ -25,8 +25,6 @@ namespace Engine46 {
 
 	class CLight : public CActorBase {
 	protected:
-		std::unique_ptr<CSprite>	m_pSprite;
-
 		LightType					m_lightType;
 
 		int							m_lightID;
@@ -44,7 +42,6 @@ namespace Engine46 {
 		void InitializeResource(CRendererBase* pRenderer) override;
 
 		virtual void Update() override;
-		virtual void Draw() override;
 
 		void SetLightType(LightType type) { m_lightType = type; }
 		LightType GetLightType() const { return m_lightType; }

@@ -33,17 +33,16 @@ namespace Engine46 {
 	public:
 		CSceneBase();
 		explicit CSceneBase(const char* sceneName);
-		virtual ~CSceneBase();
+		~CSceneBase();
 
-		virtual void Initialize();
-		virtual void Update();
-		virtual void Draw();
+		void Initialize();
+		void Update();
+		void Draw();
 
-		virtual bool Save(std::ofstream& ofs);
-		virtual bool Load(std::ifstream& ifs);
+		bool Save(std::ofstream& ofs);
+		bool Load(std::ifstream& ifs);
 
-		void SetRootActor(CActorBase* pRootActor) { this->pRootActor = pRootActor; }
-		CActorBase* GetRootActor() const { return pRootActor; }
+		void AddActorToScene(CActorBase* pActor);
 
 		CActorBase* GetActorFromActorName(std::string& actorName);
 		
@@ -52,6 +51,9 @@ namespace Engine46 {
 
 		std::vector<CCamera*> GetCamerasFromScene();
 		std::vector<CLight*> GetLightsFromScene();
+
+		void SetRootActor(CActorBase* pRootActor) { this->pRootActor = pRootActor; }
+		CActorBase* GetRootActor() const { return pRootActor; }
 
 		void SetSceneID(const int id) { m_SceneID = id; }
 

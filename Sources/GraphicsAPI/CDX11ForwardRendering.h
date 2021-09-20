@@ -35,6 +35,9 @@ namespace Engine46 {
 		bool Initialize(UINT width, UINT height) override;
 		void Begine() override;
 		void End() override;
+
+		void Rendering(CSceneBase* pScene) override;
+		void DrawForRenderScene(CSprite* pSprite, UINT x, UINT y, UINT width, UINT height) override;
 	};
 
 } // namespace

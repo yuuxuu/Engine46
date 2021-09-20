@@ -15,6 +15,7 @@
 #include "CRendering.h"
 #include "CShaderPackage.h"
 #include "CConstantBuffer.h"
+#include "CSprite.h"
 
 namespace Engine46 {
 
@@ -25,7 +26,9 @@ namespace Engine46 {
 
 	class CRendererBase : public IRenderer {
 	protected:
-		std::unique_ptr<CRenderingBase>			m_pRendering;
+		std::unique_ptr<CRenderingBase>			m_pForwardRendering;
+		std::unique_ptr<CRenderingBase>			m_pDeferredRendering;
+		std::unique_ptr<CRenderingBase>			m_pDepthRendring;
 
 		RECT									m_windowRect;
 
@@ -33,6 +36,8 @@ namespace Engine46 {
 		std::unique_ptr<CConstantBufferBase>	m_pDirectionalLightCB;
 		std::unique_ptr<CConstantBufferBase>	m_pPointLightCB;
 		std::unique_ptr<CConstantBufferBase>	m_pSpotLightCB;
+
+		std::unique_ptr<CSprite>				m_pRenderSprite;
 
 	public:
 		CRendererBase();
@@ -43,12 +48,13 @@ namespace Engine46 {
 		virtual void Begine(CSceneBase* pScene) override {};
 		virtual bool Render(CSceneBase* pScene) override { return true; };
 
-		virtual void CreateConstantBuffer(std::unique_ptr<CConstantBufferBase>& pConstantBuffer) {};
+		virtual void CreateConstantBuffer(std::unique_ptr<CConstantBufferBase>& pConstantBuffer, UINT byteWidth) {};
 		virtual void CreateMesh(std::unique_ptr<CMeshBase>& pMesh, const char* meshName) {};
 		virtual void CreateTexture(std::unique_ptr<CTextureBase>& pTexture, const char* textureName) {};
 		virtual void CreateShader(std::unique_ptr<CShaderPackage>& pShaderPackage, const char* shaderName) {};
 
 		RECT GetWindowRect() const { return m_windowRect; }
+		CSprite* GetRenderSprite() const { return m_pRenderSprite.get(); }
 	};
 
 } // namespace

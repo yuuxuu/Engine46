@@ -50,7 +50,8 @@ namespace Engine46 {
 		explicit CMeshBase(const char* meshName);
 		virtual ~CMeshBase();
 
-		virtual void Create(PRIMITIVE_TOPOLOGY_TYPE type) {};
+		virtual void CreateVertexBuffer(PRIMITIVE_TOPOLOGY_TYPE type) {};
+		virtual void CreateIndexBuffer() {};
 		virtual void Draw() {};
 
 		void ReserveVertex(int reserveSize);

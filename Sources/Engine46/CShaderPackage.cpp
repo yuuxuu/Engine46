@@ -23,13 +23,6 @@ namespace Engine46 {
 	CShaderPackage::~CShaderPackage()
 	{}
 
-	// シェーダーパッケージのシェーダーをそれぞれ設定
-	void CShaderPackage::SetShader() {
-		for (const auto& shader : m_pVecShader) {
-			shader->Set();
-		}
-	}
-
 	// シェーダーコンパイル
 	bool CShaderPackage::CompileShader(
 		ComPtr<ID3DBlob>& pBlob,
