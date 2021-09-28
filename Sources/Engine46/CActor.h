@@ -15,121 +15,121 @@
 
 namespace Engine46 {
 
-	// 前方宣言
-	class CRendererBase;
-	class CDataRecordBase;
-	class CConstantBufferBase;
-	class CMeshBase;
-	class CMaterialBase;
-	class CTextureBase;
-	class CShaderPackage;
-	class CInput;
+    // 前方宣言
+    class CRendererBase;
+    class CDataRecordBase;
+    class CConstantBufferBase;
+    class CMeshBase;
+    class CMaterialBase;
+    class CTextureBase;
+    class CShaderPackage;
+    class CInput;
 
-	enum class ClassType {
-		Root,
-		Camera,
-		Sprite,
-		Light,
-	};
+    enum class ClassType {
+        Root,
+        Camera,
+        Sprite,
+        Light,
+    };
 
-	class CActorBase : public IObject {
-	protected:
-		std::vector<CDataRecordBase>			vecDataRecords;
+    class CActorBase : public IObject {
+    protected:
+        std::vector<CDataRecordBase>            vecDataRecords;
 
-		UINT									m_classID;
+        UINT                                    m_classID;
 
-		UINT									m_actorID;
+        UINT                                    m_actorID;
 
-		std::string								m_actorName;
+        std::string                             m_actorName;
 
-		Transform								m_transform;
-		
-		CMeshBase*								pMesh;
+        Transform                               m_transform;
 
-		CMaterialBase*							pMaterial;
+        CMeshBase*                              pMesh;
 
-		CShaderPackage*							pShaderPackage;
+        CMaterialBase*                          pMaterial;
 
-		std::unique_ptr<CConstantBufferBase>	m_pWorldConstantBuffer;
+        CShaderPackage*                         pShaderPackage;
 
-		CInput*									pInput;
+        std::unique_ptr<CConstantBufferBase>    m_pWorldConstantBuffer;
 
-		CActorBase*								pParentActor;
-		int										m_parentActorID;
+        CInput* pInput;
 
-		std::list<CActorBase*>					pChildActorList;
-		std::vector<int>						m_childActorIDList;
+        CActorBase* pParentActor;
+        int                                     m_parentActorID;
 
-	public:
-		CActorBase();
-		CActorBase(const UINT classID, const char* actorName, const Transform transform);
-		virtual ~CActorBase();
+        std::list<CActorBase*>                  pChildActorList;
+        std::vector<int>                        m_childActorIDList;
 
-		virtual void Initialize() override;
-		virtual void Update() override;
-		virtual void Draw() override;
+    public:
+        CActorBase();
+        CActorBase(const UINT classID, const char* actorName, const Transform transform);
+        virtual ~CActorBase();
 
-		virtual bool Save(std::ofstream& ofs) override;
-		virtual bool Load(std::ifstream& ifs) override;
+        virtual void Initialize() override;
+        virtual void Update() override;
+        virtual void Draw() override;
 
-		virtual void InitializeResource(CRendererBase* pRenderer) {};
+        virtual bool Save(std::ofstream& ofs) override;
+        virtual bool Load(std::ifstream& ifs) override;
 
-		void SetWorldConstantBuffer(std::unique_ptr<CConstantBufferBase>& pConstantBuffer);
+        virtual void InitializeResource(CRendererBase* pRenderer) {};
 
-		void SetMesh(CMeshBase* pMesh);
-		void SetMesh(const char* meshName);
+        void SetWorldConstantBuffer(std::unique_ptr<CConstantBufferBase>& pConstantBuffer);
 
-		CMaterialBase* GetMaterial() const { return pMaterial; }
-		void SetMaterial(CMaterialBase* pMaterial);
-		void SetMaterial(const char* materialName);
+        void SetMesh(CMeshBase* pMesh);
+        void SetMesh(const char* meshName);
 
-		void SetTexture(CTextureBase* pTex);
-		void SetTexture(const char* textureName);
+        CMaterialBase* GetMaterial() const { return pMaterial; }
+        void SetMaterial(CMaterialBase* pMaterial);
+        void SetMaterial(const char* materialName);
 
-		CShaderPackage* GetShaderPackage() const { return pShaderPackage; }
-		void SetShaderPackage(CShaderPackage* pShaderPackage);
-		void SetShaderPackage(const char* shaderPackageName);
+        void SetTexture(CTextureBase* pTex);
+        void SetTexture(const char* textureName);
 
-		void SetInput(CInput* pInput);
+        CShaderPackage* GetShaderPackage() const { return pShaderPackage; }
+        void SetShaderPackage(CShaderPackage* pShaderPackage);
+        void SetShaderPackage(const char* shaderPackageName);
 
-		void ConnectParentActor(CActorBase* pParentActor);
-		void DisconnectParentActor(CActorBase* pParentActor);
+        void SetInput(CInput* pInput);
 
-		CActorBase* GetParentActor() const { return pParentActor; }
-		int GetParentActorID() const { return m_parentActorID; }
+        void ConnectParentActor(CActorBase* pParentActor);
+        void DisconnectParentActor(CActorBase* pParentActor);
 
-		void AddChiledActorList(CActorBase* pChiledObject);
+        CActorBase* GetParentActor() const { return pParentActor; }
+        int GetParentActorID() const { return m_parentActorID; }
 
-		std::list<CActorBase*> GetChildActorList() const { return pChildActorList; }
-		std::vector<int> GetChildActorIDList() const { return m_childActorIDList; }
+        void AddChiledActorList(CActorBase* pChiledObject);
 
-		UINT GetClassID() const { return m_classID; }
+        std::list<CActorBase*> GetChildActorList() const { return pChildActorList; }
+        std::vector<int> GetChildActorIDList() const { return m_childActorIDList; }
 
-		void SetActorID(const UINT id) { m_actorID = id; }
+        UINT GetClassID() const { return m_classID; }
 
-		void SetActorName(const std::string& actorName) { m_actorName = actorName; }
-		std::string GetActorName() const { return m_actorName.c_str(); }
+        void SetActorID(const UINT id) { m_actorID = id; }
 
-		void SetTransform(const Transform& transform) { m_transform = transform; }
-		Transform GetTransform() const { return m_transform; }
+        void SetActorName(const std::string& actorName) { m_actorName = actorName; }
+        std::string GetActorName() const { return m_actorName.c_str(); }
 
-		void SetPos(const VECTOR3& pos) { m_transform.pos = pos; }
-		VECTOR3 GetPos() const { return m_transform.pos; }
+        void SetTransform(const Transform& transform) { m_transform = transform; }
+        Transform GetTransform() const { return m_transform; }
 
-		void SetRotation(const VECTOR3& rotation) { m_transform.rotation = rotation; }
-		VECTOR3 GetRotation() const { return m_transform.rotation; }
+        void SetPos(const VECTOR3& pos) { m_transform.pos = pos; }
+        VECTOR3 GetPos() const { return m_transform.pos; }
 
-		void SetScale(const VECTOR3& scale) { m_transform.scale = scale; }
-		VECTOR3 GetScale() const { return m_transform.scale; }
+        void SetRotation(const VECTOR3& rotation) { m_transform.rotation = rotation; }
+        VECTOR3 GetRotation() const { return m_transform.rotation; }
 
-		Matrix GetWorldMatrix();
+        void SetScale(const VECTOR3& scale) { m_transform.scale = scale; }
+        VECTOR3 GetScale() const { return m_transform.scale; }
 
-		VECTOR3 GetDirectionVector();
+        Matrix GetWorldMatrix();
 
-		VECTOR3 GetRightVector();
-		VECTOR3 GetUpVector();
-		VECTOR3 GetForwardVector();
-	};
+        VECTOR3 GetDirectionVector();
+
+        VECTOR3 GetRightVector();
+        VECTOR3 GetUpVector();
+        VECTOR3 GetForwardVector();
+    };
 
 } // namespace
 

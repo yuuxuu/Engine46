@@ -12,9 +12,9 @@
 #include <QVBoxLayout>
 #include <QFileSystemModel>
 
-#include "../Engine46/CFileSystem.h"
+#include "Engine46/CFileSystem.h"
 
-// コンストラクタ
+ // コンストラクタ
 Engine46MainEditor::Engine46MainEditor(QWidget* parent)
     : QMainWindow(parent)
 {
@@ -24,7 +24,7 @@ Engine46MainEditor::Engine46MainEditor(QWidget* parent)
 
     this->setStyleSheet(
         "QWidget {"
-            "border: 2px solid grey;"
+        "border: 2px solid grey;"
         "}"
     );
 

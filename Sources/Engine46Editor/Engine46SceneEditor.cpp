@@ -10,12 +10,12 @@
 #include <QHBoxLayout>
 #include <QDebug>
 
-#include "../Engine46/CRendererSystem.h"
-#include "../Engine46/CScene.h"
+#include "Engine46/CRendererSystem.h"
+#include "Engine46/CScene.h"
 
-// コンストラクタ
+ // コンストラクタ
 Engine46SceneEditor::Engine46SceneEditor(QWidget* parent)
-	: QWidget(parent)
+    : QWidget(parent)
 {
     ui.setupUi(this);
 }
@@ -53,7 +53,7 @@ void Engine46SceneEditor::InitializeSceneEditor() {
 }
 
 // アクターの子アクターを再帰検索
-void Engine46SceneEditor::RecursiveActor(Engine46::CActorBase* pRootActor, QStandardItemModel* pItemModel, QStandardItem* pRootItem){
+void Engine46SceneEditor::RecursiveActor(Engine46::CActorBase* pRootActor, QStandardItemModel* pItemModel, QStandardItem* pRootItem) {
 
     int rowIndex = 0;
     for (auto& pChildActor : pRootActor->GetChildActorList()) {

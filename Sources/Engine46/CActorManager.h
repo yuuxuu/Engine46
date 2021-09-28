@@ -13,56 +13,56 @@
 #include "CLight.h"
 
 namespace Engine46 {
-	
-	// 前方宣言
-	class CActorBase;
-	class CLight;
-	class CRendererBase;
 
-	struct classCount {
-		UINT allCount;
-		UINT rootCount;
-		UINT cameraCount;
-		UINT spriteCount;
-		UINT lightCount;
+    // 前方宣言
+    class CActorBase;
+    class CLight;
+    class CRendererBase;
 
-		classCount() :
-			allCount(0),
-			rootCount(0),
-			cameraCount(0),
-			spriteCount(0),
-			lightCount(0)
-		{}
-	};
+    struct classCount {
+        UINT allCount;
+        UINT rootCount;
+        UINT cameraCount;
+        UINT spriteCount;
+        UINT lightCount;
 
-	class CActorManager {
-	private:
-		std::vector<std::unique_ptr<CActorBase>>	m_pVecActor;
-		std::vector<std::unique_ptr<CLight>>		m_pVecLight;
+        classCount() :
+            allCount(0),
+            rootCount(0),
+            cameraCount(0),
+            spriteCount(0),
+            lightCount(0)
+        {}
+    };
 
-		CRendererBase*								pRenderer;
+    class CActorManager {
+    private:
+        std::vector<std::unique_ptr<CActorBase>>    m_pVecActor;
+        std::vector<std::unique_ptr<CLight>>        m_pVecLight;
 
-		classCount									m_classCount;
+        CRendererBase* pRenderer;
 
-	public:
-		explicit CActorManager(CRendererBase* pRenderer);
-		~CActorManager();
+        classCount                                  m_classCount;
 
-		CActorBase* CreateActor(int classType);
-		CLight* CreateLight(int lightType);
+    public:
+        explicit CActorManager(CRendererBase* pRenderer);
+        ~CActorManager();
 
-		void AddActorToVec(std::unique_ptr<CActorBase>& pActor) { m_pVecActor.emplace_back(std::move(pActor)); }
-		void AddLightToVec(std::unique_ptr<CLight>& pLight) { m_pVecLight.emplace_back(std::move(pLight)); }
+        CActorBase* CreateActor(int classType);
+        CLight* CreateLight(int lightType);
 
-		CActorBase* GetActorFromActorName(const char* name);
+        void AddActorToVec(std::unique_ptr<CActorBase>& pActor) { m_pVecActor.emplace_back(std::move(pActor)); }
+        void AddLightToVec(std::unique_ptr<CLight>& pLight) { m_pVecLight.emplace_back(std::move(pLight)); }
 
-		bool SaveActor();
-		bool LoadActor();
+        CActorBase* GetActorFromActorName(const char* name);
 
-	private:
-		void ConnectActor();
+        bool SaveActor();
+        bool LoadActor();
 
-	};
+    private:
+        void ConnectActor();
+
+    };
 } // namespace
 
 #endif

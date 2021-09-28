@@ -12,55 +12,55 @@
 
 namespace Engine46 {
 
-	struct TextureData {
-		std::unique_ptr<uint8_t[]>	pData;
+    struct TextureData {
+        std::unique_ptr<uint8_t[]>  pData;
 
-		size_t						rowPitch;
-		size_t						slicePitch;
+        size_t                      rowPitch;
+        size_t                      slicePitch;
 
-		UINT						width;
-		UINT						height;
+        UINT                        width;
+        UINT                        height;
 
-		DXGI_FORMAT					format;
+        DXGI_FORMAT                 format;
 
-		TextureData() :
-			pData(nullptr),
-			rowPitch(0),
-			slicePitch(0),
-			width(0),
-			height(0),
-			format(DXGI_FORMAT_UNKNOWN)
-		{}
-	};
+        TextureData() :
+            pData(nullptr),
+            rowPitch(0),
+            slicePitch(0),
+            width(0),
+            height(0),
+            format(DXGI_FORMAT_UNKNOWN)
+        {}
+    };
 
-	enum class TextureType {
-		Render,
-		Depth,
-		Stencil,
-		Image,
-	};
+    enum class TextureType {
+        Render,
+        Depth,
+        Stencil,
+        Image,
+    };
 
-	class CTextureBase {
-	protected:
-		std::string	m_textureName;
+    class CTextureBase {
+    protected:
+        std::string	m_textureName;
 
-		TextureData	m_textureData;
+        TextureData	m_textureData;
 
-	public:
-		CTextureBase();
-		CTextureBase(const char* textureName);
-		virtual ~CTextureBase();
+    public:
+        CTextureBase();
+        CTextureBase(const char* textureName);
+        virtual ~CTextureBase();
 
-		bool Initialize();
+        bool Initialize();
 
-		bool LoadTexture(const char* filePath);
+        bool LoadTexture(const char* filePath);
 
-		virtual void CreateTexture() {};
-		virtual void CreateShaderResourceView() {};
-		virtual void Set(UINT slot) {};
+        virtual void CreateTexture() {};
+        virtual void CreateShaderResourceView() {};
+        virtual void Set(UINT slot) {};
 
-		std::string GetTextureName() const { return m_textureName.c_str(); }
-	};
+        std::string GetTextureName() const { return m_textureName.c_str(); }
+    };
 
 } // namespace
 

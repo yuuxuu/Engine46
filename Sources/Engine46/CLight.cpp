@@ -6,91 +6,92 @@
  */
 
 #include "CLight.h"
-#include "CRenderer.h"
 #include "CMesh.h"
 #include "CMaterial.h"
 #include "CConstantBuffer.h"
 #include "CSprite.h"
 
+#include "GraphicsAPI/CRenderer.h"
+
 namespace Engine46 {
 
-	// コンストラクタ
-	CLight::CLight(const char* lightName) :
-		CActorBase((int)ClassType::Light, lightName, Transform()),
-		m_lightID(0),
-		m_lightDiffuse(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),
-		m_lightSpecular(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),
-		m_lightAmbinet(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),
-		m_lightEmissive(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),
-		m_lightAttenuation(VECTOR4(0.1f, 0.1f, 0.0f, 1.0f))
-	{}
+    // コンストラクタ
+    CLight::CLight(const char* lightName) :
+        CActorBase((int)ClassType::Light, lightName, Transform()),
+        m_lightID(0),
+        m_lightDiffuse(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),
+        m_lightSpecular(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),
+        m_lightAmbinet(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),
+        m_lightEmissive(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),
+        m_lightAttenuation(VECTOR4(0.1f, 0.1f, 0.0f, 1.0f))
+    {}
 
-	// デストラクタ
-	CLight::~CLight()
-	{}
+    // デストラクタ
+    CLight::~CLight()
+    {}
 
-	// リソースの初期化
-	void CLight::InitializeResource(CRendererBase* pRenderer) {
-		
-		if (pRenderer) {
-			std::unique_ptr<CConstantBufferBase> pConstantBuffer;
-			pRenderer->CreateConstantBuffer(pConstantBuffer, sizeof(worldCB));
-			SetWorldConstantBuffer(pConstantBuffer);
+    // リソースの初期化
+    void CLight::InitializeResource(CRendererBase* pRenderer) {
 
-			if (pMaterial && !pMaterial->IsInitialize()) {
-				std::unique_ptr<CConstantBufferBase> pMaterialConstantBuffer;
-				pRenderer->CreateConstantBuffer(pMaterialConstantBuffer, sizeof(materialCB));
-				pMaterial->SetMaterialConstantBuffer(pMaterialConstantBuffer);
-			}
-		}
+        if (pRenderer) {
+            std::unique_ptr<CConstantBufferBase> pConstantBuffer;
+            pRenderer->CreateConstantBuffer(pConstantBuffer, sizeof(worldCB));
+            SetWorldConstantBuffer(pConstantBuffer);
 
-		if (pMesh && !pMesh->IsInitialize()) {
-			pMesh->ReserveVertex(4);
+            if (pMaterial && !pMaterial->IsInitialize()) {
+                std::unique_ptr<CConstantBufferBase> pMaterialConstantBuffer;
+                pRenderer->CreateConstantBuffer(pMaterialConstantBuffer, sizeof(materialCB));
+                pMaterial->SetMaterialConstantBuffer(pMaterialConstantBuffer);
+            }
+        }
 
-			vertexInfo info;
+        if (pMesh && !pMesh->IsInitialize()) {
+            pMesh->ReserveVertex(4);
 
-			info.vertex = VECTOR3(-1.0f, 1.0f, 0.0f);
-			info.color = VECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
-			info.uv = VECTOR2(0.0f, 0.0f);
-			info.normal = VECTOR3(0.0f, 0.0f, -1.0f);
-			pMesh->AddVertexInfo(info);
+            vertexInfo info;
 
-			info.vertex = VECTOR3(1.0f, 1.0f, 0.0f);
-			info.color = VECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
-			info.uv = VECTOR2(1.0f, 0.0f);
-			info.normal = VECTOR3(0.0f, 0.0f, -1.0f);
-			pMesh->AddVertexInfo(info);
+            info.vertex = VECTOR3(-1.0f, 1.0f, 0.0f);
+            info.color = VECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
+            info.uv = VECTOR2(0.0f, 0.0f);
+            info.normal = VECTOR3(0.0f, 0.0f, 1.0f);
+            pMesh->AddVertexInfo(info);
 
-			info.vertex = VECTOR3(-1.0f, -1.0f, 0.0f);
-			info.color = VECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
-			info.uv = VECTOR2(0.0f, 1.0f);
-			info.normal = VECTOR3(0.0f, 0.0f, -1.0f);
-			pMesh->AddVertexInfo(info);
+            info.vertex = VECTOR3(1.0f, 1.0f, 0.0f);
+            info.color = VECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
+            info.uv = VECTOR2(1.0f, 0.0f);
+            info.normal = VECTOR3(0.0f, 0.0f, 1.0f);
+            pMesh->AddVertexInfo(info);
 
-			info.vertex = VECTOR3(1.0f, -1.0f, 0.0f);
-			info.color = VECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
-			info.uv = VECTOR2(1.0f, 1.0f);
-			info.normal = VECTOR3(0.0f, 0.0f, -1.0f);
-			pMesh->AddVertexInfo(info);
+            info.vertex = VECTOR3(-1.0f, -1.0f, 0.0f);
+            info.color = VECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
+            info.uv = VECTOR2(0.0f, 1.0f);
+            info.normal = VECTOR3(0.0f, 0.0f, 1.0f);
+            pMesh->AddVertexInfo(info);
 
-			pMesh->CreateVertexBuffer(PRIMITIVE_TOPOLOGY_TYPE::TRIANGLESTRIP);
+            info.vertex = VECTOR3(1.0f, -1.0f, 0.0f);
+            info.color = VECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
+            info.uv = VECTOR2(1.0f, 1.0f);
+            info.normal = VECTOR3(0.0f, 0.0f, 1.0f);
+            pMesh->AddVertexInfo(info);
 
-			pMesh->ReserveIndex(6);
+            pMesh->CreateVertexBuffer(PRIMITIVE_TOPOLOGY_TYPE::TRIANGLESTRIP);
 
-			pMesh->AddIndex(0);
-			pMesh->AddIndex(1);
-			pMesh->AddIndex(3);
-			pMesh->AddIndex(0);
-			pMesh->AddIndex(3);
-			pMesh->AddIndex(2);
+            pMesh->ReserveIndex(6);
 
-			pMesh->CreateIndexBuffer();
-		}
-	}
+            pMesh->AddIndex(0);
+            pMesh->AddIndex(1);
+            pMesh->AddIndex(3);
+            pMesh->AddIndex(0);
+            pMesh->AddIndex(3);
+            pMesh->AddIndex(2);
 
-	// 更新
-	void CLight::Update() {
+            pMesh->CreateIndexBuffer();
+        }
+    }
 
-	}
+    // 更新
+    void CLight::Update() {
+
+    }
 
 } // namespace

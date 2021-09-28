@@ -51,9 +51,7 @@
     <ClCompile Include="CMesh.cpp" />
     <ClCompile Include="CMeshManager.cpp" />
     <ClCompile Include="CPointLight.cpp" />
-    <ClCompile Include="CRenderer.cpp" />
     <ClCompile Include="CRendererSystem.cpp" />
-    <ClCompile Include="CRendering.cpp" />
     <ClCompile Include="CScene.cpp" />
     <ClCompile Include="CSceneManager.cpp" />
     <ClCompile Include="CShader.cpp" />
@@ -86,9 +84,7 @@
     <ClInclude Include="CMesh.h" />
     <ClInclude Include="CMeshManager.h" />
     <ClInclude Include="CPointLight.h" />
-    <ClInclude Include="CRenderer.h" />
     <ClInclude Include="CRendererSystem.h" />
-    <ClInclude Include="CRendering.h" />
     <ClInclude Include="CScene.h" />
     <ClInclude Include="CSceneManager.h" />
     <ClInclude Include="CShader.h" />
@@ -102,7 +98,6 @@
     <ClInclude Include="CWinow.h" />
     <ClInclude Include="CDataRecord.h" />
     <ClInclude Include="IObject.h" />
-    <ClInclude Include="IRenderer.h" />
     <ClInclude Include="math.h" />
     <ClInclude Include="utility.h" />
   </ItemGroup>
@@ -273,7 +268,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <ForcedIncludeFiles>..\stdafx.h</ForcedIncludeFiles>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-      <AdditionalIncludeDirectories>..\..\Inc;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Inc;..\</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>..\stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
@@ -295,7 +290,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <ForcedIncludeFiles>..\stdafx.h</ForcedIncludeFiles>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-      <AdditionalIncludeDirectories>..\..\Inc;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Inc;..\</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>..\stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
@@ -318,7 +313,7 @@
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <ForcedIncludeFiles>..\stdafx.h</ForcedIncludeFiles>
-      <AdditionalIncludeDirectories>..\..\Inc;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Inc;..\</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>..\stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
@@ -343,7 +338,7 @@
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <ForcedIncludeFiles>..\stdafx.h</ForcedIncludeFiles>
-      <AdditionalIncludeDirectories>..\..\Inc;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Inc;..\</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>..\stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>

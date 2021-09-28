@@ -14,92 +14,92 @@
 
 namespace Engine46 {
 
-	enum class CB_TYPE {
-		WORLD,
-		MATERIAL,
-		CAMERA,
-		DIRECTIONAL_LIGHT,
-		POINT_LIGHT,
-		SPOT_LIGHT,
-	};
+    enum class CB_TYPE {
+        WORLD,
+        MATERIAL,
+        CAMERA,
+        DIRECTIONAL_LIGHT,
+        POINT_LIGHT,
+        SPOT_LIGHT,
+    };
 
-	struct worldCB {
-		Matrix	matW;
-	};
+    struct worldCB {
+        Matrix	matW;
+    };
 
-	struct materialCB {
-		VECTOR4	diffuse;
-		VECTOR4	specular;
-		VECTOR4	ambient;
-		VECTOR4	emissive;
-	};
+    struct materialCB {
+        VECTOR4	diffuse;
+        VECTOR4	specular;
+        VECTOR4	ambient;
+        VECTOR4	emissive;
+    };
 
-	struct CameraCB {
-		Matrix	matVP;
-		VECTOR3	cameraPos;
-	};
+    struct CameraCB {
+        Matrix	matVP;
+        VECTOR3	cameraPos;
+    };
 
-	constexpr int LIGHT_MAX = 1024 / 2;
+    constexpr int LIGHT_MAX = 1024 / 2;
 
-	struct DirectionalLightCB {
-		VECTOR3 pos;
-		float	dummy;
-		VECTOR4 diffuse;
-		VECTOR4 specular;
-	};
+    struct DirectionalLightCB {
+        VECTOR3 pos;
+        float	dummy;
+        VECTOR4 diffuse;
+        VECTOR4 specular;
+    };
 
-	struct PointLightCB {
-		struct PointLight {
-			VECTOR3 pos;
-			float	radius;
-			VECTOR4 diffuse;
-			VECTOR4 specular;
-			VECTOR4 attenuation;
-		};
+    struct PointLightCB {
+        struct PointLight {
+            VECTOR3 pos;
+            float	radius;
+            VECTOR4 diffuse;
+            VECTOR4 specular;
+            VECTOR4 attenuation;
+        };
 
-		PointLightCB() :
-			numPointLight(0)
-		{}
+        PointLightCB() :
+            numPointLight(0)
+        {}
 
-		PointLight pointLights[LIGHT_MAX];
-		int numPointLight;
-		int dummy1;
-		int dummy2;
-		int dummy3;
-	};
+        PointLight pointLights[LIGHT_MAX];
+        int numPointLight;
+        int dummy1;
+        int dummy2;
+        int dummy3;
+    };
 
-	struct SpotLightCB {
-		struct SpotLight {
-			VECTOR3 pos;
-			float	angle;
-			VECTOR4 diffuse;
-			VECTOR4 specular;
-			VECTOR4 attenuation;
-		};
+    struct SpotLightCB {
+        struct SpotLight {
+            VECTOR3 pos;
+            float	angle;
+            VECTOR4 diffuse;
+            VECTOR4 specular;
+            VECTOR4 attenuation;
+        };
 
-		SpotLightCB() :
-			numSpotLight(0)
-		{}
+        SpotLightCB() :
+            numSpotLight(0)
+        {}
 
-		SpotLight spotLights[LIGHT_MAX];
-		int numSpotLight;
-		int dummy1;
-		int dummy2;
-		int dummy3;
-	};
+        SpotLight spotLights[LIGHT_MAX];
+        int numSpotLight;
+        int dummy1;
+        int dummy2;
+        int dummy3;
+    };
 
-	class CConstantBufferBase {
-	protected:
+    class CConstantBufferBase {
+    protected:
 
-	public:
-		CConstantBufferBase();
-		virtual ~CConstantBufferBase();
+    public:
+        CConstantBufferBase();
+        virtual ~CConstantBufferBase();
 
-		virtual void CreateConstantBuffer(UINT byteWidth) {};
-		virtual void CreateConstantBufferView() {};
-		virtual void Update(void* srcData) {};
-		virtual void Set(UINT slot) {};
-	};
+        virtual void CreateConstantBuffer(UINT byteWidth) {};
+        virtual void CreateConstantBufferView() {};
+        virtual void Update(void* srcData) {};
+        virtual void Set(UINT slot) {};
+    };
 
 } // namespace
 

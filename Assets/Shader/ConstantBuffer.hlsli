@@ -48,68 +48,68 @@ RWByteAddressBuffer outBuffer				: register(u0);
 
 cbuffer CbWorld : register(b0)
 {
-	float4x4	matW;	// ワールド行列
+    float4x4	matW;	// ワールド行列
 }
 
 struct Material {
-	float4	diffuse;	// マテリアルディフューズ色
-	float4	specular;	// マテリアルスペキュラー色
-	float4	ambinet;	// マテリアルアンビエント色
+    float4	diffuse;	// マテリアルディフューズ色
+    float4	specular;	// マテリアルスペキュラー色
+    float4	ambinet;	// マテリアルアンビエント色
 };	float4	emissive;	// マテリアルエミッシブ色
 
 // マテリアル
 cbuffer CbMaterial : register(b1)
 {
-	Material material;
+    Material material;
 }
 
 cbuffer CbCamera : register(b2)
 {
-	float4x4	matVP;		// ワールドビュープロジェクション行列
+    float4x4	matVP;		// ワールドビュープロジェクション行列
 
-	float3		cameraPos;	// カメラの位置
+    float3		cameraPos;	// カメラの位置
 }
 
 struct DirectionalLight {
-	float4 pos;
-	float4 diffuse;
-	float4 specular;
+    float4 pos;
+    float4 diffuse;
+    float4 specular;
 };
 
 // ディレクショナルライト
 cbuffer CbDirectionalLight : register(b3)
 {
-	DirectionalLight directionalLight;
+    DirectionalLight directionalLight;
 }
 
 struct PointLight {
-	float3	pos;
-	float	radius;
-	float4	diffuse;
-	float4	specular;
-	float4	attenuation;
+    float3	pos;
+    float	radius;
+    float4	diffuse;
+    float4	specular;
+    float4	attenuation;
 };
 
 cbuffer CbPointLight : register(b4)
 {
-	PointLight pointLights[LIGHT_MAX];
+    PointLight pointLights[LIGHT_MAX];
 
-	int numPointLight;
+    int numPointLight;
 }
 
 struct SpotLight {
-	float3	pos;
-	float	angle;
-	float4	diffuse;
-	float4	specular;
-	float4	attenuation;
+    float3	pos;
+    float	angle;
+    float4	diffuse;
+    float4	specular;
+    float4	attenuation;
 };
 
 cbuffer CbSpotLight : register(b5)
 {
-	SpotLight spotLights[LIGHT_MAX];
+    SpotLight spotLights[LIGHT_MAX];
 
-	int numSpotLight;
+    int numSpotLight;
 }
 
 //// 行列コンスタントバッファ

@@ -11,10 +11,10 @@
 
 class QMyTreeView : public QTreeView {
 public:
-	QMyTreeView(QWidget* parent = Q_NULLPTR);
-	~QMyTreeView();
+    QMyTreeView(QWidget* parent = Q_NULLPTR);
+    ~QMyTreeView();
 
 private:
-	void keyPressEvent(QKeyEvent* event) override;
+    void keyPressEvent(QKeyEvent* event) override;
 };
 

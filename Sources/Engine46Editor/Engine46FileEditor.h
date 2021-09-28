@@ -13,15 +13,15 @@
 
 class Engine46FileEditor : public QWidget {
 public:
-	Engine46FileEditor(QWidget* parent = Q_NULLPTR);
-	~Engine46FileEditor();
+    Engine46FileEditor(QWidget* parent = Q_NULLPTR);
+    ~Engine46FileEditor();
 
-	void InitializeFileEditor();
+    void InitializeFileEditor();
 
 public:
-	Ui::Engine46FileEditor ui;
+    Ui::Engine46FileEditor ui;
 
 public slots:
-	void SelectItem(const QModelIndex& index);
+    void SelectItem(const QModelIndex& index);
 };
 

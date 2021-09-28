@@ -11,12 +11,12 @@
 
 class QMyRenderWidget : public QWidget {
 public:
-	QMyRenderWidget(QWidget* parent = Q_NULLPTR);
-	~QMyRenderWidget();
+    QMyRenderWidget(QWidget* parent = Q_NULLPTR);
+    ~QMyRenderWidget();
 
 private:
 
-	void enterEvent(QEvent* event) override;
-	void leaveEvent(QEvent* event) override;
+    void enterEvent(QEvent* event) override;
+    void leaveEvent(QEvent* event) override;
 };
 

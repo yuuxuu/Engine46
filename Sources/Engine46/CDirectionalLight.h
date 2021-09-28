@@ -11,15 +11,15 @@
 
 namespace Engine46 {
 
-	class CDirectionalLight : public CLight {
-	private:
-		float m_intensity;
+    class CDirectionalLight : public CLight {
+    private:
+        float m_intensity;
 
-	public:
-		explicit CDirectionalLight(const char* lightName);
-		~CDirectionalLight();
+    public:
+        explicit CDirectionalLight(const char* lightName);
+        ~CDirectionalLight();
 
-	};
+    };
 
 } // namespace
 

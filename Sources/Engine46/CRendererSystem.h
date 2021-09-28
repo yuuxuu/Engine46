@@ -16,42 +16,42 @@
 
 namespace Engine46 {
 
-	// 前方宣言
-	class CRendererBase;
-	class CSceneBase;
+    // 前方宣言
+    class CRendererBase;
+    class CSceneBase;
 
-	class CRendererSystem{
-	private:
-		std::thread						m_rendererSystemThread;
-		HANDLE							m_hRenderer;
+    class CRendererSystem {
+    private:
+        std::thread                     m_rendererSystemThread;
+        HANDLE                          m_hRenderer;
 
-		std::unique_ptr<CRendererBase>	m_pRenderer;
+        std::unique_ptr<CRendererBase>  m_pRenderer;
 
-		CSceneBase*						pRenderScene;
+        CSceneBase* pRenderScene;
 
-		bool							m_isInitialize;
+        bool                            m_isInitialize;
 
-	private:
-		CRendererSystem();
-		~CRendererSystem();
+    private:
+        CRendererSystem();
+        ~CRendererSystem();
 
-		void Loop();
-		void Draw();
+        void Loop();
+        void Draw();
 
-	public:
-		bool Initialize(HWND hwnd, RECT rect);
-		void Finalize();
+    public:
+        bool Initialize(HWND hwnd, RECT rect);
+        void Finalize();
 
-		static CRendererSystem& GetRendererSystem() {
-			static CRendererSystem rendererSystem;
-			return rendererSystem;
-		}
+        static CRendererSystem& GetRendererSystem() {
+            static CRendererSystem rendererSystem;
+            return rendererSystem;
+        }
 
-		CRendererBase* GetRenderer() const { return m_pRenderer.get(); }
+        CRendererBase* GetRenderer() const { return m_pRenderer.get(); }
 
-		void SetRenderScene(CSceneBase* pScene) { pRenderScene = pScene; }
-		CSceneBase* GetRenderScene() const { return pRenderScene; }
-	};
+        void SetRenderScene(CSceneBase* pScene) { pRenderScene = pScene; }
+        CSceneBase* GetRenderScene() const { return pRenderScene; }
+    };
 
 } // namespace
 

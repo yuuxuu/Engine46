@@ -13,75 +13,75 @@
 
 namespace Engine46 {
 
-	constexpr const char* g_sceneListFileName = "SceneListData.bin";
+    constexpr const char* g_sceneListFileName = "SceneListData.bin";
 
-	// コンストラクタ
-	CSceneManager::CSceneManager()
-	{}
+    // コンストラクタ
+    CSceneManager::CSceneManager()
+    {}
 
-	// デストラクタ
-	CSceneManager::~CSceneManager()
-	{}
+    // デストラクタ
+    CSceneManager::~CSceneManager()
+    {}
 
-	// シーン作成
-	CSceneBase* CSceneManager::CreateScene(const char* sceneName) {
-		std::unique_ptr<CSceneBase> scene;
+    // シーン作成
+    CSceneBase* CSceneManager::CreateScene(const char* sceneName) {
+        std::unique_ptr<CSceneBase> scene;
 
-		if (sceneName) {
-			scene = std::make_unique<CSceneBase>(sceneName);
-		}
-		else {
-			scene = std::make_unique<CSceneBase>();
-		}
+        if (sceneName) {
+            scene = std::make_unique<CSceneBase>(sceneName);
+        }
+        else {
+            scene = std::make_unique<CSceneBase>();
+        }
 
-		scene->SetSceneID((UINT)m_pVecScene.size());
+        scene->SetSceneID((UINT)m_pVecScene.size());
 
-		scene->Initialize();
+        scene->Initialize();
 
-		CSceneBase* pScene = scene.get();
+        CSceneBase* pScene = scene.get();
 
-		this->AddSceneToVec(scene);
+        this->AddSceneToVec(scene);
 
-		return pScene;
-	}
+        return pScene;
+    }
 
-	// シーン保存
-	bool CSceneManager::SaveScene() {
-		std::ios_base::openmode mode = std::ios_base::out | std::ios_base::binary;
+    // シーン保存
+    bool CSceneManager::SaveScene() {
+        std::ios_base::openmode mode = std::ios_base::out | std::ios_base::binary;
 
-		std::ofstream ofs;
-		ofs.open(g_sceneListFileName, mode);
+        std::ofstream ofs;
+        ofs.open(g_sceneListFileName, mode);
 
-		if (!ofs.is_open()) return false;
+        if (!ofs.is_open()) return false;
 
-		for (const auto& scene : m_pVecScene) {
-			scene->Save(ofs);
-		}
+        for (const auto& scene : m_pVecScene) {
+            scene->Save(ofs);
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	// シーン読み込み
-	bool CSceneManager::LoadScene() {
-		std::ios_base::openmode mode = std::ios_base::in | std::ios_base::binary;
+    // シーン読み込み
+    bool CSceneManager::LoadScene() {
+        std::ios_base::openmode mode = std::ios_base::in | std::ios_base::binary;
 
-		std::ifstream ifs;
-		ifs.open(g_sceneListFileName, mode);
+        std::ifstream ifs;
+        ifs.open(g_sceneListFileName, mode);
 
-		if (!ifs.is_open()) return false;
+        if (!ifs.is_open()) return false;
 
-		while (true) {
+        while (true) {
 
-			if (ifs.eof()) break;
+            if (ifs.eof()) break;
 
-			CSceneBase* pScene = CreateScene();
+            CSceneBase* pScene = CreateScene();
 
-			pScene->Load(ifs);
-		}
+            pScene->Load(ifs);
+        }
 
-		std::cout << g_sceneListFileName << "を読み込みしました。" << std::endl;
+        std::cout << g_sceneListFileName << "を読み込みしました。" << std::endl;
 
-		return true;
-	}
+        return true;
+    }
 
 } // namespace

@@ -16,22 +16,22 @@
 
 class Engine46SceneEditor : public QWidget {
 public:
-	Engine46SceneEditor(QWidget* parent = Q_NULLPTR);
-	~Engine46SceneEditor();
+    Engine46SceneEditor(QWidget* parent = Q_NULLPTR);
+    ~Engine46SceneEditor();
 
-	void InitializeSceneEditor();
+    void InitializeSceneEditor();
 
-	void RecursiveActor(Engine46::CActorBase* pRootActor, QStandardItemModel* pItemModel, QStandardItem* pRootItem);
+    void RecursiveActor(Engine46::CActorBase* pRootActor, QStandardItemModel* pItemModel, QStandardItem* pRootItem);
 
-	void ChangeValueReflectToName(const QString& string);
+    void ChangeValueReflectToName(const QString& string);
 
 public:
-	Ui::Engine46SceneEditor ui;
+    Ui::Engine46SceneEditor ui;
 
 private:
-	QModelIndex selectIndex;
+    QModelIndex selectIndex;
 
 public slots:
-	void SelectItem(const QModelIndex& index);
+    void SelectItem(const QModelIndex& index);
 };
 

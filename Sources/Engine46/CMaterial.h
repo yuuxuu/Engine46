@@ -16,49 +16,49 @@
 
 namespace Engine46 {
 
-	class CMaterialBase {
-	protected:
-		CTextureBase*							pTexture;
-		std::vector<CTextureBase*>				pVecRenderTexture;
+    class CMaterialBase {
+    protected:
+        CTextureBase* pTexture;
+        std::vector<CTextureBase*>              pVecRenderTexture;
 
-		std::unique_ptr<CConstantBufferBase>	m_pMaterialConstantBuffer;
+        std::unique_ptr<CConstantBufferBase>    m_pMaterialConstantBuffer;
 
-		VECTOR4									m_diffuse;
-		VECTOR4									m_specular;
-		VECTOR4									m_ambient;
-		VECTOR4									m_emissive;
+        VECTOR4                                 m_diffuse;
+        VECTOR4	                                m_specular;
+        VECTOR4                                 m_ambient;
+        VECTOR4                                 m_emissive;
 
-		int										m_materialID;
+        int                                     m_materialID;
 
-		std::string								m_materialName;
+        std::string                             m_materialName;
 
-		bool									m_isInitialize;
+        bool                                    m_isInitialize;
 
-	public:
-		CMaterialBase();
-		explicit CMaterialBase(const char* materialName);
-		~CMaterialBase();
+    public:
+        CMaterialBase();
+        explicit CMaterialBase(const char* materialName);
+        ~CMaterialBase();
 
-		void Update();
-		void Set(UINT slot);
+        void Update();
+        void Set(UINT slot);
 
-		void SetMaterialConstantBuffer(std::unique_ptr<CConstantBufferBase>& pConstantBuffer);
+        void SetMaterialConstantBuffer(std::unique_ptr<CConstantBufferBase>& pConstantBuffer);
 
-		void SetDiffuse(const VECTOR4& diffuse) { m_diffuse = diffuse; }
-		void SetSpecular(const VECTOR4& specular) { m_diffuse = specular; }
-		void SetAmbient(const VECTOR4& ambient) { m_diffuse = ambient; }
-		void SetEmissive(const VECTOR4& emissive) { m_diffuse = emissive; }
+        void SetDiffuse(const VECTOR4& diffuse) { m_diffuse = diffuse; }
+        void SetSpecular(const VECTOR4& specular) { m_diffuse = specular; }
+        void SetAmbient(const VECTOR4& ambient) { m_diffuse = ambient; }
+        void SetEmissive(const VECTOR4& emissive) { m_diffuse = emissive; }
 
-		CConstantBufferBase* GetMaterialConstantBuffer() const { return m_pMaterialConstantBuffer.get(); }
+        CConstantBufferBase* GetMaterialConstantBuffer() const { return m_pMaterialConstantBuffer.get(); }
 
-		void SetTexture(CTextureBase* pTexture) { this->pTexture = pTexture; }
+        void SetTexture(CTextureBase* pTexture) { this->pTexture = pTexture; }
 
-		void AddRenderTexture(CTextureBase* pTexture) { pVecRenderTexture.emplace_back(pTexture); };
+        void AddRenderTexture(CTextureBase* pTexture) { pVecRenderTexture.emplace_back(pTexture); };
 
-		std::string GetMaterialName() const { return m_materialName.c_str(); }
+        std::string GetMaterialName() const { return m_materialName.c_str(); }
 
-		bool IsInitialize() const { return m_isInitialize; }
-	};
+        bool IsInitialize() const { return m_isInitialize; }
+    };
 
 } // namespace
 

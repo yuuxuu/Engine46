@@ -9,85 +9,85 @@
 #include "CGameSystem.h"
 #include "CScene.h"
 
-#include "../GraphicsAPI/CDX11Renderer.h"
-#include "../GraphicsAPI/CDX12Renderer.h"
+#include "GraphicsAPI/DirectX11/CDX11Renderer.h"
+#include "GraphicsAPI/DirectX12/CDX12Renderer.h"
 
 namespace Engine46 {
 
-	// コンストラクタ
-	CRendererSystem::CRendererSystem() :
-		m_isInitialize(false)
-	{}
+    // コンストラクタ
+    CRendererSystem::CRendererSystem() :
+        m_isInitialize(false)
+    {}
 
-	// デストラクタ
-	CRendererSystem::~CRendererSystem(){
-		Finalize();
-	}
+    // デストラクタ
+    CRendererSystem::~CRendererSystem() {
+        Finalize();
+    }
 
-	// 初期化
-	bool CRendererSystem::Initialize(HWND hwnd, RECT rect) {
+    // 初期化
+    bool CRendererSystem::Initialize(HWND hwnd, RECT rect) {
 
-		if (m_isInitialize) return true;
+        if (m_isInitialize) return true;
 
-		m_pRenderer = std::make_unique<CDX12Renderer>();
-		if (!m_pRenderer->Initialize(hwnd, rect.w, rect.h)) return false;
+        m_pRenderer = std::make_unique<CDX12Renderer>();
+        if (!m_pRenderer->Initialize(hwnd, rect.w, rect.h)) return false;
 
-		// イベントハンドル生成
-		m_hRenderer = CreateEvent(NULL, false, false, NULL);
-		if (!m_hRenderer) {
-			MessageBox(NULL, "CRendererSystem::CreateEventエラー", "MessageBox", MB_OK);
-			return false;
-		}
-		// レンダラーメインスレッド生成
-		m_rendererSystemThread = std::thread(&CRendererSystem::Loop, this);
-		if (!m_rendererSystemThread.joinable()) {
-			std::cout << "レンダラーメインスレッド生成:失敗" << std::endl;
-			return false;
-		}
+        // イベントハンドル生成
+        m_hRenderer = CreateEvent(NULL, false, false, NULL);
+        if (!m_hRenderer) {
+            MessageBox(NULL, "CRendererSystem::CreateEventエラー", "MessageBox", MB_OK);
+            return false;
+        }
+        // レンダラーメインスレッド生成
+        m_rendererSystemThread = std::thread(&CRendererSystem::Loop, this);
+        if (!m_rendererSystemThread.joinable()) {
+            std::cout << "レンダラーメインスレッド生成:失敗" << std::endl;
+            return false;
+        }
 
-		m_isInitialize = true;
+        m_isInitialize = true;
 
-		return true;
-	}
+        return true;
+    }
 
-	// 終了
-	void CRendererSystem::Finalize() {
-		if (m_hRenderer) {
-			CloseHandle(m_hRenderer);
-			m_hRenderer = 0;
-		}
-		// レンダラースレッドの終了待ち
-		if (m_rendererSystemThread.joinable()) {
-			m_rendererSystemThread.join();
-		}
-	}
+    // 終了
+    void CRendererSystem::Finalize() {
+        if (m_hRenderer) {
+            CloseHandle(m_hRenderer);
+            m_hRenderer = 0;
+        }
+        // レンダラースレッドの終了待ち
+        if (m_rendererSystemThread.joinable()) {
+            m_rendererSystemThread.join();
+        }
+    }
 
-	// ループ
-	void CRendererSystem::Loop() {
-		while (1) {
-			if (CGameSystem::GetGameSystem().IsInitialize()) break;
-		}
+    // ループ
+    void CRendererSystem::Loop() {
+        while (1) {
+            if (CGameSystem::GetGameSystem().IsInitialize()) break;
+        }
 
-		DWORD sts;
-		DWORD ms = 1000 / 60; // 1000ms/60spd = 0.16ms
+        DWORD sts;
+        DWORD ms = 1000 / 60; // 1000ms/60spd = 0.16ms
 
-		while(1) {
-			sts = WaitForSingleObject(m_hRenderer, ms);
-			if (sts == WAIT_FAILED) {
-				break;
-			}
+        while (1) {
+            sts = WaitForSingleObject(m_hRenderer, ms);
+            if (sts == WAIT_FAILED) {
+                break;
+            }
 
-			this->Draw();
-		}
-	}
+            this->Draw();
+        }
+    }
 
-	// 描画
-	void CRendererSystem::Draw() {
-		if (pRenderScene) {
-			m_pRenderer->Begine(pRenderScene);
+    // 描画
+    void CRendererSystem::Draw() {
+        if (pRenderScene) {
+            m_pRenderer->Begine(pRenderScene);
 
-			m_pRenderer->Render(pRenderScene);
-		}
-	}
+            m_pRenderer->Render(pRenderScene);
+        }
+    }
 
 } // namespace
