@@ -90,18 +90,21 @@ namespace Engine46 {
             CLight* pPointLight = m_pActorManager->CreateLight((int)LightType::Point);
             pPointLight->SetPos(VECTOR3(0.0f, 0.0f, 10.0f));
             pPointLight->GetMaterial()->SetDiffuse(VECTOR4(1.0f, 0.0f, 0.0f, 1.0f));
+            pPointLight->GetMaterial()->SetEmissive(VECTOR4(3.0f, 0.0f, 0.0f, 1.0f));
             pPointLight->SetLightDiffuse(VECTOR4(1.0f, 0.0f, 0.0f, 1.0f));
             pScene->AddActorToScene(pPointLight);
 
             pPointLight = m_pActorManager->CreateLight((int)LightType::Point);
             pPointLight->SetPos(VECTOR3(5.0f, 0.0f, 10.0f));
             pPointLight->GetMaterial()->SetDiffuse(VECTOR4(0.0f, 1.0f, 0.0f, 1.0f));
+            pPointLight->GetMaterial()->SetEmissive(VECTOR4(0.0f, 3.0f, 0.0f, 1.0f));
             pPointLight->SetLightDiffuse(VECTOR4(0.0f, 1.0f, 0.0f, 1.0f));
             pScene->AddActorToScene(pPointLight);
 
             pPointLight = m_pActorManager->CreateLight((int)LightType::Point);
             pPointLight->SetPos(VECTOR3(-5.0f, 0.0f, 10.0f));
             pPointLight->GetMaterial()->SetDiffuse(VECTOR4(0.0f, 0.0f, 1.0f, 1.0f));
+            pPointLight->GetMaterial()->SetEmissive(VECTOR4(0.0f, 0.0f, 3.0f, 1.0f));
             pPointLight->SetLightDiffuse(VECTOR4(0.0f, 0.0f, 1.0f, 1.0f));
             pScene->AddActorToScene(pPointLight);
         }

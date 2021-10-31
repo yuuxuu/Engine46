@@ -45,9 +45,9 @@ namespace Engine46 {
         void SetMaterialConstantBuffer(std::unique_ptr<CConstantBufferBase>& pConstantBuffer);
 
         void SetDiffuse(const VECTOR4& diffuse) { m_diffuse = diffuse; }
-        void SetSpecular(const VECTOR4& specular) { m_diffuse = specular; }
-        void SetAmbient(const VECTOR4& ambient) { m_diffuse = ambient; }
-        void SetEmissive(const VECTOR4& emissive) { m_diffuse = emissive; }
+        void SetSpecular(const VECTOR4& specular) { m_specular = specular; }
+        void SetAmbient(const VECTOR4& ambient) { m_ambient = ambient; }
+        void SetEmissive(const VECTOR4& emissive) { m_emissive = emissive; }
 
         CConstantBufferBase* GetMaterialConstantBuffer() const { return m_pMaterialConstantBuffer.get(); }
 

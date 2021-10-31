@@ -55,7 +55,7 @@ PS_OUT PS_main(PS_IN input) {
 
     float3 l = normalize(directionalLight.pos.xyz);
     float d = Lambert(n, l);
-    float4 dLight = directionalLight.diffuse * d;
+    float4 dLight = directionalLight.diffuse;
 
     float4 pLight;
     for (int i = 0; i < numPointLight; ++i) {
