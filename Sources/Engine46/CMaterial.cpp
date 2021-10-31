@@ -7,93 +7,80 @@
 
 #include "CMaterial.h"
 
+#include "GraphicsAPI/DirectX12/CDX12ShaderPackage.h"
+
 namespace Engine46 {
 
-	struct materialCB {
-		VECTOR4	diffuse;
-		VECTOR4	specular;
-		VECTOR4	ambient;
-		VECTOR4	emissive;
-	};
+    // コンストラクタ
+    CMaterialBase::CMaterialBase() :
+        m_diffuse(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),
+        m_specular(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),
+        m_ambient(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),
+        m_emissive(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),
+        pTexture(nullptr),
+        m_materialID(0),
+        m_materialName("Material_" + std::to_string(m_materialID)),
+        m_isInitialize(false)
+    {
+        m_materialName.resize(m_materialName.size());
+    }
 
-	// コンストラクタ
-	CMaterialBase::CMaterialBase() :
-		m_diffuse(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),
-		m_specular(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),
-		m_ambient(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),
-		m_emissive(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),
-		pTexture(nullptr),
-		pShaderPackage(nullptr),
-		m_materialID(0),
-		m_materialName("Material_" + std::to_string(m_materialID)),
-		m_isInitialize(false)
-	{
-		m_materialName.resize(m_materialName.size());
-	}
+    // コンストラクタ
+    CMaterialBase::CMaterialBase(const char* materialName) :
+        m_diffuse(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),
+        m_specular(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),
+        m_ambient(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),
+        m_emissive(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),
+        pTexture(nullptr),
+        m_materialID(0),
+        m_materialName(materialName),
+        m_isInitialize(false)
+    {
+        m_materialName.resize(m_materialName.size());
+    }
 
-	// コンストラクタ
-	CMaterialBase::CMaterialBase(const char* materialName) :
-		m_diffuse(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),
-		m_specular(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),
-		m_ambient(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),
-		m_emissive(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),
-		pTexture(nullptr),
-		pShaderPackage(nullptr),
-		m_materialID(0),
-		m_materialName(materialName),
-		m_isInitialize(false)
-	{
-		m_materialName.resize(m_materialName.size());
-	}
+    // デストラクタ
+    CMaterialBase::~CMaterialBase()
+    {}
 
-	// デストラクタ
-	CMaterialBase::~CMaterialBase()
-	{}
+    // 更新
+    void CMaterialBase::Update() {
+        if (m_pMaterialConstantBuffer) {
+            materialCB cb = {
+                m_diffuse,
+                m_specular,
+                m_ambient,
+                m_emissive,
+            };
 
-	// 更新
-	void CMaterialBase::Update() {
-		if (m_pMaterialConstantBuffer) {
-			materialCB cb = {
-			m_diffuse,
-			m_specular,
-			m_ambient,
-			m_emissive,
-			};
+            m_pMaterialConstantBuffer->Update(&cb);
+        }
+    }
 
-			m_pMaterialConstantBuffer->Update(&cb);
-		}
-	}
+    // マテリアルをシェーダーへ設定
+    void CMaterialBase::Set(UINT slot) {
 
-	// マテリアルをシェーダーへ設定
-	void CMaterialBase::Set(UINT slot) {
+        if (m_pMaterialConstantBuffer) {
+            m_pMaterialConstantBuffer->Set(slot);
+        }
 
-		if (m_pMaterialConstantBuffer) {
-			m_pMaterialConstantBuffer->Set(slot);
-		}
+        if (pTexture) {
+            pTexture->Set((UINT)MyRS_01::SRV_diffuse);
+        }
+    }
 
-		if (pShaderPackage) {
-			pShaderPackage->SetShader();
-		}
+    // コンスタントバッファを設定
+    void CMaterialBase::SetMaterialConstantBuffer(std::unique_ptr<CConstantBufferBase>& pConstantBuffer) {
 
-		if (pTexture) {
-			pTexture->Set(0);
-		}
-	}
+        if (m_isInitialize) return;
 
-	// コンスタントバッファを設定
-	void CMaterialBase::SetMaterialConstantBuffer(std::unique_ptr<CConstantBufferBase>& pConstantBuffer) {
-		
-		if (m_isInitialize) return;
-		
-		if (pConstantBuffer) {
-			pConstantBuffer->CreateConstantBuffer(sizeof(materialCB));
+        if (pConstantBuffer) {
+            m_pMaterialConstantBuffer.swap(pConstantBuffer);
 
-			m_pMaterialConstantBuffer.swap(pConstantBuffer);
+            this->Update();
 
-			this->Update();
-
-			m_isInitialize = true;
-		}
-	}
+            m_isInitialize = true;
+        }
+    }
 
 } // namespace

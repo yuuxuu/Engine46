@@ -19,24 +19,61 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CDX11ConstantBuffer.h" />
-    <ClInclude Include="CDX11Device.h" />
-    <ClInclude Include="CDX11DeviceContext.h" />
-    <ClInclude Include="CDX11Mesh.h" />
-    <ClInclude Include="CDX11Renderer.h" />
-    <ClInclude Include="CDX11Shader.h" />
-    <ClInclude Include="CDX11Texture.h" />
-    <ClInclude Include="CDX11ForwardRendering.h" />
+    <ClInclude Include="CRenderer.h" />
+    <ClInclude Include="CRendering.h" />
+    <ClInclude Include="DirectX11\CDX11ConstantBuffer.h" />
+    <ClInclude Include="DirectX11\CDX11Device.h" />
+    <ClInclude Include="DirectX11\CDX11DeviceContext.h" />
+    <ClInclude Include="DirectX11\CDX11ForwardRendering.h" />
+    <ClInclude Include="DirectX11\CDX11Mesh.h" />
+    <ClInclude Include="DirectX11\CDX11Renderer.h" />
+    <ClInclude Include="DirectX11\CDX11ShaderPackage.h" />
+    <ClInclude Include="DirectX11\CDX11Texture.h" />
+    <ClInclude Include="DirectX12\CDX12Command.h" />
+    <ClInclude Include="DirectX12\CDX12ConstantBuffer.h" />
+    <ClInclude Include="DirectX12\CDX12UnorderedAccessBuffer.h" />
+    <ClInclude Include="DirectX12\CDX12DeferredRenderig.h" />
+    <ClInclude Include="DirectX12\CDX12DepthRendering.h" />
+    <ClInclude Include="DirectX12\CDX12Device.h" />
+    <ClInclude Include="DirectX12\CDX12ForwardRendering.h" />
+    <ClInclude Include="DirectX12\CDX12Mesh.h" />
+    <ClInclude Include="DirectX12\CDX12Renderer.h" />
+    <ClInclude Include="DirectX12\CDX12ShaderPackage.h" />
+    <ClInclude Include="DirectX12\CDX12Texture.h" />
+    <ClInclude Include="IRenderer.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CDX11ConstantBuffer.cpp" />
-    <ClCompile Include="CDX11Device.cpp" />
-    <ClCompile Include="CDX11DeviceContext.cpp" />
-    <ClCompile Include="CDX11Mesh.cpp" />
-    <ClCompile Include="CDX11Renderer.cpp" />
-    <ClCompile Include="CDX11Shader.cpp" />
-    <ClCompile Include="CDX11Texture.cpp" />
-    <ClCompile Include="CDX11ForwardRendering.cpp" />
+    <ClCompile Include="CRenderer.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\stdafx.h</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\stdafx.h</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\stdafx.h</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\stdafx.h</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="CRendering.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\stdafx.h</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\stdafx.h</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\stdafx.h</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\stdafx.h</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="DirectX11\CDX11ConstantBuffer.cpp" />
+    <ClCompile Include="DirectX11\CDX11Device.cpp" />
+    <ClCompile Include="DirectX11\CDX11DeviceContext.cpp" />
+    <ClCompile Include="DirectX11\CDX11ForwardRendering.cpp" />
+    <ClCompile Include="DirectX11\CDX11Mesh.cpp" />
+    <ClCompile Include="DirectX11\CDX11Renderer.cpp" />
+    <ClCompile Include="DirectX11\CDX11ShaderPackage.cpp" />
+    <ClCompile Include="DirectX11\CDX11Texture.cpp" />
+    <ClCompile Include="DirectX12\CDX12Command.cpp" />
+    <ClCompile Include="DirectX12\CDX12ConstantBuffer.cpp" />
+    <ClCompile Include="DirectX12\CDX12UnorderedAccessBuffer.cpp" />
+    <ClCompile Include="DirectX12\CDX12DeferredRenderig.cpp" />
+    <ClCompile Include="DirectX12\CDX12DepthRendering.cpp" />
+    <ClCompile Include="DirectX12\CDX12Device.cpp" />
+    <ClCompile Include="DirectX12\CDX12ForwardRendering.cpp" />
+    <ClCompile Include="DirectX12\CDX12Mesh.cpp" />
+    <ClCompile Include="DirectX12\CDX12Renderer.cpp" />
+    <ClCompile Include="DirectX12\CDX12ShaderPackage.cpp" />
+    <ClCompile Include="DirectX12\CDX12Texture.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -112,9 +149,9 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\..\Inc;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Inc;..\</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <ForcedIncludeFiles>..\stdafx.h</ForcedIncludeFiles>
+      <ForcedIncludeFiles>..\..\stdafx.h</ForcedIncludeFiles>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -130,9 +167,9 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\..\Inc;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Inc;..\</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <ForcedIncludeFiles>..\stdafx.h</ForcedIncludeFiles>
+      <ForcedIncludeFiles>..\..\stdafx.h</ForcedIncludeFiles>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -148,9 +185,9 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\..\Inc;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Inc;..\</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <ForcedIncludeFiles>..\stdafx.h</ForcedIncludeFiles>
+      <ForcedIncludeFiles>..\..\stdafx.h</ForcedIncludeFiles>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -166,9 +203,9 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\..\Inc;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Inc;..\</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <ForcedIncludeFiles>..\stdafx.h</ForcedIncludeFiles>
+      <ForcedIncludeFiles>..\..\stdafx.h</ForcedIncludeFiles>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>

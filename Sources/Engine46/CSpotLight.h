@@ -11,15 +11,15 @@
 
 namespace Engine46 {
 
-	class CSpotLight : public CLight {
-	private:
-		float m_angle;
+    class CSpotLight : public CLight {
+    private:
+        float m_angle;
 
-	public:
-		explicit CSpotLight(const char* lightName);
-		~CSpotLight();
+    public:
+        explicit CSpotLight(const char* lightName);
+        ~CSpotLight();
 
-	};
+    };
 
 } // namespace
 

@@ -14,70 +14,61 @@
 
 namespace Engine46 {
 
-	// 前方宣言
-	class CDataRecordBase;
-	class CActorBase;
-	class CCamera;
-	class CLight;
+    // 前方宣言
+    class CDataRecordBase;
+    class CActorBase;
+    class CCamera;
+    class CLight;
+    class CSprite;
 
-	class CSceneBase : public IObject {
-	protected:
-		std::vector<CDataRecordBase>	vecDataRecords;
+    class CSceneBase {
+    protected:
+        std::vector<CDataRecordBase>    vecDataRecords;
 
-		CActorBase*						pRootActor;
+        CActorBase*                     pRootActor;
 
-		CSceneBase*						pParentScene;
-		int								m_parentSceneID;
+        UINT                            m_SceneID;
 
-		std::list<CSceneBase*>			pChiledSceneList;
-		std::vector<int>				m_chiledSceneIDList;
+        std::string                     m_SceneName;
 
-		int								m_SceneID;
+    public:
+        CSceneBase();
+        explicit CSceneBase(const char* sceneName);
+        ~CSceneBase();
 
-		std::string						m_SceneName;
+        void Initialize();
+        void Update();
+        void Draw();
 
-	public:
-		CSceneBase();
-		explicit CSceneBase(const char* sceneName);
-		virtual ~CSceneBase();
+        bool Save(std::ofstream& ofs);
+        bool Load(std::ifstream& ifs);
 
-		virtual void Initialize() override;
-		virtual void Update() override;
-		virtual void Draw() override;
+        void AddActorToScene(CActorBase* pActor);
 
-		virtual bool Save(std::ofstream& ofs) override;
-		virtual bool Load(std::ifstream& ifs) override;
+        CActorBase* GetActorFromActorName(std::string& actorName);
 
-		void ConnectParentScene(CSceneBase* pParentScene);
+        CCamera* GetCameraFromScene();
+        CLight* GetLightFromScene();
 
-		CSceneBase* GetParentScene() const { return pParentScene; }
-		int GetParentSceneID() const { return m_parentSceneID; }
+        std::vector<CSprite*> GetSpritesFromScene();
+        std::vector<CCamera*> GetCamerasFromScene();
+        std::vector<CLight*> GetLightsFromScene();
 
-		void AddChiledSceneList(CSceneBase* pChiledScene);
+        void SetRootActor(CActorBase* pRootActor) { this->pRootActor = pRootActor; }
+        CActorBase* GetRootActor() const { return pRootActor; }
 
-		std::list<CSceneBase*> GetChildSceneList() const { return pChiledSceneList; }
-		std::vector<int> GetChiledSceneIDList() const { return m_chiledSceneIDList; }
+        void SetSceneID(const int id) { m_SceneID = id; }
 
-		void SetRootActor(CActorBase* pRootActor) { this->pRootActor = pRootActor; }
-		CActorBase* GetRootActor() const { return pRootActor; }
+        void SetSceneName(const std::string& sceneName) { m_SceneName = sceneName; }
+        std::string GetSceneName() const { return m_SceneName.c_str(); }
 
-		CActorBase* GetActorFromActorName(std::string& actorName);
-		
-		CCamera* GetCameraFromScene();
-		CLight* GetLightFromScene();
+    private:
+        CActorBase* GetActorRecursiveInName(CActorBase* pRootActor, std::string& actorName);
+        CActorBase* GetActorRecursiveInActor(CActorBase* pRootActor, int actorType);
 
-		std::vector<CCamera*> GetCamerasFromScene();
-		std::vector<CLight*> GetLightsFromScene();
-
-		std::string GetSceneName() const { return m_SceneName.c_str(); }
-
-	private:
-		CActorBase* GetActorRecursiveInName(CActorBase* pRootActor, std::string& actorName);
-		CActorBase* GetActorRecursiveInClass(CActorBase* pRootActor, int classID);
-
-		void GetActorsRecursiveInName(std::vector<CActorBase*>& pActors, CActorBase* pRootActor, std::string& actorName);
-		void GetActorsRecursiveInClass(std::vector<CActorBase*>& pActors, CActorBase* pRootActor, int classID);
-	};
+        void GetActorsRecursiveInName(std::vector<CActorBase*>& pActors, CActorBase* pRootActor, std::string& actorName);
+        void GetActorsRecursiveInActor(std::vector<CActorBase*>& pActors, CActorBase* pRootActor, int actorType);
+    };
 
 } // namespace
 

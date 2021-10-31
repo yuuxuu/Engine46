@@ -7,13 +7,15 @@
 
 #include "QMyRenderWidget.h"
 
-#include "../Engine46/CGameSystem.h"
-#include "../Engine46/CInput.h"
+#include "Engine46/CGameSystem.h"
+#include "Engine46/CInput.h"
 
-// コンストラクタ
+ // コンストラクタ
 QMyRenderWidget::QMyRenderWidget(QWidget* parent) :
-	QWidget(parent)
-{}
+    QWidget(parent)
+{
+    resize(QSize(1280, 720));
+}
 
 // デストラクタ
 QMyRenderWidget::~QMyRenderWidget()
@@ -21,10 +23,10 @@ QMyRenderWidget::~QMyRenderWidget()
 
 // ウェジットにマウスが入った際のイベント
 void QMyRenderWidget::enterEvent(QEvent* event) {
-	Engine46::CGameSystem::GetGameSystem().GetInput()->ChangeUpdateState(true);
+    Engine46::CGameSystem::GetGameSystem().GetInput()->ChangeUpdateState(true);
 }
 
 // ウェジットからマウスが出た際のイベント
 void QMyRenderWidget::leaveEvent(QEvent* event) {
-	Engine46::CGameSystem::GetGameSystem().GetInput()->ChangeUpdateState(false);
+    Engine46::CGameSystem::GetGameSystem().GetInput()->ChangeUpdateState(false);
 }

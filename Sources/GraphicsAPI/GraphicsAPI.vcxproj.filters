@@ -22,57 +22,147 @@
     <Filter Include="DX11\ヘッダー ファイル">
       <UniqueIdentifier>{a78ce399-b5b0-4162-afc0-9acf9edf7e3b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DX12">
+      <UniqueIdentifier>{1cbcc7b8-aa3f-4e52-bbd1-bd0e9ae70aab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DX12\ソースファイル">
+      <UniqueIdentifier>{e6af60e7-eeb0-4417-915e-cdca035ab911}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DX12\ヘッダーファイル">
+      <UniqueIdentifier>{04457a7f-32c3-41a5-8694-cfcbb46fd393}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CDX11Device.h">
+    <ClInclude Include="CRenderer.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="CRendering.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="IRenderer.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX11\CDX11ConstantBuffer.h">
       <Filter>DX11\ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="CDX11DeviceContext.h">
+    <ClInclude Include="DirectX11\CDX11Device.h">
       <Filter>DX11\ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="CDX11Renderer.h">
+    <ClInclude Include="DirectX11\CDX11DeviceContext.h">
       <Filter>DX11\ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="CDX11ForwardRendering.h">
+    <ClInclude Include="DirectX11\CDX11ForwardRendering.h">
       <Filter>DX11\ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="CDX11ConstantBuffer.h">
+    <ClInclude Include="DirectX11\CDX11Mesh.h">
       <Filter>DX11\ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="CDX11Mesh.h">
+    <ClInclude Include="DirectX11\CDX11Renderer.h">
       <Filter>DX11\ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="CDX11Texture.h">
+    <ClInclude Include="DirectX11\CDX11ShaderPackage.h">
       <Filter>DX11\ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="CDX11Shader.h">
+    <ClInclude Include="DirectX11\CDX11Texture.h">
       <Filter>DX11\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\CDX12Command.h">
+      <Filter>DX12\ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\CDX12ConstantBuffer.h">
+      <Filter>DX12\ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\CDX12DeferredRenderig.h">
+      <Filter>DX12\ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\CDX12DepthRendering.h">
+      <Filter>DX12\ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\CDX12Device.h">
+      <Filter>DX12\ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\CDX12ForwardRendering.h">
+      <Filter>DX12\ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\CDX12Mesh.h">
+      <Filter>DX12\ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\CDX12Renderer.h">
+      <Filter>DX12\ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\CDX12ShaderPackage.h">
+      <Filter>DX12\ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\CDX12Texture.h">
+      <Filter>DX12\ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\CDX12UnorderedAccessBuffer.h">
+      <Filter>DX12\ヘッダーファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CDX11Device.cpp">
+    <ClCompile Include="CRendering.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="CRenderer.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX11\CDX11ConstantBuffer.cpp">
       <Filter>DX11\ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="CDX11DeviceContext.cpp">
+    <ClCompile Include="DirectX11\CDX11Device.cpp">
       <Filter>DX11\ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="CDX11Renderer.cpp">
+    <ClCompile Include="DirectX11\CDX11DeviceContext.cpp">
       <Filter>DX11\ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="CDX11ForwardRendering.cpp">
+    <ClCompile Include="DirectX11\CDX11ForwardRendering.cpp">
       <Filter>DX11\ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="CDX11ConstantBuffer.cpp">
+    <ClCompile Include="DirectX11\CDX11Mesh.cpp">
       <Filter>DX11\ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="CDX11Mesh.cpp">
+    <ClCompile Include="DirectX11\CDX11Renderer.cpp">
       <Filter>DX11\ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="CDX11Texture.cpp">
+    <ClCompile Include="DirectX11\CDX11ShaderPackage.cpp">
       <Filter>DX11\ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="CDX11Shader.cpp">
+    <ClCompile Include="DirectX11\CDX11Texture.cpp">
       <Filter>DX11\ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\CDX12Command.cpp">
+      <Filter>DX12\ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\CDX12ConstantBuffer.cpp">
+      <Filter>DX12\ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\CDX12DeferredRenderig.cpp">
+      <Filter>DX12\ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\CDX12DepthRendering.cpp">
+      <Filter>DX12\ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\CDX12Device.cpp">
+      <Filter>DX12\ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\CDX12ForwardRendering.cpp">
+      <Filter>DX12\ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\CDX12Mesh.cpp">
+      <Filter>DX12\ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\CDX12Renderer.cpp">
+      <Filter>DX12\ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\CDX12ShaderPackage.cpp">
+      <Filter>DX12\ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\CDX12Texture.cpp">
+      <Filter>DX12\ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\CDX12UnorderedAccessBuffer.cpp">
+      <Filter>DX12\ソースファイル</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

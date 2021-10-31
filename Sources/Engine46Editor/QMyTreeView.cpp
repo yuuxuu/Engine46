@@ -7,9 +7,9 @@
 
 #include "QMyTreeView.h"
 
-// コンストラクタ
+ // コンストラクタ
 QMyTreeView::QMyTreeView(QWidget* parent) :
-	QTreeView(parent)
+    QTreeView(parent)
 {}
 
 // デストラクタ
@@ -17,5 +17,5 @@ QMyTreeView::~QMyTreeView()
 {}
 
 // マウス押下イベント
-void QMyTreeView::keyPressEvent(QKeyEvent* event) 
+void QMyTreeView::keyPressEvent(QKeyEvent* event)
 {}

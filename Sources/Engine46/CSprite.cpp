@@ -6,84 +6,49 @@
  */
 
 #include "CSprite.h"
-#include "CRenderer.h"
 #include "CMesh.h"
 #include "CMaterial.h"
 #include "CConstantBuffer.h"
 
+#include "GraphicsAPI/CRenderer.h"
+
 namespace Engine46 {
 
-	// コンストラクタ
-	CSprite::CSprite(const char* actorName) :
-		CActorBase((int)ClassType::Sprite, actorName, Transform(VECTOR3(), VECTOR3(), VECTOR3(10.0f, 10.0f, 10.0f)))
-	{}
+    // コンストラクタ
+    CSprite::CSprite(const char* actorName) :
+        CActorBase((int)ActorType::Sprite, actorName, Transform(VECTOR3(), VECTOR3(), VECTOR3(10.0f, 10.0f, 10.0f)))
+    {}
 
-	// デストラクタ
-	CSprite::~CSprite()
-	{}
+    // デストラクタ
+    CSprite::~CSprite()
+    {}
 
-	// リソースの初期化
-	void CSprite::InitializeResource(CRendererBase* pRenderer) {
+    // リソースの初期化
+    void CSprite::InitializeResource(CRendererBase* pRenderer) {
 
-		if (pRenderer) {
-			std::unique_ptr<CConstantBufferBase> pConstantBuffer;
-			pRenderer->CreateConstantBuffer(pConstantBuffer);
-			SetWorldConstantBuffer(pConstantBuffer);
+        CActorBase::InitializeResource(pRenderer);
 
-			if (m_pMaterial && !m_pMaterial->IsInitialize()) {
-				std::unique_ptr<CConstantBufferBase> pMaterialConstantBuffer;
-				pRenderer->CreateConstantBuffer(pMaterialConstantBuffer);
+        if (pMesh) {
+            pMesh->CreateSpriteMesh();
+        }
+    }
 
-				m_pMaterial->SetMaterialConstantBuffer(pMaterialConstantBuffer);
-			}
+    // 更新
+    void CSprite::Update() {
 
-		}
+    }
 
-		if (m_pMesh && !m_pMesh->IsInitialize()) {
-			m_pMesh->ReserveVertex(4);
+    // 描画
+    void CSprite::Draw() {
+        Matrix matW = GetWorldMatrix();
+        matW.dx_m = DirectX::XMMatrixTranspose(matW.dx_m);
 
-			vertexInfo info;
+        worldCB cb = {
+            matW,
+        };
+        m_pWorldConstantBuffer->Update(&cb);
 
-			info.vertex = VECTOR3(-1.0f, 1.0f, 0.0f);
-			info.color = VECTOR4(1.0f, 0.0f, 0.0f, 1.0f);
-			info.uv = VECTOR2(0.0f, 0.0f);
-			info.normal = VECTOR3(0.0f, 0.0f, -1.0f);
-			m_pMesh->AddVertexInfo(info);
-
-			info.vertex = VECTOR3(1.0f, 1.0f, 0.0f);
-			info.color = VECTOR4(0.0f, 1.0f, 0.0f, 1.0f);
-			info.uv = VECTOR2(1.0f, 0.0f);
-			info.normal = VECTOR3(0.0f, 0.0f, -1.0f);
-			m_pMesh->AddVertexInfo(info);
-
-			info.vertex = VECTOR3(-1.0f, -1.0f, 0.0f);
-			info.color = VECTOR4(0.0f, 0.0f, 1.0f, 1.0f);
-			info.uv = VECTOR2(0.0f, 1.0f);
-			info.normal = VECTOR3(0.0f, 0.0f, -1.0f);
-			m_pMesh->AddVertexInfo(info);
-
-			info.vertex = VECTOR3(1.0f, -1.0f, 0.0f);
-			info.color = VECTOR4(1.0f, 0.0f, 0.0f, 1.0f);
-			info.uv = VECTOR2(1.0f, 1.0f);
-			info.normal = VECTOR3(0.0f, 0.0f, -1.0f);
-			m_pMesh->AddVertexInfo(info);
-
-			m_pMesh->ReserveIndex(6);
-
-			m_pMesh->AddIndex(0);
-			m_pMesh->AddIndex(1);
-			m_pMesh->AddIndex(3);
-			m_pMesh->AddIndex(0);
-			m_pMesh->AddIndex(3);
-			m_pMesh->AddIndex(2);
-
-			m_pMesh->Create();
-		}
-	}
-
-	// 更新
-	void CSprite::Update() {
-		
-	}
+        CActorBase::Draw();
+    }
 
 } // namespace

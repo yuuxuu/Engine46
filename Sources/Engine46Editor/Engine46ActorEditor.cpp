@@ -10,9 +10,9 @@
 #include <QStandardItem>
 #include <QDoubleSpinBox>
 
-#include "../Engine46/CActor.h"
-#include "../Engine46/CScene.h"
-#include "../Engine46/CRendererSystem.h"
+#include "Engine46/CActor.h"
+#include "Engine46/CScene.h"
+#include "Engine46/CRendererSystem.h"
 
  // コンストラクタ
 Engine46ActorEditor::Engine46ActorEditor(QWidget* parent)
@@ -40,11 +40,11 @@ Engine46ActorEditor::Engine46ActorEditor(QWidget* parent)
     connect(ui.doubleSpinBox_PosX, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &Engine46ActorEditor::ChangeValueReflectToPos);
     connect(ui.doubleSpinBox_PosY, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &Engine46ActorEditor::ChangeValueReflectToPos);
     connect(ui.doubleSpinBox_PosZ, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &Engine46ActorEditor::ChangeValueReflectToPos);
-                                                                  
+
     connect(ui.doubleSpinBox_RotX, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &Engine46ActorEditor::ChangeValueReflectToRotation);
     connect(ui.doubleSpinBox_RotY, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &Engine46ActorEditor::ChangeValueReflectToRotation);
     connect(ui.doubleSpinBox_RotZ, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &Engine46ActorEditor::ChangeValueReflectToRotation);
-                                                                  
+
     connect(ui.doubleSpinBox_ScaX, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &Engine46ActorEditor::ChangeValueReflectToScale);
     connect(ui.doubleSpinBox_ScaY, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &Engine46ActorEditor::ChangeValueReflectToScale);
     connect(ui.doubleSpinBox_ScaZ, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &Engine46ActorEditor::ChangeValueReflectToScale);
@@ -101,7 +101,7 @@ void Engine46ActorEditor::EditorReflectToSelectActor() {
 // 選択しているアクターを設定
 void Engine46ActorEditor::SetSelectActor(const QModelIndex& index) {
     std::string actorName = index.data().toString().toLocal8Bit();
-    
+
     if (pSelectActor) {
         if (actorName == pSelectActor->GetActorName()) return;
     }

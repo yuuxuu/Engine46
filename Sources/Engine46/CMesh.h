@@ -14,46 +14,52 @@
 
 namespace Engine46 {
 
-	struct vertexInfo {
-		VECTOR3	vertex;
-		VECTOR4	color;
-		VECTOR2	uv;
-		VECTOR3	normal;
-		VECTOR3	tangent;
-		VECTOR3	binormal;
-	};
+    struct vertexInfo {
+        VECTOR3	vertex;
+        VECTOR4	color;
+        VECTOR2	uv;
+        VECTOR3	normal;
+        VECTOR3	tangent;
+        VECTOR3	binormal;
+    };
 
-	class CMeshBase {
-	protected:
-		std::vector<vertexInfo>	m_vecVertexInfo;
+    enum class PRIMITIVE_TOPOLOGY_TYPE {
+        POINTLIST,
+        LINELIST,
+        LINESTRIP,
+        TRIANGLELIST,
+        TRIANGLESTRIP,
+    };
 
-		std::vector<DWORD>		m_vecIndexes;
+    class CMeshBase {
+    protected:
+        std::vector<vertexInfo>	m_vecVertexInfo;
 
-		int						m_meshID;
+        std::vector<DWORD>      m_vecIndexes;
 
-		std::string				m_meshName;
+        int                     m_meshID;
 
-		bool					m_isInitialize;
+        std::string             m_meshName;
 
-	public:
-		CMeshBase();
-		explicit CMeshBase(const char* meshName);
-		virtual ~CMeshBase();
+        bool                    m_isInitialize;
 
-		virtual void Create() {};
-		virtual void Draw() {};
+        UINT                    m_primitiveTopologyType;
 
-		void ReserveVertex(int reserveSize);
-		void ReserveIndex(int reserveSize);
+    public:
+        CMeshBase();
+        explicit CMeshBase(const char* meshName);
+        virtual ~CMeshBase();
 
-		void AddVertexInfo(vertexInfo info) { m_vecVertexInfo.emplace_back(info); }
+        virtual void CreateVertexBuffer(PRIMITIVE_TOPOLOGY_TYPE type) {};
+        virtual void CreateIndexBuffer() {};
+        virtual void Draw() {};
 
-		void AddIndex(const DWORD index) { m_vecIndexes.emplace_back(index); }
+        void CreateSpriteMesh();
 
-		std::string GetMeshName() const { return m_meshName.c_str(); }
+        std::string GetMeshName() const { return m_meshName.c_str(); }
 
-		bool IsInitialize() const { return m_isInitialize; }
-	};
+        bool IsInitialize() const { return m_isInitialize; }
+    };
 
 } // namespace
 

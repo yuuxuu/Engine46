@@ -1,17 +1,17 @@
 ﻿#include "Engine46MainEditor.h"
 #include <QApplication>
 
-#include "../Engine46/CGameSystem.h"
-#include "../Engine46/CFileSystem.h"
-#include "../Engine46/CRendererSystem.h"
+#include "Engine46/CGameSystem.h"
+#include "Engine46/CFileSystem.h"
+#include "Engine46/CRendererSystem.h"
 
 #pragma comment(lib, "Engine46.lib")
 #pragma comment(lib, "GraphicsAPI.lib")
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
     QApplication a(argc, argv);
-    
+
     Engine46MainEditor w;
     w.show();
 

@@ -15,24 +15,24 @@
 
 class Engine46ActorEditor : public QWidget {
 public:
-	Engine46ActorEditor(QWidget* parent = Q_NULLPTR);
-	~Engine46ActorEditor();
+    Engine46ActorEditor(QWidget* parent = Q_NULLPTR);
+    ~Engine46ActorEditor();
 
-	void SelectActorReflectToEditor();
-	void EditorReflectToSelectActor();
+    void SelectActorReflectToEditor();
+    void EditorReflectToSelectActor();
 
-	void ChangeValueReflectToName(const QString& string);
+    void ChangeValueReflectToName(const QString& string);
 public:
-	Ui::Engine46ActorEditor ui;
+    Ui::Engine46ActorEditor ui;
 
 private:
-	Engine46::CActorBase* pSelectActor = nullptr;
+    Engine46::CActorBase* pSelectActor = nullptr;
 
 public slots:
-	void SetSelectActor(const QModelIndex& index);
+    void SetSelectActor(const QModelIndex& index);
 
-	void ChangeValueReflectToPos(double value);
-	void ChangeValueReflectToRotation(double value);
-	void ChangeValueReflectToScale(double value);
+    void ChangeValueReflectToPos(double value);
+    void ChangeValueReflectToRotation(double value);
+    void ChangeValueReflectToScale(double value);
 };
 

@@ -14,80 +14,100 @@
 
 namespace Engine46 {
 
-	enum class CB_TYPE {
-		WORLD,
-		CAMERA,
-		MATERIAL,
-		DIRECTIONAL_LIGHT,
-		POINT_LIGHT,
-		SPOT_LIGHT,
-	};
+    enum class CB_TYPE {
+        WORLD,
+        MATERIAL,
+        CAMERA,
+        DIRECTIONAL_LIGHT,
+        POINT_LIGHT,
+        SPOT_LIGHT,
+    };
 
-	struct CameraCB {
-		Matrix	matVP;
-		VECTOR3	cameraPos;
-	};
+    struct worldCB {
+        Matrix	matW;
+    };
 
-	constexpr int LIGHT_MAX = 1024 / 2;
+    struct materialCB {
+        VECTOR4	diffuse;
+        VECTOR4	specular;
+        VECTOR4	ambient;
+        VECTOR4	emissive;
+    };
 
-	struct DirectionalLightCB {
-		VECTOR3 pos;
-		float	dummy;
-		VECTOR4 diffuse;
-		VECTOR4 specular;
-	};
+    struct CameraCB {
+        Matrix	matVP;
+        VECTOR3	cameraPos;
+    };
 
-	struct PointLightCB {
-		struct PointLight {
-			VECTOR3 pos;
-			float	radius;
-			VECTOR4 diffuse;
-			VECTOR4 specular;
-			VECTOR4 attenuation;
-		};
+    struct DirectionalLightCB {
+        VECTOR3 pos;
+        float	dummy;
+        VECTOR4 diffuse;
+        VECTOR4 specular;
+    };
 
-		PointLightCB() :
-			numPointLight(0)
-		{}
+    constexpr UINT LIGHT_MAX = 1024 / 2;
 
-		PointLight pointLights[LIGHT_MAX];
-		int numPointLight;
-		int dummy1;
-		int dummy2;
-		int dummy3;
-	};
+    struct PointLightCB {
+        struct PointLight {
+            VECTOR3 pos;
+            float	radius;
+            VECTOR4 diffuse;
+            VECTOR4 specular;
+            VECTOR4 attenuation;
+        };
 
-	struct SpotLightCB {
-		struct SpotLight {
-			VECTOR3 pos;
-			float	angle;
-			VECTOR4 diffuse;
-			VECTOR4 specular;
-			VECTOR4 attenuation;
-		};
+        PointLightCB() :
+            numPointLight(0)
+        {}
 
-		SpotLightCB() :
-			numSpotLight(0)
-		{}
+        PointLight pointLights[LIGHT_MAX];
+        int numPointLight;
+        int dummy1;
+        int dummy2;
+        int dummy3;
+    };
 
-		SpotLight spotLights[LIGHT_MAX];
-		int numSpotLight;
-		int dummy1;
-		int dummy2;
-		int dummy3;
-	};
+    struct SpotLightCB {
+        struct SpotLight {
+            VECTOR3 pos;
+            float	angle;
+            VECTOR4 diffuse;
+            VECTOR4 specular;
+            VECTOR4 attenuation;
+        };
 
-	class CConstantBufferBase {
-	protected:
+        SpotLightCB() :
+            numSpotLight(0)
+        {}
 
-	public:
-		CConstantBufferBase();
-		virtual ~CConstantBufferBase();
+        SpotLight spotLights[LIGHT_MAX];
+        int numSpotLight;
+        int dummy1;
+        int dummy2;
+        int dummy3;
+    };
 
-		virtual void CreateConstantBuffer(UINT byteWidth) {};
-		virtual void Update(void* srcData) {};
-		virtual void Set(UINT slot) {};
-	};
+    constexpr UINT OFFSET_MAX = 15;
+
+    struct PostEffectCB {
+        VECTOR4 blurOffset[OFFSET_MAX];
+
+        UINT texWidth;
+        UINT texHeight;
+    };
+
+    class CConstantBufferBase {
+    public:
+        CConstantBufferBase();
+        virtual ~CConstantBufferBase();
+
+        virtual void CreateConstantBuffer(UINT byteWidth) {};
+        virtual void CreateConstantBufferView() {};
+        virtual void Update(void* srcData) {};
+        virtual void Set(UINT slot) {};
+        virtual void SetCompute(UINT slot) {};
+    };
 
 } // namespace
 

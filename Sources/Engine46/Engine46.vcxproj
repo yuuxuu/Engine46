@@ -39,6 +39,7 @@
     </ClCompile>
     <ClCompile Include="CActor.cpp" />
     <ClCompile Include="CActorManager.cpp" />
+    <ClCompile Include="CUnorderedAccessBuffer.cpp" />
     <ClCompile Include="CCamera.cpp" />
     <ClCompile Include="CConstantBuffer.cpp" />
     <ClCompile Include="CDirectionalLight.cpp" />
@@ -51,9 +52,7 @@
     <ClCompile Include="CMesh.cpp" />
     <ClCompile Include="CMeshManager.cpp" />
     <ClCompile Include="CPointLight.cpp" />
-    <ClCompile Include="CRenderer.cpp" />
     <ClCompile Include="CRendererSystem.cpp" />
-    <ClCompile Include="CRendering.cpp" />
     <ClCompile Include="CScene.cpp" />
     <ClCompile Include="CSceneManager.cpp" />
     <ClCompile Include="CShader.cpp" />
@@ -74,6 +73,7 @@
     <ClInclude Include="..\stdafx.h" />
     <ClInclude Include="CActor.h" />
     <ClInclude Include="CActorManager.h" />
+    <ClInclude Include="CUnorderedAccessBuffer.h" />
     <ClInclude Include="CCamera.h" />
     <ClInclude Include="CConstantBuffer.h" />
     <ClInclude Include="CDirectionalLight.h" />
@@ -86,9 +86,7 @@
     <ClInclude Include="CMesh.h" />
     <ClInclude Include="CMeshManager.h" />
     <ClInclude Include="CPointLight.h" />
-    <ClInclude Include="CRenderer.h" />
     <ClInclude Include="CRendererSystem.h" />
-    <ClInclude Include="CRendering.h" />
     <ClInclude Include="CScene.h" />
     <ClInclude Include="CSceneManager.h" />
     <ClInclude Include="CShader.h" />
@@ -102,12 +100,41 @@
     <ClInclude Include="CWinow.h" />
     <ClInclude Include="CDataRecord.h" />
     <ClInclude Include="IObject.h" />
-    <ClInclude Include="IRenderer.h" />
     <ClInclude Include="math.h" />
     <ClInclude Include="utility.h" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="..\..\Assets\Shader\HLSL\CS_ClearColor.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\..\Assets\Shader\HLSL\CS_LuminanceExtraction.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\..\Assets\Shader\HLSL\PostEffect_Bloom.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
     <FxCompile Include="..\..\Assets\Shader\HLSL\CPUParticle.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\..\Assets\Shader\HLSL\CS_HorizonalBlur.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\..\Assets\Shader\HLSL\CS_VerticalBlur.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
@@ -144,6 +171,12 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\..\Assets\Shader\HLSL\Model_Instance.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\..\Assets\Shader\HLSL\PostEffect_Blur.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
@@ -273,7 +306,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <ForcedIncludeFiles>..\stdafx.h</ForcedIncludeFiles>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-      <AdditionalIncludeDirectories>..\..\Inc;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Inc;..\</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>..\stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
@@ -295,7 +328,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <ForcedIncludeFiles>..\stdafx.h</ForcedIncludeFiles>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-      <AdditionalIncludeDirectories>..\..\Inc;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Inc;..\</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>..\stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
@@ -318,7 +351,7 @@
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <ForcedIncludeFiles>..\stdafx.h</ForcedIncludeFiles>
-      <AdditionalIncludeDirectories>..\..\Inc;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Inc;..\</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>..\stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
@@ -343,7 +376,7 @@
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <ForcedIncludeFiles>..\stdafx.h</ForcedIncludeFiles>
-      <AdditionalIncludeDirectories>..\..\Inc;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Inc;..\</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>..\stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>

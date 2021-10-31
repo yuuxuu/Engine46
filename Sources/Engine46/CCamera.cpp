@@ -6,153 +6,161 @@
  */
 
 #include "CCamera.h"
-#include "CRenderer.h"
 #include "CDataRecord.h"
 #include "CInput.h"
 #include "CConstantBuffer.h"
 
 namespace Engine46 {
 
-	constexpr float Z_NEAR = 0.1f;
-	constexpr float Z_FAR = 1000.0f;
+    constexpr float Z_NEAR = 0.1f;
+    constexpr float Z_FAR = 1000.0f;
 
-	// コンストラクタ
-	CCamera::CCamera(const char* actorName, const int sWidth, const int sHeight) :
-		CActorBase((int)ClassType::Camera, actorName, Transform()),
-		m_eye(0.0f, 0.0f, -10.0f),
-		m_forcus(),
-		m_up(0.0f, 1.0f, 0.0f),
-		m_speed(1.0f)
-	{
-		m_matProj.dx_m = DirectX::XMMatrixPerspectiveFovLH(
-			DirectX::XMConvertToRadians(90.0f),
-			(float)sWidth / (float)sHeight,
-			Z_NEAR,
-			Z_FAR);
-	}
+    // コンストラクタ
+    CCamera::CCamera(const char* actorName, const int sWidth, const int sHeight) :
+        CActorBase((int)ActorType::Camera, actorName, Transform()),
+        m_eye(0.0f, 0.0f, 10.0f),
+        m_forcus(),
+        m_up(0.0f, 1.0f, 0.0f),
+        m_speed(1.0f)
+    {
+        m_matProj.dx_m = DirectX::XMMatrixPerspectiveFovLH(
+            DirectX::XMConvertToRadians(90.0f),
+            (float)sWidth / (float)sHeight,
+            Z_NEAR,
+            Z_FAR);
+    }
 
-	// デストラクタ
-	CCamera::~CCamera()
-	{}
+    // デストラクタ
+    CCamera::~CCamera()
+    {}
 
-	// リソースの初期化
-	void CCamera::InitializeResource(CRendererBase* pRenderer) {
-		
-	}
+    // リソースの初期化
+    void CCamera::InitializeResource(CRendererBase* pRenderer) {
+        
+    }
 
-	// 初期化
-	void CCamera::Initialize() {
+    // 初期化
+    void CCamera::Initialize() {
 
-		vecDataRecords.emplace_back(CDataRecordBase(offsetof(CCamera, m_eye), sizeof(m_eye)));
-		vecDataRecords.emplace_back(CDataRecordBase(offsetof(CCamera, m_forcus), sizeof(m_forcus)));
-		vecDataRecords.emplace_back(CDataRecordBase(offsetof(CCamera, m_up), sizeof(m_up)));
-		vecDataRecords.emplace_back(CDataRecordBase(offsetof(CCamera, m_matView), sizeof(m_matView)));
-		vecDataRecords.emplace_back(CDataRecordBase(offsetof(CCamera, m_matProj), sizeof(m_matProj)));
-	}
+        vecDataRecords.emplace_back(CDataRecordBase(offsetof(CCamera, m_eye), sizeof(m_eye)));
+        vecDataRecords.emplace_back(CDataRecordBase(offsetof(CCamera, m_forcus), sizeof(m_forcus)));
+        vecDataRecords.emplace_back(CDataRecordBase(offsetof(CCamera, m_up), sizeof(m_up)));
+        vecDataRecords.emplace_back(CDataRecordBase(offsetof(CCamera, m_matView), sizeof(m_matView)));
+        vecDataRecords.emplace_back(CDataRecordBase(offsetof(CCamera, m_matProj), sizeof(m_matProj)));
+    }
 
-	// 更新
-	void CCamera::Update() {
-		if (pInput) {
-			pInput->UpdateInput();
+    // 更新
+    void CCamera::Update() {
+        if (pInput) {
+            pInput->UpdateInput();
 
-			m_speed = this->GetCameraSpeed(m_speed);
+            m_speed = this->GetCameraSpeed(m_speed);
 
-			VECTOR3 forward = GetCameraForwardVector() * m_speed;
-			VECTOR3 right = GetCameraRightVector() * m_speed;
-			VECTOR3 up = GetCameraUpVector() * m_speed;
+            VECTOR3 forward = GetCameraForwardVector() * m_speed;
+            VECTOR3 right = GetCameraRightVector() * m_speed;
+            VECTOR3 up = GetCameraUpVector() * m_speed;
 
-			if(pInput->IsPressKey(DIK_W)) {
-				m_eye += forward;
-				m_forcus += forward;
-			}
-			if (pInput->IsPressKey(DIK_S)) {
-				m_eye -= forward;
-				m_forcus -= forward;
-			}
-			if (pInput->IsPressKey(DIK_A)) {
-				m_eye -= right;
-				m_forcus -= right;
-			}
-			if (pInput->IsPressKey(DIK_D)) {
-				m_eye += right;
-				m_forcus += right;
-			}
+            if(pInput->IsPressKey(DIK_W)) {
+                m_eye += forward;
+                m_forcus += forward;
+            }
+            if (pInput->IsPressKey(DIK_S)) {
+                m_eye -= forward;
+                m_forcus -= forward;
+            }
+            if (pInput->IsPressKey(DIK_A)) {
+                m_eye -= right;
+                m_forcus -= right;
+            }
+            if (pInput->IsPressKey(DIK_D)) {
+                m_eye += right;
+                m_forcus += right;
+            }
 
-			const float speed = 0.01f;
-			if (pInput->IsTriggerLeftMouse()) {
+            const float speed = 0.01f;
+            if (pInput->IsTriggerLeftMouse()) {
 
-				m_forcus += right * pInput->GetMousePosX() * speed;
-				m_forcus += up * pInput->GetMousePosY() * speed;
-			}
-			if (pInput->IsTriggerRightMouse()) {
-				float r = Vec3Lenght(m_forcus - m_eye);
+                m_forcus += right * pInput->GetMousePosX() * speed;
+                m_forcus += up * pInput->GetMousePosY() * speed;
+            }
+            if (pInput->IsTriggerRightMouse()) {
+                float r = Vec3Lenght(m_forcus - m_eye);
 
-				float theta = m_transform.rotation.y + pInput->GetMousePosY() * speed;
-				float phi = m_transform.rotation.x + pInput->GetMousePosX() * speed;
+                float theta = m_transform.rotation.y + pInput->GetMousePosY() * speed;
+                float phi = m_transform.rotation.x + pInput->GetMousePosX() * speed;
 
-				VECTOR3 pos;
-				pos.x = r * sinf(theta) * cosf(phi);
-				pos.y = r * cosf(theta);
-				pos.z = r * sinf(theta) * sinf(phi);
+                VECTOR3 pos;
+                pos.x = r * sinf(theta) * cosf(phi);
+                pos.y = r * cosf(theta);
+                pos.z = r * sinf(theta) * sinf(phi);
 
-				m_eye = m_forcus + pos;
+                m_eye = m_forcus + pos;
 
-				m_transform.rotation.x = phi;
-				m_transform.rotation.y = theta;
-			}
-		}
+                m_transform.rotation.x = phi;
+                m_transform.rotation.y = theta;
+            }
+        }
 
-		DirectX::XMVECTOR eye = { m_eye.x, m_eye.y, m_eye.z };
-		DirectX::XMVECTOR forcus = { m_forcus.x, m_forcus.y, m_forcus.z };
-		DirectX::XMVECTOR up = { m_up.x, m_up.y, m_up.z };
+        DirectX::XMVECTOR eye = { m_eye.x, m_eye.y, m_eye.z };
+        DirectX::XMVECTOR forcus = { m_forcus.x, m_forcus.y, m_forcus.z };
+        DirectX::XMVECTOR up = { m_up.x, m_up.y, m_up.z };
 
-		m_matView.dx_m = DirectX::XMMatrixLookAtLH(eye, forcus, up);
-	}
+        m_matView.dx_m = DirectX::XMMatrixLookAtLH(eye, forcus, up);
+    }
 
-	// ビュー行列とプロジェクション行列を合成し取得
-	Matrix CCamera::GetViewProjectionMatrix() {
-		Matrix matVP;
-		matVP.dx_m = m_matView.dx_m * m_matProj.dx_m;
-		
-		return matVP;
-	}
+    // ビュー行列とプロジェクション行列を合成し取得
+    Matrix CCamera::GetViewProjectionMatrix() {
+        Matrix matVP;
+        matVP.dx_m = m_matView.dx_m * m_matProj.dx_m;
+        
+        return matVP;
+    }
 
-	// カメラのスピードを取得
-	float CCamera::GetCameraSpeed(float nowSpeed) {
-		const float minSpeed = 1.0f;
-		const float maxSpeed = 3.0f;
-		
-		float raito = pInput->GetMousePosZ();
-		if (raito < 0.1f && raito > -0.1f) {
-			return nowSpeed;
-		}
+    Matrix CCamera::GetInvViewMatrix() {
+        Matrix matVP;
+        matVP.dx_m = DirectX::XMMatrixInverse(nullptr, m_matView.dx_m);
 
-		raito = (raito / std::fabsf(raito)) * 0.1f;
+        matVP._41 = matVP._42 = matVP._43 = 0.0f;
 
-		nowSpeed += raito;
-		if (nowSpeed < minSpeed) {
-			return minSpeed;
-		}
-		if (nowSpeed > maxSpeed) {
-			return maxSpeed;
-		}
+        return matVP;
+    }
 
-		return nowSpeed;
-	}
+    // カメラのスピードを取得
+    float CCamera::GetCameraSpeed(float nowSpeed) {
+        const float minSpeed = 1.0f;
+        const float maxSpeed = 3.0f;
+        
+        float raito = pInput->GetMousePosZ();
+        if (raito < 0.1f && raito > -0.1f) {
+            return nowSpeed;
+        }
 
-	// カメラの右向きベクトルを取得
-	VECTOR3 CCamera::GetCameraRightVector() {
-		return VECTOR3(m_matView._11, m_matView._21, m_matView._31);
-	}
+        raito = (raito / std::fabsf(raito)) * 0.1f;
 
-	// カメラの上向きベクトルを取得
-	VECTOR3 CCamera::GetCameraUpVector() {
-		return VECTOR3(m_matView._12, m_matView._22, m_matView._32);
-	}
+        nowSpeed += raito;
+        if (nowSpeed < minSpeed) {
+            return minSpeed;
+        }
+        if (nowSpeed > maxSpeed) {
+            return maxSpeed;
+        }
 
-	// カメラの前向きベクトルを取得
-	VECTOR3 CCamera::GetCameraForwardVector() {
-		return VECTOR3(m_matView._13, m_matView._23, m_matView._33);
-	}
+        return nowSpeed;
+    }
+
+    // カメラの右向きベクトルを取得
+    VECTOR3 CCamera::GetCameraRightVector() {
+        return VECTOR3(m_matView._11, m_matView._21, m_matView._31);
+    }
+
+    // カメラの上向きベクトルを取得
+    VECTOR3 CCamera::GetCameraUpVector() {
+        return VECTOR3(m_matView._12, m_matView._22, m_matView._32);
+    }
+
+    // カメラの前向きベクトルを取得
+    VECTOR3 CCamera::GetCameraForwardVector() {
+        return VECTOR3(m_matView._13, m_matView._23, m_matView._33);
+    }
 
 } // namespace

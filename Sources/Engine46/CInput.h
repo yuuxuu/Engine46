@@ -10,63 +10,68 @@
 #ifndef _CINPUT_H_
 #define _CINPUT_H_
 
+#include <dinput.h>
+
+#pragma comment(lib, "dinput8.lib")
+#pragma comment(lib, "dxguid.lib")
+
 using Microsoft::WRL::ComPtr;
 
 namespace Engine46 {
 
-	constexpr int MAX_KEY = 256;
+    constexpr int MAX_KEY = 256;
 
-	class CInput {
-	private:
-		HWND							m_hWnd;
+    class CInput {
+    private:
+        HWND                            m_hWnd;
 
-		ComPtr<IDirectInput8A>			m_pDirectInput;
+        ComPtr<IDirectInput8A>          m_pDirectInput;
 
-		ComPtr<IDirectInputDevice8A>	m_pDirectDeviceKeyboard;
-		ComPtr<IDirectInputDevice8A>	m_pDirectDeviceMouse;
+        ComPtr<IDirectInputDevice8A>    m_pDirectDeviceKeyboard;
+        ComPtr<IDirectInputDevice8A>    m_pDirectDeviceMouse;
 
-		std::array<BYTE, MAX_KEY>		m_key;
-		std::array<BYTE, MAX_KEY>		m_oldKey;
+        std::array<BYTE, MAX_KEY>       m_key;
+        std::array<BYTE, MAX_KEY>       m_oldKey;
 
-		DIMOUSESTATE					m_mouse;
-		DIMOUSESTATE					m_oldMouse;
+        DIMOUSESTATE                    m_mouse;
+        DIMOUSESTATE                    m_oldMouse;
 
-		POINT							m_mousePos;
+        POINT                           m_mousePos;
 
-		bool							m_isUpdate;
+        bool                            m_isUpdate;
 
-	private:
-		bool InitializeKeyBoard(HWND hwnd);
-		bool InitializeMouse(HWND hwnd);
-		
-		bool UpdateKeyBoard();
-		bool UpdateMouse();
-	public:
-		explicit CInput(HWND hwnd);
-		~CInput();
+    private:
+        bool InitializeKeyBoard(HWND hwnd);
+        bool InitializeMouse(HWND hwnd);
 
-		bool Initialize(HINSTANCE hInstance);
+        bool UpdateKeyBoard();
+        bool UpdateMouse();
+    public:
+        explicit CInput(HWND hwnd);
+        ~CInput();
 
-		void UpdateInput();
+        bool Initialize(HINSTANCE hInstance);
 
-		void ChangeUpdateState(bool state);
+        void UpdateInput();
 
-		bool IsPressKey(UINT key);
-		bool IsTriggerKey(UINT key);
+        void ChangeUpdateState(bool state);
 
-		bool IsPressLeftMouse();
-		bool IsTriggerLeftMouse();
+        bool IsPressKey(UINT key);
+        bool IsTriggerKey(UINT key);
 
-		bool IsPressRightMouse();
-		bool IsTriggerRightMouse();
+        bool IsPressLeftMouse();
+        bool IsTriggerLeftMouse();
 
-		bool IsPressCenterMouse();
-		bool IsTriggerCenterMouse();
+        bool IsPressRightMouse();
+        bool IsTriggerRightMouse();
 
-		float GetMousePosX() { return (float)m_mouse.lX; }
-		float GetMousePosY() { return (float)m_mouse.lY; }
-		float GetMousePosZ() { return (float)m_mouse.lZ; }
-	};
+        bool IsPressCenterMouse();
+        bool IsTriggerCenterMouse();
+
+        float GetMousePosX() { return (float)m_mouse.lX; }
+        float GetMousePosY() { return (float)m_mouse.lY; }
+        float GetMousePosZ() { return (float)m_mouse.lZ; }
+    };
 
 } // namespace
 
