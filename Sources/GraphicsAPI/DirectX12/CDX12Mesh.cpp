@@ -30,7 +30,7 @@ namespace Engine46 {
 
         if (!m_vecVertexInfo.empty()) {
 
-            UINT size = sizeof(m_vecVertexInfo[0]) * m_vecVertexInfo.size();
+            UINT size = sizeof(m_vecVertexInfo[0]) * (UINT)m_vecVertexInfo.size();
 
             D3D12_RESOURCE_DESC rDesc = {};
 
@@ -88,7 +88,7 @@ namespace Engine46 {
 
     void CDX12Mesh::CreateIndexBuffer() {
         if (!m_vecIndexes.empty()) {
-            UINT size = sizeof(m_vecIndexes[0]) * m_vecIndexes.size();
+            UINT size = sizeof(m_vecIndexes[0]) * (UINT)m_vecIndexes.size();
 
             D3D12_RESOURCE_DESC rDesc = {};
 
@@ -129,7 +129,7 @@ namespace Engine46 {
 
         pDX12Command->SetBuffer(m_vbView, m_ibView);
 
-        pDX12Command->DrawIndexed((D3D12_PRIMITIVE_TOPOLOGY)m_primitiveTopologyType, m_vecIndexes.size());
+        pDX12Command->DrawIndexed((D3D12_PRIMITIVE_TOPOLOGY)m_primitiveTopologyType, (UINT)m_vecIndexes.size());
     }
 
 } // namespace

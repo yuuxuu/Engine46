@@ -29,6 +29,55 @@ namespace Engine46 {
         { "CS_main", "cs_5_0", SHADER_TYPE::TYPE_COMPUTE },
     };
 
+    enum class MyRS_01 {
+        CBV_WORLD,
+        CBV_MATERIAL,
+        CBV_CAMERA,
+        CBV_DirectionalLight,
+        CBV_PointLight,
+        CBV_SpotLight,
+        SRV_diffuse,
+    };
+
+    enum class MyRS_GBuffer_Ligthing {
+        CBV_CAMERA,
+        CBV_DirectionalLight,
+        CBV_PointLight,
+        CBV_SpotLight,
+        SRV_0,
+        SRV_1,
+        SRV_2,
+        SRV_3,
+    };
+
+    enum class MyRS_CS_Blur {
+        CBV_Blur,
+        UAV_0,
+        UAV_1,
+    };
+
+    enum class MyRS_Blur {
+        CBV_Blur,
+        SRV_0,
+    };
+
+    enum class MyRS_Bloom {
+        SRV_0,
+        SRV_1,
+        SRV_2,
+        SRV_3,
+        SRV_4,
+    };
+
+    enum class MyRS_LuminanceExtraction {
+        UAV_0,
+        UAV_1,
+    };
+
+    enum class MyRS_ClearColor {
+        UAV_0,
+    };
+
     class CShaderPackage {
     protected:
         std::vector<std::unique_ptr<CShaderBase>>   m_pVecShader;
@@ -40,9 +89,11 @@ namespace Engine46 {
         CShaderPackage();
         ~CShaderPackage();
 
+        virtual bool Initialize() { return true; };
+
         virtual void SetShader() {};
 
-        virtual bool Initialize() { return true; };
+        virtual void SetSceneConstantBufferToShader(UINT startSlot) {};
 
         bool CompileShader(ComPtr<ID3DBlob>& pBlob, const char* fileName, const char* entrPoint, const char* shaderModel);
 

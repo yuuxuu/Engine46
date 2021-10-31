@@ -19,6 +19,7 @@ namespace Engine46 {
     class CActorBase;
     class CCamera;
     class CLight;
+    class CSprite;
 
     class CSceneBase {
     protected:
@@ -49,6 +50,7 @@ namespace Engine46 {
         CCamera* GetCameraFromScene();
         CLight* GetLightFromScene();
 
+        std::vector<CSprite*> GetSpritesFromScene();
         std::vector<CCamera*> GetCamerasFromScene();
         std::vector<CLight*> GetLightsFromScene();
 
@@ -62,10 +64,10 @@ namespace Engine46 {
 
     private:
         CActorBase* GetActorRecursiveInName(CActorBase* pRootActor, std::string& actorName);
-        CActorBase* GetActorRecursiveInClass(CActorBase* pRootActor, int classID);
+        CActorBase* GetActorRecursiveInActor(CActorBase* pRootActor, int actorType);
 
         void GetActorsRecursiveInName(std::vector<CActorBase*>& pActors, CActorBase* pRootActor, std::string& actorName);
-        void GetActorsRecursiveInClass(std::vector<CActorBase*>& pActors, CActorBase* pRootActor, int classID);
+        void GetActorsRecursiveInActor(std::vector<CActorBase*>& pActors, CActorBase* pRootActor, int actorType);
     };
 
 } // namespace

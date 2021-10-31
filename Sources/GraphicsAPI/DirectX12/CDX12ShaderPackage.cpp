@@ -40,9 +40,7 @@ namespace Engine46 {
 
         SetShaderByteCode(gpsDesc);
         SetDepthStencilState(gpsDesc);
-        SetBlendState(gpsDesc);
         SetRasterizerState(gpsDesc);
-        SetRTVFormats(gpsDesc);
 
         D3D12_INPUT_ELEMENT_DESC IEDesc[] = {
             { "POSITION" , 0, DXGI_FORMAT_R32G32B32_FLOAT	, 0,  0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
@@ -95,13 +93,12 @@ namespace Engine46 {
 
     // シェーダーへ設定
     void CDX12ShaderPackage::SetShader() {
-
         if (pDescriptorHeap) {
             pDX12Command->SetDescriptorHeaps(pDescriptorHeap);
         }
 
         if (m_pGraphicsRootSignature) {
-            pDX12Command->SetRootSignature(m_pGraphicsRootSignature.Get());
+            pDX12Command->SetGraphicsRootSignature(m_pGraphicsRootSignature.Get());
         }
 
         if (m_pGraphicsPiplineState) {
@@ -109,16 +106,19 @@ namespace Engine46 {
         }
 
         if (m_pComputeRootSignature) {
-            pDX12Command->SetRootSignature(m_pComputeRootSignature.Get());
+            pDX12Command->SetComputeRootSignature(m_pComputeRootSignature.Get());
         }
 
         if (m_pComputePiplineState) {
             pDX12Command->SetPipelineState(m_pComputePiplineState.Get());
         }
+    }
 
+    // シーンコンスタントバッファをシェーダーへ設定
+    void CDX12ShaderPackage::SetSceneConstantBufferToShader(UINT startSlot) {
         CDX12Renderer* pRenderer = dynamic_cast<CDX12Renderer*>(CRendererSystem::GetRendererSystem().GetRenderer());
         if (pRenderer) {
-            pRenderer->SetConstantBuffers();
+            pRenderer->SetSceneConstantBuffers(startSlot);
         }
     }
 
@@ -159,12 +159,25 @@ namespace Engine46 {
         }
     }
 
-    void CDX12ShaderPackage::SetRTVFormats(D3D12_GRAPHICS_PIPELINE_STATE_DESC& gpsDesc) {
+    void CDX12ShaderPackage::SetRTVFormats(D3D12_GRAPHICS_PIPELINE_STATE_DESC& gpsDesc, std::string& shaderName) {
 
         gpsDesc.NumRenderTargets = RENDER_TARGET_SIZE;
 
-        for (UINT i = 0; i < RENDER_TARGET_SIZE; ++i) {
-            gpsDesc.RTVFormats[i] = RENDER_TARGET_FORMATS[i];
+        gpsDesc.RTVFormats[0] = DXGI_FORMAT_B8G8R8A8_UNORM;
+
+        if (shaderName == "GBuffer.hlsl") {
+            for (UINT i = 0; i < RENDER_TARGET_SIZE; ++i) {
+                gpsDesc.RTVFormats[i] = RENDER_TARGET_FORMATS[i];
+            }
+        }
+        else if (shaderName == "CPUParticle.hlsl") {
+            gpsDesc.RTVFormats[0] = DXGI_FORMAT_R16G16B16A16_FLOAT;
+        }
+        else if (shaderName == "PostEffect_Blur.hlsl") {
+            gpsDesc.RTVFormats[0] = DXGI_FORMAT_R16G16B16A16_FLOAT;
+        }
+        else if (shaderName == "GBuffer_Lighting.hlsl") {
+            gpsDesc.RTVFormats[0] = DXGI_FORMAT_R16G16B16A16_FLOAT;
         }
 
         gpsDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
@@ -174,7 +187,7 @@ namespace Engine46 {
         gpsDesc.DepthStencilState.DepthEnable = TRUE;
         gpsDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
         gpsDesc.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
-        gpsDesc.DepthStencilState.StencilEnable = TRUE;
+        gpsDesc.DepthStencilState.StencilEnable = FALSE;
         gpsDesc.DepthStencilState.StencilReadMask = D3D12_DEFAULT_STENCIL_READ_MASK;
         gpsDesc.DepthStencilState.StencilWriteMask = D3D12_DEFAULT_STENCIL_WRITE_MASK;
         gpsDesc.DepthStencilState.FrontFace.StencilFailOp = D3D12_STENCIL_OP_KEEP;
@@ -201,7 +214,7 @@ namespace Engine46 {
         gpsDesc.RasterizerState.ConservativeRaster = D3D12_CONSERVATIVE_RASTERIZATION_MODE_OFF;
     }
 
-    void CDX12ShaderPackage::SetBlendState(D3D12_GRAPHICS_PIPELINE_STATE_DESC& gpsDesc) {
+    void CDX12ShaderPackage::SetBlendState(D3D12_GRAPHICS_PIPELINE_STATE_DESC& gpsDesc, std::string& shaderName) {
         gpsDesc.BlendState.AlphaToCoverageEnable = FALSE;
         gpsDesc.BlendState.IndependentBlendEnable = FALSE;
 

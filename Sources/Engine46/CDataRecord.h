@@ -77,7 +77,7 @@ namespace Engine46 {
     class CBufDataRecord : public CDataRecordBase {
     private:
         std::unique_ptr<BYTE[]>& m_pBuf;
-        int& m_bufSize;
+        int& m_byteSize;
 
     public:
         CBufDataRecord(std::unique_ptr<BYTE[]>& pBuf, int& bufSize);

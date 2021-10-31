@@ -10,6 +10,7 @@
 #include "CActor.h"
 #include "CCamera.h"
 #include "CLight.h"
+#include "CSprite.h"
 
 namespace Engine46 {
 
@@ -106,10 +107,10 @@ namespace Engine46 {
     // シーン内のカメラを取得
     CCamera* CSceneBase::GetCameraFromScene() {
         if (pRootActor) {
-            if (pRootActor->GetClassID() == (int)ClassType::Camera) {
+            if (pRootActor->GetClassID() == (int)ActorType::Camera) {
                 return dynamic_cast<CCamera*>(pRootActor);
             }
-            CActorBase* pCamera = this->GetActorRecursiveInClass(pRootActor, (int)ClassType::Camera);
+            CActorBase* pCamera = this->GetActorRecursiveInActor(pRootActor, (int)ActorType::Camera);
             return dynamic_cast<CCamera*>(pCamera);
         }
 
@@ -119,50 +120,68 @@ namespace Engine46 {
     // シーン内のライトを取得
     CLight* CSceneBase::GetLightFromScene() {
         if (pRootActor) {
-            if (pRootActor->GetClassID() == (int)ClassType::Light) {
+            if (pRootActor->GetClassID() == (int)ActorType::Light) {
                 return dynamic_cast<CLight*>(pRootActor);
             }
-            CActorBase* pLight = this->GetActorRecursiveInClass(pRootActor, (int)ClassType::Light);
+            CActorBase* pLight = this->GetActorRecursiveInActor(pRootActor, (int)ActorType::Light);
             return dynamic_cast<CLight*>(pLight);
         }
 
         return nullptr;
     }
 
-    // シーン内カメラを全て取得
-    std::vector<CCamera*> CSceneBase::GetCamerasFromScene() {
-        std::vector<CCamera*> pCameras;
+    // シーン内スプライトを全て取得
+    std::vector<CSprite*> CSceneBase::GetSpritesFromScene() {
+        std::vector<CSprite*> vecSprite;
 
         if (pRootActor) {
             std::vector<CActorBase*> pActors;
-            this->GetActorsRecursiveInClass(pActors, pRootActor, (int)ClassType::Camera);
+            this->GetActorsRecursiveInActor(pActors, pRootActor, (int)ActorType::Sprite);
 
             if (!pActors.empty()) {
                 for (const auto pActor : pActors) {
-                    pCameras.emplace_back(dynamic_cast<CCamera*>(pActor));
+                    vecSprite.emplace_back(dynamic_cast<CSprite*>(pActor));
                 }
             }
         }
 
-        return pCameras;
+        return vecSprite;
+    }
+
+    // シーン内カメラを全て取得
+    std::vector<CCamera*> CSceneBase::GetCamerasFromScene() {
+        std::vector<CCamera*> vecCameras;
+
+        if (pRootActor) {
+            std::vector<CActorBase*> pActors;
+            this->GetActorsRecursiveInActor(pActors, pRootActor, (int)ActorType::Camera);
+
+            if (!pActors.empty()) {
+                for (const auto pActor : pActors) {
+                    vecCameras.emplace_back(dynamic_cast<CCamera*>(pActor));
+                }
+            }
+        }
+
+        return vecCameras;
     }
 
     // シーン内のライトを全て取得
     std::vector<CLight*> CSceneBase::GetLightsFromScene() {
-        std::vector<CLight*> pLights;
+        std::vector<CLight*> vecLights;
 
         if (pRootActor) {
             std::vector<CActorBase*> pActors;
-            this->GetActorsRecursiveInClass(pActors, pRootActor, (int)ClassType::Light);
+            this->GetActorsRecursiveInActor(pActors, pRootActor, (int)ActorType::Light);
 
             if (!pActors.empty()) {
                 for (const auto pActor : pActors) {
-                    pLights.emplace_back(dynamic_cast<CLight*>(pActor));
+                    vecLights.emplace_back(dynamic_cast<CLight*>(pActor));
                 }
             }
         }
 
-        return pLights;
+        return vecLights;
     }
 
     // 指定アクター名のアクターを再帰検索して取得
@@ -180,15 +199,15 @@ namespace Engine46 {
         return nullptr;
     }
 
-    // 指定クラスのアクターを再帰検索して取得
-    CActorBase* CSceneBase::GetActorRecursiveInClass(CActorBase* pRootActor, int classID) {
+    // 指定アクターを再帰検索して取得
+    CActorBase* CSceneBase::GetActorRecursiveInActor(CActorBase* pRootActor, int actorType) {
         if (pRootActor) {
             for (const auto pChild : pRootActor->GetChildActorList()) {
-                if (pChild->GetClassID() == classID) {
+                if (pChild->GetClassID() == actorType) {
                     return pChild;
                 }
 
-                this->GetActorRecursiveInClass(pChild, classID);
+                this->GetActorRecursiveInActor(pChild, actorType);
             }
         }
 
@@ -208,15 +227,15 @@ namespace Engine46 {
         }
     }
 
-    // 指定クラスのアクター全てを再帰検索して取得
-    void CSceneBase::GetActorsRecursiveInClass(std::vector<CActorBase*>& pActors, CActorBase* pRootActor, int classID) {
+    // 指定アクター全てを再帰検索して取得
+    void CSceneBase::GetActorsRecursiveInActor(std::vector<CActorBase*>& pActors, CActorBase* pRootActor, int actorType) {
         if (pRootActor) {
             for (const auto pChild : pRootActor->GetChildActorList()) {
-                if (pChild->GetClassID() == classID) {
+                if (pChild->GetClassID() == actorType) {
                     pActors.emplace_back(pChild);
                 }
 
-                this->GetActorsRecursiveInClass(pActors, pChild, classID);
+                this->GetActorsRecursiveInActor(pActors, pChild, actorType);
             }
         }
     }

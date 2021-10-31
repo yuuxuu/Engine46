@@ -39,14 +39,14 @@ namespace Engine46 {
         VECTOR3	cameraPos;
     };
 
-    constexpr int LIGHT_MAX = 1024 / 2;
-
     struct DirectionalLightCB {
         VECTOR3 pos;
         float	dummy;
         VECTOR4 diffuse;
         VECTOR4 specular;
     };
+
+    constexpr UINT LIGHT_MAX = 1024 / 2;
 
     struct PointLightCB {
         struct PointLight {
@@ -88,9 +88,16 @@ namespace Engine46 {
         int dummy3;
     };
 
-    class CConstantBufferBase {
-    protected:
+    constexpr UINT OFFSET_MAX = 15;
 
+    struct PostEffectCB {
+        VECTOR4 blurOffset[OFFSET_MAX];
+
+        UINT texWidth;
+        UINT texHeight;
+    };
+
+    class CConstantBufferBase {
     public:
         CConstantBufferBase();
         virtual ~CConstantBufferBase();
@@ -99,6 +106,7 @@ namespace Engine46 {
         virtual void CreateConstantBufferView() {};
         virtual void Update(void* srcData) {};
         virtual void Set(UINT slot) {};
+        virtual void SetCompute(UINT slot) {};
     };
 
 } // namespace

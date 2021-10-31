@@ -34,6 +34,9 @@ namespace Engine46 {
         VECTOR2 operator * (VECTOR2 f) {
             return VECTOR2(x * f.x, y * f.y);
         };
+        VECTOR2 operator * (float f) {
+            return VECTOR2(x * f, y * f);
+        };
         VECTOR2 operator / (VECTOR2 f) {
             return VECTOR2(x / f.x, y / f.y);
         };

@@ -54,12 +54,7 @@ namespace Engine46 {
         virtual void CreateIndexBuffer() {};
         virtual void Draw() {};
 
-        void ReserveVertex(int reserveSize);
-        void ReserveIndex(int reserveSize);
-
-        void AddVertexInfo(vertexInfo info) { m_vecVertexInfo.emplace_back(info); }
-
-        void AddIndex(const DWORD index) { m_vecIndexes.emplace_back(index); }
+        void CreateSpriteMesh();
 
         std::string GetMeshName() const { return m_meshName.c_str(); }
 

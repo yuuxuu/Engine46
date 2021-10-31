@@ -222,7 +222,6 @@ namespace Engine46 {
         D3D12_CPU_DESCRIPTOR_HANDLE handle) {
 
         m_pDevice->CreateRenderTargetView(pResource, pRtvDesc, handle);
-
     }
 
     // デプスステンシルビュー作成
@@ -250,10 +249,6 @@ namespace Engine46 {
         D3D12_CPU_DESCRIPTOR_HANDLE handle) {
 
         m_pDevice->CreateShaderResourceView(pResource, &srvDesc, handle);
-
-        //CRenderManager::Get()->GetGraphicsCommand()->ExecuteCommandList();
-        //
-        //CRenderManager::Get()->GetGraphicsCommand()->ResetCommandList();
     }
 
     // アンオーダードアクセスビュー作成

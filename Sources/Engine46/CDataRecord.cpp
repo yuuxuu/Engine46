@@ -39,7 +39,7 @@ namespace Engine46 {
 
     // コンストラクタ
     CStrDataRecord::CStrDataRecord(int offset, std::string& string) :
-        CDataRecordBase(DATA_TYPE::TYPE_STR, offset, string.size() + 1),
+        CDataRecordBase(DATA_TYPE::TYPE_STR, offset, (UINT)string.size() + 1),
         m_string(string)
     {}
 
@@ -118,7 +118,7 @@ namespace Engine46 {
     CBufDataRecord::CBufDataRecord(std::unique_ptr<BYTE[]>& pBuf, int& bufSize) :
         CDataRecordBase(DATA_TYPE::TYPE_BUF, 0, 0),
         m_pBuf(pBuf),
-        m_bufSize(bufSize)
+        m_byteSize(bufSize)
     {}
 
     // デストラクタ
@@ -127,14 +127,14 @@ namespace Engine46 {
 
     // データの書き込み
     void CBufDataRecord::WriteData(std::ofstream& ofs, char* p) {
-        ofs.write((char*)m_pBuf.get(), m_bufSize);
+        ofs.write((char*)m_pBuf.get(), m_byteSize);
     }
 
     // データの読み込み
     void CBufDataRecord::ReadData(std::ifstream& ifs, char* p) {
-        m_pBuf.reset(new BYTE[m_bufSize]);
+        m_pBuf.reset(new BYTE[m_byteSize]);
 
-        ifs.read((char*)m_pBuf.get(), m_bufSize);
+        ifs.read((char*)m_pBuf.get(), m_byteSize);
     }
 
 } // namespace

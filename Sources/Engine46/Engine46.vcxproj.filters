@@ -114,6 +114,9 @@
     <ClCompile Include="CSpotLight.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="CUnorderedAccessBuffer.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="math.h">
@@ -209,6 +212,9 @@
     <ClInclude Include="CSpotLight.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="CUnorderedAccessBuffer.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\..\Assets\Shader\HLSL\CPUParticle.hlsl">
@@ -242,6 +248,24 @@
       <Filter>リソース ファイル\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="..\..\Assets\Shader\HLSL\SpriteStencilDebug.hlsl">
+      <Filter>リソース ファイル\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Assets\Shader\HLSL\CS_HorizonalBlur.hlsl">
+      <Filter>リソース ファイル\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Assets\Shader\HLSL\CS_VerticalBlur.hlsl">
+      <Filter>リソース ファイル\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Assets\Shader\HLSL\PostEffect_Bloom.hlsl">
+      <Filter>リソース ファイル\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Assets\Shader\HLSL\PostEffect_Blur.hlsl">
+      <Filter>リソース ファイル\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Assets\Shader\HLSL\CS_LuminanceExtraction.hlsl">
+      <Filter>リソース ファイル\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Assets\Shader\HLSL\CS_ClearColor.hlsl">
       <Filter>リソース ファイル\HLSL</Filter>
     </FxCompile>
   </ItemGroup>

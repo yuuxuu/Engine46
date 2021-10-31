@@ -20,16 +20,6 @@ namespace Engine46 {
     class CDX12Device;
     class CDX12Command;
 
-    enum class MyRootSignature_01 {
-        CBV_WORLD,
-        CBV_MATERIAL,
-        CBV_CAMERA,
-        CBV_DirectionalLight,
-        CBV_PointLight,
-        CBV_SpotLight,
-        SRV_diffuse,
-    };
-
     const UINT STATIC_MAX = 4;
 
     class CDX12ShaderPackage : public CShaderPackage {
@@ -56,13 +46,15 @@ namespace Engine46 {
 
         void SetShader() override;
 
+        void SetSceneConstantBufferToShader(UINT startSlot) override;
+
         void CopyDescriptorHandle(D3D12_CPU_DESCRIPTOR_HANDLE srcHandle, UINT destIndex);
 
         void SetShaderByteCode(D3D12_GRAPHICS_PIPELINE_STATE_DESC& gpsDesc);
-        void SetRTVFormats(D3D12_GRAPHICS_PIPELINE_STATE_DESC& gpsDesc);
+        void SetRTVFormats(D3D12_GRAPHICS_PIPELINE_STATE_DESC& gpsDesc, std::string& shaderName);
         void SetDepthStencilState(D3D12_GRAPHICS_PIPELINE_STATE_DESC& gpsDesc);
         void SetRasterizerState(D3D12_GRAPHICS_PIPELINE_STATE_DESC& gpsDesc);
-        void SetBlendState(D3D12_GRAPHICS_PIPELINE_STATE_DESC& gpsDesc);
+        void SetBlendState(D3D12_GRAPHICS_PIPELINE_STATE_DESC& gpsDesc, std::string& shaderName);
 
         void SetDescriptorHeap(ID3D12DescriptorHeap* pDescriptorHeap) { this->pDescriptorHeap = pDescriptorHeap; }
     };

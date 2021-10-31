@@ -20,11 +20,15 @@ namespace Engine46 {
     class CDX12Device;
     class CDX12Command;
     class CDX12Texture;
+    class CDX12UnorderedAccessBuffer;
 
     class CDX12DeferredRenderig : public CRenderingBase {
     private:
         CDX12Device* pDX12Device;
         CDX12Command* pDX12Command;
+
+        std::unique_ptr<CDX12Texture>               m_pRenderTex;
+        D3D12_CPU_DESCRIPTOR_HANDLE                 m_rtvHandle;
 
         std::vector<std::unique_ptr<CDX12Texture>>  m_pVecRenderTex;
 
@@ -44,8 +48,14 @@ namespace Engine46 {
         void End() override;
 
         void Rendering(CSceneBase* pScene) override;
-        void DrawForSceneLighting(CSprite* pSprite) override;
+        void RenderingForSceneLighting(CSprite* pSprite) override;
+        void RenderingForPostEffect(CSceneBase* pScene) override;
+
         void DrawForRenderScene(CSprite* pSprite, UINT x, UINT y, UINT width, UINT height) override;
+
+        CDX12Texture* GetRenderTexture() const { return m_pRenderTex.get(); };
+
+        CDX12Texture* GetRenderTexture(DXGI_FORMAT format);
     };
 
 } // namespace

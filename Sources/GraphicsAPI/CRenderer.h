@@ -16,13 +16,13 @@
 #include "Engine46/math.h"
 #include "Engine46/CShaderPackage.h"
 #include "Engine46/CConstantBuffer.h"
+#include "Engine46/CUnorderedAccessBuffer.h"
 #include "Engine46/CSprite.h"
 
 namespace Engine46 {
 
     // 前方宣言
     class CMeshBase;
-    class CMaterialBase;
     class CTextureBase;
 
     class CRendererBase : public IRenderer {
@@ -50,6 +50,7 @@ namespace Engine46 {
         virtual bool Render(CSceneBase* pScene) override { return true; };
 
         virtual void CreateConstantBuffer(std::unique_ptr<CConstantBufferBase>& pConstantBuffer, UINT byteWidth) {};
+        virtual void CreateUnorderedAccessBuffer(std::unique_ptr<CUnorderedAccessBufferBase>& pUnorderedAccessBuffer, UINT byteWidth, UINT byteSize) {};
         virtual void CreateMesh(std::unique_ptr<CMeshBase>& pMesh, const char* meshName) {};
         virtual void CreateTexture(std::unique_ptr<CTextureBase>& pTexture, const char* textureName) {};
         virtual void CreateShader(std::unique_ptr<CShaderPackage>& pShaderPackage, const char* shaderName) {};

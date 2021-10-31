@@ -23,10 +23,10 @@ namespace Engine46 {
 
     class CDX12ForwardRendering : public CRenderingBase {
     private:
-        CDX12Device* pDX12Device;
-        CDX12Command* pDX12Command;
+        CDX12Device*                    pDX12Device;
+        CDX12Command*                   pDX12Command;
 
-        CDX12Texture* pDX12RenderTexture;
+        CDX12Texture*                   pDX12RenderTexture;
 
         ComPtr<ID3D12DescriptorHeap>    m_pRtvDescriptorHeap;
         D3D12_CPU_DESCRIPTOR_HANDLE	    m_rtvHandle;
@@ -44,7 +44,9 @@ namespace Engine46 {
         void End() override;
 
         void Rendering(CSceneBase* pScene) override;
-        void DrawForRenderScene(CSprite* pSprite, UINT x, UINT y, UINT width, UINT height) override;
+        void RenderingForRenderScene(CSprite* pSprite, UINT x, UINT y, UINT width, UINT height) override;
+
+        CDX12Texture* GetRenderTexture() const { return pDX12RenderTexture; }
     };
 
 } // namespace

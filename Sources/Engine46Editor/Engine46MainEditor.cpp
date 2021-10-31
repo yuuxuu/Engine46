@@ -41,7 +41,6 @@ Engine46MainEditor::Engine46MainEditor(QWidget* parent)
 
     // レンダーウェジット
     pRenderWidget = new QMyRenderWidget(this);
-    pRenderWidget->resize(QSize(1280, 720));
 
     ui.tabWidget->addTab(pRenderWidget, "RenderWidget");
 

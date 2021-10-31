@@ -143,7 +143,7 @@ namespace Engine46 {
     // レンダーターゲットビューを設定
     void CDX12Command::SetRenderTargetViews(std::vector<D3D12_CPU_DESCRIPTOR_HANDLE>& rtvHandles, D3D12_CPU_DESCRIPTOR_HANDLE* dsHandle) {
         if (!rtvHandles.empty()) {
-            m_pCommandList->OMSetRenderTargets(rtvHandles.size(), &rtvHandles[0], TRUE, dsHandle);
+            m_pCommandList->OMSetRenderTargets((UINT)rtvHandles.size(), &rtvHandles[0], TRUE, dsHandle);
         }
         else {
             m_pCommandList->OMSetRenderTargets(0, nullptr, TRUE, dsHandle);
@@ -174,9 +174,14 @@ namespace Engine46 {
         }
     }
 
-    // ルートシグネチャを設定
-    void CDX12Command::SetRootSignature(ID3D12RootSignature* pRootSignature) {
+    // グラフィクスルートシグネチャを設定
+    void CDX12Command::SetGraphicsRootSignature(ID3D12RootSignature* pRootSignature) {
         m_pCommandList->SetGraphicsRootSignature(pRootSignature);
+    }
+
+    // コンピュートルートシグネチャを設定
+    void CDX12Command::SetComputeRootSignature(ID3D12RootSignature* pRootSignature) {
+        m_pCommandList->SetComputeRootSignature(pRootSignature);
     }
 
     // パイプラインステートを設定
@@ -184,24 +189,36 @@ namespace Engine46 {
         m_pCommandList->SetPipelineState(pPipelineState);
     }
 
-    // ルートデスクリプターヒープテーブルを設定
-    void CDX12Command::SetRootDescriptorTable(UINT index, D3D12_GPU_DESCRIPTOR_HANDLE handle) {
+    // グラフィクスルートデスクリプターヒープテーブルを設定
+    void CDX12Command::SetGraphicsRootDescriptorTable(UINT index, D3D12_GPU_DESCRIPTOR_HANDLE handle) {
         m_pCommandList->SetGraphicsRootDescriptorTable(index, handle);
     }
 
-    // コンスタントバッファビューを設定
-    void CDX12Command::SetRootConstantBufferView(UINT index, D3D12_GPU_VIRTUAL_ADDRESS address) {
+    // コンピュートルートデスクリプターヒープテーブルを設定
+    void CDX12Command::SetComputeRootDescriptorTable(UINT index, D3D12_GPU_DESCRIPTOR_HANDLE handle) {
+        m_pCommandList->SetComputeRootDescriptorTable(index, handle);
+    }
+
+    // グラフィクスコンスタントバッファビューを設定
+    void CDX12Command::SetGraphicsRootConstantBufferView(UINT index, D3D12_GPU_VIRTUAL_ADDRESS address) {
         m_pCommandList->SetGraphicsRootConstantBufferView(index, address);
     }
 
-    // シェーダーリソースビューを設定
-    void CDX12Command::SetRootShaderResourceView(UINT index, D3D12_GPU_VIRTUAL_ADDRESS address) {
+    // グラフィクスシェーダーリソースビューを設定
+    void CDX12Command::SetGraphicsRootShaderResourceView(UINT index, D3D12_GPU_VIRTUAL_ADDRESS address) {
         m_pCommandList->SetGraphicsRootShaderResourceView(index, address);
     }
 
-    // アンオーダードアクセスビューを設定
-    void CDX12Command::SetRootUnorderdAccessView(UINT index, D3D12_GPU_VIRTUAL_ADDRESS address) {
+    // グラフィクスアンオーダードアクセスビューを設定
+    void CDX12Command::SetGraphicsRootUnorderdAccessView(UINT index, D3D12_GPU_VIRTUAL_ADDRESS address) {
         m_pCommandList->SetGraphicsRootUnorderedAccessView(index, address);
+    }
+
+    // ディスパッチ
+    void CDX12Command::Dispatch(UINT dispatchX, UINT dispatchY, UINT dispatchZ) {
+        m_pCommandList->Dispatch(dispatchX, dispatchY, dispatchZ);
+
+        WaitForPreviousFrame(m_pCommandQueue.Get());
     }
 
 } // namespace

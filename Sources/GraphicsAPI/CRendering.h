@@ -19,7 +19,7 @@ namespace Engine46 {
     class CSprite;
 
     static const DXGI_FORMAT RENDER_TARGET_FORMATS[] = {
-        DXGI_FORMAT_B8G8R8A8_UNORM,     // Diffuse
+        DXGI_FORMAT_R16G16B16A16_FLOAT, // Diffuse
         DXGI_FORMAT_R11G11B10_FLOAT,    // Specular
         DXGI_FORMAT_R16G16B16A16_FLOAT, // Normal
         DXGI_FORMAT_R16G16B16A16_FLOAT, // Position
@@ -29,7 +29,7 @@ namespace Engine46 {
 
     class CRenderingBase {
     protected:
-        std::unique_ptr<CTextureBase> m_pRenderTex;
+        std::unique_ptr<CTextureBase>   m_pRenderTex;
 
     public:
         CRenderingBase();
@@ -40,7 +40,10 @@ namespace Engine46 {
         virtual void End() {};
 
         virtual void Rendering(CSceneBase* pScene) {};
-        virtual void DrawForSceneLighting(CSprite* pSprite) {};
+        virtual void RenderingForRenderScene(CSprite* pSprite, UINT x, UINT y, UINT width, UINT height) {};
+        virtual void RenderingForSceneLighting(CSprite* pSprite) {};
+        virtual void RenderingForPostEffect(CSceneBase* pScene) {};
+
         virtual void DrawForRenderScene(CSprite* pSprite, UINT x, UINT y, UINT width, UINT height) {};
 
         CTextureBase* GetRenderTexture() const { return m_pRenderTex.get(); }

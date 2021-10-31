@@ -67,13 +67,13 @@ namespace Engine46 {
             dsvDesc.Texture2D.MipSlice = 0;
             dsvDesc.Flags = D3D12_DSV_FLAG_NONE;
 
-            std::unique_ptr<CDX12Texture> depthTexture;
-            pRenderer->CreateRenderTexture(depthTexture, rDesc, clearValue, TextureType::Depth);
+            std::unique_ptr<CDX12Texture> pDepthTexture;
+            pRenderer->CreateRenderTexture(pDepthTexture, rDesc, clearValue, TextureType::Depth);
+            pRenderer->CreateShaderResourceView(pDepthTexture.get());
+            pDX12Device->CreateDepthStencilView(pDepthTexture->GetResource(), &dsvDesc, m_dsvHandle);
 
-            pDX12Device->CreateDepthStencilView(depthTexture->GetResource(), &dsvDesc, m_dsvHandle);
-
-            pDX12DepthTexture = depthTexture.get();
-            m_pRenderTex = std::move(depthTexture);
+            pDX12DepthTexture = pDepthTexture.get();
+            m_pRenderTex = std::move(pDepthTexture);
         }
 
         return true;

@@ -13,7 +13,9 @@
  // コンストラクタ
 QMyRenderWidget::QMyRenderWidget(QWidget* parent) :
     QWidget(parent)
-{}
+{
+    resize(QSize(1280, 720));
+}
 
 // デストラクタ
 QMyRenderWidget::~QMyRenderWidget()

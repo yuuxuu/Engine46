@@ -12,6 +12,7 @@
 #include "CDX12Renderer.h"
 
 #include "Engine46/CRendererSystem.h"
+#include "Engine46/CLight.h"
 
 namespace Engine46 {
 
@@ -47,8 +48,8 @@ namespace Engine46 {
             rDesc.Width = width;
             rDesc.Height = height;
             rDesc.MipLevels = 1;
-            rDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
-            rDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
+            rDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
+            rDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET | D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
             rDesc.DepthOrArraySize = 1;
             rDesc.SampleDesc = { 1 , 0 };
             rDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
@@ -69,6 +70,8 @@ namespace Engine46 {
 
             std::unique_ptr<CDX12Texture> pRenderTex;
             pRenderer->CreateRenderTexture(pRenderTex, rDesc, clearValue);
+            pRenderer->CreateShaderResourceView(pRenderTex.get());
+            pRenderer->CreateUnorderedAccessBufferView(pRenderTex.get());
 
             pDX12Device->CreateRenderTargetView(pRenderTex->GetResource(), &rtvDesc, m_rtvHandle);
 
@@ -149,7 +152,7 @@ namespace Engine46 {
     }
 
     // 描画したシーン描画
-    void CDX12ForwardRendering::DrawForRenderScene(CSprite* pSprite, UINT x, UINT y, UINT width, UINT height) {
+    void CDX12ForwardRendering::RenderingForRenderScene(CSprite* pSprite, UINT x, UINT y, UINT width, UINT height) {
 
         if (!pSprite) return;
 

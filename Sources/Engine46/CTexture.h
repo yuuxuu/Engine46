@@ -15,8 +15,8 @@ namespace Engine46 {
     struct TextureData {
         std::unique_ptr<uint8_t[]>  pData;
 
-        size_t                      rowPitch;
-        size_t                      slicePitch;
+        UINT                        rowPitch;
+        UINT                        slicePitch;
 
         UINT                        width;
         UINT                        height;
@@ -58,8 +58,12 @@ namespace Engine46 {
         virtual void CreateTexture() {};
         virtual void CreateShaderResourceView() {};
         virtual void Set(UINT slot) {};
+        virtual void SetCompute(UINT slot) {};
 
         std::string GetTextureName() const { return m_textureName.c_str(); }
+
+        UINT GetTextureWidth() const { return m_textureData.width; }
+        UINT GetTextureHeight() const { return m_textureData.height; }
     };
 
 } // namespace

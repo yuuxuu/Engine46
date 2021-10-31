@@ -6,7 +6,6 @@
  */
 
 #include "CDX12ConstantBuffer.h"
-
 #include "CDX12Device.h"
 #include "CDX12Command.h"
 
@@ -16,7 +15,7 @@ namespace Engine46 {
     CDX12ConstantBuffer::CDX12ConstantBuffer(CDX12Device* pDevice, CDX12Command* pCommand) :
         pDX12Device(pDevice),
         pDX12Command(pCommand),
-        m_bufSize(0)
+        m_byteSize(0)
     {}
 
     // デストラクタ
@@ -52,7 +51,7 @@ namespace Engine46 {
             return;
         }
 
-        m_bufSize = byteWidth;
+        m_byteSize = byteWidth;
     }
 
     // コンスタントバッファビュー作成
@@ -67,7 +66,7 @@ namespace Engine46 {
 
         D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc = {};
 
-        cbvDesc.SizeInBytes = (m_bufSize + 0xff) & ~0xff;
+        cbvDesc.SizeInBytes = (m_byteSize + 0xff) & ~0xff;
         cbvDesc.BufferLocation = m_pCbResource->GetGPUVirtualAddress();
 
         m_cpuHandle = m_pCbDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
@@ -77,21 +76,36 @@ namespace Engine46 {
 
     // 更新
     void CDX12ConstantBuffer::Update(void* srcData) {
-        memcpy(m_mappedBuffer, srcData, m_bufSize);
+        memcpy(m_mappedBuffer, srcData, m_byteSize);
     }
 
     // コンスタントバッファをシェーダーへ設定
     void CDX12ConstantBuffer::Set(UINT slot) {
 
         if (m_gpuHandle.ptr != 0) {
-            pDX12Command->SetRootDescriptorTable(slot, m_gpuHandle);
+            pDX12Command->SetGraphicsRootDescriptorTable(slot, m_gpuHandle);
             return;
         }
 
         if (m_pCbDescriptorHeap) {
             //pDX12Command->SetDescriptorHeaps(m_pCbDescriptorHeap.Get());
 
-            //pDX12Command->SetRootDescriptorTable(slot, m_pCbDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+            //pDX12Command->SetGraphicsRootDescriptorTable(slot, m_pCbDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+        }
+    }
+
+    // コンスタントバッファをシェーダーへ設定
+    void CDX12ConstantBuffer::SetCompute(UINT slot) {
+
+        if (m_gpuHandle.ptr != 0) {
+            pDX12Command->SetComputeRootDescriptorTable(slot, m_gpuHandle);
+            return;
+        }
+
+        if (m_pCbDescriptorHeap) {
+            //pDX12Command->SetDescriptorHeaps(m_pCbDescriptorHeap.Get());
+
+            //pDX12Command->SetGraphicsRootDescriptorTable(slot, m_pCbDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
         }
     }
 
@@ -99,7 +113,7 @@ namespace Engine46 {
     void CDX12ConstantBuffer::CreateConstantBufferView(ID3D12DescriptorHeap* pDescriptorHeap, UINT heapIndex) {
         D3D12_CONSTANT_BUFFER_VIEW_DESC cbDesc = {};
 
-        cbDesc.SizeInBytes = (m_bufSize + 0xff) & ~0xff;
+        cbDesc.SizeInBytes = (m_byteSize + 0xff) & ~0xff;
         cbDesc.BufferLocation = m_pCbResource->GetGPUVirtualAddress();
 
         UINT heapSize = pDX12Device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);

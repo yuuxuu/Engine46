@@ -28,29 +28,32 @@ namespace Engine46 {
     {}
 
     // オブジェクト作成
-    CActorBase* CActorManager::CreateActor(int classType) {
+    CActorBase* CActorManager::CreateActor(int actorType) {
         std::unique_ptr<CActorBase> actor;
         RECT rect;
         std::string actorName;
 
-        switch ((ClassType)classType) {
-        case ClassType::Root:
+        switch ((ActorType)actorType) {
+        case ActorType::Root:
             actorName = "Root_" + std::to_string(m_classCount.rootCount++);
 
-            actor = std::make_unique<CActorBase>(classType, actorName.c_str(), Transform());
+            actor = std::make_unique<CActorBase>(actorType, actorName.c_str(), Transform());
             break;
-        case ClassType::Camera:
+        case ActorType::Camera:
             rect = pRenderer->GetWindowRect();
             actorName = "Camera_" + std::to_string(m_classCount.cameraCount++);
 
             actor = std::make_unique<CCamera>(actorName.c_str(), rect.w, rect.h);
             break;
-        case ClassType::Sprite:
+        case ActorType::Sprite:
             actorName = "Sprite_" + std::to_string(m_classCount.spriteCount++);
 
             actor = std::make_unique<CSprite>(actorName.c_str());
+            actor->SetMesh("SpriteMesh_" + std::to_string(m_classCount.spriteCount++));
+            actor->SetMaterial("SpriteMaterial_" + std::to_string(m_classCount.spriteCount++));
+            actor->InitializeResource(pRenderer);
             break;
-        case ClassType::Light:
+        case ActorType::Light:
             return nullptr;
         }
 
@@ -92,6 +95,12 @@ namespace Engine46 {
         light->SetLightType((LightType)lightType);
         light->SetActorID(m_classCount.allCount++);
         light->SetLightID(m_classCount.lightCount++);
+
+        light->SetMesh("LightMesh");
+        light->SetMaterial("LightMaterial_" + std::to_string(m_classCount.lightCount));
+        light->SetTexture("particle.png");
+        light->SetShaderPackage("CPUParticle.hlsl");
+        light->InitializeResource(pRenderer);
 
         light->CActorBase::Initialize();
 

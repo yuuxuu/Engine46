@@ -24,6 +24,7 @@ namespace Engine46 {
         void InitializeResource(CRendererBase* pRenderer) override;
 
         void Update() override;
+        void Draw() override;
     };
 
 } // namespace

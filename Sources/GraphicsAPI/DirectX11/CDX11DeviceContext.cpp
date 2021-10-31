@@ -58,7 +58,7 @@ namespace Engine46 {
 
     // レンダーターゲットビューを複数設定
     void CDX11DeviceContext::SetRenderTargetViews(std::vector<ID3D11RenderTargetView*>& vecRtv, ID3D11DepthStencilView* pDsv) {
-        m_pDeviceContext->OMSetRenderTargets(vecRtv.size(), &vecRtv[0], pDsv);
+        m_pDeviceContext->OMSetRenderTargets((UINT)vecRtv.size(), &vecRtv[0], pDsv);
     }
 
     // バーテックスシェーダーを設定

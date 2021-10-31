@@ -13,13 +13,13 @@ namespace Engine46 {
     // コンストラクタ
     CShaderBase::CShaderBase() :
         m_shaderName(),
-        m_bufSize(0),
+        m_byteSize(0),
         m_shaderType(SHADER_TYPE::TYPE_NONE)
     {}
 
     // コンストラクタ
     CShaderBase::CShaderBase(const char* name, ComPtr<ID3DBlob>& pBlob, SHADER_TYPE type) :
-        m_bufSize(0),
+        m_byteSize(0),
         m_shaderName(name),
         m_shaderType(type)
     {
@@ -41,8 +41,8 @@ namespace Engine46 {
 
         vecDataRecord.emplace_back(std::make_unique<CDataRecordBase>(offsetof(CShaderBase, m_shaderType), sizeof(m_shaderType)));
         vecDataRecord.emplace_back(std::make_unique<CStrDataRecord>(offsetof(CShaderBase, m_shaderName), m_shaderName));
-        vecDataRecord.emplace_back(std::make_unique<CDataRecordBase>(offsetof(CShaderBase, m_bufSize), sizeof(m_bufSize)));
-        vecDataRecord.emplace_back(std::make_unique<CBufDataRecord>(m_pBuf, m_bufSize));
+        vecDataRecord.emplace_back(std::make_unique<CDataRecordBase>(offsetof(CShaderBase, m_byteSize), sizeof(m_byteSize)));
+        vecDataRecord.emplace_back(std::make_unique<CBufDataRecord>(m_pBuf, m_byteSize));
     }
 
     // シェーダーの保存
@@ -65,11 +65,11 @@ namespace Engine46 {
 
     // データを設定
     void CShaderBase::SetData(ComPtr<ID3DBlob>& pBlob) {
-        m_bufSize = pBlob->GetBufferSize();
-        m_pBuf.reset(new BYTE[m_bufSize]);
+        m_byteSize = (int)pBlob->GetBufferSize();
+        m_pBuf.reset(new BYTE[m_byteSize]);
 
         char* p = (char*)pBlob->GetBufferPointer();
-        std::memcpy(m_pBuf.get(), p, m_bufSize);
+        std::memcpy(m_pBuf.get(), p, m_byteSize);
 
         m_pBlob = pBlob;
     }

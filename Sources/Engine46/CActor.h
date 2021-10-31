@@ -24,8 +24,9 @@ namespace Engine46 {
     class CTextureBase;
     class CShaderPackage;
     class CInput;
+    class CUnorderedAccessBufferBase;
 
-    enum class ClassType {
+    enum class ActorType {
         Root,
         Camera,
         Sprite,
@@ -52,9 +53,9 @@ namespace Engine46 {
 
         std::unique_ptr<CConstantBufferBase>    m_pWorldConstantBuffer;
 
-        CInput* pInput;
+        CInput*                                 pInput;
 
-        CActorBase* pParentActor;
+        CActorBase*                             pParentActor;
         int                                     m_parentActorID;
 
         std::list<CActorBase*>                  pChildActorList;
@@ -62,7 +63,7 @@ namespace Engine46 {
 
     public:
         CActorBase();
-        CActorBase(const UINT classID, const char* actorName, const Transform transform);
+        CActorBase(const UINT classID, const std::string& actorName, const Transform transform);
         virtual ~CActorBase();
 
         virtual void Initialize() override;
@@ -72,23 +73,25 @@ namespace Engine46 {
         virtual bool Save(std::ofstream& ofs) override;
         virtual bool Load(std::ifstream& ifs) override;
 
-        virtual void InitializeResource(CRendererBase* pRenderer) {};
+        virtual void InitializeResource(CRendererBase* pRenderer);
 
+        void UpdateWorldConstantBuffer(void* pData);
         void SetWorldConstantBuffer(std::unique_ptr<CConstantBufferBase>& pConstantBuffer);
 
+        CMeshBase* GetMesh() const { return pMesh; }
         void SetMesh(CMeshBase* pMesh);
-        void SetMesh(const char* meshName);
+        void SetMesh(const std::string& meshName);
 
         CMaterialBase* GetMaterial() const { return pMaterial; }
         void SetMaterial(CMaterialBase* pMaterial);
-        void SetMaterial(const char* materialName);
+        void SetMaterial(const std::string& materialName);
 
         void SetTexture(CTextureBase* pTex);
-        void SetTexture(const char* textureName);
+        void SetTexture(const std::string& textureName);
 
         CShaderPackage* GetShaderPackage() const { return pShaderPackage; }
         void SetShaderPackage(CShaderPackage* pShaderPackage);
-        void SetShaderPackage(const char* shaderPackageName);
+        void SetShaderPackage(const std::string& shaderPackageName);
 
         void SetInput(CInput* pInput);
 
@@ -123,6 +126,7 @@ namespace Engine46 {
         VECTOR3 GetScale() const { return m_transform.scale; }
 
         Matrix GetWorldMatrix();
+        Matrix GetBillboradMatrix();
 
         VECTOR3 GetDirectionVector();
 

@@ -13,26 +13,26 @@
 #include "math.h"
 #include "CTexture.h"
 #include "CConstantBuffer.h"
+#include "CUnorderedAccessBuffer.h"
 
 namespace Engine46 {
 
     class CMaterialBase {
     protected:
-        CTextureBase* pTexture;
-        std::vector<CTextureBase*>              pVecRenderTexture;
+        CTextureBase*                               pTexture;                                                  
 
-        std::unique_ptr<CConstantBufferBase>    m_pMaterialConstantBuffer;
+        std::unique_ptr<CConstantBufferBase>        m_pMaterialConstantBuffer;
 
-        VECTOR4                                 m_diffuse;
-        VECTOR4	                                m_specular;
-        VECTOR4                                 m_ambient;
-        VECTOR4                                 m_emissive;
+        VECTOR4                                     m_diffuse;
+        VECTOR4	                                    m_specular;
+        VECTOR4                                     m_ambient;
+        VECTOR4                                     m_emissive;
 
-        int                                     m_materialID;
+        int                                         m_materialID;
 
-        std::string                             m_materialName;
+        std::string                                 m_materialName;
 
-        bool                                    m_isInitialize;
+        bool                                        m_isInitialize;
 
     public:
         CMaterialBase();
@@ -52,8 +52,6 @@ namespace Engine46 {
         CConstantBufferBase* GetMaterialConstantBuffer() const { return m_pMaterialConstantBuffer.get(); }
 
         void SetTexture(CTextureBase* pTexture) { this->pTexture = pTexture; }
-
-        void AddRenderTexture(CTextureBase* pTexture) { pVecRenderTexture.emplace_back(pTexture); };
 
         std::string GetMaterialName() const { return m_materialName.c_str(); }
 

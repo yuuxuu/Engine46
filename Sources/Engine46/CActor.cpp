@@ -8,27 +8,22 @@
 #include "CActor.h"
 #include "CGameSystem.h"
 #include "CDataRecord.h"
-#include "CConstantBuffer.h"
 #include "CMesh.h"
 #include "CMaterial.h"
-#include "CTexture.h"
-#include "CActorManager.h"
 #include "CMaterialManager.h"
 #include "CMeshManager.h"
-#include "CShaderPackage.h"
 #include "CShaderManager.h"
 #include "CTextureManager.h"
 #include "CRendererSystem.h"
+#include "CCamera.h"
 
-#include "GraphicsAPI/DirectX12/CDX12Renderer.h"
-#include "GraphicsAPI/DirectX12/CDX12ConstantBuffer.h"
-#include "GraphicsAPI/DirectX12/CDX12ShaderPackage.h"
+#include "GraphicsAPI/CRenderer.h"
 
 namespace Engine46 {
 
     // コンストラクタ
     CActorBase::CActorBase() :
-        m_classID((int)ClassType::Root),
+        m_classID((int)ActorType::Root),
         m_actorID(0),
         m_actorName("Actor_" + std::to_string(m_actorID)),
         m_transform(Transform()),
@@ -39,7 +34,7 @@ namespace Engine46 {
     }
 
     // コンストラクタ
-    CActorBase::CActorBase(const UINT classID, const char* actorName, const Transform transform) :
+    CActorBase::CActorBase(const UINT classID, const std::string& actorName, const Transform transform) :
         m_classID(classID),
         m_actorID(0),
         m_actorName(actorName),
@@ -77,28 +72,22 @@ namespace Engine46 {
     // 描画
     void CActorBase::Draw() {
 
-        if (!pShaderPackage) return;
+        if (pShaderPackage) {
+            pShaderPackage->SetShader();
+            pShaderPackage->SetSceneConstantBufferToShader((UINT)MyRS_01::CBV_CAMERA);
 
-        pShaderPackage->SetShader();
+            if (m_pWorldConstantBuffer) {
+                m_pWorldConstantBuffer->Set((UINT)CB_TYPE::WORLD);
+            }
 
-        if (m_pWorldConstantBuffer) {
-            Matrix matW = GetWorldMatrix();
-            matW.dx_m = DirectX::XMMatrixTranspose(matW.dx_m);
+            if (pMaterial) {
+                pMaterial->Update();
+                pMaterial->Set((UINT)CB_TYPE::MATERIAL);
+            }
 
-            worldCB cb = {
-                matW,
-            };
-
-            m_pWorldConstantBuffer->Update(&cb);
-            m_pWorldConstantBuffer->Set((UINT)CB_TYPE::WORLD);
-        }
-
-        if (pMaterial) {
-            pMaterial->Set((UINT)CB_TYPE::MATERIAL);
-        }
-
-        if (pMesh) {
-            pMesh->Draw();
+            if (pMesh) {
+                pMesh->Draw();
+            }
         }
 
         for (auto& chiled : pChildActorList) {
@@ -126,6 +115,29 @@ namespace Engine46 {
         return true;
     }
 
+    // リソースの初期化
+    void CActorBase::InitializeResource(CRendererBase* pRenderer) {
+        if (pRenderer) {
+            std::unique_ptr<CConstantBufferBase> pConstantBuffer;
+            pRenderer->CreateConstantBuffer(pConstantBuffer, sizeof(worldCB));
+            SetWorldConstantBuffer(pConstantBuffer);
+
+            if (pMaterial && !pMaterial->IsInitialize()) {
+                std::unique_ptr<CConstantBufferBase> pMaterialConstantBuffer;
+                pRenderer->CreateConstantBuffer(pMaterialConstantBuffer, sizeof(materialCB));
+                pMaterial->SetMaterialConstantBuffer(pMaterialConstantBuffer);
+            }
+        }
+    }
+
+    // コンスタントバッファを更新
+    void CActorBase::UpdateWorldConstantBuffer(void* pData) {
+        if (m_pWorldConstantBuffer) {
+            m_pWorldConstantBuffer->Update(pData);
+            m_pWorldConstantBuffer->Set((UINT)CB_TYPE::WORLD);
+        }
+    }
+
     // コンスタントバッファを設定
     void CActorBase::SetWorldConstantBuffer(std::unique_ptr<CConstantBufferBase>& pConstantBuffer) {
         if (pConstantBuffer) {
@@ -141,9 +153,9 @@ namespace Engine46 {
     }
 
     // メッシュを設定
-    void CActorBase::SetMesh(const char* meshName) {
+    void CActorBase::SetMesh(const std::string& meshName) {
         CMeshManager* meshManager = CGameSystem::GetGameSystem().GetMeshManager();
-        meshManager->SetMeshToActor(this, meshName);
+        meshManager->SetMeshToActor(this, meshName.c_str());
     }
 
     // マテリアルを設定
@@ -154,9 +166,9 @@ namespace Engine46 {
     }
 
     // マテリアルを設定
-    void CActorBase::SetMaterial(const char* materialName) {
+    void CActorBase::SetMaterial(const std::string& materialName) {
         CMaterialManager* materialManager = CGameSystem::GetGameSystem().GetMaterialManager();
-        materialManager->SetMaterialToActor(this, materialName);
+        materialManager->SetMaterialToActor(this, materialName.c_str());
     }
 
     // マテリアルにテクスチャを設定
@@ -167,9 +179,9 @@ namespace Engine46 {
     }
 
     // マテリアルにテクスチャを設定
-    void CActorBase::SetTexture(const char* textureName) {
+    void CActorBase::SetTexture(const std::string& textureName) {
         CTextureManager* textureManager = CGameSystem::GetGameSystem().GetTextureManager();
-        textureManager->SetTextureToActor(this, textureName);
+        textureManager->SetTextureToActor(this, textureName.c_str());
     }
 
     // シェーダーパッケージを設定
@@ -180,9 +192,9 @@ namespace Engine46 {
     }
 
     // シェーダーパッケージを設定
-    void CActorBase::SetShaderPackage(const char* shaderPackageName) {
+    void CActorBase::SetShaderPackage(const std::string& shaderPackageName) {
         CShaderManager* shaderManager = CGameSystem::GetGameSystem().GetShaderManager();
-        shaderManager->SetShaderPackageToActor(this, shaderPackageName);
+        shaderManager->SetShaderPackageToActor(this, shaderPackageName.c_str());
     }
 
     // インプットを設定
@@ -252,6 +264,29 @@ namespace Engine46 {
 
         Matrix matRotate;
         matRotate.dx_m = DirectX::XMMatrixRotationRollPitchYaw(m_transform.rotation.x, m_transform.rotation.y, m_transform.rotation.z);
+
+        Matrix matTrans;
+        matTrans.dx_m = DirectX::XMMatrixTranslation(m_transform.pos.x, m_transform.pos.y, m_transform.pos.z);
+
+        Matrix matWorld;
+        matWorld.dx_m = matScale.dx_m * matRotate.dx_m * matTrans.dx_m;
+
+        return matWorld;
+    }
+
+    Matrix CActorBase::GetBillboradMatrix() {
+        Matrix matScale;
+        matScale.dx_m = DirectX::XMMatrixScaling(m_transform.scale.x, m_transform.scale.y, m_transform.scale.z);
+
+        Matrix matRotate;
+
+        CSceneBase* pScene = CRendererSystem::GetRendererSystem().GetRenderScene();
+        if (pScene) {
+            CCamera* pCamera = pScene->GetCameraFromScene();
+            if (pCamera) {
+                matRotate = pCamera->GetInvViewMatrix();
+            }
+        }
 
         Matrix matTrans;
         matTrans.dx_m = DirectX::XMMatrixTranslation(m_transform.pos.x, m_transform.pos.y, m_transform.pos.z);

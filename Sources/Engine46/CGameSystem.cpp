@@ -12,6 +12,7 @@
 #include "CActor.h"
 #include "CLight.h"
 #include "CScene.h"
+#include "CMaterial.h"
 
 #include "CSceneManager.h"
 #include "CActorManager.h"
@@ -70,35 +71,38 @@ namespace Engine46 {
         CRendererSystem::GetRendererSystem().SetRenderScene(pScene);
 
         {
-            CActorBase* pRoot = m_pActorManager->CreateActor((int)ClassType::Root);
+            CActorBase* pRoot = m_pActorManager->CreateActor((int)ActorType::Root);
             pScene->SetRootActor(pRoot);
 
-            CActorBase* pCamera = m_pActorManager->CreateActor((int)ClassType::Camera);
+            CActorBase* pCamera = m_pActorManager->CreateActor((int)ActorType::Camera);
             pCamera->SetInput(m_pInput.get());
             pScene->AddActorToScene(pCamera);
 
-            CActorBase* pSprite = m_pActorManager->CreateActor((int)ClassType::Sprite);
-            pSprite->SetMesh("SpriteMesh");
-            pSprite->SetMaterial("SpriteMaterial");
+            CActorBase* pSprite = m_pActorManager->CreateActor((int)ActorType::Sprite);
             pSprite->SetTexture("E3g6p9QUYAMTSbT.jpg");
             pSprite->SetShaderPackage("Model.hlsl");
-            pSprite->InitializeResource(pRenderer);
             pScene->AddActorToScene(pSprite);
 
             CLight* pDirectionalLight = m_pActorManager->CreateLight((int)LightType::Directional);
-            pDirectionalLight->SetMesh("LightMesh");
-            pDirectionalLight->SetMaterial("LightMaterial");
-            pDirectionalLight->SetTexture("particle.png");
-            pDirectionalLight->SetShaderPackage("CPUParticle.hlsl");
-            pDirectionalLight->InitializeResource(pRenderer);
+            pDirectionalLight->SetPos(VECTOR3(0.0f, 0.0f, 1000.0f));
             pScene->AddActorToScene(pDirectionalLight);
 
             CLight* pPointLight = m_pActorManager->CreateLight((int)LightType::Point);
-            pPointLight->SetMesh("LightMesh");
-            pPointLight->SetMaterial("LightMaterial");
-            pPointLight->SetTexture("particle.png");
-            pPointLight->SetShaderPackage("CPUParticle.hlsl");
-            pPointLight->InitializeResource(pRenderer);
+            pPointLight->SetPos(VECTOR3(0.0f, 0.0f, 10.0f));
+            pPointLight->GetMaterial()->SetDiffuse(VECTOR4(1.0f, 0.0f, 0.0f, 1.0f));
+            pPointLight->SetLightDiffuse(VECTOR4(1.0f, 0.0f, 0.0f, 1.0f));
+            pScene->AddActorToScene(pPointLight);
+
+            pPointLight = m_pActorManager->CreateLight((int)LightType::Point);
+            pPointLight->SetPos(VECTOR3(5.0f, 0.0f, 10.0f));
+            pPointLight->GetMaterial()->SetDiffuse(VECTOR4(0.0f, 1.0f, 0.0f, 1.0f));
+            pPointLight->SetLightDiffuse(VECTOR4(0.0f, 1.0f, 0.0f, 1.0f));
+            pScene->AddActorToScene(pPointLight);
+
+            pPointLight = m_pActorManager->CreateLight((int)LightType::Point);
+            pPointLight->SetPos(VECTOR3(-5.0f, 0.0f, 10.0f));
+            pPointLight->GetMaterial()->SetDiffuse(VECTOR4(0.0f, 0.0f, 1.0f, 1.0f));
+            pPointLight->SetLightDiffuse(VECTOR4(0.0f, 0.0f, 1.0f, 1.0f));
             pScene->AddActorToScene(pPointLight);
         }
 

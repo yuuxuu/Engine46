@@ -65,7 +65,7 @@ namespace Engine46 {
         ofs.write((char*)&strSize, sizeof(int));
         ofs.write((char*)&m_PakageName, strSize);
 
-        int packageSize = m_pVecShader.size();
+        int packageSize = (UINT)m_pVecShader.size();
         ofs.write((char*)&packageSize, sizeof(int));
 
         for (const auto& shader : m_pVecShader) {

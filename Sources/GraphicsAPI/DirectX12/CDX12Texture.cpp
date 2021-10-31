@@ -96,14 +96,16 @@ namespace Engine46 {
         srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
         srvDesc.Texture2D.MipLevels = 1;
 
-        pDX12Device->CreateShaderResourceView(m_pTextureResource.Get(), srvDesc, m_SrvDescriptorHeap->GetCPUDescriptorHandleForHeapStart());
+        m_srvCpuHandle = m_SrvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
+
+        pDX12Device->CreateShaderResourceView(m_pTextureResource.Get(), srvDesc, m_srvCpuHandle);
     }
 
     // テクスチャをシェーダーへ設定
     void CDX12Texture::Set(UINT slot) {
 
-        if (m_gpuHandle.ptr != 0) {
-            pDX12Command->SetRootDescriptorTable(slot + (UINT)MyRootSignature_01::SRV_diffuse, m_gpuHandle);
+        if (m_srvGpuHandle.ptr != 0) {
+            pDX12Command->SetGraphicsRootDescriptorTable(slot, m_srvGpuHandle);
             return;
         }
 
@@ -114,34 +116,49 @@ namespace Engine46 {
         }
     }
 
+    // テクスチャをシェーダーへ設定
+    void CDX12Texture::SetCompute(UINT slot) {
+        if (m_srvGpuHandle.ptr != 0) {
+            pDX12Command->SetComputeRootDescriptorTable(slot, m_uavGpuHandle);
+            return;
+        }
+    }
+
     // テクスチャ作成
-    void CDX12Texture::CreateTexture(D3D12_RESOURCE_DESC& rDesc, D3D12_CLEAR_VALUE clearValue) {
+    void CDX12Texture::CreateTexture(D3D12_RESOURCE_DESC& rDesc, D3D12_HEAP_PROPERTIES& prop, D3D12_CLEAR_VALUE clearValue, D3D12_RESOURCE_STATES states) {
 
-        CD3DX12_HEAP_PROPERTIES prop = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
+        pDX12Device->CreateResource(m_pTextureResource, prop, rDesc, &clearValue, states);
 
-        pDX12Device->CreateResource(m_pTextureResource, prop, rDesc, &clearValue);
-
+        m_textureData.width = (UINT)rDesc.Width;
+        m_textureData.height = (UINT)rDesc.Height;
         m_textureData.format = rDesc.Format;
     }
 
     // デプステクスチャ作成
-    void CDX12Texture::CreateDepthTexture(D3D12_RESOURCE_DESC& rDesc, D3D12_CLEAR_VALUE clearValue) {
+    void CDX12Texture::CreateDepthTexture(D3D12_RESOURCE_DESC& rDesc, D3D12_HEAP_PROPERTIES& prop, D3D12_CLEAR_VALUE clearValue) {
 
-        CreateTexture(rDesc, clearValue);
+        CreateTexture(rDesc, prop, clearValue);
 
+        m_textureData.width = (UINT)rDesc.Width;
+        m_textureData.height = (UINT)rDesc.Height;
         m_textureData.format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
     }
 
     // ステンシルテクスチャ作成
-    void CDX12Texture::CreateStencilTexture(D3D12_RESOURCE_DESC& rDesc, D3D12_CLEAR_VALUE clearValue) {
+    void CDX12Texture::CreateStencilTexture(D3D12_RESOURCE_DESC& rDesc, D3D12_HEAP_PROPERTIES& prop, D3D12_CLEAR_VALUE clearValue) {
 
-        CreateTexture(rDesc, clearValue);
+        CreateTexture(rDesc, prop, clearValue);
 
+        m_textureData.width = (UINT)rDesc.Width;
+        m_textureData.height = (UINT)rDesc.Height;
         m_textureData.format = DXGI_FORMAT_X24_TYPELESS_G8_UINT;
     }
 
     // シェーダーリソースビュー作成
     void CDX12Texture::CreateShaderResourceView(ID3D12DescriptorHeap* pDescriptorHeap, UINT heapIndex) {
+
+        if (!m_pTextureResource) return;
+
         D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
 
         srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
@@ -151,13 +168,36 @@ namespace Engine46 {
 
         UINT heapSize = pDX12Device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
-        m_cpuHandle = pDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
-        m_cpuHandle.ptr += heapSize * heapIndex;
+        m_srvCpuHandle = pDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
+        m_srvCpuHandle.ptr += heapSize * heapIndex;
 
-        m_gpuHandle = pDescriptorHeap->GetGPUDescriptorHandleForHeapStart();
-        m_gpuHandle.ptr += (UINT64)heapSize * heapIndex;
+        m_srvGpuHandle = pDescriptorHeap->GetGPUDescriptorHandleForHeapStart();
+        m_srvGpuHandle.ptr += (UINT64)heapSize * heapIndex;
 
-        pDX12Device->CreateShaderResourceView(m_pTextureResource.Get(), srvDesc, m_cpuHandle);
+        pDX12Device->CreateShaderResourceView(m_pTextureResource.Get(), srvDesc, m_srvCpuHandle);
+    }
+
+    // アンオーダードアクセスバッファ作成
+    void CDX12Texture::CreateUnorderedAccessBufferView(ID3D12DescriptorHeap* pDescriptorHeap, UINT heapIndex) {
+        
+        if (!m_pTextureResource) return;
+        
+        D3D12_UNORDERED_ACCESS_VIEW_DESC uavDesc = {};
+
+        uavDesc.Format = DXGI_FORMAT_UNKNOWN;
+        uavDesc.ViewDimension = D3D12_UAV_DIMENSION_TEXTURE2D;
+        uavDesc.Buffer.NumElements = 0;
+        uavDesc.Buffer.StructureByteStride = 0;
+
+        UINT heapSize = pDX12Device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+
+        m_uavCpuHandle = pDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
+        m_uavCpuHandle.ptr += heapSize * heapIndex;
+
+        m_uavGpuHandle = pDescriptorHeap->GetGPUDescriptorHandleForHeapStart();
+        m_uavGpuHandle.ptr += (UINT64)heapSize * heapIndex;
+
+        pDX12Device->CreateUnorderedAccessView(m_pTextureResource.Get(), uavDesc, m_uavCpuHandle);
     }
 
 } // namespace

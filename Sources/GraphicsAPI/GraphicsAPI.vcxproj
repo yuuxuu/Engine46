@@ -31,6 +31,7 @@
     <ClInclude Include="DirectX11\CDX11Texture.h" />
     <ClInclude Include="DirectX12\CDX12Command.h" />
     <ClInclude Include="DirectX12\CDX12ConstantBuffer.h" />
+    <ClInclude Include="DirectX12\CDX12UnorderedAccessBuffer.h" />
     <ClInclude Include="DirectX12\CDX12DeferredRenderig.h" />
     <ClInclude Include="DirectX12\CDX12DepthRendering.h" />
     <ClInclude Include="DirectX12\CDX12Device.h" />
@@ -64,6 +65,7 @@
     <ClCompile Include="DirectX11\CDX11Texture.cpp" />
     <ClCompile Include="DirectX12\CDX12Command.cpp" />
     <ClCompile Include="DirectX12\CDX12ConstantBuffer.cpp" />
+    <ClCompile Include="DirectX12\CDX12UnorderedAccessBuffer.cpp" />
     <ClCompile Include="DirectX12\CDX12DeferredRenderig.cpp" />
     <ClCompile Include="DirectX12\CDX12DepthRendering.cpp" />
     <ClCompile Include="DirectX12\CDX12Device.cpp" />

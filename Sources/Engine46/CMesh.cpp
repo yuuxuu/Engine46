@@ -36,14 +36,57 @@ namespace Engine46 {
         VecClear(m_vecIndexes);
     }
 
-    // 頂点配列の初期化
-    void CMeshBase::ReserveVertex(int reserveSize) {
-        m_vecVertexInfo.reserve(reserveSize);
-    }
+    // スプライトメッシュ作成
+    void CMeshBase::CreateSpriteMesh() {
 
-    // インデックス配列の初期化
-    void CMeshBase::ReserveIndex(int reserveSize) {
-        m_vecIndexes.reserve(reserveSize);
+        if (m_isInitialize) return;
+
+        m_vecVertexInfo.reserve(4);
+
+        vertexInfo info = {
+            VECTOR3(-1.0f, 1.0f, 0.0f),
+            VECTOR4(1.0f, 1.0f, 1.0f, 1.0f),
+            VECTOR2(0.0f, 0.0f),
+            VECTOR3(0.0f, 0.0f, 1.0f),
+        };
+        m_vecVertexInfo.emplace_back(info);
+
+        info = {
+            VECTOR3(1.0f, 1.0f, 0.0f),
+            VECTOR4(1.0f, 1.0f, 1.0f, 1.0f),
+            VECTOR2(1.0f, 0.0f),
+            VECTOR3(0.0f, 0.0f, 1.0f),
+        };
+        m_vecVertexInfo.emplace_back(info);
+
+        info = {
+            VECTOR3(-1.0f, -1.0f, 0.0f),
+            VECTOR4(1.0f, 1.0f, 1.0f, 1.0f),
+            VECTOR2(0.0f, 1.0f),
+            VECTOR3(0.0f, 0.0f, 1.0f),
+        };
+        m_vecVertexInfo.emplace_back(info);
+
+        info = {
+            VECTOR3(1.0f, -1.0f, 0.0f),
+            VECTOR4(1.0f, 1.0f, 1.0f, 1.0f),
+            VECTOR2(1.0f, 1.0f),
+            VECTOR3(0.0f, 0.0f, 1.0f),
+        };
+        m_vecVertexInfo.emplace_back(info);
+
+        CreateVertexBuffer(PRIMITIVE_TOPOLOGY_TYPE::TRIANGLESTRIP);
+
+        m_vecIndexes.reserve(6);
+
+        m_vecIndexes.emplace_back(0);
+        m_vecIndexes.emplace_back(1);
+        m_vecIndexes.emplace_back(3);
+        m_vecIndexes.emplace_back(0);
+        m_vecIndexes.emplace_back(3);
+        m_vecIndexes.emplace_back(2);
+
+        CreateIndexBuffer();
     }
 
 } // namespace

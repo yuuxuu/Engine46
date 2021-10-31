@@ -33,7 +33,7 @@ namespace Engine46 {
         D3D12_CPU_DESCRIPTOR_HANDLE     m_cpuHandle;
         D3D12_GPU_DESCRIPTOR_HANDLE	    m_gpuHandle;
 
-        UINT                            m_bufSize;
+        UINT                            m_byteSize;
 
     public:
         CDX12ConstantBuffer(CDX12Device* pDevice, CDX12Command* pCommand);
@@ -43,6 +43,7 @@ namespace Engine46 {
         void CreateConstantBufferView() override;
         void Update(void* srcData) override;
         void Set(UINT slot) override;
+        void SetCompute(UINT slot) override;
 
         void CreateConstantBufferView(ID3D12DescriptorHeap* pDescriptorHeap, UINT heapIndex);
 

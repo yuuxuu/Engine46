@@ -65,17 +65,21 @@ namespace Engine46 {
 
         void SetDescriptorHeaps(ID3D12DescriptorHeap* pDescriptorHeap);
 
-        void SetRootSignature(ID3D12RootSignature* pRootSignature);
+        void SetGraphicsRootSignature(ID3D12RootSignature* pRootSignature);
+        void SetComputeRootSignature(ID3D12RootSignature* pRootSignature);
 
         void SetPipelineState(ID3D12PipelineState* pPipelineState);
 
-        void SetRootDescriptorTable(UINT index, D3D12_GPU_DESCRIPTOR_HANDLE handle);
+        void SetGraphicsRootDescriptorTable(UINT index, D3D12_GPU_DESCRIPTOR_HANDLE handle);
+        void SetComputeRootDescriptorTable(UINT index, D3D12_GPU_DESCRIPTOR_HANDLE handle);
 
-        void SetRootConstantBufferView(UINT index, D3D12_GPU_VIRTUAL_ADDRESS address);
+        void SetGraphicsRootConstantBufferView(UINT index, D3D12_GPU_VIRTUAL_ADDRESS address);
 
-        void SetRootShaderResourceView(UINT index, D3D12_GPU_VIRTUAL_ADDRESS address);
+        void SetGraphicsRootShaderResourceView(UINT index, D3D12_GPU_VIRTUAL_ADDRESS address);
 
-        void SetRootUnorderdAccessView(UINT index, D3D12_GPU_VIRTUAL_ADDRESS address);
+        void SetGraphicsRootUnorderdAccessView(UINT index, D3D12_GPU_VIRTUAL_ADDRESS address);
+
+        void Dispatch(UINT dispatchX, UINT dispatchY, UINT dispatchZ);
 
         ID3D12GraphicsCommandList* GetCommandList() const { return m_pCommandList.Get(); }
         ID3D12CommandQueue* GetCommandQueue() const { return m_pCommandQueue.Get(); }

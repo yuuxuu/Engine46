@@ -73,7 +73,7 @@ namespace Engine46 {
 
         if (!ofs.is_open()) return false;
 
-        int packageSize = m_pMapShaderPackage.size();
+        int packageSize = (UINT)m_pMapShaderPackage.size();
         ofs.write((char*)&packageSize, sizeof(int));
 
         for (const auto& pSp : m_pMapShaderPackage) {

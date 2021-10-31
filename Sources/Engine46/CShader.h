@@ -37,7 +37,7 @@ namespace Engine46 {
         std::string                                     m_shaderName;
 
         std::unique_ptr<BYTE[]>                         m_pBuf;
-        int                                             m_bufSize;
+        int                                             m_byteSize;
 
         SHADER_TYPE                                     m_shaderType;
 
@@ -58,7 +58,7 @@ namespace Engine46 {
 
         ID3DBlob* GetBlob() const { return m_pBlob.Get(); }
         BYTE* GetBuffer() const { return m_pBuf.get(); }
-        int GetBufferSize() const { return m_bufSize; }
+        int GetBufferSize() const { return m_byteSize; }
 
         std::string GetShaderName() const { return m_shaderName.c_str(); }
 

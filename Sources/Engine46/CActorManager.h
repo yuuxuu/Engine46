@@ -48,7 +48,7 @@ namespace Engine46 {
         explicit CActorManager(CRendererBase* pRenderer);
         ~CActorManager();
 
-        CActorBase* CreateActor(int classType);
+        CActorBase* CreateActor(int actorType);
         CLight* CreateLight(int lightType);
 
         void AddActorToVec(std::unique_ptr<CActorBase>& pActor) { m_pVecActor.emplace_back(std::move(pActor)); }

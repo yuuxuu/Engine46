@@ -9,6 +9,7 @@
 #include "CDX12Device.h"
 #include "CDX12Command.h"
 #include "CDX12ConstantBuffer.h"
+#include "CDX12UnorderedAccessBuffer.h"
 #include "CDX12Mesh.h"
 #include "CDX12Texture.h"
 #include "CDX12ShaderPackage.h"
@@ -22,7 +23,7 @@
 
 namespace Engine46 {
 
-    constexpr UINT DESCRIPTORHEAP_MAX = STATIC_MAX + 100;
+    constexpr UINT DESCRIPTORHEAP_MAX = STATIC_MAX + 200;
 
     // コンストラクタ
     CDX12Renderer::CDX12Renderer() :
@@ -131,6 +132,9 @@ namespace Engine46 {
         m_pDepthRendring = std::make_unique<CDX12DepthRendering>(m_pDX12Device.get(), m_pDX12Command.get());
         if (!m_pDepthRendring->Initialize(width, height)) return false;
 
+        m_pDX12PostEffect = std::make_unique<CDX12PostEffect>(m_pDX12Device.get(), m_pDX12Command.get());
+        if (!m_pDX12PostEffect->Initialize(this, width, height)) return false;
+
         m_pDX12Command->CloseCommandList();
 
         m_windowRect = RECT(width, height);
@@ -230,7 +234,17 @@ namespace Engine46 {
 
         if (m_pDeferredRendering) {
             m_pDeferredRendering->Rendering(pScene);
+            m_pDeferredRendering->RenderingForSceneLighting(m_pRenderSprite.get());
             Reset();
+        }
+
+        CDX12Texture* pRenderTexture = nullptr;
+        if (m_pDX12PostEffect) {
+            pRenderTexture = dynamic_cast<CDX12DeferredRenderig*>(m_pDeferredRendering.get())->GetRenderTexture();
+
+            m_pDX12PostEffect->PostEffectBlur(pRenderTexture, m_pRenderSprite.get());
+            Reset();
+            //m_pDX12PostEffect->PostEffectBlur_CS(pRenderTexture);
         }
 
         UINT index = m_pDX12Device->GetCurrentBackBufferIndex();
@@ -247,9 +261,11 @@ namespace Engine46 {
         UINT x = 0;
         UINT y = (UINT)m_windowRect.h - height;
 
-        if (m_pDeferredRendering) {
-            m_pDeferredRendering->DrawForSceneLighting(m_pRenderSprite.get());
+        if (m_pDX12PostEffect) {
+            m_pDX12PostEffect->DrawForBloom(m_pRenderSprite.get(), pRenderTexture);
+        }
 
+        if (m_pDeferredRendering) {
             m_pDeferredRendering->DrawForRenderScene(m_pRenderSprite.get(), x, y, width, height);
         }
 
@@ -277,11 +293,11 @@ namespace Engine46 {
         m_pDX12Command->SetViewPort(0, 0, m_windowRect.w, m_windowRect.h);
     }
 
-    void CDX12Renderer::SetConstantBuffers() {
-        m_pCameraCB->Set((UINT)MyRootSignature_01::CBV_CAMERA);
-        m_pDirectionalLightCB->Set((UINT)MyRootSignature_01::CBV_DirectionalLight);
-        m_pPointLightCB->Set((UINT)MyRootSignature_01::CBV_PointLight);
-        m_pSpotLightCB->Set((UINT)MyRootSignature_01::CBV_SpotLight);
+    void CDX12Renderer::SetSceneConstantBuffers(UINT startSlot) {
+        m_pCameraCB->Set(startSlot);
+        m_pDirectionalLightCB->Set(startSlot + 1);
+        m_pPointLightCB->Set(startSlot + 2);
+        m_pSpotLightCB->Set(startSlot + 3);
     }
 
     // コンスタントバッファ作成
@@ -293,7 +309,17 @@ namespace Engine46 {
         if (m_descriptorHeapOffsetIndex <= DESCRIPTORHEAP_MAX) {
             dynamic_cast<CDX12ConstantBuffer*>(pConstantBuffer.get())->CreateConstantBufferView(m_pCbDescriptorHeap.Get(), m_descriptorHeapOffsetIndex++);
         }
+    }
 
+    // アンオーダードアクセスバッファ作成
+    void CDX12Renderer::CreateUnorderedAccessBuffer(std::unique_ptr<CUnorderedAccessBufferBase>& pUnorderedAccessBuffer, UINT byteWidth, UINT byteSize) {
+        pUnorderedAccessBuffer = std::make_unique<CDX12UnorderedAccessBuffer>(m_pDX12Device.get(), m_pDX12Command.get());
+
+        pUnorderedAccessBuffer->CreateUnorderedAccessBuffer(byteWidth, byteSize);
+
+        if (m_descriptorHeapOffsetIndex <= DESCRIPTORHEAP_MAX) {
+            dynamic_cast<CDX12UnorderedAccessBuffer*>(pUnorderedAccessBuffer.get())->CreateUnorderedAccessBufferView(m_pCbDescriptorHeap.Get(), m_descriptorHeapOffsetIndex++);
+        }
     }
 
     // メッシュ作成
@@ -335,33 +361,93 @@ namespace Engine46 {
         }
 
         if (pShaderPackage->IsCompile()) {
-            dynamic_cast<CDX12ShaderPackage*>(pShaderPackage.get())->SetDescriptorHeap(m_pCbDescriptorHeap.Get());
+            CDX12ShaderPackage* pDX12Sp = dynamic_cast<CDX12ShaderPackage*>(pShaderPackage.get());
+
+            pDX12Sp->SetDescriptorHeap(m_pCbDescriptorHeap.Get());
 
             D3D12_GRAPHICS_PIPELINE_STATE_DESC gpsDesc = {};
-            dynamic_cast<CDX12ShaderPackage*>(pShaderPackage.get())->InitializeGraphics(gpsDesc);
+
+            std::string name = std::string(shaderName);
+            pDX12Sp->SetRTVFormats(gpsDesc, name);
+            pDX12Sp->SetBlendState(gpsDesc, name);
+
+            pDX12Sp->InitializeGraphics(gpsDesc);
 
             D3D12_COMPUTE_PIPELINE_STATE_DESC cpsDesc = {};
-            dynamic_cast<CDX12ShaderPackage*>(pShaderPackage.get())->InitializeCompute(cpsDesc);
+            pDX12Sp->InitializeCompute(cpsDesc);
         }
+    }
+
+    // リソース作成
+    void CDX12Renderer::CreateResource(ComPtr<ID3D12Resource>& pResource, D3D12_RESOURCE_DESC& rDesc) {
+        
+        CD3DX12_HEAP_PROPERTIES prop = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
+
+        m_pDX12Device->CreateResource(pResource, prop, rDesc);
     }
 
     // レンダーテクスチャ作成
     void CDX12Renderer::CreateRenderTexture(std::unique_ptr<CDX12Texture>& pDX12RenderTexture, D3D12_RESOURCE_DESC& rDesc, D3D12_CLEAR_VALUE& clearValue, TextureType type) {
         pDX12RenderTexture = std::make_unique<CDX12Texture>(m_pDX12Device.get(), m_pDX12Command.get());
 
+        CD3DX12_HEAP_PROPERTIES prop = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
+
         switch (type) {
         case TextureType::Render:
-            pDX12RenderTexture->CreateTexture(rDesc, clearValue);
+            pDX12RenderTexture->CreateTexture(rDesc, prop, clearValue);
             break;
         case TextureType::Depth:
-            pDX12RenderTexture->CreateDepthTexture(rDesc, clearValue);
+            pDX12RenderTexture->CreateDepthTexture(rDesc, prop, clearValue);
             break;
         case TextureType::Stencil:
-            pDX12RenderTexture->CreateStencilTexture(rDesc, clearValue);
+            pDX12RenderTexture->CreateStencilTexture(rDesc, prop, clearValue);
             break;
         }
+    }
 
-        pDX12RenderTexture.get()->CreateShaderResourceView(m_pCbDescriptorHeap.Get(), m_descriptorHeapOffsetIndex++);
+    // シェーダーリソースビュー作成
+    void CDX12Renderer::CreateShaderResourceView(CDX12Texture* pDX12Texture) {
+        if (pDX12Texture) {
+            if (m_descriptorHeapOffsetIndex <= DESCRIPTORHEAP_MAX) {
+                pDX12Texture->CreateShaderResourceView(m_pCbDescriptorHeap.Get(), m_descriptorHeapOffsetIndex++);
+            }
+        }
+    }
+
+    // アンオーダードアクセスバッファビュー作成
+    void CDX12Renderer::CreateUnorderedAccessBufferView(CDX12Texture* pDX12Texture) {
+        if (pDX12Texture) {
+            if (m_descriptorHeapOffsetIndex <= DESCRIPTORHEAP_MAX) {
+                pDX12Texture->CreateUnorderedAccessBufferView(m_pCbDescriptorHeap.Get(), m_descriptorHeapOffsetIndex++);
+            }
+        }
+    }
+
+    // アンオーダードアクセスバッファ作成
+    void CDX12Renderer::CreateUnorderedAccessBuffer(std::unique_ptr<CDX12UnorderedAccessBuffer>& pUnorderedAccessBuffer) {
+        pUnorderedAccessBuffer = std::make_unique<CDX12UnorderedAccessBuffer>(m_pDX12Device.get(), m_pDX12Command.get());
+    }
+
+    // アンオーダードアクセスバッファビュー作成
+    void CDX12Renderer::CreateUnorderedAccessBufferView(CDX12UnorderedAccessBuffer* pUnorderedAccessBuffer, ComPtr<ID3D12Resource>& pResource, D3D12_UNORDERED_ACCESS_VIEW_DESC& uavDesc) {
+        if (pUnorderedAccessBuffer && pResource) {
+            pUnorderedAccessBuffer->SetResource(pResource);
+
+            if (m_descriptorHeapOffsetIndex <= DESCRIPTORHEAP_MAX) {
+                pUnorderedAccessBuffer->CreateUnorderedAccessBufferView(nullptr, uavDesc, m_pCbDescriptorHeap.Get(), m_descriptorHeapOffsetIndex++);
+                pUnorderedAccessBuffer->CreateShaderResourceView(m_pCbDescriptorHeap.Get(), m_descriptorHeapOffsetIndex++);
+            }
+        }
+    }
+
+    // アンオーダードアクセスバッファビュー作成
+    void CDX12Renderer::CreateUnorderedAccessBufferView(CDX12UnorderedAccessBuffer* pUnorderedAccessBuffer, ID3D12Resource* pResource, D3D12_UNORDERED_ACCESS_VIEW_DESC& uavDesc) {
+        if (pUnorderedAccessBuffer && pResource) {
+            if (m_descriptorHeapOffsetIndex <= DESCRIPTORHEAP_MAX) {
+                pUnorderedAccessBuffer->CreateUnorderedAccessBufferView(pResource, uavDesc, m_pCbDescriptorHeap.Get(), m_descriptorHeapOffsetIndex++);
+                pUnorderedAccessBuffer->CreateShaderResourceView(m_pCbDescriptorHeap.Get(), m_descriptorHeapOffsetIndex++);
+            }
+        }
     }
 
 } // namespace

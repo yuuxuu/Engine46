@@ -43,6 +43,7 @@ namespace Engine46 {
         void Update() override;
 
         Matrix GetViewProjectionMatrix();
+        Matrix GetInvViewMatrix();
 
         VECTOR3 GetCameraRightVector();
         VECTOR3 GetCameraUpVector();

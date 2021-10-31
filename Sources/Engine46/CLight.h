@@ -42,6 +42,7 @@ namespace Engine46 {
         void InitializeResource(CRendererBase* pRenderer) override;
 
         virtual void Update() override;
+        virtual void Draw() override;
 
         void SetLightType(LightType type) { m_lightType = type; }
         LightType GetLightType() const { return m_lightType; }

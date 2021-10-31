@@ -3,18 +3,16 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31025.194
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Engine46", "Sources\Engine46\Engine46.vcxproj", "{651C44AC-C73C-4DE1-B557-F02BF121CD47}"
-	ProjectSection(ProjectDependencies) = postProject
-		{CEF86CCD-D628-476D-8556-951ACBF3F394} = {CEF86CCD-D628-476D-8556-951ACBF3F394}
-	EndProjectSection
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GraphicsAPI", "Sources\GraphicsAPI\GraphicsAPI.vcxproj", "{CEF86CCD-D628-476D-8556-951ACBF3F394}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Engine46Editor", "Sources\Engine46Editor\Engine46Editor.vcxproj", "{B9B19C02-8E71-499E-A8E8-CDC1A0D7C24B}"
 	ProjectSection(ProjectDependencies) = postProject
 		{651C44AC-C73C-4DE1-B557-F02BF121CD47} = {651C44AC-C73C-4DE1-B557-F02BF121CD47}
+		{D394BEAC-E5ED-4CEB-9B3A-940AF5264282} = {D394BEAC-E5ED-4CEB-9B3A-940AF5264282}
 		{CEF86CCD-D628-476D-8556-951ACBF3F394} = {CEF86CCD-D628-476D-8556-951ACBF3F394}
 	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Engine46", "Sources\Engine46\Engine46.vcxproj", "{651C44AC-C73C-4DE1-B557-F02BF121CD47}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PostEffect", "Sources\PostEffect\PostEffect.vcxproj", "{D394BEAC-E5ED-4CEB-9B3A-940AF5264282}"
 EndProject
@@ -26,14 +24,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{651C44AC-C73C-4DE1-B557-F02BF121CD47}.Debug|x64.ActiveCfg = Debug|x64
-		{651C44AC-C73C-4DE1-B557-F02BF121CD47}.Debug|x64.Build.0 = Debug|x64
-		{651C44AC-C73C-4DE1-B557-F02BF121CD47}.Debug|x86.ActiveCfg = Debug|Win32
-		{651C44AC-C73C-4DE1-B557-F02BF121CD47}.Debug|x86.Build.0 = Debug|Win32
-		{651C44AC-C73C-4DE1-B557-F02BF121CD47}.Release|x64.ActiveCfg = Release|x64
-		{651C44AC-C73C-4DE1-B557-F02BF121CD47}.Release|x64.Build.0 = Release|x64
-		{651C44AC-C73C-4DE1-B557-F02BF121CD47}.Release|x86.ActiveCfg = Release|Win32
-		{651C44AC-C73C-4DE1-B557-F02BF121CD47}.Release|x86.Build.0 = Release|Win32
 		{CEF86CCD-D628-476D-8556-951ACBF3F394}.Debug|x64.ActiveCfg = Debug|x64
 		{CEF86CCD-D628-476D-8556-951ACBF3F394}.Debug|x64.Build.0 = Debug|x64
 		{CEF86CCD-D628-476D-8556-951ACBF3F394}.Debug|x86.ActiveCfg = Debug|Win32
@@ -50,6 +40,14 @@ Global
 		{B9B19C02-8E71-499E-A8E8-CDC1A0D7C24B}.Release|x64.Build.0 = Release|x64
 		{B9B19C02-8E71-499E-A8E8-CDC1A0D7C24B}.Release|x86.ActiveCfg = Release|Win32
 		{B9B19C02-8E71-499E-A8E8-CDC1A0D7C24B}.Release|x86.Build.0 = Release|Win32
+		{651C44AC-C73C-4DE1-B557-F02BF121CD47}.Debug|x64.ActiveCfg = Debug|x64
+		{651C44AC-C73C-4DE1-B557-F02BF121CD47}.Debug|x64.Build.0 = Debug|x64
+		{651C44AC-C73C-4DE1-B557-F02BF121CD47}.Debug|x86.ActiveCfg = Debug|Win32
+		{651C44AC-C73C-4DE1-B557-F02BF121CD47}.Debug|x86.Build.0 = Debug|Win32
+		{651C44AC-C73C-4DE1-B557-F02BF121CD47}.Release|x64.ActiveCfg = Release|x64
+		{651C44AC-C73C-4DE1-B557-F02BF121CD47}.Release|x64.Build.0 = Release|x64
+		{651C44AC-C73C-4DE1-B557-F02BF121CD47}.Release|x86.ActiveCfg = Release|Win32
+		{651C44AC-C73C-4DE1-B557-F02BF121CD47}.Release|x86.Build.0 = Release|Win32
 		{D394BEAC-E5ED-4CEB-9B3A-940AF5264282}.Debug|x64.ActiveCfg = Debug|x64
 		{D394BEAC-E5ED-4CEB-9B3A-940AF5264282}.Debug|x64.Build.0 = Debug|x64
 		{D394BEAC-E5ED-4CEB-9B3A-940AF5264282}.Debug|x86.ActiveCfg = Debug|Win32

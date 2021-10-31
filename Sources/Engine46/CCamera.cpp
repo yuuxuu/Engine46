@@ -17,7 +17,7 @@ namespace Engine46 {
 
     // コンストラクタ
     CCamera::CCamera(const char* actorName, const int sWidth, const int sHeight) :
-        CActorBase((int)ClassType::Camera, actorName, Transform()),
+        CActorBase((int)ActorType::Camera, actorName, Transform()),
         m_eye(0.0f, 0.0f, 10.0f),
         m_forcus(),
         m_up(0.0f, 1.0f, 0.0f),
@@ -113,6 +113,15 @@ namespace Engine46 {
         Matrix matVP;
         matVP.dx_m = m_matView.dx_m * m_matProj.dx_m;
         
+        return matVP;
+    }
+
+    Matrix CCamera::GetInvViewMatrix() {
+        Matrix matVP;
+        matVP.dx_m = DirectX::XMMatrixInverse(nullptr, m_matView.dx_m);
+
+        matVP._41 = matVP._42 = matVP._43 = 0.0f;
+
         return matVP;
     }
 

@@ -53,10 +53,10 @@ namespace Engine46 {
         m_textureData.pData = std::make_unique<uint8_t[]>(sImage.GetPixelsSize());
         std::memcpy(m_textureData.pData.get(), image->pixels, sImage.GetPixelsSize());
 
-        m_textureData.rowPitch = image->rowPitch;
-        m_textureData.slicePitch = image->slicePitch;
-        m_textureData.width = image->width;
-        m_textureData.height = image->height;
+        m_textureData.rowPitch = (UINT)image->rowPitch;
+        m_textureData.slicePitch = (UINT)image->slicePitch;
+        m_textureData.width = (UINT)image->width;
+        m_textureData.height = (UINT)image->height;
         m_textureData.format = image->format;
 
         return true;

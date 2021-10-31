@@ -11,9 +11,14 @@
 #include "CDX12Command.h"
 #include "CDX12Renderer.h"
 #include "CDX12Texture.h"
+#include "CDX12UnorderedAccessBuffer.h"
 
 #include "Engine46/CRendererSystem.h"
+#include "Engine46/CGameSystem.h"
+#include "Engine46/CShaderManager.h"
 #include "Engine46/CMaterial.h"
+#include "Engine46/CMesh.h"
+#include "Engine46/CLight.h"
 
 namespace Engine46 {
 
@@ -33,21 +38,55 @@ namespace Engine46 {
         CDX12Renderer* pRenderer = dynamic_cast<CDX12Renderer*>(CRendererSystem::GetRendererSystem().GetRenderer());
         if (!pRenderer) return false;
 
-        UINT size = sizeof(RENDER_TARGET_FORMATS) / sizeof(RENDER_TARGET_FORMATS[0]);
+        D3D12_DESCRIPTOR_HEAP_DESC dhDesc = {};
+
+        dhDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
+        dhDesc.NumDescriptors = RENDER_TARGET_SIZE + 1;
+        dhDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+
+        pDX12Device->CreateDescriptorHeap(m_pRtvDescriptorHeap, dhDesc);
+
         UINT heapSize = pDX12Device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 
         {
-            D3D12_DESCRIPTOR_HEAP_DESC dhDesc = {};
+            D3D12_RESOURCE_DESC rDesc = {};
 
-            dhDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
-            dhDesc.NumDescriptors = size;
-            dhDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+            rDesc.Width = width;
+            rDesc.Height = height;
+            rDesc.MipLevels = 1;
+            rDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
+            rDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET | D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
+            rDesc.DepthOrArraySize = 1;
+            rDesc.SampleDesc = { 1 , 0 };
+            rDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+            rDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
 
-            pDX12Device->CreateDescriptorHeap(m_pRtvDescriptorHeap, dhDesc);
+            D3D12_CLEAR_VALUE clearValue = {};
 
-            for (UINT i = 0; i < size; ++i) {
+            clearValue.Format = rDesc.Format;
+            clearValue.Color[0] = 0.0f;
+            clearValue.Color[1] = 0.0f;
+            clearValue.Color[2] = 0.0f;
+            clearValue.Color[3] = 1.0f;
+
+            D3D12_RENDER_TARGET_VIEW_DESC rtvDesc = {};
+
+            rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
+            rtvDesc.Format = rDesc.Format;
+
+            pRenderer->CreateRenderTexture(m_pRenderTex, rDesc, clearValue);
+            pRenderer->CreateShaderResourceView(m_pRenderTex.get());
+            pRenderer->CreateUnorderedAccessBufferView(m_pRenderTex.get());
+
+            m_rtvHandle = m_pRtvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
+
+            pDX12Device->CreateRenderTargetView(m_pRenderTex->GetResource(), &rtvDesc, m_rtvHandle);
+        }
+
+        {
+            for (UINT i = 0; i < RENDER_TARGET_SIZE; ++i) {
                 D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = m_pRtvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
-                rtvHandle.ptr += heapSize * i;
+                rtvHandle.ptr += heapSize * (i + 1);
 
                 D3D12_RESOURCE_DESC rDesc = {};
 
@@ -55,7 +94,7 @@ namespace Engine46 {
                 rDesc.Height = height;
                 rDesc.MipLevels = 1;
                 rDesc.Format = RENDER_TARGET_FORMATS[i];
-                rDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
+                rDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET | D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
                 rDesc.DepthOrArraySize = 1;
                 rDesc.SampleDesc = { 1 , 0 };
                 rDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
@@ -76,6 +115,8 @@ namespace Engine46 {
 
                 std::unique_ptr<CDX12Texture> pRenderTex;
                 pRenderer->CreateRenderTexture(pRenderTex, rDesc, clearValue);
+                pRenderer->CreateShaderResourceView(pRenderTex.get());
+                pRenderer->CreateUnorderedAccessBufferView(pRenderTex.get());
 
                 pDX12Device->CreateRenderTargetView(pRenderTex->GetResource(), &rtvDesc, rtvHandle);
 
@@ -157,21 +198,89 @@ namespace Engine46 {
     // シーン描画
     void CDX12DeferredRenderig::Rendering(CSceneBase* pScene) {
 
-        CActorBase* pRoot = pScene->GetRootActor();
-        if (!pRoot) return;
+        if (!pScene) return;
 
         Begine();
 
-        for (auto pActor : pRoot->GetChildActorList()) {
-            CShaderPackage* pSp = pActor->GetShaderPackage();
-            if (pSp) {
-                pActor->SetShaderPackage("GBuffer.hlsl");
-                pActor->Draw();
-                pActor->SetShaderPackage(pSp);
+        CShaderManager* pShaderManager = CGameSystem::GetGameSystem().GetShaderManager();
+
+        CShaderPackage* pSp = pShaderManager->CreateShaderPackage("GBuffer.hlsl");
+        if (pSp) {
+            pSp->SetShader();
+            pSp->SetSceneConstantBufferToShader((UINT)CB_TYPE::CAMERA);
+
+            std::vector<CSprite*> vecSprites = pScene->GetSpritesFromScene();
+            for (const auto& pSprite : vecSprites) {
+                Matrix matW = pSprite->GetWorldMatrix();
+                matW.dx_m = DirectX::XMMatrixTranspose(matW.dx_m);
+
+                worldCB cb = {
+                    matW,
+                };
+                pSprite->UpdateWorldConstantBuffer(&cb);
+
+                pSprite->GetMaterial()->Set((UINT)CB_TYPE::MATERIAL);
+
+                pSprite->GetMesh()->Draw();
             }
         }
 
+        std::vector<CLight*> vecLight = pScene->GetLightsFromScene();
+        for (const auto& pLight : vecLight) {
+            pLight->Draw();
+        }
+
         End();
+    }
+
+    // 描画したシーンをライティング描画
+    void CDX12DeferredRenderig::RenderingForSceneLighting(CSprite* pSprite) {
+
+        if (!pSprite) return;
+
+        CShaderManager* pShaderManager = CGameSystem::GetGameSystem().GetShaderManager();
+
+        CShaderPackage* pSp = pShaderManager->CreateShaderPackage("GBuffer_Lighting.hlsl");
+        if (pSp) {
+            pDX12Command->SetResourceBarrier(m_pRenderTex->GetResource(), D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_RENDER_TARGET);
+            pDX12Command->SetResourceBarrier(m_pDsvResource.Get(), D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_DEPTH_WRITE);
+
+            pDX12Command->ClearDepthStencilView(m_dsvHandle, D3D12_CLEAR_FLAG_DEPTH);
+            pDX12Command->ClearRenderTargetView(m_rtvHandle);
+            pDX12Command->SetRenderTargetView(&m_rtvHandle, &m_dsvHandle);
+
+            pSp->SetShader();
+            pSp->SetSceneConstantBufferToShader((UINT)MyRS_GBuffer_Ligthing::CBV_CAMERA);
+
+            UINT index = (UINT)MyRS_GBuffer_Ligthing::SRV_0;
+            for (const auto& pTexture : m_pVecRenderTex) {
+                pTexture->Set(index++);
+            }
+
+            pSprite->GetMesh()->Draw();
+
+            pDX12Command->SetResourceBarrier(m_pRenderTex->GetResource(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_GENERIC_READ);
+            pDX12Command->SetResourceBarrier(m_pDsvResource.Get(), D3D12_RESOURCE_STATE_DEPTH_WRITE, D3D12_RESOURCE_STATE_GENERIC_READ);
+        }
+    }
+
+    // ポストエフェクト準備描画
+    void CDX12DeferredRenderig::RenderingForPostEffect(CSceneBase* pScene) {
+
+        pDX12Command->SetResourceBarrier(m_pRenderTex->GetResource(), D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_RENDER_TARGET);
+        pDX12Command->SetResourceBarrier(m_pDsvResource.Get(), D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_DEPTH_WRITE);
+
+        pDX12Command->ClearDepthStencilView(m_dsvHandle, D3D12_CLEAR_FLAG_DEPTH);
+        pDX12Command->ClearRenderTargetView(m_rtvHandle);
+        pDX12Command->SetRenderTargetView(&m_rtvHandle, &m_dsvHandle);
+
+        std::vector<CLight*> vecLight = pScene->GetLightsFromScene();
+        for (const auto& pLight : vecLight) {
+            pLight->Draw();
+        }
+
+        pDX12Command->SetResourceBarrier(m_pRenderTex->GetResource(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_GENERIC_READ);
+        pDX12Command->SetResourceBarrier(m_pDsvResource.Get(), D3D12_RESOURCE_STATE_DEPTH_WRITE, D3D12_RESOURCE_STATE_GENERIC_READ);
     }
 
     // 描画したシーン描画
@@ -189,24 +298,16 @@ namespace Engine46 {
         }
     }
 
-    // ライティングシーン描画
-    void CDX12DeferredRenderig::DrawForSceneLighting(CSprite* pSprite) {
+    // MRTレンダーテクスチャを取得
+    CDX12Texture* CDX12DeferredRenderig::GetRenderTexture(DXGI_FORMAT format) {
 
-        if (!pSprite) return;
-
-        CMaterialBase* pMaterial = pSprite->GetMaterial();
-        if (!pMaterial) return;
-
-        for (const auto& pRenderTex : m_pVecRenderTex) {
-            pMaterial->AddRenderTexture(pRenderTex.get());
+        for (int i = 0; i < RENDER_TARGET_SIZE; ++i) {
+            if (RENDER_TARGET_FORMATS[i] == format) {
+                return m_pVecRenderTex[i].get();
+            }
         }
 
-        CShaderPackage* pSp = pSprite->GetShaderPackage();
-        if (!pSp) return;
-
-        pSprite->SetShaderPackage("GBuffer_Lighting.hlsl");
-        pSprite->Draw();
-        pSprite->SetShaderPackage(pSp);
+        return nullptr;
     }
 
 } // namespace

@@ -7,6 +7,8 @@
 
 #include "CMaterial.h"
 
+#include "GraphicsAPI/DirectX12/CDX12ShaderPackage.h"
+
 namespace Engine46 {
 
     // コンストラクタ
@@ -45,10 +47,10 @@ namespace Engine46 {
     void CMaterialBase::Update() {
         if (m_pMaterialConstantBuffer) {
             materialCB cb = {
-            m_diffuse,
-            m_specular,
-            m_ambient,
-            m_emissive,
+                m_diffuse,
+                m_specular,
+                m_ambient,
+                m_emissive,
             };
 
             m_pMaterialConstantBuffer->Update(&cb);
@@ -63,17 +65,7 @@ namespace Engine46 {
         }
 
         if (pTexture) {
-            pTexture->Set(0);
-        }
-
-        if (!pVecRenderTexture.empty()) {
-            UINT size = pVecRenderTexture.size();
-
-            for (UINT i = 0; i < size; ++i) {
-                pVecRenderTexture[i]->Set(i);
-            }
-
-            pVecRenderTexture.clear();
+            pTexture->Set((UINT)MyRS_01::SRV_diffuse);
         }
     }
 

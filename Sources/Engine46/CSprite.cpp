@@ -16,7 +16,7 @@ namespace Engine46 {
 
     // コンストラクタ
     CSprite::CSprite(const char* actorName) :
-        CActorBase((int)ClassType::Sprite, actorName, Transform(VECTOR3(), VECTOR3(), VECTOR3(10.0f, 10.0f, 10.0f)))
+        CActorBase((int)ActorType::Sprite, actorName, Transform(VECTOR3(), VECTOR3(), VECTOR3(10.0f, 10.0f, 10.0f)))
     {}
 
     // デストラクタ
@@ -26,65 +26,29 @@ namespace Engine46 {
     // リソースの初期化
     void CSprite::InitializeResource(CRendererBase* pRenderer) {
 
-        if (pRenderer) {
-            std::unique_ptr<CConstantBufferBase> pConstantBuffer;
-            pRenderer->CreateConstantBuffer(pConstantBuffer, sizeof(worldCB));
-            SetWorldConstantBuffer(pConstantBuffer);
+        CActorBase::InitializeResource(pRenderer);
 
-            if (pMaterial && !pMaterial->IsInitialize()) {
-                std::unique_ptr<CConstantBufferBase> pMaterialConstantBuffer;
-                pRenderer->CreateConstantBuffer(pMaterialConstantBuffer, sizeof(materialCB));
-                pMaterial->SetMaterialConstantBuffer(pMaterialConstantBuffer);
-            }
-        }
-
-        if (pMesh && !pMesh->IsInitialize()) {
-            pMesh->ReserveVertex(4);
-
-            vertexInfo info;
-
-            info.vertex = VECTOR3(-1.0f, 1.0f, 0.0f);
-            info.color = VECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
-            info.uv = VECTOR2(0.0f, 0.0f);
-            info.normal = VECTOR3(0.0f, 0.0f, 1.0f);
-            pMesh->AddVertexInfo(info);
-
-            info.vertex = VECTOR3(1.0f, 1.0f, 0.0f);
-            info.color = VECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
-            info.uv = VECTOR2(1.0f, 0.0f);
-            info.normal = VECTOR3(0.0f, 0.0f, 1.0f);
-            pMesh->AddVertexInfo(info);
-
-            info.vertex = VECTOR3(-1.0f, -1.0f, 0.0f);
-            info.color = VECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
-            info.uv = VECTOR2(0.0f, 1.0f);
-            info.normal = VECTOR3(0.0f, 0.0f, 1.0f);
-            pMesh->AddVertexInfo(info);
-
-            info.vertex = VECTOR3(1.0f, -1.0f, 0.0f);
-            info.color = VECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
-            info.uv = VECTOR2(1.0f, 1.0f);
-            info.normal = VECTOR3(0.0f, 0.0f, 1.0f);
-            pMesh->AddVertexInfo(info);
-
-            pMesh->CreateVertexBuffer(PRIMITIVE_TOPOLOGY_TYPE::TRIANGLESTRIP);
-
-            pMesh->ReserveIndex(6);
-
-            pMesh->AddIndex(0);
-            pMesh->AddIndex(1);
-            pMesh->AddIndex(3);
-            pMesh->AddIndex(0);
-            pMesh->AddIndex(3);
-            pMesh->AddIndex(2);
-
-            pMesh->CreateIndexBuffer();
+        if (pMesh) {
+            pMesh->CreateSpriteMesh();
         }
     }
 
     // 更新
     void CSprite::Update() {
 
+    }
+
+    // 描画
+    void CSprite::Draw() {
+        Matrix matW = GetWorldMatrix();
+        matW.dx_m = DirectX::XMMatrixTranspose(matW.dx_m);
+
+        worldCB cb = {
+            matW,
+        };
+        m_pWorldConstantBuffer->Update(&cb);
+
+        CActorBase::Draw();
     }
 
 } // namespace

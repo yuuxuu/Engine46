@@ -96,6 +96,9 @@
     <ClInclude Include="DirectX12\CDX12Texture.h">
       <Filter>DX12\ヘッダーファイル</Filter>
     </ClInclude>
+    <ClInclude Include="DirectX12\CDX12UnorderedAccessBuffer.h">
+      <Filter>DX12\ヘッダーファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CRendering.cpp">
@@ -156,6 +159,9 @@
       <Filter>DX12\ソースファイル</Filter>
     </ClCompile>
     <ClCompile Include="DirectX12\CDX12Texture.cpp">
+      <Filter>DX12\ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\CDX12UnorderedAccessBuffer.cpp">
       <Filter>DX12\ソースファイル</Filter>
     </ClCompile>
   </ItemGroup>
