@@ -69,9 +69,13 @@ namespace Engine46 {
         SRV_4,
     };
 
-    enum class MyRS_LuminanceExtraction {
+    enum class MyRS_CS_LuminanceExtraction {
         UAV_0,
         UAV_1,
+    };
+
+    enum class MyRS_LuminanceExtraction {
+        SRV_0,
     };
 
     enum class MyRS_ClearColor {

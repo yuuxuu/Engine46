@@ -32,15 +32,14 @@ namespace Engine46 {
         CDX12Command*                                       pDX12Command;
 
         std::unique_ptr<CDX12Texture>                       m_pLuminanceExtractionTexture;
-        D3D12_CPU_DESCRIPTOR_HANDLE                         m_rtvHandle;
+        D3D12_CPU_DESCRIPTOR_HANDLE                         m_luminanceExtractionHandle;
 
         std::vector<std::unique_ptr<CDX12Texture>>          m_pVecBlurTexture;
+        std::vector<D3D12_CPU_DESCRIPTOR_HANDLE>            m_vecBlurHandle;
 
         std::vector<std::unique_ptr<CConstantBufferBase>>   m_pVecBlurCb;
 
-
         ComPtr<ID3D12DescriptorHeap>                        m_pRtvDescriptorHeap;
-        std::vector<D3D12_CPU_DESCRIPTOR_HANDLE>            m_vecRtvHandle;
 
         ComPtr<ID3D12Resource>                              m_pDsvResource;
         ComPtr<ID3D12DescriptorHeap>                        m_pDsvDescriptorHeap;
@@ -61,8 +60,9 @@ namespace Engine46 {
         void PostEffectBlur_CS(CDX12Texture* pDX12Texture);
         void Blur_CS(CDX12Texture* pDX12InTexture, CDX12Texture* pDX12OutTexture);
 
+        void LuminanceExtraction(CDX12Texture* pDX12Texture, CSprite* pSprite);
         void PostEffectBlur(CDX12Texture* pDX12Texture, CSprite* pSprite);
-        void DrawBlur(CDX12Texture* pDX12Texture, D3D12_CPU_DESCRIPTOR_HANDLE handle, CSprite* pSprite);
+        void RenderingForPostEffect(CDX12Texture* pDX12Texture, D3D12_CPU_DESCRIPTOR_HANDLE handle, CSprite* pSprite);
     };
 
 } // namespace

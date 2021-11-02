@@ -54,7 +54,8 @@ struct Material {
     float4	diffuse;    // マテリアルディフューズ色
     float4	specular;   // マテリアルスペキュラー色
     float4	ambinet;    // マテリアルアンビエント色
-};	float4	emissive;   // マテリアルエミッシブ色
+	float4	emissive;   // マテリアルエミッシブ色
+};
 
 // マテリアル
 cbuffer CbMaterial : register(b1)
