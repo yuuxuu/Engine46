@@ -71,7 +71,7 @@ namespace Engine46 {
             rDesc.Width = width;
             rDesc.Height = height;
             rDesc.MipLevels = 1;
-            rDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+            rDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
             rDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET | D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
             rDesc.DepthOrArraySize = 1;
             rDesc.SampleDesc = { 1 , 0 };
@@ -95,9 +95,9 @@ namespace Engine46 {
             pDX12Renderer->CreateShaderResourceView(m_pLuminanceExtractionTexture.get());
             pDX12Renderer->CreateUnorderedAccessBufferView(m_pLuminanceExtractionTexture.get());
 
-            m_rtvHandle = m_pRtvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
+            m_luminanceExtractionHandle = m_pRtvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
 
-            pDX12Device->CreateRenderTargetView(m_pLuminanceExtractionTexture->GetResource(), &rtvDesc, m_rtvHandle);
+            pDX12Device->CreateRenderTargetView(m_pLuminanceExtractionTexture->GetResource(), &rtvDesc, m_luminanceExtractionHandle);
         }
 
         {
@@ -147,7 +147,7 @@ namespace Engine46 {
 
                 m_pVecBlurTexture.emplace_back(std::move(pRenderTex));
 
-                m_vecRtvHandle.emplace_back(rtvHandle);
+                m_vecBlurHandle.emplace_back(rtvHandle);
 
                 std::unique_ptr<CConstantBufferBase> blurCb;
                 pDX12Renderer->CreateConstantBuffer(blurCb, sizeof(PostEffectCB));
@@ -251,7 +251,6 @@ namespace Engine46 {
 
     // ブルーム結果を描画
     void CDX12PostEffect::DrawForBloom(CSprite* pSprite, CDX12Texture* pDX12Texture) {
-
         if (!pSprite) return;
         if (!pDX12Texture) return;
 
@@ -274,7 +273,6 @@ namespace Engine46 {
 
     // クリアカラー(コンピュートシェーダー用)
     void CDX12PostEffect::ClearColor_CS(CDX12Texture* pDX12Texture) {
-
         if (!pDX12Texture) return;
 
         UINT w = pDX12Texture->GetTextureWidth();
@@ -291,7 +289,6 @@ namespace Engine46 {
 
     // 輝度抽出(コンピュートシェーダー用)
     void CDX12PostEffect::LuminanceExtraction_CS(CDX12Texture* pDX12InTexture, CDX12Texture* pDX12OutTexture) {
-        
         if (!pDX12InTexture) return;
         if (!pDX12OutTexture) return;
 
@@ -300,8 +297,8 @@ namespace Engine46 {
 
         pDX12Command->SetResourceBarrier(pDX12OutTexture->GetResource(), D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
 
-        pDX12InTexture->SetCompute((UINT)MyRS_LuminanceExtraction::UAV_0);
-        pDX12OutTexture->SetCompute((UINT)MyRS_LuminanceExtraction::UAV_1);
+        pDX12InTexture->SetCompute((UINT)MyRS_CS_LuminanceExtraction::UAV_0);
+        pDX12OutTexture->SetCompute((UINT)MyRS_CS_LuminanceExtraction::UAV_1);
 
         pDX12Command->Dispatch(w / THREAD_X_SIZE, h / THREAD_Y_SIZE, THREAD_Z_SIZE);
 
@@ -390,16 +387,32 @@ namespace Engine46 {
         pDX12Command->SetResourceBarrier(pDX12OutTexture->GetResource(), D3D12_RESOURCE_STATE_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_GENERIC_READ);
     }
 
+    //輝度抽出描画
+    void CDX12PostEffect::LuminanceExtraction(CDX12Texture* pDX12Texture, CSprite* pSprite) {
+
+        pDX12Command->SetResourceBarrier(m_pDsvResource.Get(), D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_DEPTH_WRITE);
+
+        pDX12Command->ClearDepthStencilView(m_dsvHandle, D3D12_CLEAR_FLAG_DEPTH);
+
+        pDX12Texture->Set((UINT)MyRS_LuminanceExtraction::SRV_0);
+
+        RenderingForPostEffect(m_pLuminanceExtractionTexture.get(), m_luminanceExtractionHandle, pSprite);
+
+        pDX12Command->SetResourceBarrier(m_pDsvResource.Get(), D3D12_RESOURCE_STATE_DEPTH_WRITE, D3D12_RESOURCE_STATE_GENERIC_READ);
+    }
+
     // ブラー
     void CDX12PostEffect::PostEffectBlur(CDX12Texture* pDX12Texture, CSprite* pSprite) {
+        if (!pSprite) return;
+        if (!pDX12Texture) return;
 
         CShaderManager* pShaderManager = CGameSystem::GetGameSystem().GetShaderManager();
 
-        CShaderPackage* pSp = pShaderManager->CreateShaderPackage("CS_LuminanceExtraction.hlsl");
+        CShaderPackage* pSp = pShaderManager->CreateShaderPackage("LuminanceExtraction.hlsl");
         if (pSp) {
             pSp->SetShader();
 
-            LuminanceExtraction_CS(pDX12Texture, m_pLuminanceExtractionTexture.get());
+            LuminanceExtraction(pDX12Texture, pSprite);
         }
 
         pSp = pShaderManager->CreateShaderPackage("PostEffect_Blur.hlsl");
@@ -426,14 +439,14 @@ namespace Engine46 {
                 UpdateBlurConstantBuffer(m_pVecBlurCb[i].get(), w, h, dir, m);
                 m_pVecBlurCb[i]->Set((UINT)MyRS_Blur::CBV_Blur);
 
-                DrawBlur(m_pVecBlurTexture[i].get(), m_vecRtvHandle[i], pSprite);
+                RenderingForPostEffect(m_pVecBlurTexture[i].get(), m_vecBlurHandle[i], pSprite);
 
                 dir = VECTOR2(0.0f, 1.0f);
                 UpdateBlurConstantBuffer(m_pVecBlurCb[i + 1].get(), w, h, dir, m);
                 m_pVecBlurCb[i + 1]->Set((UINT)MyRS_Blur::CBV_Blur);
 
                 m_pVecBlurTexture[i]->Set((UINT)MyRS_Blur::SRV_0);
-                DrawBlur(m_pVecBlurTexture[i + 1].get(), m_vecRtvHandle[i + 1], pSprite);
+                RenderingForPostEffect(m_pVecBlurTexture[i + 1].get(), m_vecBlurHandle[i + 1], pSprite);
             }
 
             pDX12Command->SetResourceBarrier(m_pDsvResource.Get(), D3D12_RESOURCE_STATE_DEPTH_WRITE, D3D12_RESOURCE_STATE_GENERIC_READ);
@@ -441,9 +454,7 @@ namespace Engine46 {
     }
 
     // ブラー描画
-    void CDX12PostEffect::DrawBlur(CDX12Texture* pDX12Texture, D3D12_CPU_DESCRIPTOR_HANDLE handle, CSprite* pSprite) {
-        if (!pSprite) return;
-        if (!pDX12Texture) return;
+    void CDX12PostEffect::RenderingForPostEffect(CDX12Texture* pDX12Texture, D3D12_CPU_DESCRIPTOR_HANDLE handle, CSprite* pSprite) {
 
         pDX12Command->SetResourceBarrier(pDX12Texture->GetResource(), D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_RENDER_TARGET);
 

@@ -170,14 +170,19 @@ namespace Engine46 {
                 gpsDesc.RTVFormats[i] = RENDER_TARGET_FORMATS[i];
             }
         }
-        else if (shaderName == "CPUParticle.hlsl") {
-            gpsDesc.RTVFormats[0] = DXGI_FORMAT_R16G16B16A16_FLOAT;
-        }
-        else if (shaderName == "PostEffect_Blur.hlsl") {
-            gpsDesc.RTVFormats[0] = DXGI_FORMAT_R16G16B16A16_FLOAT;
-        }
-        else if (shaderName == "GBuffer_Lighting.hlsl") {
-            gpsDesc.RTVFormats[0] = DXGI_FORMAT_R16G16B16A16_FLOAT;
+
+        std::vector<std::string> shaderNames = {
+            "CPUParticle.hlsl",
+            "PostEffect_Blur.hlsl",
+            "GBuffer_Lighting.hlsl",
+            "LuminanceExtraction.hlsl",
+        };
+
+        for (const auto& name : shaderNames) {
+            if (name == shaderName) {
+                gpsDesc.RTVFormats[0] = DXGI_FORMAT_R16G16B16A16_FLOAT;
+                break;
+            }
         }
 
         gpsDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
