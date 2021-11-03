@@ -59,20 +59,4 @@ namespace Engine46 {
         return nullptr;
     }
 
-    // アクターへマテリアルを設定
-    void CMaterialManager::SetMaterialToActor(CActorBase* pActor, const char* materialName) {
-        CMaterialBase* pMaterial = GetMaterialFromMap(materialName);
-
-        if (pMaterial) {
-            pActor->SetMaterial(pMaterial);
-            return;
-        }
-
-        pMaterial = CreateMaterial(materialName);
-
-        if (pMaterial) {
-            pActor->SetMaterial(pMaterial);
-        }
-    }
-
 } // namespace

@@ -39,6 +39,7 @@
     </ClCompile>
     <ClCompile Include="CActor.cpp" />
     <ClCompile Include="CActorManager.cpp" />
+    <ClCompile Include="COBB.cpp" />
     <ClCompile Include="CUnorderedAccessBuffer.cpp" />
     <ClCompile Include="CCamera.cpp" />
     <ClCompile Include="CConstantBuffer.cpp" />
@@ -73,6 +74,7 @@
     <ClInclude Include="..\stdafx.h" />
     <ClInclude Include="CActor.h" />
     <ClInclude Include="CActorManager.h" />
+    <ClInclude Include="COBB.h" />
     <ClInclude Include="CUnorderedAccessBuffer.h" />
     <ClInclude Include="CCamera.h" />
     <ClInclude Include="CConstantBuffer.h" />

@@ -155,7 +155,10 @@ namespace Engine46 {
     // メッシュを設定
     void CActorBase::SetMesh(const std::string& meshName) {
         CMeshManager* meshManager = CGameSystem::GetGameSystem().GetMeshManager();
-        meshManager->SetMeshToActor(this, meshName.c_str());
+        CMeshBase* pMesh = meshManager->CreateMesh(meshName.c_str());
+        if (pMesh) {
+            this->pMesh = pMesh;
+        }
     }
 
     // マテリアルを設定
@@ -168,20 +171,26 @@ namespace Engine46 {
     // マテリアルを設定
     void CActorBase::SetMaterial(const std::string& materialName) {
         CMaterialManager* materialManager = CGameSystem::GetGameSystem().GetMaterialManager();
-        materialManager->SetMaterialToActor(this, materialName.c_str());
+        CMaterialBase* pMaterial = materialManager->CreateMaterial(materialName.c_str());
+        if (pMaterial) {
+            this->pMaterial = pMaterial;
+        }
     }
 
     // マテリアルにテクスチャを設定
-    void CActorBase::SetTexture(CTextureBase* pTex) {
+    void CActorBase::SetTexture(CTextureBase* pTexture) {
         if (pMaterial) {
-            pMaterial->SetTexture(pTex);
+            pMaterial->SetTexture(pTexture);
         }
     }
 
     // マテリアルにテクスチャを設定
     void CActorBase::SetTexture(const std::string& textureName) {
         CTextureManager* textureManager = CGameSystem::GetGameSystem().GetTextureManager();
-        textureManager->SetTextureToActor(this, textureName.c_str());
+        CTextureBase* pTexture = textureManager->CreateTexture(textureName.c_str());
+        if (pMaterial) {
+            pMaterial->SetTexture(pTexture);
+        }
     }
 
     // シェーダーパッケージを設定
@@ -194,7 +203,10 @@ namespace Engine46 {
     // シェーダーパッケージを設定
     void CActorBase::SetShaderPackage(const std::string& shaderPackageName) {
         CShaderManager* shaderManager = CGameSystem::GetGameSystem().GetShaderManager();
-        shaderManager->SetShaderPackageToActor(this, shaderPackageName.c_str());
+        CShaderPackage* pShaderPackage = shaderManager->CreateShaderPackage(shaderPackageName.c_str());
+        if (pShaderPackage) {
+            this->pShaderPackage = pShaderPackage;
+        }
     }
 
     // インプットを設定

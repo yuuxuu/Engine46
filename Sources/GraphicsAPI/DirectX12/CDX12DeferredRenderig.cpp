@@ -223,6 +223,21 @@ namespace Engine46 {
 
                 pSprite->GetMesh()->Draw();
             }
+
+            std::vector<CActorBase*> vecBoxs = pScene->GetBoxsFromScene();
+            for (const auto& pBox : vecBoxs) {
+                Matrix matW = pBox->GetWorldMatrix();
+                matW.dx_m = DirectX::XMMatrixTranspose(matW.dx_m);
+
+                worldCB cb = {
+                    matW,
+                };
+                pBox->UpdateWorldConstantBuffer(&cb);
+
+                pBox->GetMaterial()->Set((UINT)CB_TYPE::MATERIAL);
+
+                pBox->GetMesh()->Draw();
+            }
         }
 
         std::vector<CLight*> vecLight = pScene->GetLightsFromScene();

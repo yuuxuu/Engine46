@@ -34,8 +34,6 @@ namespace Engine46 {
         void AddMaterialToMap(const char* name, std::unique_ptr<CMaterialBase>& pMaterial);
 
         CMaterialBase* GetMaterialFromMap(const char* name);
-
-        void SetMaterialToActor(CActorBase* pActor, const char* materialName);
     };
 
 } // namespace

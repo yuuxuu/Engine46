@@ -30,6 +30,7 @@ namespace Engine46 {
         Root,
         Camera,
         Sprite,
+        Box,
         Light,
     };
 

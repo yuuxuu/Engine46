@@ -107,20 +107,4 @@ namespace Engine46 {
         return true;
     }
 
-    // アクターへシェーダーパッケージを設定
-    void CShaderManager::SetShaderPackageToActor(CActorBase* pActor, const char* shaderPackageName) {
-        CShaderPackage* pSp = GetShaderPackageFromMap(shaderPackageName);
-
-        if (pSp) {
-            pActor->SetShaderPackage(pSp);
-            return;
-        }
-
-        pSp = CreateShaderPackage(shaderPackageName);
-
-        if (pSp && pSp->IsCompile()) {
-            pActor->SetShaderPackage(pSp);
-        }
-    }
-
 } // namespace

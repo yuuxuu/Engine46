@@ -62,20 +62,4 @@ namespace Engine46 {
         return nullptr;
     }
 
-    // アクターへメッシュを設定
-    void CMeshManager::SetMeshToActor(CActorBase* pActor, const char* meshName) {
-        CMeshBase* pMesh = GetMeshFromMap(meshName);
-
-        if (pMesh) {
-            pActor->SetMesh(pMesh);
-            return;
-        }
-
-        pMesh = CreateMesh(meshName);
-
-        if (pMesh) {
-            pActor->SetMesh(pMesh);
-        }
-    }
-
 } // namespace

@@ -35,8 +35,6 @@ namespace Engine46 {
 
         bool SaveShaderPackageList();
         bool LoadShaderPackageList();
-
-        void SetShaderPackageToActor(CActorBase* pActor, const char* shaderPackageName);
     };
 
 } // namespace

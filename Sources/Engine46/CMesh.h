@@ -55,6 +55,7 @@ namespace Engine46 {
         virtual void Draw() {};
 
         void CreateSpriteMesh();
+        void CreateBoxMesh();
 
         std::string GetMeshName() const { return m_meshName.c_str(); }
 

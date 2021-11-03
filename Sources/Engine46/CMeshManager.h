@@ -32,8 +32,6 @@ namespace Engine46 {
         void AddMeshToMap(const char* name, std::unique_ptr<CMeshBase>& pMesh);
 
         CMeshBase* GetMeshFromMap(const char* name);
-
-        void SetMeshToActor(CActorBase* pActor, const char* meshName);
     };
 
 } // namespace

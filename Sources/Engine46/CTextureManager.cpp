@@ -62,20 +62,4 @@ namespace Engine46 {
         return nullptr;
     }
 
-    // アクターへテクスチャを設定
-    void CTextureManager::SetTextureToActor(CActorBase* pActor, const char* textureName) {
-        CTextureBase* pTexture = GetTextureFromMap(textureName);
-
-        if (pTexture) {
-            pActor->SetTexture(pTexture);
-            return;
-        }
-
-        pTexture = CreateTexture(textureName);
-
-        if (pTexture) {
-            pActor->SetTexture(pTexture);
-        }
-    }
-
 } // namespace

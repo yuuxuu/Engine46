@@ -32,8 +32,6 @@ namespace Engine46 {
         void AddTextureToMap(const char* name, std::unique_ptr<CTextureBase>& pTexture);
 
         CTextureBase* GetTextureFromMap(const char* name);
-
-        void SetTextureToActor(CActorBase* pActor, const char* textureName);
     };
 
 } // namespace

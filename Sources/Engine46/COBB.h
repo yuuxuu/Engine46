@@ -9,20 +9,17 @@
 
 namespace Engine46 {
 
-	// 前方宣言
-	class CActorBase;
-	class CMeshBase;
+    // 前方宣言
 
-	class COBB {
-		
-	public:
-		COBB();
-		~COBB();
+    class COBB {
+    private:
 
-		void Initialize();
+    public:
+        COBB();
+        ~COBB();
 
-	};
+        void Initialize();
+
+    };
 
 } // namespace
-
-

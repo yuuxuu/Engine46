@@ -24,6 +24,7 @@ namespace Engine46 {
         UINT rootCount;
         UINT cameraCount;
         UINT spriteCount;
+        UINT boxCount;
         UINT lightCount;
 
         classCount() :
@@ -31,6 +32,7 @@ namespace Engine46 {
             rootCount(0),
             cameraCount(0),
             spriteCount(0),
+            boxCount(0),
             lightCount(0)
         {}
     };

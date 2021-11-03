@@ -148,6 +148,24 @@ namespace Engine46 {
         return vecSprite;
     }
 
+    // シーン内ボックスを全て取得
+    std::vector<CActorBase*> CSceneBase::GetBoxsFromScene() {
+        std::vector<CActorBase*> vecBox;
+
+        if (pRootActor) {
+            std::vector<CActorBase*> pActors;
+            this->GetActorsRecursiveInActor(pActors, pRootActor, (int)ActorType::Box);
+
+            if (!pActors.empty()) {
+                for (const auto pActor : pActors) {
+                    vecBox.emplace_back(pActor);
+                }
+            }
+        }
+
+        return vecBox;
+    }
+
     // シーン内カメラを全て取得
     std::vector<CCamera*> CSceneBase::GetCamerasFromScene() {
         std::vector<CCamera*> vecCameras;

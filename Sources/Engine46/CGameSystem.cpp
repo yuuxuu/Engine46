@@ -78,10 +78,10 @@ namespace Engine46 {
             pCamera->SetInput(m_pInput.get());
             pScene->AddActorToScene(pCamera);
 
-            CActorBase* pSprite = m_pActorManager->CreateActor((int)ActorType::Sprite);
-            pSprite->SetTexture("E3g6p9QUYAMTSbT.jpg");
-            pSprite->SetShaderPackage("Model.hlsl");
-            pScene->AddActorToScene(pSprite);
+            CActorBase* pBox = m_pActorManager->CreateActor((int)ActorType::Box);
+            pBox->SetTexture("E3g6p9QUYAMTSbT.jpg");
+            pBox->SetShaderPackage("Model.hlsl");
+            pScene->AddActorToScene(pBox);
 
             CLight* pDirectionalLight = m_pActorManager->CreateLight((int)LightType::Directional);
             pDirectionalLight->SetPos(VECTOR3(0.0f, 0.0f, 1000.0f));

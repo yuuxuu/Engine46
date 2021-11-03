@@ -6,22 +6,20 @@
  */
 
 #include "COBB.h"
-#include "CActor.h"
 
 namespace Engine46 {
 
-	// コンストラクタ
-	COBB::COBB()
-	{}
+    // コンストラクタ
+    COBB::COBB()
+    {}
 
-	// デストラクタ
-	COBB::~COBB()
-	{}
+    // デストラクタ
+    COBB::~COBB()
+    {}
 
-	// 初期化
-	void COBB::Initialize() {
+    // 初期化
+    void COBB::Initialize() {
 
-		
-	}
+    }
 
 } // namespace

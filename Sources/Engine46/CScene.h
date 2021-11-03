@@ -51,6 +51,7 @@ namespace Engine46 {
         CLight* GetLightFromScene();
 
         std::vector<CSprite*> GetSpritesFromScene();
+        std::vector<CActorBase*> GetBoxsFromScene();
         std::vector<CCamera*> GetCamerasFromScene();
         std::vector<CLight*> GetLightsFromScene();
 

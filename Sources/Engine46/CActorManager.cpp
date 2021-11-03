@@ -11,6 +11,7 @@
 #include "CDirectionalLight.h"
 #include "CPointLight.h"
 #include "CSpotLight.h"
+#include "CMesh.h"
 
 #include "GraphicsAPI/CRenderer.h"
 
@@ -33,25 +34,53 @@ namespace Engine46 {
         RECT rect;
         std::string actorName;
 
+        CMeshBase* pMesh = nullptr;
+
         switch ((ActorType)actorType) {
         case ActorType::Root:
-            actorName = "Root_" + std::to_string(m_classCount.rootCount++);
+            actorName = "Root_" + std::to_string(m_classCount.rootCount);
 
             actor = std::make_unique<CActorBase>(actorType, actorName.c_str(), Transform());
+
+            m_classCount.rootCount++;
             break;
         case ActorType::Camera:
             rect = pRenderer->GetWindowRect();
-            actorName = "Camera_" + std::to_string(m_classCount.cameraCount++);
+            actorName = "Camera_" + std::to_string(m_classCount.cameraCount);
 
             actor = std::make_unique<CCamera>(actorName.c_str(), rect.w, rect.h);
+
+            m_classCount.cameraCount++;
             break;
         case ActorType::Sprite:
-            actorName = "Sprite_" + std::to_string(m_classCount.spriteCount++);
+            actorName = "Sprite_" + std::to_string(m_classCount.spriteCount);
 
             actor = std::make_unique<CSprite>(actorName.c_str());
-            actor->SetMesh("SpriteMesh_" + std::to_string(m_classCount.spriteCount++));
-            actor->SetMaterial("SpriteMaterial_" + std::to_string(m_classCount.spriteCount++));
+            actor->SetMesh("SpriteMesh");
+            actor->SetMaterial("SpriteMaterial_" + std::to_string(m_classCount.spriteCount));
             actor->InitializeResource(pRenderer);
+
+            pMesh = actor->GetMesh();
+            if (pMesh) {
+                pMesh->CreateSpriteMesh();
+            }
+
+            m_classCount.spriteCount++;
+            break;
+        case ActorType::Box:
+            actorName = "Box_" + std::to_string(m_classCount.boxCount);
+
+            actor = std::make_unique<CActorBase>(actorType, actorName.c_str(), Transform());
+            actor->SetMesh("BoxMesh");
+            actor->SetMaterial("BoxMaterial_" + std::to_string(m_classCount.boxCount));
+            actor->InitializeResource(pRenderer);
+
+            pMesh = actor->GetMesh();
+            if (pMesh) {
+                pMesh->CreateBoxMesh();
+            }
+
+            m_classCount.boxCount++;
             break;
         case ActorType::Light:
             return nullptr;

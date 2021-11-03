@@ -18,7 +18,7 @@ namespace Engine46 {
     // コンストラクタ
     CCamera::CCamera(const char* actorName, const int sWidth, const int sHeight) :
         CActorBase((int)ActorType::Camera, actorName, Transform()),
-        m_eye(0.0f, 0.0f, 10.0f),
+        m_eye(0.0f, 0.0f, -10.0f),
         m_forcus(),
         m_up(0.0f, 1.0f, 0.0f),
         m_speed(1.0f)
