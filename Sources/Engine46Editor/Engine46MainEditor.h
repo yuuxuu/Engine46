@@ -38,4 +38,6 @@ private:
 
 public slots:
     void ChangeValueActorName();
+
+    void SelectActorForMouseLeftPress(const QPoint& point);
 };

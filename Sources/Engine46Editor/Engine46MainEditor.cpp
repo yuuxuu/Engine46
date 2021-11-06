@@ -13,6 +13,8 @@
 #include <QFileSystemModel>
 
 #include "Engine46/CFileSystem.h"
+#include "Engine46/CRendererSystem.h"
+#include "Engine46/CScene.h"
 
  // コンストラクタ
 Engine46MainEditor::Engine46MainEditor(QWidget* parent)
@@ -20,7 +22,7 @@ Engine46MainEditor::Engine46MainEditor(QWidget* parent)
 {
     ui.setupUi(this);
 
-    this->resize(QSize(1600, 900));
+    this->resize(QSize(1920, 1080));
 
     this->setStyleSheet(
         "QWidget {"
@@ -45,6 +47,8 @@ Engine46MainEditor::Engine46MainEditor(QWidget* parent)
     ui.tabWidget->addTab(pRenderWidget, "RenderWidget");
 
     // 接続
+    connect(pRenderWidget, &QMyRenderWidget::MouseLeftPress, this, &Engine46MainEditor::SelectActorForMouseLeftPress);
+
     connect(pEngine46SceneEditor->ui.sceneTreeView, &QAbstractItemView::clicked, pEngine46ActorEditor, &Engine46ActorEditor::SetSelectActor);
     connect(pEngine46SceneEditor->ui.sceneTreeView, &QAbstractItemView::clicked, pEngine46SceneEditor, &Engine46SceneEditor::SelectItem);
 
@@ -62,10 +66,28 @@ void Engine46MainEditor::InitializeMainEditor() {
     pEngine46FileEditor->InitializeFileEditor();
 }
 
+///////////
+// slots 
+//////////
+
 // アクター名変更を各エディタへ知らせる
 void Engine46MainEditor::ChangeValueActorName() {
     QString string = pEngine46ActorEditor->ui.lineEdit_ActorName->text();
 
     pEngine46SceneEditor->ChangeValueReflectToName(string);
     pEngine46ActorEditor->ChangeValueReflectToName(string);
+}
+
+// 左マウス押下でアクターを選択
+void Engine46MainEditor::SelectActorForMouseLeftPress(const QPoint& point) {
+    Engine46::CSceneBase* pScene = Engine46::CRendererSystem::GetRendererSystem().GetRenderScene();
+    if (pScene) {
+        Engine46::VECTOR2 screenSize(static_cast<float>(pRenderWidget->width()), static_cast<float>(pRenderWidget->height()));
+        Engine46::VECTOR2 mousePos(static_cast<float>(point.x()), static_cast<float>(point.y()));
+        
+        Engine46::CActorBase* pActor = pScene->GetMouseSelectActorFromScene(screenSize, mousePos);
+        if (pActor) {
+
+        }
+    }
 }

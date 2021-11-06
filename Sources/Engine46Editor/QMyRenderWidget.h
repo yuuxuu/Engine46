@@ -10,13 +10,17 @@
 #include <QWidget>
 
 class QMyRenderWidget : public QWidget {
+    Q_OBJECT
 public:
     QMyRenderWidget(QWidget* parent = Q_NULLPTR);
     ~QMyRenderWidget();
 
 private:
+    void mousePressEvent(QMouseEvent* event) override;
 
     void enterEvent(QEvent* event) override;
     void leaveEvent(QEvent* event) override;
-};
 
+Q_SIGNALS:
+    void MouseLeftPress(const QPoint& point);
+};

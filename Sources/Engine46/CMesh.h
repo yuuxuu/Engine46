@@ -14,13 +14,27 @@
 
 namespace Engine46 {
 
-    struct vertexInfo {
+    struct VertexInfo {
         VECTOR3	vertex;
         VECTOR4	color;
         VECTOR2	uv;
         VECTOR3	normal;
         VECTOR3	tangent;
         VECTOR3	binormal;
+    };
+
+    struct MeshInfo {
+        VECTOR3 vertexE;
+        VECTOR3 vertexCenterPos;
+        VECTOR3 maxVertexPos;
+        VECTOR3 minVertexPos;
+
+        MeshInfo() :
+            vertexE(0.0f, 0.0f, 0.0f),
+            vertexCenterPos(0.0f, 0.0f, 0.0f),
+            maxVertexPos(0.0f, 0.0f, 0.0f),
+            minVertexPos(10000.0f, 10000.0f, 10000.0f)
+        {}
     };
 
     enum class PRIMITIVE_TOPOLOGY_TYPE {
@@ -33,9 +47,11 @@ namespace Engine46 {
 
     class CMeshBase {
     protected:
-        std::vector<vertexInfo>	m_vecVertexInfo;
+        std::vector<VertexInfo>	m_vecVertexInfo;
 
         std::vector<DWORD>      m_vecIndexes;
+
+        MeshInfo                m_meshInfo;
 
         int                     m_meshID;
 
@@ -54,8 +70,12 @@ namespace Engine46 {
         virtual void CreateIndexBuffer() {};
         virtual void Draw() {};
 
+        void SetMeshInfo();
+
         void CreateSpriteMesh();
         void CreateBoxMesh();
+
+        const MeshInfo& GetMeshInfo() const { return m_meshInfo; }
 
         std::string GetMeshName() const { return m_meshName.c_str(); }
 

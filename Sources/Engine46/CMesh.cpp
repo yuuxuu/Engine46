@@ -36,6 +36,28 @@ namespace Engine46 {
         VecClear(m_vecIndexes);
     }
 
+    // メッシュ情報を設定
+    void CMeshBase::SetMeshInfo() {
+
+        if (m_vecVertexInfo.empty()) return;
+
+        for (const auto& vertexInfo : m_vecVertexInfo) {
+            if (m_meshInfo.maxVertexPos.x < vertexInfo.vertex.x) m_meshInfo.maxVertexPos.x = vertexInfo.vertex.x;
+            if (m_meshInfo.maxVertexPos.y < vertexInfo.vertex.y) m_meshInfo.maxVertexPos.y = vertexInfo.vertex.y;
+            if (m_meshInfo.maxVertexPos.z < vertexInfo.vertex.z) m_meshInfo.maxVertexPos.z = vertexInfo.vertex.z;
+
+            if (m_meshInfo.minVertexPos.x > vertexInfo.vertex.x) m_meshInfo.minVertexPos.x = vertexInfo.vertex.x;
+            if (m_meshInfo.minVertexPos.y > vertexInfo.vertex.y) m_meshInfo.minVertexPos.y = vertexInfo.vertex.y;
+            if (m_meshInfo.minVertexPos.z > vertexInfo.vertex.z) m_meshInfo.minVertexPos.z = vertexInfo.vertex.z;
+        }
+
+        m_meshInfo.vertexCenterPos = (m_meshInfo.minVertexPos + m_meshInfo.maxVertexPos) * 0.5f;
+
+        m_meshInfo.vertexE.x = fabsf(m_meshInfo.maxVertexPos.x - m_meshInfo.minVertexPos.x) * 0.5f;
+        m_meshInfo.vertexE.y = fabsf(m_meshInfo.maxVertexPos.y - m_meshInfo.minVertexPos.y) * 0.5f;
+        m_meshInfo.vertexE.z = fabsf(m_meshInfo.maxVertexPos.z - m_meshInfo.minVertexPos.z) * 0.5f;
+    }
+
     // スプライトメッシュ作成
     void CMeshBase::CreateSpriteMesh() {
 
@@ -46,6 +68,7 @@ namespace Engine46 {
         m_vecVertexInfo.reserve(4);
 
         m_vecVertexInfo = {
+            // vertex               // color                         // uv                // normal
             { VECTOR3(-r, r, 0.0f), VECTOR4(1.0f, 1.0f, 1.0f, 1.0f), VECTOR2(0.0f, 0.0f), VECTOR3(0.0f, 0.0f, 1.0f), },
             { VECTOR3( r, r, 0.0f), VECTOR4(1.0f, 1.0f, 1.0f, 1.0f), VECTOR2(1.0f, 0.0f), VECTOR3(0.0f, 0.0f, 1.0f), },
             { VECTOR3(-r,-r, 0.0f), VECTOR4(1.0f, 1.0f, 1.0f, 1.0f), VECTOR2(0.0f, 1.0f), VECTOR3(0.0f, 0.0f, 1.0f), },
@@ -62,6 +85,8 @@ namespace Engine46 {
         };
 
         CreateIndexBuffer();
+
+        SetMeshInfo();
     }
 
     void CMeshBase::CreateBoxMesh() {
@@ -131,6 +156,8 @@ namespace Engine46 {
         };
 
         CreateIndexBuffer();
+
+        SetMeshInfo();
     }
 
 } // namespace

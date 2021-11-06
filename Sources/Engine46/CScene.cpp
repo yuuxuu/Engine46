@@ -11,6 +11,7 @@
 #include "CCamera.h"
 #include "CLight.h"
 #include "CSprite.h"
+#include "COBB.h"
 
 namespace Engine46 {
 
@@ -99,6 +100,42 @@ namespace Engine46 {
                 return pRootActor;
             }
             return this->GetActorRecursiveInName(pRootActor, actorName);
+        }
+
+        return nullptr;
+    }
+
+    // シーン内のマウスで選択されたアクターを取得
+    CActorBase* CSceneBase::GetMouseSelectActorFromScene(VECTOR2& screenSize, VECTOR2& mousePos) {
+
+        CCamera* pCamera = GetCameraFromScene();
+        if (pCamera) {
+            Matrix viewProjMat = pCamera->GetViewProjectionMatrix();
+            Matrix viewPortMat = GetViewPortMatrix(screenSize.x, screenSize.y);
+
+            Matrix matrix;
+            matrix.dx_m = viewProjMat.dx_m * viewPortMat.dx_m;
+
+            Matrix invMatrix;
+            invMatrix.dx_m = DirectX::XMMatrixInverse(nullptr, matrix.dx_m);
+            
+            VECTOR3 nearVec = Vec3TransformCoord(VECTOR3(mousePos.x, mousePos.y, 0.0f), invMatrix);
+            VECTOR3 farVec = Vec3TransformCoord(VECTOR3(mousePos.x, mousePos.y, 1.0f), invMatrix);
+
+            Ray ray;
+            ray.orgRay = nearVec;
+            ray.dirRay = farVec - nearVec;
+
+            for (const auto& pActor : pRootActor->GetChildActorList()) {
+                COBB* pObb = pActor->GetOBB();
+                if (pObb) {
+                    pObb->Update(pActor);
+
+                    if (pObb->IsRayHit(ray)) {
+                        return pActor;
+                    }
+                }
+            }
         }
 
         return nullptr;

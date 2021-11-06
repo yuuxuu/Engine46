@@ -220,7 +220,7 @@
     <ClInclude Include="Engine46ActorEditor.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="QMyRenderWidget.h" />
+    <QtMoc Include="QMyRenderWidget.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="QMyTreeView.h" />

@@ -30,6 +30,8 @@ namespace Engine46 {
 
         if (pMesh) {
             pMesh->CreateSpriteMesh();
+
+            CreateOBB();
         }
     }
 

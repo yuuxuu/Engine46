@@ -25,6 +25,7 @@ namespace Engine46 {
     class CShaderPackage;
     class CInput;
     class CUnorderedAccessBufferBase;
+    class COBB;
 
     enum class ActorType {
         Root,
@@ -53,6 +54,8 @@ namespace Engine46 {
         CShaderPackage*                         pShaderPackage;
 
         std::unique_ptr<CConstantBufferBase>    m_pWorldConstantBuffer;
+
+        std::unique_ptr<COBB>                   m_pObb;
 
         CInput*                                 pInput;
 
@@ -93,6 +96,9 @@ namespace Engine46 {
         CShaderPackage* GetShaderPackage() const { return pShaderPackage; }
         void SetShaderPackage(CShaderPackage* pShaderPackage);
         void SetShaderPackage(const std::string& shaderPackageName);
+
+        COBB* GetOBB() const { return m_pObb.get(); }
+        void CreateOBB();
 
         void SetInput(CInput* pInput);
 

@@ -11,6 +11,7 @@
 #define _CSCENE_H_
 
 #include "IObject.h"
+#include "math.h"
 
 namespace Engine46 {
 
@@ -46,6 +47,8 @@ namespace Engine46 {
         void AddActorToScene(CActorBase* pActor);
 
         CActorBase* GetActorFromActorName(std::string& actorName);
+
+        CActorBase* GetMouseSelectActorFromScene(VECTOR2& screenSize, VECTOR2& mousePos);
 
         CCamera* GetCameraFromScene();
         CLight* GetLightFromScene();

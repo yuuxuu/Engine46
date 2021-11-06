@@ -195,6 +195,11 @@ namespace Engine46 {
         }
     };
 
+    struct Ray {
+        VECTOR3 orgRay;
+        VECTOR3 dirRay;
+    };
+
     struct RECT {
         int w, h;
 
@@ -250,7 +255,11 @@ namespace Engine46 {
 
     VECTOR3 Vec3Cross(VECTOR3 vec1, VECTOR3 vec2);
 
+    VECTOR3 Vec3TransformCoord(VECTOR3 vec, Matrix matrix);
+
     Matrix MatrixLookAt(VECTOR3 pos, VECTOR3 look, VECTOR3 up);
+
+    Matrix GetViewPortMatrix(float screenWidth, float screenHeight);
 
 } // namespace
 

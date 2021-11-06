@@ -83,7 +83,7 @@ namespace Engine46 {
     // メッシュ描画
     void CDX11Mesh::Draw() {
 
-        pDX11DeviceContext->SetBuffer(m_pVertexBuffer.Get(), m_pIndexBuffer.Get(), sizeof(vertexInfo), 0);
+        pDX11DeviceContext->SetBuffer(m_pVertexBuffer.Get(), m_pIndexBuffer.Get(), sizeof(VertexInfo), 0);
 
         pDX11DeviceContext->DrawIndexed((D3D_PRIMITIVE_TOPOLOGY)m_primitiveTopologyType, (UINT)m_vecIndexes.size());
     }

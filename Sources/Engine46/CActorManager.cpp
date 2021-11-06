@@ -60,11 +60,6 @@ namespace Engine46 {
             actor->SetMaterial("SpriteMaterial_" + std::to_string(m_classCount.spriteCount));
             actor->InitializeResource(pRenderer);
 
-            pMesh = actor->GetMesh();
-            if (pMesh) {
-                pMesh->CreateSpriteMesh();
-            }
-
             m_classCount.spriteCount++;
             break;
         case ActorType::Box:
@@ -78,6 +73,8 @@ namespace Engine46 {
             pMesh = actor->GetMesh();
             if (pMesh) {
                 pMesh->CreateBoxMesh();
+
+                actor->CreateOBB();
             }
 
             m_classCount.boxCount++;

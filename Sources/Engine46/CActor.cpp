@@ -16,6 +16,7 @@
 #include "CTextureManager.h"
 #include "CRendererSystem.h"
 #include "CCamera.h"
+#include "COBB.h"
 
 #include "GraphicsAPI/CRenderer.h"
 
@@ -64,6 +65,7 @@ namespace Engine46 {
 
     // 更新
     void CActorBase::Update() {
+
         for (auto& chiled : pChildActorList) {
             chiled->Update();
         }
@@ -207,6 +209,17 @@ namespace Engine46 {
         if (pShaderPackage) {
             this->pShaderPackage = pShaderPackage;
         }
+    }
+
+    // アクターのOBB作成
+    void CActorBase::CreateOBB() {
+
+        if (!pMesh) return;
+
+        MeshInfo meshInfo = pMesh->GetMeshInfo();
+
+        m_pObb = std::make_unique<COBB>();
+        m_pObb->Initialize(meshInfo, m_transform);
     }
 
     // インプットを設定
