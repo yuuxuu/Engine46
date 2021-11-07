@@ -199,34 +199,24 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Engine46FileEditor.cpp" />
-    <ClCompile Include="QMyRenderWidget.cpp" />
-    <ClCompile Include="QMyTreeView.cpp" />
+    <ClCompile Include="MyRenderWidget.cpp" />
+    <ClCompile Include="MyStandardItem.cpp" />
     <QtRcc Include="Engine46Editor.qrc" />
-    <QtUic Include="Engine46ActorEditor.ui" />
-    <ClInclude Include="Engine46MainEditor.h" />
-    <ClCompile Include="Engine46MainEditor.cpp" />
-    <ClCompile Include="Engine46SceneEditor.cpp" />
-    <ClCompile Include="Engine46ActorEditor.cpp" />
+    <QtUic Include="InspectorWidget.ui" />
+    <ClInclude Include="Engine46Editor.h" />
+    <ClCompile Include="Engine46Editor.cpp" />
+    <ClCompile Include="MyInspectorWidget.cpp" />
     <ClCompile Include="main.cpp" />
-    <QtUic Include="Engine46FileEditor.ui" />
-    <QtUic Include="Engine46MainEditor.ui" />
-    <QtUic Include="Engine46SceneEditor.ui" />
+    <QtUic Include="Engine46Editor.ui" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Engine46SceneEditor.h" />
+    <ClInclude Include="MyInspectorWidget.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Engine46ActorEditor.h" />
+    <QtMoc Include="MyRenderWidget.h" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="QMyRenderWidget.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="QMyTreeView.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Engine46FileEditor.h" />
+    <ClInclude Include="MyStandardItem.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

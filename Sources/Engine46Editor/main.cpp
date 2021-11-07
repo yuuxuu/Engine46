@@ -1,9 +1,17 @@
-﻿#include "Engine46MainEditor.h"
-#include <QApplication>
+﻿/**
+ * @file main.cpp
+ * @brief
+ * @author 木村優
+ * @date 2021/06/26
+ */
+
+#include "Engine46Editor.h"
 
 #include "Engine46/CGameSystem.h"
 #include "Engine46/CFileSystem.h"
 #include "Engine46/CRendererSystem.h"
+
+#include <QApplication>
 
 #pragma comment(lib, "Engine46.lib")
 #pragma comment(lib, "GraphicsAPI.lib")
@@ -12,7 +20,7 @@ int main(int argc, char* argv[])
 {
     QApplication a(argc, argv);
 
-    Engine46MainEditor w;
+    Engine46Editor w;
     w.show();
 
     Engine46::CFileSystem& fileSystem = Engine46::CFileSystem::GetFileSystem();
@@ -39,7 +47,7 @@ int main(int argc, char* argv[])
         return -1;
     }
 
-    w.InitializeMainEditor();
+    w.InitializeEditor();
 
     return a.exec();
 }

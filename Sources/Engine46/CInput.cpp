@@ -12,7 +12,8 @@ namespace Engine46 {
     // コンストラクタ
     CInput::CInput(HWND hwnd) :
         m_hWnd(hwnd),
-        m_isUpdate(false)
+        m_isKeyUpdate(false),
+        m_isMouseUpdate(false)
     {}
 
     // デストラクタ
@@ -101,27 +102,36 @@ namespace Engine46 {
     // デバイス更新
     void CInput::UpdateInput() {
 
-        if (!m_isUpdate) return;
+        if (m_isMouseUpdate) {
+            if (!UpdateMouse()) {
 
-        if (!UpdateKeyBoard()) {
-
+            }
         }
 
-        if (!UpdateMouse()) {
+        if (m_isKeyUpdate) {
+            if (!UpdateKeyBoard()) {
 
+            }
         }
     }
 
-    // 更新ステートを変更
-    void CInput::ChangeUpdateState(bool state) {
-        m_isUpdate = state;
+    // マウス更新ステートを変更
+    void CInput::ChangeMouseUpdateState(bool state) {
+        m_isMouseUpdate = state;
 
-        if (!m_isUpdate) {
-            m_key = {};
-            m_oldKey = {};
-
+        if (!m_isMouseUpdate) {
             m_mouse = {};
             m_oldMouse = {};
+        }
+    }
+
+    // キーボード更新ステートを変更
+    void CInput::ChangeKeyUpdateState(bool state) {
+        m_isKeyUpdate = state;
+
+        if (!m_isKeyUpdate) {
+            m_key = {};
+            m_oldKey = {};
         }
     }
 

@@ -12,6 +12,8 @@
 
 namespace Engine46 {
 
+    constexpr float PI = 3.141592654f;
+
     struct VECTOR2 {
         float x, y;
 
@@ -246,6 +248,11 @@ namespace Engine46 {
             return RECT(w, h);
         };
     };
+
+    float DegreeToRadian(float degree);
+    float RadianToDegree(float radian);
+
+    float Vec2Length(VECTOR2 vec);
 
     float Vec3Lenght(VECTOR3 vec);
 

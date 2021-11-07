@@ -38,7 +38,8 @@ namespace Engine46 {
 
         POINT                           m_mousePos;
 
-        bool                            m_isUpdate;
+        bool                            m_isKeyUpdate;
+        bool                            m_isMouseUpdate;
 
     private:
         bool InitializeKeyBoard(HWND hwnd);
@@ -54,7 +55,8 @@ namespace Engine46 {
 
         void UpdateInput();
 
-        void ChangeUpdateState(bool state);
+        void ChangeMouseUpdateState(bool state);
+        void ChangeKeyUpdateState(bool state);
 
         bool IsPressKey(UINT key);
         bool IsTriggerKey(UINT key);

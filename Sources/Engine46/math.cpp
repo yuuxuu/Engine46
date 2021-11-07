@@ -9,6 +9,21 @@
 
 namespace Engine46 {
 
+    // ラジアンから度数へ変換
+    float DegreeToRadian(float degree) { 
+        return degree * (PI / 180.0f); 
+    }
+
+    // 度数からラジアンへ変換
+    float RadianToDegree(float radian) { 
+        return radian * (180.0f / PI); 
+    }
+
+    // VECTOR2の長さを取得
+    float Vec2Length(VECTOR2 vec) {
+        return std::sqrtf(vec.x * vec.x + vec.y * vec.y);
+    }
+
     // VECTOR3の長さを取得
     float Vec3Lenght(VECTOR3 vec) {
         return std::sqrtf(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
