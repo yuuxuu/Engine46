@@ -10,7 +10,7 @@
 #ifndef _CCDX11_CONSTANTBUFFER_H_
 #define _CCDX11_CONSTANTBUFFER_H_
 
-#include "Engine46/CConstantBuffer.h"
+#include "../CConstantBuffer.h"
 
 using Microsoft::WRL::ComPtr;
 

@@ -12,8 +12,6 @@
 
 #include "math.h"
 
-#pragma comment(lib, "GraphicsAPI.lib")
-
 namespace Engine46 {
 
     // 前方宣言

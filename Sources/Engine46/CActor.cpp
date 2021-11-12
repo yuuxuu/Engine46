@@ -13,12 +13,11 @@
 #include "CMaterialManager.h"
 #include "CMeshManager.h"
 #include "CShaderManager.h"
-#include "CTextureManager.h"
 #include "CRendererSystem.h"
 #include "CCamera.h"
 #include "COBB.h"
 
-#include "GraphicsAPI/CRenderer.h"
+#include "CRenderer.h"
 
 namespace Engine46 {
 

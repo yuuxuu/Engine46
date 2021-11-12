@@ -10,7 +10,7 @@
 #ifndef _CRENDERING_H_
 #define _CRENDERING_H_
 
-#include "Engine46/CTexture.h"
+#include "CTexture.h"
 
 namespace Engine46 {
 

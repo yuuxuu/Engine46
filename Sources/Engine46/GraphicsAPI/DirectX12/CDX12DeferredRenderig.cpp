@@ -13,12 +13,12 @@
 #include "CDX12Texture.h"
 #include "CDX12UnorderedAccessBuffer.h"
 
-#include "Engine46/CRendererSystem.h"
-#include "Engine46/CGameSystem.h"
-#include "Engine46/CShaderManager.h"
-#include "Engine46/CMaterial.h"
-#include "Engine46/CMesh.h"
-#include "Engine46/CLight.h"
+#include "../CRendererSystem.h"
+#include "../CGameSystem.h"
+#include "../CShaderManager.h"
+#include "../CMaterial.h"
+#include "../CMesh.h"
+#include "../CLight.h"
 
 namespace Engine46 {
 

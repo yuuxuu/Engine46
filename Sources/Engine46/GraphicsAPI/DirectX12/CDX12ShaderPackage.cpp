@@ -10,7 +10,7 @@
 #include "CDX12Command.h"
 #include "CDX12Renderer.h"
 
-#include "Engine46/CRendererSystem.h"
+#include "../CRendererSystem.h"
 
 namespace Engine46 {
 

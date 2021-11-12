@@ -10,7 +10,7 @@
 #ifndef _CDX11_TEXTURE_H_
 #define _CDX11_TEXTURE_H_
 
-#include "Engine46/CTexture.h"
+#include "../CTexture.h"
 
 using Microsoft::WRL::ComPtr;
 

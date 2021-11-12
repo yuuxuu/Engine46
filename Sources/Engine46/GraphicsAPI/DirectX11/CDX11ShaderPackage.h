@@ -10,7 +10,7 @@
 #ifndef _CDX11_SHADER_PACKAGE_H_
 #define _CDX11_SHADER_PACKAGE_H_
 
-#include "Engine46/CShaderPackage.h"
+#include "../CShaderPackage.h"
 
 namespace Engine46 {
 

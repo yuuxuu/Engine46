@@ -11,8 +11,6 @@
 #include "CConstantBuffer.h"
 #include "CSprite.h"
 
-#include "GraphicsAPI/CRenderer.h"
-
 namespace Engine46 {
 
     // コンストラクタ

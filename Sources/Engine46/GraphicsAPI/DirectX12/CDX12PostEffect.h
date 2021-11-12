@@ -10,9 +10,9 @@
 #ifndef _CPOST_EFFECT_H
 #define _CPOST_EFFECT_H
 
-#include "IPostEffect.h"
+#include "../IPostEffect.h"
 
-#include "Engine46/math.h"
+#include "../math.h"
 
 using Microsoft::WRL::ComPtr;
 

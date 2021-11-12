@@ -7,13 +7,13 @@
 
 #include "CFBXLoader.h"
 
-#include "../CMesh.h"
-#include "../CMaterial.h"
-#include "../CGameSystem.h"
-#include "../CMeshManager.h"
-#include "../CMaterialManager.h"
-#include "../CTextureManager.h"
-#include "../CSkeltalMesh.h"
+#include "CMesh.h"
+#include "CMaterial.h"
+#include "CGameSystem.h"
+#include "CMeshManager.h"
+#include "CMaterialManager.h"
+#include "CTextureManager.h"
+#include "CSkeltalMesh.h"
 
 namespace Engine46 {
 

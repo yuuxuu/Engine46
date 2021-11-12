@@ -10,7 +10,7 @@
 #ifndef _CCDX12_UNORDERERD_ACCESS_BUFFER_H_
 #define _CCDX12_UNORDERERD_ACCESS_BUFFER_H_
 
-#include "Engine46/CUnorderedAccessBuffer.h"
+#include "../CUnorderedAccessBuffer.h"
 
 using Microsoft::WRL::ComPtr;
 

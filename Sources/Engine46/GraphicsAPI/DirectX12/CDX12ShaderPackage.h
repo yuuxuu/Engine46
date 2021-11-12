@@ -10,7 +10,7 @@
 #ifndef _CDX12_SHADER_PCKAGE_H_
 #define _CDX12_SHADER_PCKAGE_H_
 
-#include "Engine46/CShaderPackage.h"
+#include "../CShaderPackage.h"
 
 using Microsoft::WRL::ComPtr;
 

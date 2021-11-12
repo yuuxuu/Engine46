@@ -16,14 +16,12 @@
 namespace Engine46 {
 
     // 前方宣言
-    class CRendererBase;
     class CDataRecordBase;
     class CConstantBufferBase;
     class CMeshBase;
     class CTextureBase;
     class CShaderPackage;
     class CInput;
-    class CUnorderedAccessBufferBase;
     class COBB;
 
     enum class ActorType {

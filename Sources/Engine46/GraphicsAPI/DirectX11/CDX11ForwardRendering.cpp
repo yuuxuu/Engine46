@@ -11,9 +11,9 @@
 #include "CDX11Texture.h"
 #include "CDX11Renderer.h"
 
-#include "Engine46/CMesh.h"
-#include "Engine46/CMaterial.h"
-#include "Engine46/CRendererSystem.h"
+#include "../CMesh.h"
+#include "../CMaterial.h"
+#include "../CRendererSystem.h"
 
 namespace Engine46 {
 

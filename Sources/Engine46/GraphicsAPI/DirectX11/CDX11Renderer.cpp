@@ -14,11 +14,11 @@
 #include "CDX11ShaderPackage.h"
 #include "CDX11Texture.h"
 
-#include "Engine46/CGameSystem.h"
-#include "Engine46/CFileSystem.h"
-#include "Engine46/CShaderManager.h"
-#include "Engine46/CLight.h"
-#include "Engine46/CCamera.h"
+#include "../CGameSystem.h"
+#include "../CFileSystem.h"
+#include "../CShaderManager.h"
+#include "../CLight.h"
+#include "../CCamera.h"
 
 namespace Engine46 {
 

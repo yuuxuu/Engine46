@@ -20,31 +20,18 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\stdafx.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </ForcedIncludeFiles>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </ForcedIncludeFiles>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </ForcedIncludeFiles>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </ForcedIncludeFiles>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">stdafx.h</PrecompiledHeaderFile>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">stdafx.h</PrecompiledHeaderFile>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">stdafx.h</PrecompiledHeaderFile>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="CActor.cpp" />
     <ClCompile Include="CActorManager.cpp" />
-    <ClCompile Include="CSkeltalMesh.cpp" />
-    <ClCompile Include="COBB.cpp" />
-    <ClCompile Include="CUnorderedAccessBuffer.cpp" />
     <ClCompile Include="CCamera.cpp" />
     <ClCompile Include="CConstantBuffer.cpp" />
+    <ClCompile Include="CDataRecord.cpp" />
     <ClCompile Include="CDirectionalLight.cpp" />
+    <ClCompile Include="CFBXLoader.cpp" />
     <ClCompile Include="CFileSystem.cpp" />
     <ClCompile Include="CGameSystem.cpp" />
     <ClCompile Include="CInput.cpp" />
@@ -53,35 +40,97 @@
     <ClCompile Include="CMaterialManager.cpp" />
     <ClCompile Include="CMesh.cpp" />
     <ClCompile Include="CMeshManager.cpp" />
+    <ClCompile Include="COBB.cpp" />
     <ClCompile Include="CPointLight.cpp" />
+    <ClCompile Include="CRenderer.cpp" />
     <ClCompile Include="CRendererSystem.cpp" />
+    <ClCompile Include="CRendering.cpp" />
     <ClCompile Include="CScene.cpp" />
     <ClCompile Include="CSceneManager.cpp" />
     <ClCompile Include="CShader.cpp" />
     <ClCompile Include="CShaderManager.cpp" />
     <ClCompile Include="CShaderPackage.cpp" />
+    <ClCompile Include="CSkeltalMesh.cpp" />
     <ClCompile Include="CSpotLight.cpp" />
     <ClCompile Include="CSprite.cpp" />
     <ClCompile Include="CTexture.cpp" />
     <ClCompile Include="CTextureManager.cpp" />
     <ClCompile Include="CTimer.cpp" />
+    <ClCompile Include="CUnorderedAccessBuffer.cpp" />
     <ClCompile Include="CWinow.cpp" />
-    <ClCompile Include="CDataRecord.cpp" />
+    <ClCompile Include="GraphicsAPI\DirectX11\CDX11ConstantBuffer.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">stdafx.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="GraphicsAPI\DirectX11\CDX11Device.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">stdafx.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="GraphicsAPI\DirectX11\CDX11DeviceContext.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">stdafx.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="GraphicsAPI\DirectX11\CDX11ForwardRendering.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">stdafx.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="GraphicsAPI\DirectX11\CDX11Mesh.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">stdafx.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="GraphicsAPI\DirectX11\CDX11Renderer.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">stdafx.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="GraphicsAPI\DirectX11\CDX11ShaderPackage.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">stdafx.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="GraphicsAPI\DirectX11\CDX11Texture.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">stdafx.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="GraphicsAPI\DirectX12\CDX12Command.cpp" />
+    <ClCompile Include="GraphicsAPI\DirectX12\CDX12ConstantBuffer.cpp" />
+    <ClCompile Include="GraphicsAPI\DirectX12\CDX12DeferredRenderig.cpp" />
+    <ClCompile Include="GraphicsAPI\DirectX12\CDX12DepthRendering.cpp" />
+    <ClCompile Include="GraphicsAPI\DirectX12\CDX12Device.cpp" />
+    <ClCompile Include="GraphicsAPI\DirectX12\CDX12ForwardRendering.cpp" />
+    <ClCompile Include="GraphicsAPI\DirectX12\CDX12Mesh.cpp" />
+    <ClCompile Include="GraphicsAPI\DirectX12\CDX12PostEffect.cpp" />
+    <ClCompile Include="GraphicsAPI\DirectX12\CDX12Renderer.cpp" />
+    <ClCompile Include="GraphicsAPI\DirectX12\CDX12ShaderPackage.cpp" />
+    <ClCompile Include="GraphicsAPI\DirectX12\CDX12Texture.cpp" />
+    <ClCompile Include="GraphicsAPI\DirectX12\CDX12UnorderedAccessBuffer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="math.cpp" />
-    <ClCompile Include="ModelLoader\CFBXLoader.cpp" />
     <ClCompile Include="utility.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\stdafx.h" />
     <ClInclude Include="CActor.h" />
     <ClInclude Include="CActorManager.h" />
-    <ClInclude Include="CSkeltalMesh.h" />
-    <ClInclude Include="COBB.h" />
-    <ClInclude Include="CUnorderedAccessBuffer.h" />
     <ClInclude Include="CCamera.h" />
     <ClInclude Include="CConstantBuffer.h" />
+    <ClInclude Include="CDataRecord.h" />
     <ClInclude Include="CDirectionalLight.h" />
+    <ClInclude Include="CFBXLoader.h" />
     <ClInclude Include="CFileSystem.h" />
     <ClInclude Include="CGameSystem.h" />
     <ClInclude Include="CInput.h" />
@@ -90,24 +139,49 @@
     <ClInclude Include="CMaterialManager.h" />
     <ClInclude Include="CMesh.h" />
     <ClInclude Include="CMeshManager.h" />
+    <ClInclude Include="COBB.h" />
     <ClInclude Include="CPointLight.h" />
+    <ClInclude Include="CRenderer.h" />
     <ClInclude Include="CRendererSystem.h" />
+    <ClInclude Include="CRendering.h" />
     <ClInclude Include="CScene.h" />
     <ClInclude Include="CSceneManager.h" />
     <ClInclude Include="CShader.h" />
     <ClInclude Include="CShaderManager.h" />
     <ClInclude Include="CShaderPackage.h" />
+    <ClInclude Include="CSkeltalMesh.h" />
     <ClInclude Include="CSpotLight.h" />
     <ClInclude Include="CSprite.h" />
     <ClInclude Include="CTexture.h" />
     <ClInclude Include="CTextureManager.h" />
     <ClInclude Include="CTimer.h" />
+    <ClInclude Include="CUnorderedAccessBuffer.h" />
     <ClInclude Include="CWinow.h" />
-    <ClInclude Include="CDataRecord.h" />
+    <ClInclude Include="GraphicsAPI\DirectX11\CDX11ConstantBuffer.h" />
+    <ClInclude Include="GraphicsAPI\DirectX11\CDX11Device.h" />
+    <ClInclude Include="GraphicsAPI\DirectX11\CDX11DeviceContext.h" />
+    <ClInclude Include="GraphicsAPI\DirectX11\CDX11ForwardRendering.h" />
+    <ClInclude Include="GraphicsAPI\DirectX11\CDX11Mesh.h" />
+    <ClInclude Include="GraphicsAPI\DirectX11\CDX11Renderer.h" />
+    <ClInclude Include="GraphicsAPI\DirectX11\CDX11ShaderPackage.h" />
+    <ClInclude Include="GraphicsAPI\DirectX11\CDX11Texture.h" />
+    <ClInclude Include="GraphicsAPI\DirectX12\CDX12Command.h" />
+    <ClInclude Include="GraphicsAPI\DirectX12\CDX12ConstantBuffer.h" />
+    <ClInclude Include="GraphicsAPI\DirectX12\CDX12DeferredRenderig.h" />
+    <ClInclude Include="GraphicsAPI\DirectX12\CDX12DepthRendering.h" />
+    <ClInclude Include="GraphicsAPI\DirectX12\CDX12Device.h" />
+    <ClInclude Include="GraphicsAPI\DirectX12\CDX12ForwardRendering.h" />
+    <ClInclude Include="GraphicsAPI\DirectX12\CDX12Mesh.h" />
+    <ClInclude Include="GraphicsAPI\DirectX12\CDX12PostEffect.h" />
+    <ClInclude Include="GraphicsAPI\DirectX12\CDX12Renderer.h" />
+    <ClInclude Include="GraphicsAPI\DirectX12\CDX12ShaderPackage.h" />
+    <ClInclude Include="GraphicsAPI\DirectX12\CDX12Texture.h" />
+    <ClInclude Include="GraphicsAPI\DirectX12\CDX12UnorderedAccessBuffer.h" />
+    <ClInclude Include="IModelLoader.h" />
     <ClInclude Include="IObject.h" />
+    <ClInclude Include="IPostEffect.h" />
+    <ClInclude Include="IRenderer.h" />
     <ClInclude Include="math.h" />
-    <ClInclude Include="ModelLoader\CFBXLoader.h" />
-    <ClInclude Include="ModelLoader\IModelLoader.h" />
     <ClInclude Include="utility.h" />
   </ItemGroup>
   <ItemGroup>
@@ -320,7 +394,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
+      <ForcedIncludeFiles>stdafx.h;</ForcedIncludeFiles>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <AdditionalIncludeDirectories>..\..\Inc;..\;ModelLoader;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\include</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
@@ -345,7 +419,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
+      <ForcedIncludeFiles>stdafx.h;</ForcedIncludeFiles>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <AdditionalIncludeDirectories>..\..\Inc;..\;ModelLoader;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\include</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
@@ -372,7 +446,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
+      <ForcedIncludeFiles>stdafx.h;</ForcedIncludeFiles>
       <AdditionalIncludeDirectories>..\..\Inc;..\;ModelLoader;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\include</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
@@ -400,7 +474,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
+      <ForcedIncludeFiles>stdafx.h;</ForcedIncludeFiles>
       <AdditionalIncludeDirectories>..\..\Inc;..\;ModelLoader;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\include</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
     </ClCompile>

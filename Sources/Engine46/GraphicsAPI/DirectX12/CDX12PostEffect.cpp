@@ -7,16 +7,16 @@
 
 #include "CDX12PostEffect.h"
 
-#include "GraphicsAPI/DirectX12/CDX12Device.h"
-#include "GraphicsAPI/DirectX12/CDX12Command.h"
-#include "GraphicsAPI/DirectX12/CDX12Renderer.h"
-#include "GraphicsAPI/DirectX12/CDX12Texture.h"
-#include "GraphicsAPI/DirectX12/CDX12UnorderedAccessBuffer.h"
+#include "CDX12Device.h"
+#include "CDX12Command.h"
+#include "CDX12Renderer.h"
+#include "CDX12Texture.h"
+#include "CDX12UnorderedAccessBuffer.h"
 
-#include "Engine46/CGameSystem.h"
-#include "Engine46/CShaderManager.h"
-#include "Engine46/CSprite.h"
-#include "Engine46/CMesh.h"
+#include "../CGameSystem.h"
+#include "../CShaderManager.h"
+#include "../CSprite.h"
+#include "../CMesh.h"
 
 namespace Engine46 {
 

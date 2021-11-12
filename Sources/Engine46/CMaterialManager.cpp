@@ -9,7 +9,7 @@
 #include "CMaterial.h"
 #include "CActor.h"
 
-#include "GraphicsAPI/CRenderer.h"
+#include "CRenderer.h"
 
 namespace Engine46 {
 

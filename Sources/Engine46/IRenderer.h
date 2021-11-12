@@ -10,7 +10,7 @@
 #ifndef _IRENDERER_H_
 #define _IRENDERER_H_
 
-#include "../Engine46/CScene.h"
+#include "CScene.h"
 
 namespace Engine46 {
 

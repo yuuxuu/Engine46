@@ -17,10 +17,10 @@
 #include "CDX12DepthRendering.h"
 #include "CDX12DeferredRenderig.h"
 
-#include "Engine46/CFileSystem.h"
-#include "Engine46/CLight.h"
-#include "Engine46/CCamera.h"
-#include "Engine46/CMaterial.h"
+#include "../CFileSystem.h"
+#include "../CLight.h"
+#include "../CCamera.h"
+#include "../CMaterial.h"
 
 namespace Engine46 {
 

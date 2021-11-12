@@ -22,8 +22,6 @@
 #include "CTextureManager.h"
 #include "CShaderManager.h"
 
-#include "GraphicsAPI/DirectX11/CDX11Renderer.h"
-
 namespace Engine46 {
 
     // コンストラクタ

@@ -14,7 +14,6 @@
 #include <QApplication>
 
 #pragma comment(lib, "Engine46.lib")
-#pragma comment(lib, "GraphicsAPI.lib")
 
 int main(int argc, char* argv[])
 {

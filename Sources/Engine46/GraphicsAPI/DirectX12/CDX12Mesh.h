@@ -10,7 +10,7 @@
 #ifndef _CDX12_MESH_H_
 #define _CDX12_MESH_H_
 
-#include "Engine46/CMesh.h"
+#include "../CMesh.h"
 
 using Microsoft::WRL::ComPtr;
 

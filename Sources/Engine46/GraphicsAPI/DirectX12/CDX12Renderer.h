@@ -12,9 +12,7 @@
 
 #include "../CRenderer.h"
 
-#include "PostEffect/CDX12PostEffect.h"
-
-#pragma comment(lib, "PostEffect.lib")
+#include "CDX12PostEffect.h"
 
 using Microsoft::WRL::ComPtr;
 

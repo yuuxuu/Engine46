@@ -19,45 +19,75 @@
     <Filter Include="リソース ファイル\HLSLI">
       <UniqueIdentifier>{0702e011-fae0-46d8-8b09-8986e6aed9a6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ModelLoader">
-      <UniqueIdentifier>{31dab25a-b913-4600-a07a-05b09a894570}</UniqueIdentifier>
+    <Filter Include="GraphicsAPI">
+      <UniqueIdentifier>{ce5f1da6-dbe3-4470-8141-bd63b259f7bb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ModelLoader\ソースファイル">
-      <UniqueIdentifier>{a5d2e5f1-4711-4360-b7f6-69053265825f}</UniqueIdentifier>
+    <Filter Include="GraphicsAPI\DirectX11">
+      <UniqueIdentifier>{87eee153-7532-4ff8-9409-d4d3a7536217}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ModelLoader\ヘッダーファイル">
-      <UniqueIdentifier>{f5d5a0a0-fe12-4337-865c-b7086300faca}</UniqueIdentifier>
+    <Filter Include="GraphicsAPI\DirectX12">
+      <UniqueIdentifier>{482ff52e-eadf-4312-ab0c-87accd84dc61}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="math.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="GraphicsAPI\DirectX11\CDX11ConstantBuffer.cpp">
+      <Filter>GraphicsAPI\DirectX11</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsAPI\DirectX11\CDX11Device.cpp">
+      <Filter>GraphicsAPI\DirectX11</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsAPI\DirectX11\CDX11DeviceContext.cpp">
+      <Filter>GraphicsAPI\DirectX11</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsAPI\DirectX11\CDX11ForwardRendering.cpp">
+      <Filter>GraphicsAPI\DirectX11</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsAPI\DirectX11\CDX11Mesh.cpp">
+      <Filter>GraphicsAPI\DirectX11</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsAPI\DirectX11\CDX11Renderer.cpp">
+      <Filter>GraphicsAPI\DirectX11</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsAPI\DirectX11\CDX11ShaderPackage.cpp">
+      <Filter>GraphicsAPI\DirectX11</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsAPI\DirectX11\CDX11Texture.cpp">
+      <Filter>GraphicsAPI\DirectX11</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsAPI\DirectX12\CDX12Command.cpp">
+      <Filter>GraphicsAPI\DirectX12</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsAPI\DirectX12\CDX12ConstantBuffer.cpp">
+      <Filter>GraphicsAPI\DirectX12</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsAPI\DirectX12\CDX12DeferredRenderig.cpp">
+      <Filter>GraphicsAPI\DirectX12</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsAPI\DirectX12\CDX12DepthRendering.cpp">
+      <Filter>GraphicsAPI\DirectX12</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsAPI\DirectX12\CDX12Device.cpp">
+      <Filter>GraphicsAPI\DirectX12</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsAPI\DirectX12\CDX12ForwardRendering.cpp">
+      <Filter>GraphicsAPI\DirectX12</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsAPI\DirectX12\CDX12Mesh.cpp">
+      <Filter>GraphicsAPI\DirectX12</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsAPI\DirectX12\CDX12Renderer.cpp">
+      <Filter>GraphicsAPI\DirectX12</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsAPI\DirectX12\CDX12ShaderPackage.cpp">
+      <Filter>GraphicsAPI\DirectX12</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsAPI\DirectX12\CDX12Texture.cpp">
+      <Filter>GraphicsAPI\DirectX12</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsAPI\DirectX12\CDX12UnorderedAccessBuffer.cpp">
+      <Filter>GraphicsAPI\DirectX12</Filter>
     </ClCompile>
     <ClCompile Include="utility.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="CWinow.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="CFileSystem.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="CGameSystem.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="CDataRecord.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="..\stdafx.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="CConstantBuffer.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="CTimer.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="CInput.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="CActor.cpp">
@@ -67,6 +97,60 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="CCamera.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="CConstantBuffer.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="CDataRecord.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="CDirectionalLight.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="CFBXLoader.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="CFileSystem.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="CGameSystem.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="CInput.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="CLight.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="CMaterial.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="CMaterialManager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="CMesh.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="CMeshManager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="COBB.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="CPointLight.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="CRenderer.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="CRendererSystem.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="CRendering.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="CScene.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="CSceneManager.cpp">
@@ -81,69 +165,120 @@
     <ClCompile Include="CShaderPackage.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="CSkeltalMesh.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="CSpotLight.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
     <ClCompile Include="CSprite.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="CTexture.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="CMaterial.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="CMesh.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="CScene.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="CMaterialManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="CMeshManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="CTextureManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="CRendererSystem.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="CLight.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="CDirectionalLight.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="CPointLight.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="CSpotLight.cpp">
+    <ClCompile Include="CTimer.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="CUnorderedAccessBuffer.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="COBB.cpp">
+    <ClCompile Include="CWinow.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="ModelLoader\CFBXLoader.cpp">
-      <Filter>ModelLoader\ソースファイル</Filter>
+    <ClCompile Include="main.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="CSkeltalMesh.cpp">
+    <ClCompile Include="math.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsAPI\DirectX12\CDX12PostEffect.cpp">
+      <Filter>GraphicsAPI\DirectX12</Filter>
+    </ClCompile>
+    <ClCompile Include="..\stdafx.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="math.h">
+    <ClInclude Include="GraphicsAPI\DirectX11\CDX11ConstantBuffer.h">
+      <Filter>GraphicsAPI\DirectX11</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsAPI\DirectX11\CDX11Device.h">
+      <Filter>GraphicsAPI\DirectX11</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsAPI\DirectX11\CDX11DeviceContext.h">
+      <Filter>GraphicsAPI\DirectX11</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsAPI\DirectX11\CDX11ForwardRendering.h">
+      <Filter>GraphicsAPI\DirectX11</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsAPI\DirectX11\CDX11Mesh.h">
+      <Filter>GraphicsAPI\DirectX11</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsAPI\DirectX11\CDX11Renderer.h">
+      <Filter>GraphicsAPI\DirectX11</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsAPI\DirectX11\CDX11ShaderPackage.h">
+      <Filter>GraphicsAPI\DirectX11</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsAPI\DirectX11\CDX11Texture.h">
+      <Filter>GraphicsAPI\DirectX11</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsAPI\DirectX12\CDX12Command.h">
+      <Filter>GraphicsAPI\DirectX12</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsAPI\DirectX12\CDX12ConstantBuffer.h">
+      <Filter>GraphicsAPI\DirectX12</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsAPI\DirectX12\CDX12DeferredRenderig.h">
+      <Filter>GraphicsAPI\DirectX12</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsAPI\DirectX12\CDX12DepthRendering.h">
+      <Filter>GraphicsAPI\DirectX12</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsAPI\DirectX12\CDX12Device.h">
+      <Filter>GraphicsAPI\DirectX12</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsAPI\DirectX12\CDX12ForwardRendering.h">
+      <Filter>GraphicsAPI\DirectX12</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsAPI\DirectX12\CDX12Mesh.h">
+      <Filter>GraphicsAPI\DirectX12</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsAPI\DirectX12\CDX12Renderer.h">
+      <Filter>GraphicsAPI\DirectX12</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsAPI\DirectX12\CDX12ShaderPackage.h">
+      <Filter>GraphicsAPI\DirectX12</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsAPI\DirectX12\CDX12Texture.h">
+      <Filter>GraphicsAPI\DirectX12</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsAPI\DirectX12\CDX12UnorderedAccessBuffer.h">
+      <Filter>GraphicsAPI\DirectX12</Filter>
+    </ClInclude>
+    <ClInclude Include="CActor.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="utility.h">
+    <ClInclude Include="CActorManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="CWinow.h">
+    <ClInclude Include="CCamera.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="CConstantBuffer.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="CDataRecord.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="CDirectionalLight.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="CFBXLoader.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="CFileSystem.h">
@@ -152,31 +287,37 @@
     <ClInclude Include="CGameSystem.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="CDataRecord.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="IObject.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="..\stdafx.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="CConstantBuffer.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="CTimer.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="CInput.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="CTexture.h">
+    <ClInclude Include="CLight.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="CMaterial.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="CMaterialManager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
     <ClInclude Include="CMesh.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="CMeshManager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="COBB.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="CPointLight.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="CRenderer.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="CRendererSystem.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="CRendering.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="CScene.h">
@@ -194,56 +335,53 @@
     <ClInclude Include="CShaderPackage.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="CSprite.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="CCamera.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="CActor.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="CActorManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="CMaterialManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="CMeshManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="CTextureManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="CRendererSystem.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="CLight.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="CDirectionalLight.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="CPointLight.h">
+    <ClInclude Include="CSkeltalMesh.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="CSpotLight.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="CSprite.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="CTexture.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="CTextureManager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="CTimer.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
     <ClInclude Include="CUnorderedAccessBuffer.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="COBB.h">
+    <ClInclude Include="CWinow.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="ModelLoader\CFBXLoader.h">
-      <Filter>ModelLoader\ヘッダーファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="CSkeltalMesh.h">
+    <ClInclude Include="IModelLoader.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="ModelLoader\IModelLoader.h">
-      <Filter>ModelLoader\ヘッダーファイル</Filter>
+    <ClInclude Include="IObject.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="IPostEffect.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="IRenderer.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="math.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="utility.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsAPI\DirectX12\CDX12PostEffect.h">
+      <Filter>GraphicsAPI\DirectX12</Filter>
+    </ClInclude>
+    <ClInclude Include="..\stdafx.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -13,11 +13,11 @@
 #include "IRenderer.h"
 #include "CRendering.h"
 
-#include "Engine46/math.h"
-#include "Engine46/CShaderPackage.h"
-#include "Engine46/CConstantBuffer.h"
-#include "Engine46/CUnorderedAccessBuffer.h"
-#include "Engine46/CSprite.h"
+#include "math.h"
+#include "CShaderPackage.h"
+#include "CConstantBuffer.h"
+#include "CUnorderedAccessBuffer.h"
+#include "CSprite.h"
 
 namespace Engine46 {
 

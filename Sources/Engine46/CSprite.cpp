@@ -10,8 +10,6 @@
 #include "CMaterial.h"
 #include "CConstantBuffer.h"
 
-#include "GraphicsAPI/CRenderer.h"
-
 namespace Engine46 {
 
     // コンストラクタ
