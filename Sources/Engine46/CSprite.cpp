@@ -23,18 +23,6 @@ namespace Engine46 {
     CSprite::~CSprite()
     {}
 
-    // リソースの初期化
-    void CSprite::InitializeResource(CRendererBase* pRenderer) {
-
-        CActorBase::InitializeResource(pRenderer);
-
-        if (pMesh) {
-            pMesh->CreateSpriteMesh();
-
-            CreateOBB();
-        }
-    }
-
     // 更新
     void CSprite::Update() {
 

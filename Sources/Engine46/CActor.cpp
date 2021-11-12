@@ -82,12 +82,8 @@ namespace Engine46 {
                 m_pWorldConstantBuffer->Set((UINT)CB_TYPE::WORLD);
             }
 
-            if (pMaterial) {
-                pMaterial->Update();
-                pMaterial->Set((UINT)CB_TYPE::MATERIAL);
-            }
-
             if (pMesh) {
+                pMesh->Set();
                 pMesh->Draw();
             }
         }
@@ -117,21 +113,6 @@ namespace Engine46 {
         return true;
     }
 
-    // リソースの初期化
-    void CActorBase::InitializeResource(CRendererBase* pRenderer) {
-        if (pRenderer) {
-            std::unique_ptr<CConstantBufferBase> pConstantBuffer;
-            pRenderer->CreateConstantBuffer(pConstantBuffer, sizeof(worldCB));
-            SetWorldConstantBuffer(pConstantBuffer);
-
-            if (pMaterial && !pMaterial->IsInitialize()) {
-                std::unique_ptr<CConstantBufferBase> pMaterialConstantBuffer;
-                pRenderer->CreateConstantBuffer(pMaterialConstantBuffer, sizeof(materialCB));
-                pMaterial->SetMaterialConstantBuffer(pMaterialConstantBuffer);
-            }
-        }
-    }
-
     // コンスタントバッファを更新
     void CActorBase::UpdateWorldConstantBuffer(void* pData) {
         if (m_pWorldConstantBuffer) {
@@ -149,9 +130,7 @@ namespace Engine46 {
 
     // メッシュを設定
     void CActorBase::SetMesh(CMeshBase* pMesh) {
-        if (pMesh) {
-            this->pMesh = pMesh;
-        }
+        this->pMesh = pMesh;
     }
 
     // メッシュを設定
@@ -160,38 +139,6 @@ namespace Engine46 {
         CMeshBase* pMesh = meshManager->CreateMesh(meshName.c_str());
         if (pMesh) {
             this->pMesh = pMesh;
-        }
-    }
-
-    // マテリアルを設定
-    void CActorBase::SetMaterial(CMaterialBase* pMaterial) {
-        if (pMaterial) {
-            this->pMaterial = pMaterial;
-        }
-    }
-
-    // マテリアルを設定
-    void CActorBase::SetMaterial(const std::string& materialName) {
-        CMaterialManager* materialManager = CGameSystem::GetGameSystem().GetMaterialManager();
-        CMaterialBase* pMaterial = materialManager->CreateMaterial(materialName.c_str());
-        if (pMaterial) {
-            this->pMaterial = pMaterial;
-        }
-    }
-
-    // マテリアルにテクスチャを設定
-    void CActorBase::SetTexture(CTextureBase* pTexture) {
-        if (pMaterial) {
-            pMaterial->SetTexture(pTexture);
-        }
-    }
-
-    // マテリアルにテクスチャを設定
-    void CActorBase::SetTexture(const std::string& textureName) {
-        CTextureManager* textureManager = CGameSystem::GetGameSystem().GetTextureManager();
-        CTextureBase* pTexture = textureManager->CreateTexture(textureName.c_str());
-        if (pMaterial) {
-            pMaterial->SetTexture(pTexture);
         }
     }
 

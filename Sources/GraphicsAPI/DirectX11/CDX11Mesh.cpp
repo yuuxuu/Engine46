@@ -64,9 +64,9 @@ namespace Engine46 {
     }
 
     void CDX11Mesh::CreateIndexBuffer() {
-        if (!m_vecIndexes.empty()) {
+        if (!m_vecIndex.empty()) {
             D3D11_BUFFER_DESC bufDesc = {};
-            bufDesc.ByteWidth = sizeof(m_vecIndexes[0]) * (UINT)m_vecIndexes.size();
+            bufDesc.ByteWidth = sizeof(m_vecIndex[0]) * (UINT)m_vecIndex.size();
             bufDesc.Usage = D3D11_USAGE_DEFAULT;
             bufDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
             bufDesc.CPUAccessFlags = 0;
@@ -74,7 +74,7 @@ namespace Engine46 {
             bufDesc.StructureByteStride = 0;
 
             D3D11_SUBRESOURCE_DATA subData = {};
-            subData.pSysMem = &m_vecIndexes[0];
+            subData.pSysMem = &m_vecIndex[0];
 
             pDX11Device->CreateBuffer(m_pIndexBuffer, bufDesc, &subData);
         }
@@ -85,7 +85,7 @@ namespace Engine46 {
 
         pDX11DeviceContext->SetBuffer(m_pVertexBuffer.Get(), m_pIndexBuffer.Get(), sizeof(VertexInfo), 0);
 
-        pDX11DeviceContext->DrawIndexed((D3D_PRIMITIVE_TOPOLOGY)m_primitiveTopologyType, (UINT)m_vecIndexes.size());
+        pDX11DeviceContext->DrawIndexed((D3D_PRIMITIVE_TOPOLOGY)m_primitiveTopologyType, (UINT)m_vecIndex.size());
     }
 
 } // namespace

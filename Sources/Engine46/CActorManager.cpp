@@ -12,6 +12,7 @@
 #include "CPointLight.h"
 #include "CSpotLight.h"
 #include "CMesh.h"
+#include "CMaterial.h"
 
 #include "GraphicsAPI/CRenderer.h"
 
@@ -33,7 +34,6 @@ namespace Engine46 {
         std::unique_ptr<CActorBase> actor;
         RECT rect;
         std::string actorName;
-
         CMeshBase* pMesh = nullptr;
 
         switch ((ActorType)actorType) {
@@ -56,9 +56,16 @@ namespace Engine46 {
             actorName = "Sprite_" + std::to_string(m_classCount.spriteCount);
 
             actor = std::make_unique<CSprite>(actorName.c_str());
-            actor->SetMesh("SpriteMesh");
-            actor->SetMaterial("SpriteMaterial_" + std::to_string(m_classCount.spriteCount));
-            actor->InitializeResource(pRenderer);
+            actor->SetMesh("SpriteMesh_" + std::to_string(m_classCount.spriteCount));
+
+            pMesh = actor->GetMesh();
+            if (pMesh) {
+                pMesh->SetMaterial("SpriteMaterial_" + std::to_string(m_classCount.spriteCount));
+
+                pMesh->CreateSpriteMesh();
+
+                actor->CreateOBB();
+            }
 
             m_classCount.spriteCount++;
             break;
@@ -66,12 +73,12 @@ namespace Engine46 {
             actorName = "Box_" + std::to_string(m_classCount.boxCount);
 
             actor = std::make_unique<CActorBase>(actorType, actorName.c_str(), Transform());
-            actor->SetMesh("BoxMesh");
-            actor->SetMaterial("BoxMaterial_" + std::to_string(m_classCount.boxCount));
-            actor->InitializeResource(pRenderer);
-
+            actor->SetMesh("BoxMesh" + std::to_string(m_classCount.boxCount));
+            
             pMesh = actor->GetMesh();
             if (pMesh) {
+                pMesh->SetMaterial("BoxMaterial_" + std::to_string(m_classCount.boxCount));
+
                 pMesh->CreateBoxMesh();
 
                 actor->CreateOBB();
@@ -82,6 +89,10 @@ namespace Engine46 {
         case ActorType::Light:
             return nullptr;
         }
+
+        std::unique_ptr<CConstantBufferBase> worldConstantBuffer;
+        pRenderer->CreateConstantBuffer(worldConstantBuffer, sizeof(worldCB));
+        actor->SetWorldConstantBuffer(worldConstantBuffer);
 
         actor->SetActorID(m_classCount.allCount++);
 
@@ -118,15 +129,32 @@ namespace Engine46 {
             break;
         }
 
+        std::unique_ptr<CConstantBufferBase> worldConstantBuffer;
+        pRenderer->CreateConstantBuffer(worldConstantBuffer, sizeof(worldCB));
+        light->SetWorldConstantBuffer(worldConstantBuffer);
+
         light->SetLightType((LightType)lightType);
+
+        light->SetMesh("LightMesh" + std::to_string(m_classCount.lightCount));
+
+        CMeshBase* pMesh = light->GetMesh();
+        if (pMesh) {
+            pMesh->SetMaterial("LightMaterial_" + std::to_string(m_classCount.lightCount));
+
+            pMesh->CreateSpriteMesh();
+
+            light->CreateOBB();
+
+            CMaterialBase* pMaterial = pMesh->GetMaterial();
+            if (pMaterial) {
+                pMaterial->SetTexture("particle.png");
+            }
+        }
+
+        light->SetShaderPackage("CPUParticle.hlsl");
+
         light->SetActorID(m_classCount.allCount++);
         light->SetLightID(m_classCount.lightCount++);
-
-        light->SetMesh("LightMesh");
-        light->SetMaterial("LightMaterial_" + std::to_string(m_classCount.lightCount));
-        light->SetTexture("particle.png");
-        light->SetShaderPackage("CPUParticle.hlsl");
-        light->InitializeResource(pRenderer);
 
         light->CActorBase::Initialize();
 

@@ -39,8 +39,6 @@ namespace Engine46 {
         explicit CLight(const char* lightName);
         virtual ~CLight();
 
-        void InitializeResource(CRendererBase* pRenderer) override;
-
         virtual void Update() override;
         virtual void Draw() override;
 

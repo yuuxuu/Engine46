@@ -21,8 +21,6 @@ namespace Engine46 {
         explicit CSprite(const char* actorName);
         ~CSprite();
 
-        void InitializeResource(CRendererBase* pRenderer) override;
-
         void Update() override;
         void Draw() override;
     };

@@ -36,7 +36,9 @@ namespace Engine46 {
         ~CDX12Mesh();
 
         void CreateVertexBuffer(PRIMITIVE_TOPOLOGY_TYPE type) override;
+        void CreateVertexBuffer(PRIMITIVE_TOPOLOGY_TYPE type, const std::vector<VertexInfo>& vecVertexInfo) override;
         void CreateIndexBuffer() override;
+        void CreateIndexBuffer(const std::vector<DWORD>& vecIndex) override;
         void Draw() override;
     };
 } // namespace

@@ -11,6 +11,8 @@
 #include "CDX11Texture.h"
 #include "CDX11Renderer.h"
 
+#include "Engine46/CMesh.h"
+#include "Engine46/CMaterial.h"
 #include "Engine46/CRendererSystem.h"
 
 namespace Engine46 {
@@ -200,7 +202,11 @@ namespace Engine46 {
 
         pDX11DeviceContext->SetViewPort(x, y, width, height);
 
-        pSprite->SetTexture(m_pRenderTex.get());
+        CMeshBase* pMesh = pSprite->GetMesh();
+        if (pMesh) {
+            CMaterialBase* pMaterial = pMesh->GetMaterial();
+            pMaterial->SetTexture(m_pRenderTex.get());
+        }
 
         pSprite->Draw();
     }

@@ -219,7 +219,7 @@ namespace Engine46 {
                 };
                 pSprite->UpdateWorldConstantBuffer(&cb);
 
-                pSprite->GetMaterial()->Set((UINT)CB_TYPE::MATERIAL);
+                pSprite->GetMesh()->Set();
 
                 pSprite->GetMesh()->Draw();
             }
@@ -234,7 +234,7 @@ namespace Engine46 {
                 };
                 pBox->UpdateWorldConstantBuffer(&cb);
 
-                pBox->GetMaterial()->Set((UINT)CB_TYPE::MATERIAL);
+                pBox->GetMesh()->Set();
 
                 pBox->GetMesh()->Draw();
             }
@@ -306,7 +306,12 @@ namespace Engine46 {
         for (const auto& pRenderTex : m_pVecRenderTex) {
             pDX12Command->SetViewPort(x, y, width, height);
 
-            pSprite->SetTexture(pRenderTex.get());
+            CMeshBase* pMesh = pSprite->GetMesh();
+            if (pMesh) {
+                CMaterialBase* pMaterial = pMesh->GetMaterial();
+                pMaterial->SetTexture(pRenderTex.get());
+            }
+
             pSprite->Draw();
 
             x += width;

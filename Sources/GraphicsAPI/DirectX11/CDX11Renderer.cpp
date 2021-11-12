@@ -106,10 +106,19 @@ namespace Engine46 {
     void CDX11Renderer::Begine(CSceneBase* pScene) {
         if (!m_pRenderSprite) {
             m_pRenderSprite = std::make_unique<CSprite>("RenderSprite");
+
+            std::unique_ptr<CConstantBufferBase> worldConstantBuffer;
+            CreateConstantBuffer(worldConstantBuffer, sizeof(worldCB));
+            m_pRenderSprite->SetWorldConstantBuffer(worldConstantBuffer);
+
             m_pRenderSprite->SetMesh("RenderSpriteMesh");
-            m_pRenderSprite->SetMaterial("RenderSpriteMaterial");
+            CMeshBase* pMesh = m_pRenderSprite->GetMesh();
+            if (pMesh) {
+                pMesh->SetMaterial("RenderSpriteMaterial");
+
+                pMesh->CreateSpriteMesh();
+            }
             m_pRenderSprite->SetShaderPackage("Sprite.hlsl");
-            m_pRenderSprite->InitializeResource(this);
         }
 
         if (pScene) {

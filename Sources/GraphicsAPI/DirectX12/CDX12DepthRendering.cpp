@@ -12,6 +12,8 @@
 #include "CDX12Texture.h"
 
 #include "Engine46/CRendererSystem.h"
+#include "Engine46/CMaterial.h"
+#include "Engine46/CMesh.h"
 
 namespace Engine46 {
 
@@ -110,7 +112,12 @@ namespace Engine46 {
 
         pDX12Command->SetViewPort(x, y, width, height);
 
-        pSprite->SetTexture(pDX12DepthTexture);
+        CMeshBase* pMesh = pSprite->GetMesh();
+        if (pMesh) {
+            CMaterialBase* pMaterial = pMesh->GetMaterial();
+            pMaterial->SetTexture(pDX12DepthTexture);
+        }
+
         pSprite->Draw();
     }
 

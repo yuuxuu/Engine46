@@ -7,6 +7,9 @@
 
 #include "CMaterial.h"
 
+#include "CGameSystem.h"
+#include "CTextureManager.h"
+
 #include "GraphicsAPI/DirectX12/CDX12ShaderPackage.h"
 
 namespace Engine46 {
@@ -67,6 +70,11 @@ namespace Engine46 {
         if (pTexture) {
             pTexture->Set((UINT)MyRS_01::SRV_diffuse);
         }
+        else {
+            for (const auto pTexture : m_pVecTexture) {
+                pTexture->Set((UINT)MyRS_01::SRV_diffuse);
+            }
+        }
     }
 
     // コンスタントバッファを設定
@@ -80,6 +88,15 @@ namespace Engine46 {
             this->Update();
 
             m_isInitialize = true;
+        }
+    }
+
+    // テクスチャを設定
+    void CMaterialBase::SetTexture(const std::string& textureName) {
+        CTextureManager* textureManager = CGameSystem::GetGameSystem().GetTextureManager();
+        CTextureBase* pTexture = textureManager->CreateTexture(textureName.c_str());
+        if (pTexture) {
+            this->pTexture = pTexture;
         }
     }
 

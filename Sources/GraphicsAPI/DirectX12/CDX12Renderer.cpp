@@ -20,6 +20,7 @@
 #include "Engine46/CFileSystem.h"
 #include "Engine46/CLight.h"
 #include "Engine46/CCamera.h"
+#include "Engine46/CMaterial.h"
 
 namespace Engine46 {
 
@@ -151,10 +152,19 @@ namespace Engine46 {
     void CDX12Renderer::Begine(CSceneBase* pScene) {
         if (!m_pRenderSprite) {
             m_pRenderSprite = std::make_unique<CSprite>("RenderSprite");
+
+            std::unique_ptr<CConstantBufferBase> worldConstantBuffer;
+            CreateConstantBuffer(worldConstantBuffer, sizeof(worldCB));
+            m_pRenderSprite->SetWorldConstantBuffer(worldConstantBuffer);
+
             m_pRenderSprite->SetMesh("RenderSpriteMesh");
-            m_pRenderSprite->SetMaterial("RenderSpriteMaterial");
+            CMeshBase* pMesh = m_pRenderSprite->GetMesh();
+            if (pMesh) {
+                pMesh->SetMaterial("RenderSpriteMaterial");
+
+                pMesh->CreateSpriteMesh();
+            }
             m_pRenderSprite->SetShaderPackage("Sprite.hlsl");
-            m_pRenderSprite->InitializeResource(this);
         }
 
         if (pScene) {
@@ -261,7 +271,7 @@ namespace Engine46 {
         UINT x = 0;
         UINT y = (UINT)m_windowRect.h - height;
 
-        if (m_pDX12PostEffect) {
+        /*if (m_pDX12PostEffect) {
             m_pDX12PostEffect->DrawForBloom(m_pRenderSprite.get(), pRenderTexture);
         }
 
@@ -272,6 +282,16 @@ namespace Engine46 {
         if (m_pDepthRendring) {
             x += width * RENDER_TARGET_SIZE;
             m_pDepthRendring->DrawForRenderScene(m_pRenderSprite.get(), x, y, width, height);
+        }*/
+
+        if (m_pRenderSprite) {
+            CMeshBase* pMesh = m_pRenderSprite->GetMesh();
+            if (pMesh) {
+                CMaterialBase* pMaterial = pMesh->GetMaterial();
+                pMaterial->SetTexture(pRenderTexture);
+            }
+
+            m_pRenderSprite->Draw();
         }
 
         m_pDX12Command->SetResourceBarrier(m_pRtvResource[index].Get(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);

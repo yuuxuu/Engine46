@@ -39,6 +39,7 @@
     </ClCompile>
     <ClCompile Include="CActor.cpp" />
     <ClCompile Include="CActorManager.cpp" />
+    <ClCompile Include="CSkeltalMesh.cpp" />
     <ClCompile Include="COBB.cpp" />
     <ClCompile Include="CUnorderedAccessBuffer.cpp" />
     <ClCompile Include="CCamera.cpp" />
@@ -68,12 +69,14 @@
     <ClCompile Include="CDataRecord.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="math.cpp" />
+    <ClCompile Include="ModelLoader\CFBXLoader.cpp" />
     <ClCompile Include="utility.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\stdafx.h" />
     <ClInclude Include="CActor.h" />
     <ClInclude Include="CActorManager.h" />
+    <ClInclude Include="CSkeltalMesh.h" />
     <ClInclude Include="COBB.h" />
     <ClInclude Include="CUnorderedAccessBuffer.h" />
     <ClInclude Include="CCamera.h" />
@@ -103,6 +106,8 @@
     <ClInclude Include="CDataRecord.h" />
     <ClInclude Include="IObject.h" />
     <ClInclude Include="math.h" />
+    <ClInclude Include="ModelLoader\CFBXLoader.h" />
+    <ClInclude Include="ModelLoader\IModelLoader.h" />
     <ClInclude Include="utility.h" />
   </ItemGroup>
   <ItemGroup>
@@ -235,6 +240,9 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Engine46.rc" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
@@ -312,10 +320,10 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <ForcedIncludeFiles>..\stdafx.h</ForcedIncludeFiles>
+      <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-      <AdditionalIncludeDirectories>..\..\Inc;..\</AdditionalIncludeDirectories>
-      <PrecompiledHeaderFile>..\stdafx.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>..\..\Inc;..\;ModelLoader;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\include</AdditionalIncludeDirectories>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -324,6 +332,9 @@
       <SubSystem>
       </SubSystem>
     </Link>
+    <Lib>
+      <AdditionalLibraryDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\lib\vs2015\x64\debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -334,10 +345,10 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <ForcedIncludeFiles>..\stdafx.h</ForcedIncludeFiles>
+      <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-      <AdditionalIncludeDirectories>..\..\Inc;..\</AdditionalIncludeDirectories>
-      <PrecompiledHeaderFile>..\stdafx.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>..\..\Inc;..\;ModelLoader;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\include</AdditionalIncludeDirectories>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -346,6 +357,9 @@
       <SubSystem>
       </SubSystem>
     </Link>
+    <Lib>
+      <AdditionalLibraryDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\lib\vs2015\x86\debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -358,9 +372,9 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <ForcedIncludeFiles>..\stdafx.h</ForcedIncludeFiles>
-      <AdditionalIncludeDirectories>..\..\Inc;..\</AdditionalIncludeDirectories>
-      <PrecompiledHeaderFile>..\stdafx.h</PrecompiledHeaderFile>
+      <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
+      <AdditionalIncludeDirectories>..\..\Inc;..\;ModelLoader;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\include</AdditionalIncludeDirectories>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -371,6 +385,9 @@
       <SubSystem>
       </SubSystem>
     </Link>
+    <Lib>
+      <AdditionalLibraryDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\lib\vs2015\x64\release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -383,9 +400,9 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <ForcedIncludeFiles>..\stdafx.h</ForcedIncludeFiles>
-      <AdditionalIncludeDirectories>..\..\Inc;..\</AdditionalIncludeDirectories>
-      <PrecompiledHeaderFile>..\stdafx.h</PrecompiledHeaderFile>
+      <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
+      <AdditionalIncludeDirectories>..\..\Inc;..\;ModelLoader;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\include</AdditionalIncludeDirectories>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -396,6 +413,9 @@
       <SubSystem>
       </SubSystem>
     </Link>
+    <Lib>
+      <AdditionalLibraryDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\lib\vs2015\x86\release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

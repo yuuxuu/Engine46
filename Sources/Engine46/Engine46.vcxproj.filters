@@ -19,6 +19,15 @@
     <Filter Include="リソース ファイル\HLSLI">
       <UniqueIdentifier>{0702e011-fae0-46d8-8b09-8986e6aed9a6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ModelLoader">
+      <UniqueIdentifier>{31dab25a-b913-4600-a07a-05b09a894570}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ModelLoader\ソースファイル">
+      <UniqueIdentifier>{a5d2e5f1-4711-4360-b7f6-69053265825f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ModelLoader\ヘッダーファイル">
+      <UniqueIdentifier>{f5d5a0a0-fe12-4337-865c-b7086300faca}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="math.cpp">
@@ -118,6 +127,12 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="COBB.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelLoader\CFBXLoader.cpp">
+      <Filter>ModelLoader\ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="CSkeltalMesh.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -221,6 +236,15 @@
     <ClInclude Include="COBB.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="ModelLoader\CFBXLoader.h">
+      <Filter>ModelLoader\ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="CSkeltalMesh.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelLoader\IModelLoader.h">
+      <Filter>ModelLoader\ヘッダーファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\..\Assets\Shader\HLSL\CPUParticle.hlsl">
@@ -288,5 +312,10 @@
     <None Include="..\..\Assets\Shader\ShaderUlity.hlsli">
       <Filter>リソース ファイル\HLSLI</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Engine46.rc">
+      <Filter>リソース ファイル</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

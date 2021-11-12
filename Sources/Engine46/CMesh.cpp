@@ -6,7 +6,11 @@
  */
 
 #include "CMesh.h"
+#include "CMaterial.h"
 #include "utility.h"
+
+#include "CGameSystem.h"
+#include "CMaterialManager.h"
 
 namespace Engine46 {
 
@@ -33,7 +37,29 @@ namespace Engine46 {
     {
         VecClear(m_vecVertexInfo);
 
-        VecClear(m_vecIndexes);
+        VecClear(m_vecIndex);
+    }
+
+    void CMeshBase::Set() {
+        if (pMaterial) {
+            pMaterial->Update();
+            pMaterial->Set((UINT)CB_TYPE::MATERIAL);
+        }
+        else {
+            for (const auto pMaterial : m_pVecMaterial) {
+                pMaterial->Update();
+                pMaterial->Set((UINT)CB_TYPE::MATERIAL);
+            }
+        }
+    }
+
+    // マテリアルを設定
+    void CMeshBase::SetMaterial(const std::string& materialName) {
+        CMaterialManager* materialManager = CGameSystem::GetGameSystem().GetMaterialManager();
+        CMaterialBase* pMaterial = materialManager->CreateMaterial(materialName.c_str());
+        if (pMaterial) {
+            this->pMaterial = pMaterial;
+        }
     }
 
     // メッシュ情報を設定
@@ -77,9 +103,9 @@ namespace Engine46 {
 
         CreateVertexBuffer(PRIMITIVE_TOPOLOGY_TYPE::TRIANGLESTRIP);
 
-        m_vecIndexes.reserve(6);
+        m_vecIndex.reserve(6);
 
-        m_vecIndexes = {
+        m_vecIndex = {
             0, 1, 2,
             3, 2, 1,
         };
@@ -89,6 +115,7 @@ namespace Engine46 {
         SetMeshInfo();
     }
 
+    // ボックスメッシュ作成
     void CMeshBase::CreateBoxMesh() {
 
         if (m_isInitialize) return;
@@ -133,9 +160,9 @@ namespace Engine46 {
 
         CreateVertexBuffer(PRIMITIVE_TOPOLOGY_TYPE::TRIANGLELIST);
 
-        m_vecIndexes.reserve(36);
+        m_vecIndex.reserve(36);
 
-        m_vecIndexes = {
+        m_vecIndex = {
             0, 1, 2, 
             3, 2, 1,
 

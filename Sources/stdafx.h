@@ -31,6 +31,8 @@
 
 #include <DirectXTex/DirectXTex.h>
 
+#include <fbxsdk.h>
+
 #pragma comment(lib, "winmm.lib")
 
 #pragma comment(lib, "d3d11.lib")
@@ -42,5 +44,5 @@
 
 #pragma comment(lib, "DirectXTex.lib")
 
-
+#pragma comment(lib, "libfbxsdk-mt.lib")
 

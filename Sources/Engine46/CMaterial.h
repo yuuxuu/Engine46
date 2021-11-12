@@ -21,6 +21,8 @@ namespace Engine46 {
     protected:
         CTextureBase*                               pTexture;                                                  
 
+        std::vector<CTextureBase*>                  m_pVecTexture;
+
         std::unique_ptr<CConstantBufferBase>        m_pMaterialConstantBuffer;
 
         VECTOR4                                     m_diffuse;
@@ -44,14 +46,18 @@ namespace Engine46 {
 
         void SetMaterialConstantBuffer(std::unique_ptr<CConstantBufferBase>& pConstantBuffer);
 
+        void SetTexture(const std::string& textureName);
+        void SetTexture(CTextureBase* pTexture) { this->pTexture = pTexture; };
+
+        void AddTexture(CTextureBase* pTexture) { m_pVecTexture.emplace_back(pTexture); }
+
         void SetDiffuse(const VECTOR4& diffuse) { m_diffuse = diffuse; }
         void SetSpecular(const VECTOR4& specular) { m_specular = specular; }
         void SetAmbient(const VECTOR4& ambient) { m_ambient = ambient; }
         void SetEmissive(const VECTOR4& emissive) { m_emissive = emissive; }
 
-        CConstantBufferBase* GetMaterialConstantBuffer() const { return m_pMaterialConstantBuffer.get(); }
 
-        void SetTexture(CTextureBase* pTexture) { this->pTexture = pTexture; }
+        CConstantBufferBase* GetMaterialConstantBuffer() const { return m_pMaterialConstantBuffer.get(); }
 
         std::string GetMaterialName() const { return m_materialName.c_str(); }
 

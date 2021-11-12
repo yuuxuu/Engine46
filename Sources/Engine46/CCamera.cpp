@@ -34,11 +34,6 @@ namespace Engine46 {
     CCamera::~CCamera()
     {}
 
-    // リソースの初期化
-    void CCamera::InitializeResource(CRendererBase* pRenderer) {
-        
-    }
-
     // 初期化
     void CCamera::Initialize() {
 

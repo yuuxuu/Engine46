@@ -30,18 +30,6 @@ namespace Engine46 {
     CLight::~CLight()
     {}
 
-    // リソースの初期化
-    void CLight::InitializeResource(CRendererBase* pRenderer) {
-
-        CActorBase::InitializeResource(pRenderer);
-
-        if (pMesh) {
-            pMesh->CreateSpriteMesh();
-
-            CreateOBB();
-        }
-    }
-
     // 更新
     void CLight::Update() {
         

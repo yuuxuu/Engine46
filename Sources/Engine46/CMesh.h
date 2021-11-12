@@ -14,6 +14,9 @@
 
 namespace Engine46 {
 
+    // 前方宣言
+    class CMaterialBase;
+
     struct VertexInfo {
         VECTOR3	vertex;
         VECTOR4	color;
@@ -47,19 +50,23 @@ namespace Engine46 {
 
     class CMeshBase {
     protected:
-        std::vector<VertexInfo>	m_vecVertexInfo;
+        CMaterialBase*              pMaterial;
 
-        std::vector<DWORD>      m_vecIndexes;
+        std::vector<CMaterialBase*> m_pVecMaterial;
 
-        MeshInfo                m_meshInfo;
+        std::vector<VertexInfo>	    m_vecVertexInfo;
 
-        int                     m_meshID;
+        std::vector<DWORD>          m_vecIndex;
 
-        std::string             m_meshName;
+        MeshInfo                    m_meshInfo;
 
-        bool                    m_isInitialize;
+        int                         m_meshID;
 
-        UINT                    m_primitiveTopologyType;
+        std::string                 m_meshName;
+
+        bool                        m_isInitialize;
+
+        UINT                        m_primitiveTopologyType;
 
     public:
         CMeshBase();
@@ -67,8 +74,18 @@ namespace Engine46 {
         virtual ~CMeshBase();
 
         virtual void CreateVertexBuffer(PRIMITIVE_TOPOLOGY_TYPE type) {};
+        virtual void CreateVertexBuffer(PRIMITIVE_TOPOLOGY_TYPE type, const std::vector<VertexInfo>& vecVertexInfo) {};
         virtual void CreateIndexBuffer() {};
+        virtual void CreateIndexBuffer(const std::vector<DWORD>& vecIndex) {};
         virtual void Draw() {};
+
+        void Set();
+
+        CMaterialBase* GetMaterial() const { return pMaterial; }
+        void SetMaterial(const std::string& materialName);
+        void SetMaterial(CMaterialBase* pMaterial) { this->pMaterial = pMaterial; };
+
+        void AddMaterial(CMaterialBase* pMaterial) { m_pVecMaterial.emplace_back(pMaterial); }
 
         void SetMeshInfo();
 

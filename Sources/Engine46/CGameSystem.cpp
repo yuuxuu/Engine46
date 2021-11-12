@@ -13,6 +13,7 @@
 #include "CLight.h"
 #include "CScene.h"
 #include "CMaterial.h"
+#include "CMesh.h"
 
 #include "CSceneManager.h"
 #include "CActorManager.h"
@@ -79,7 +80,13 @@ namespace Engine46 {
             pScene->AddActorToScene(pCamera);
 
             CActorBase* pBox = m_pActorManager->CreateActor((int)ActorType::Box);
-            pBox->SetTexture("E3g6p9QUYAMTSbT.jpg");
+            CMeshBase* pMesh = pBox->GetMesh();
+            if (pMesh) {
+                CMaterialBase* pMaterial = pMesh->GetMaterial();
+                if (pMaterial) {
+                    pMaterial->SetTexture("E3g6p9QUYAMTSbT.jpg");
+                }
+            }
             pBox->SetShaderPackage("Model.hlsl");
             pScene->AddActorToScene(pBox);
 
@@ -89,22 +96,40 @@ namespace Engine46 {
 
             CLight* pPointLight = m_pActorManager->CreateLight((int)LightType::Point);
             pPointLight->SetPos(VECTOR3(0.0f, 0.0f, 10.0f));
-            pPointLight->GetMaterial()->SetDiffuse(VECTOR4(1.0f, 0.0f, 0.0f, 1.0f));
-            pPointLight->GetMaterial()->SetEmissive(VECTOR4(3.0f, 0.0f, 0.0f, 1.0f));
+            pMesh = pPointLight->GetMesh();
+            if (pMesh) {
+                CMaterialBase* pMaterial = pMesh->GetMaterial();
+                if (pMaterial) {
+                    pMaterial->SetDiffuse(VECTOR4(1.0f, 0.0f, 0.0f, 1.0f));
+                    pMaterial->SetEmissive(VECTOR4(1.0f, 0.0f, 0.0f, 1.0f));
+                }
+            }
             pPointLight->SetLightDiffuse(VECTOR4(1.0f, 0.0f, 0.0f, 1.0f));
             pScene->AddActorToScene(pPointLight);
 
             pPointLight = m_pActorManager->CreateLight((int)LightType::Point);
             pPointLight->SetPos(VECTOR3(5.0f, 0.0f, 10.0f));
-            pPointLight->GetMaterial()->SetDiffuse(VECTOR4(0.0f, 1.0f, 0.0f, 1.0f));
-            pPointLight->GetMaterial()->SetEmissive(VECTOR4(0.0f, 3.0f, 0.0f, 1.0f));
+            pMesh = pPointLight->GetMesh();
+            if (pMesh) {
+                CMaterialBase* pMaterial = pMesh->GetMaterial();
+                if (pMaterial) {
+                    pMaterial->SetDiffuse(VECTOR4(0.0f, 1.0f, 0.0f, 1.0f));
+                    pMaterial->SetEmissive(VECTOR4(0.0f, 3.0f, 0.0f, 1.0f));
+                }
+            }
             pPointLight->SetLightDiffuse(VECTOR4(0.0f, 1.0f, 0.0f, 1.0f));
             pScene->AddActorToScene(pPointLight);
 
             pPointLight = m_pActorManager->CreateLight((int)LightType::Point);
             pPointLight->SetPos(VECTOR3(-5.0f, 0.0f, 10.0f));
-            pPointLight->GetMaterial()->SetDiffuse(VECTOR4(0.0f, 0.0f, 1.0f, 1.0f));
-            pPointLight->GetMaterial()->SetEmissive(VECTOR4(0.0f, 0.0f, 3.0f, 1.0f));
+            pMesh = pPointLight->GetMesh();
+            if (pMesh) {
+                CMaterialBase* pMaterial = pMesh->GetMaterial();
+                if (pMaterial) {
+                    pMaterial->SetDiffuse(VECTOR4(0.0f, 0.0f, 1.0f, 1.0f));
+                    pMaterial->SetEmissive(VECTOR4(0.0f, 0.0f, 3.0f, 1.0f));
+                }
+            }
             pPointLight->SetLightDiffuse(VECTOR4(0.0f, 0.0f, 1.0f, 1.0f));
             pScene->AddActorToScene(pPointLight);
         }

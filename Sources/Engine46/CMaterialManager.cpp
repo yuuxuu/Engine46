@@ -9,6 +9,8 @@
 #include "CMaterial.h"
 #include "CActor.h"
 
+#include "GraphicsAPI/CRenderer.h"
+
 namespace Engine46 {
 
     // コンストラクタ
@@ -30,6 +32,10 @@ namespace Engine46 {
         std::unique_ptr<CMaterialBase> material = std::make_unique<CMaterialBase>(materialName);
 
         if (material) {
+            std::unique_ptr<CConstantBufferBase> pMaterialConstantBuffer;
+            pRenderer->CreateConstantBuffer(pMaterialConstantBuffer, sizeof(materialCB));
+            material->SetMaterialConstantBuffer(pMaterialConstantBuffer);
+
             pMaterial = material.get();
 
             this->AddMaterialToMap(materialName, material);

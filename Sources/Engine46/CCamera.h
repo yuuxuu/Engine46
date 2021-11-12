@@ -37,8 +37,6 @@ namespace Engine46 {
         CCamera(const char* actorName, const int sWidth, const int sHeight);
         ~CCamera();
 
-        void InitializeResource(CRendererBase* pRenderer) override;
-
         void Initialize() override;
         void Update() override;
 

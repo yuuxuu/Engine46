@@ -109,41 +109,41 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>..\..\Inc;..\;$(Qt_INCLUDEPATH_);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <ForcedIncludeFiles>..\stdafx.h</ForcedIncludeFiles>
+      <AdditionalIncludeDirectories>..\..\Inc;..\;$(Qt_INCLUDEPATH_);C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(SolutionDir)Lib\$(PlatformTarget)\$(Configuration)\;$(Qt_LIBPATH_);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Lib\$(PlatformTarget)\$(Configuration)\;$(Qt_LIBPATH_);C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\include;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>..\..\Inc;..\;$(Qt_INCLUDEPATH_);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <ForcedIncludeFiles>..\stdafx.h</ForcedIncludeFiles>
+      <AdditionalIncludeDirectories>..\..\Inc;..\;$(Qt_INCLUDEPATH_);C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(SolutionDir)Lib\$(PlatformTarget)\$(Configuration)\;$(Qt_LIBPATH_);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Lib\$(PlatformTarget)\$(Configuration)\;$(Qt_LIBPATH_);C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\lib\vs2015\x86\release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>..\..\Inc;..\;$(Qt_INCLUDEPATH_);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <ForcedIncludeFiles>..\stdafx.h</ForcedIncludeFiles>
+      <AdditionalIncludeDirectories>..\..\Inc;..\;$(Qt_INCLUDEPATH_);C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(SolutionDir)Lib\$(PlatformTarget)\$(Configuration)\;$(Qt_LIBPATH_);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Lib\$(PlatformTarget)\$(Configuration)\;$(Qt_LIBPATH_);C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\lib\vs2015\x64\debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>..\..\Inc;..\;$(Qt_INCLUDEPATH_);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <ForcedIncludeFiles>..\stdafx.h</ForcedIncludeFiles>
+      <AdditionalIncludeDirectories>..\..\Inc;..\;$(Qt_INCLUDEPATH_);C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(SolutionDir)Lib\$(PlatformTarget)\$(Configuration)\;$(Qt_LIBPATH_);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Lib\$(PlatformTarget)\$(Configuration)\;$(Qt_LIBPATH_);C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\lib\vs2015\x64\release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|Win32'" Label="Configuration">
