@@ -39,6 +39,13 @@
       <widget class="QLineEdit" name="lineEdit_ActorName"/>
      </item>
      <item>
+      <widget class="QCheckBox" name="checkBox_visible">
+       <property name="text">
+        <string>表示</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <spacer name="horizontalSpacer">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>

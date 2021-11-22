@@ -70,16 +70,24 @@ namespace Engine46 {
         CRendererSystem::GetRendererSystem().SetRenderScene(pScene);
 
         {
-            CActorBase* pRoot = m_pActorManager->CreateActor((int)ActorType::Root);
+            CActorBase* pRoot = m_pActorManager->CreateActor(ActorType::Root);
             pScene->SetRootActor(pRoot);
 
-            CActorBase* pCamera = m_pActorManager->CreateActor((int)ActorType::Camera);
+            CActorBase* pCamera = m_pActorManager->CreateActor(ActorType::Camera);
             pCamera->SetInput(m_pInput.get());
             pScene->AddActorToScene(pCamera);
 
-            CActorBase* pBox = m_pActorManager->CreateActor((int)ActorType::Box);
+            CActorBase* pBox = m_pActorManager->CreateActor(ActorType::Box);
+            pBox->SetMesh("BoxMesh");
+
             CMeshBase* pMesh = pBox->GetMesh();
             if (pMesh) {
+                pMesh->SetMaterial("BoxMaterial");
+
+                pMesh->CreateBoxMesh();
+
+                pBox->CreateOBB();
+
                 CMaterialBase* pMaterial = pMesh->GetMaterial();
                 if (pMaterial) {
                     pMaterial->SetTexture("E3g6p9QUYAMTSbT.jpg");
@@ -88,11 +96,21 @@ namespace Engine46 {
             pBox->SetShaderPackage("Model.hlsl");
             pScene->AddActorToScene(pBox);
 
-            CLight* pDirectionalLight = m_pActorManager->CreateLight((int)LightType::Directional);
+            CActorBase* pCharacter = m_pActorManager->CreateActor(ActorType::Character);
+            pCharacter->SetModelMesh("star-wars-arc-170-pbr_.fbx");
+
+            CModelMesh* pModelMesh = pCharacter->GetModelMesh();
+            if (pModelMesh) {
+                pCharacter->CreateOBB();
+            }
+            pCharacter->SetShaderPackage("Model.hlsl");
+            pScene->AddActorToScene(pCharacter);
+
+            CLight* pDirectionalLight = m_pActorManager->CreateLight(LightType::Directional);
             pDirectionalLight->SetPos(VECTOR3(0.0f, 0.0f, 1000.0f));
             pScene->AddActorToScene(pDirectionalLight);
 
-            CLight* pPointLight = m_pActorManager->CreateLight((int)LightType::Point);
+            CLight* pPointLight = m_pActorManager->CreateLight(LightType::Point);
             pPointLight->SetPos(VECTOR3(0.0f, 0.0f, 10.0f));
             pMesh = pPointLight->GetMesh();
             if (pMesh) {
@@ -105,7 +123,7 @@ namespace Engine46 {
             pPointLight->SetLightDiffuse(VECTOR4(1.0f, 0.0f, 0.0f, 1.0f));
             pScene->AddActorToScene(pPointLight);
 
-            pPointLight = m_pActorManager->CreateLight((int)LightType::Point);
+            pPointLight = m_pActorManager->CreateLight(LightType::Point);
             pPointLight->SetPos(VECTOR3(5.0f, 0.0f, 10.0f));
             pMesh = pPointLight->GetMesh();
             if (pMesh) {
@@ -118,7 +136,7 @@ namespace Engine46 {
             pPointLight->SetLightDiffuse(VECTOR4(0.0f, 1.0f, 0.0f, 1.0f));
             pScene->AddActorToScene(pPointLight);
 
-            pPointLight = m_pActorManager->CreateLight((int)LightType::Point);
+            pPointLight = m_pActorManager->CreateLight(LightType::Point);
             pPointLight->SetPos(VECTOR3(-5.0f, 0.0f, 10.0f));
             pMesh = pPointLight->GetMesh();
             if (pMesh) {

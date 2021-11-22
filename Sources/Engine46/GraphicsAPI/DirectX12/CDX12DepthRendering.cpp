@@ -110,13 +110,15 @@ namespace Engine46 {
 
         if (!pSprite) return;
 
+        CMeshBase* pMesh = pSprite->GetMesh();
+        if (!pMesh) return;
+
+        CMaterialBase* pMaterial = pMesh->GetMaterial();
+        if (!pMaterial) return;
+
         pDX12Command->SetViewPort(x, y, width, height);
 
-        CMeshBase* pMesh = pSprite->GetMesh();
-        if (pMesh) {
-            CMaterialBase* pMaterial = pMesh->GetMaterial();
-            pMaterial->SetTexture(pDX12DepthTexture);
-        }
+        pMaterial->SetTexture(pDX12DepthTexture);
 
         pSprite->Draw();
     }

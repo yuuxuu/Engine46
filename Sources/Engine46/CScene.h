@@ -46,15 +46,14 @@ namespace Engine46 {
 
         void AddActorToScene(CActorBase* pActor);
 
-        CActorBase* GetActorFromActorName(std::string& actorName);
+        CActorBase* GetActorFromMap(std::string& actorName);
 
         CActorBase* GetMouseSelectActorFromScene(VECTOR2& screenSize, VECTOR2& mousePos);
 
         CCamera* GetCameraFromScene();
         CLight* GetLightFromScene();
 
-        std::vector<CSprite*> GetSpritesFromScene();
-        std::vector<CActorBase*> GetBoxsFromScene();
+        std::vector<CActorBase*> GetActorsFromScene();
         std::vector<CCamera*> GetCamerasFromScene();
         std::vector<CLight*> GetLightsFromScene();
 

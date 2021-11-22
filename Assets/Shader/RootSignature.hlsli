@@ -8,7 +8,7 @@
 #ifndef _ROOT_SIGNATURE_H_
 #define _ROOT_SIGNATURE_H_
 
-#define RS_01 "RootFlags(ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT),"\
+#define RS_MODEL "RootFlags(ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT),"\
                             "DescriptorTable(CBV(b0, numDescriptors = 1, space = 0), visibility = SHADER_VISIBILITY_ALL),"\
                             "DescriptorTable(CBV(b1, numDescriptors = 1, space = 0), visibility = SHADER_VISIBILITY_ALL),"\
                             "DescriptorTable(CBV(b2, numDescriptors = 1, space = 0), visibility = SHADER_VISIBILITY_ALL),"\
@@ -55,6 +55,14 @@
                                 "maxLOD = 3.402823466e+38f,"\
                                 "space = 0,"\
                                 "visibility = SHADER_VISIBILITY_PIXEL)"\
+
+#define RS_MODEL_LINE "RootFlags(ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT),"\
+                            "DescriptorTable(CBV(b0, numDescriptors = 1, space = 0), visibility = SHADER_VISIBILITY_ALL),"\
+                            "DescriptorTable(CBV(b1, numDescriptors = 1, space = 0), visibility = SHADER_VISIBILITY_ALL),"\
+                            "DescriptorTable(CBV(b2, numDescriptors = 1, space = 0), visibility = SHADER_VISIBILITY_ALL),"\
+                            "DescriptorTable(CBV(b3, numDescriptors = 1, space = 0), visibility = SHADER_VISIBILITY_ALL),"\
+                            "DescriptorTable(CBV(b4, numDescriptors = 1, space = 0), visibility = SHADER_VISIBILITY_ALL),"\
+                            "DescriptorTable(CBV(b5, numDescriptors = 1, space = 0), visibility = SHADER_VISIBILITY_ALL),"\
 
 #define RS_GBUFFER_LIGHTING "RootFlags(ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT),"\
                                         "DescriptorTable(CBV(b2, numDescriptors = 1, space = 0), visibility = SHADER_VISIBILITY_ALL),"\

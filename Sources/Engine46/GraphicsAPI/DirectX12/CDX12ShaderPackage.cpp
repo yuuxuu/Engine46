@@ -51,7 +51,6 @@ namespace Engine46 {
 
         gpsDesc.InputLayout = { IEDesc, _countof(IEDesc) };
         gpsDesc.pRootSignature = m_pGraphicsRootSignature.Get();
-        gpsDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
         gpsDesc.SampleDesc = { 1, 0 };
         gpsDesc.SampleMask = UINT_MAX;
 
@@ -176,6 +175,7 @@ namespace Engine46 {
             "PostEffect_Blur.hlsl",
             "GBuffer_Lighting.hlsl",
             "LuminanceExtraction.hlsl",
+            "Model_Line.hlsl",
         };
 
         for (const auto& name : shaderNames) {
@@ -234,6 +234,22 @@ namespace Engine46 {
             gpsDesc.BlendState.RenderTarget[i].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
             gpsDesc.BlendState.RenderTarget[i].LogicOpEnable = FALSE;
             gpsDesc.BlendState.RenderTarget[i].LogicOp = D3D12_LOGIC_OP_CLEAR;
+        }
+    }
+
+    void CDX12ShaderPackage::SetPrimitiveTopologyType(D3D12_GRAPHICS_PIPELINE_STATE_DESC& gpsDesc, std::string& shaderName) {
+        
+        gpsDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+
+        std::vector<std::string> shaderNames = {
+            "Model_Line.hlsl",
+        };
+
+        for (const auto& name : shaderNames) {
+            if (name == shaderName) {
+                gpsDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE;
+                break;
+            }
         }
     }
 

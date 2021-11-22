@@ -112,6 +112,7 @@ namespace Engine46 {
             m_pRenderSprite->SetWorldConstantBuffer(worldConstantBuffer);
 
             m_pRenderSprite->SetMesh("RenderSpriteMesh");
+
             CMeshBase* pMesh = m_pRenderSprite->GetMesh();
             if (pMesh) {
                 pMesh->SetMaterial("RenderSpriteMaterial");

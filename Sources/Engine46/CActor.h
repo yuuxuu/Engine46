@@ -23,12 +23,14 @@ namespace Engine46 {
     class CShaderPackage;
     class CInput;
     class COBB;
+    class CModelMesh;
 
     enum class ActorType {
         Root,
         Camera,
         Sprite,
         Box,
+        Character,
         Light,
     };
 
@@ -46,6 +48,8 @@ namespace Engine46 {
 
         CMeshBase*                              pMesh;
 
+        CModelMesh*                             pModelMesh;
+
         CShaderPackage*                         pShaderPackage;
 
         std::unique_ptr<CConstantBufferBase>    m_pWorldConstantBuffer;
@@ -60,6 +64,8 @@ namespace Engine46 {
         std::list<CActorBase*>                  pChildActorList;
         std::vector<int>                        m_childActorIDList;
 
+        bool                                    m_visible;
+
     public:
         CActorBase();
         CActorBase(const UINT classID, const std::string& actorName, const Transform transform);
@@ -72,12 +78,25 @@ namespace Engine46 {
         virtual bool Save(std::ofstream& ofs) override;
         virtual bool Load(std::ifstream& ifs) override;
 
+        UINT GetClassID() const { return m_classID; }
+
+        UINT GetActorID() const { return m_actorID; }
+        void SetActorID(const UINT id) { m_actorID = id; }
+
+        void SetActorName(const std::string& actorName) { m_actorName = actorName; }
+        std::string GetActorName() const { return m_actorName.c_str(); }
+
+        CConstantBufferBase* GetWorldConstantBuffer() const { return m_pWorldConstantBuffer.get(); }
         void UpdateWorldConstantBuffer(void* pData);
         void SetWorldConstantBuffer(std::unique_ptr<CConstantBufferBase>& pConstantBuffer);
 
         CMeshBase* GetMesh() const { return pMesh; }
         void SetMesh(CMeshBase* pMesh);
         void SetMesh(const std::string& meshName);
+
+        CModelMesh* GetModelMesh() const { return pModelMesh; }
+        void SetModelMesh(CModelMesh* pModelMesh);
+        void SetModelMesh(const std::string& modelName);
 
         CShaderPackage* GetShaderPackage() const { return pShaderPackage; }
         void SetShaderPackage(CShaderPackage* pShaderPackage);
@@ -99,12 +118,8 @@ namespace Engine46 {
         std::list<CActorBase*> GetChildActorList() const { return pChildActorList; }
         std::vector<int> GetChildActorIDList() const { return m_childActorIDList; }
 
-        UINT GetClassID() const { return m_classID; }
-
-        void SetActorID(const UINT id) { m_actorID = id; }
-
-        void SetActorName(const std::string& actorName) { m_actorName = actorName; }
-        std::string GetActorName() const { return m_actorName.c_str(); }
+        bool GetVisible() const { return m_visible; }
+        void SetVisible(bool visible);
 
         void SetTransform(const Transform& transform) { m_transform = transform; }
         Transform GetTransform() const { return m_transform; }

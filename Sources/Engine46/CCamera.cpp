@@ -123,7 +123,7 @@ namespace Engine46 {
     // カメラのスピードを取得
     float CCamera::GetCameraSpeed(float nowSpeed) {
         const float minSpeed = 1.0f;
-        const float maxSpeed = 3.0f;
+        const float maxSpeed = 5.0f;
         
         float raito = pInput->GetMousePosZ();
         if (raito < 0.1f && raito > -0.1f) {

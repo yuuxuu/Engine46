@@ -165,7 +165,7 @@
     <ClCompile Include="CShaderPackage.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="CSkeltalMesh.cpp">
+    <ClCompile Include="CModelMesh.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="CSpotLight.cpp">
@@ -335,7 +335,7 @@
     <ClInclude Include="CShaderPackage.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="CSkeltalMesh.h">
+    <ClInclude Include="CModelMesh.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="CSpotLight.h">
@@ -437,6 +437,9 @@
       <Filter>リソース ファイル\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="..\..\Assets\Shader\HLSL\LuminanceExtraction.hlsl">
+      <Filter>リソース ファイル\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Assets\Shader\HLSL\Model_Line.hlsl">
       <Filter>リソース ファイル\HLSL</Filter>
     </FxCompile>
   </ItemGroup>

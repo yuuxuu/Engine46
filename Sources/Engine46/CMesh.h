@@ -64,9 +64,9 @@ namespace Engine46 {
 
         std::string                 m_meshName;
 
-        bool                        m_isInitialize;
-
         UINT                        m_primitiveTopologyType;
+
+        bool                        m_visible;
 
     public:
         CMeshBase();
@@ -87,7 +87,7 @@ namespace Engine46 {
 
         void AddMaterial(CMaterialBase* pMaterial) { m_pVecMaterial.emplace_back(pMaterial); }
 
-        void SetMeshInfo();
+        void SetMeshInfo(std::vector<VertexInfo>& vecVertex);
 
         void CreateSpriteMesh();
         void CreateBoxMesh();
@@ -96,7 +96,8 @@ namespace Engine46 {
 
         std::string GetMeshName() const { return m_meshName.c_str(); }
 
-        bool IsInitialize() const { return m_isInitialize; }
+        bool GetVisible() const { return m_visible; }
+        void SetVisible(bool visible) { m_visible = visible; }
     };
 
 } // namespace

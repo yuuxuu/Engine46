@@ -23,7 +23,7 @@ namespace Engine46 {
         CFBXLoader();
         ~CFBXLoader();
 
-        bool LoadModel(CSkeltalMesh* pModel, const std::string& filePath) override;
+        bool LoadModel(CModelMesh* pModel, const std::string& filePath) override;
 
         void RecursiveFbxNode(std::vector<FbxNode*>& outVecFbxNode, FbxNode* pRootNode);
 

@@ -1,25 +1,28 @@
 ﻿/**
- * @file CSkeltalMesh.h
+ * @file CModelMesh.h
  * @brief
  * @author 木村優
  * @date 2021/05/06
  */
 
-#include "CSkeltalMesh.h"
+#include "CModelMesh.h"
 #include "CMesh.h"
 
 namespace Engine46 {
 
     // コンストラクタ
-    CSkeltalMesh::CSkeltalMesh()
-    {}
+    CModelMesh::CModelMesh(const char* modelName) :
+        m_modelName(modelName)
+    {
+        m_modelName.resize(m_modelName.size());
+    }
 
     // デストラクタ
-    CSkeltalMesh::~CSkeltalMesh()
+    CModelMesh::~CModelMesh()
     {}
 
     // モデル描画
-    void CSkeltalMesh::Draw() {
+    void CModelMesh::Draw() {
         for (const auto& pMesh : m_pVecMesh) {
             pMesh->Set();
             pMesh->Draw();
@@ -27,7 +30,7 @@ namespace Engine46 {
     }
 
     // メッシュとマテリアルのペアを追加
-    void CSkeltalMesh::AddMesh(CMeshBase* pMesh) {
+    void CModelMesh::AddMesh(CMeshBase* pMesh) {
         if (!pMesh) return;
 
         m_pVecMesh.emplace_back(pMesh);

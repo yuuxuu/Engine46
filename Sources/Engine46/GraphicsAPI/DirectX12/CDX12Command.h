@@ -51,7 +51,9 @@ namespace Engine46 {
 
         void SetBuffer(D3D12_VERTEX_BUFFER_VIEW& vbView, D3D12_INDEX_BUFFER_VIEW& ibView);
 
-        void DrawIndexed(D3D12_PRIMITIVE_TOPOLOGY topology, UINT numIndexes);
+        void DrawInstanced(D3D12_PRIMITIVE_TOPOLOGY topology, UINT numVertices);
+
+        void DrawIndexed(D3D12_PRIMITIVE_TOPOLOGY topology, UINT numIndecies);
 
         void SetRect(UINT width, UINT height);
 

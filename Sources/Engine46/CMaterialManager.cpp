@@ -27,18 +27,28 @@ namespace Engine46 {
     CMaterialBase* CMaterialManager::CreateMaterial(const char* materialName) {
         CMaterialBase* pMaterial = GetMaterialFromMap(materialName);
 
-        if (pMaterial) return pMaterial;
+        std::string name(materialName);
+        if (pMaterial) {
+            int count = 0;
+            for (;;) {
+                name = std::string(materialName) + "_" + std::to_string(count++);
+                    
+                if (!GetMaterialFromMap(name.c_str())) {
+                    break;
+                }
+            }
+        }
 
-        std::unique_ptr<CMaterialBase> material = std::make_unique<CMaterialBase>(materialName);
+        std::unique_ptr<CMaterialBase> material = std::make_unique<CMaterialBase>(name.c_str());
 
         if (material) {
             std::unique_ptr<CConstantBufferBase> pMaterialConstantBuffer;
             pRenderer->CreateConstantBuffer(pMaterialConstantBuffer, sizeof(materialCB));
             material->SetMaterialConstantBuffer(pMaterialConstantBuffer);
 
-            pMaterial = material.get();
+            CMaterialBase* pMaterial = material.get();
 
-            this->AddMaterialToMap(materialName, material);
+            this->AddMaterialToMap(name.c_str(), material);
 
             return pMaterial;
         }
@@ -51,6 +61,7 @@ namespace Engine46 {
 
         if (!GetMaterialFromMap(name)) {
             m_pMapMaterial[name] = std::move(pMaterial);
+            return;
         }
     }
 

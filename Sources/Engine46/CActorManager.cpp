@@ -30,61 +30,38 @@ namespace Engine46 {
     {}
 
     // オブジェクト作成
-    CActorBase* CActorManager::CreateActor(int actorType) {
+    CActorBase* CActorManager::CreateActor(ActorType actorType) {
         std::unique_ptr<CActorBase> actor;
         RECT rect;
         std::string actorName;
         CMeshBase* pMesh = nullptr;
 
-        switch ((ActorType)actorType) {
+        switch (actorType) {
         case ActorType::Root:
-            actorName = "Root_" + std::to_string(m_classCount.rootCount);
+            actorName = "Root_" + std::to_string(m_classCount.rootCount++);
 
-            actor = std::make_unique<CActorBase>(actorType, actorName.c_str(), Transform());
-
-            m_classCount.rootCount++;
+            actor = std::make_unique<CActorBase>((UINT)actorType, actorName.c_str(), Transform());
             break;
         case ActorType::Camera:
             rect = pRenderer->GetWindowRect();
-            actorName = "Camera_" + std::to_string(m_classCount.cameraCount);
+            actorName = "Camera_" + std::to_string(m_classCount.cameraCount++);
 
             actor = std::make_unique<CCamera>(actorName.c_str(), rect.w, rect.h);
-
-            m_classCount.cameraCount++;
             break;
         case ActorType::Sprite:
-            actorName = "Sprite_" + std::to_string(m_classCount.spriteCount);
+            actorName = "Sprite_" + std::to_string(m_classCount.spriteCount++);
 
             actor = std::make_unique<CSprite>(actorName.c_str());
-            actor->SetMesh("SpriteMesh_" + std::to_string(m_classCount.spriteCount));
-
-            pMesh = actor->GetMesh();
-            if (pMesh) {
-                pMesh->SetMaterial("SpriteMaterial_" + std::to_string(m_classCount.spriteCount));
-
-                pMesh->CreateSpriteMesh();
-
-                actor->CreateOBB();
-            }
-
-            m_classCount.spriteCount++;
             break;
         case ActorType::Box:
-            actorName = "Box_" + std::to_string(m_classCount.boxCount);
+            actorName = "Box_" + std::to_string(m_classCount.boxCount++);
 
-            actor = std::make_unique<CActorBase>(actorType, actorName.c_str(), Transform());
-            actor->SetMesh("BoxMesh" + std::to_string(m_classCount.boxCount));
-            
-            pMesh = actor->GetMesh();
-            if (pMesh) {
-                pMesh->SetMaterial("BoxMaterial_" + std::to_string(m_classCount.boxCount));
+            actor = std::make_unique<CActorBase>((UINT)actorType, actorName.c_str(), Transform());
+            break;
+        case ActorType::Character:
+            actorName = "Character_" + std::to_string(m_classCount.charctorCount++);
 
-                pMesh->CreateBoxMesh();
-
-                actor->CreateOBB();
-            }
-
-            m_classCount.boxCount++;
+            actor = std::make_unique<CActorBase>((UINT)actorType, actorName.c_str(), Transform());
             break;
         case ActorType::Light:
             return nullptr;
@@ -100,17 +77,17 @@ namespace Engine46 {
 
         CActorBase* pActor = actor.get();
 
-        this->AddActorToVec(actor);
+        AddActorFromMap(actorName.c_str(), actor);
 
         return pActor;
     }
 
     // ライト作成
-    CLight* CActorManager::CreateLight(int lightType) {
+    CLight* CActorManager::CreateLight(LightType lightType) {
         std::unique_ptr<CLight> light;
         std::string lightName;
 
-        switch ((LightType)lightType)
+        switch (lightType)
         {
         case LightType::Directional:
             lightName = "DirectionalLight_" + std::to_string(m_classCount.lightCount);
@@ -133,13 +110,13 @@ namespace Engine46 {
         pRenderer->CreateConstantBuffer(worldConstantBuffer, sizeof(worldCB));
         light->SetWorldConstantBuffer(worldConstantBuffer);
 
-        light->SetLightType((LightType)lightType);
+        light->SetLightType(lightType);
 
-        light->SetMesh("LightMesh" + std::to_string(m_classCount.lightCount));
+        light->SetMesh("LightMesh");
 
         CMeshBase* pMesh = light->GetMesh();
         if (pMesh) {
-            pMesh->SetMaterial("LightMaterial_" + std::to_string(m_classCount.lightCount));
+            pMesh->SetMaterial("LightMaterial");
 
             pMesh->CreateSpriteMesh();
 
@@ -160,15 +137,46 @@ namespace Engine46 {
 
         CLight* pLight = light.get();
 
-        this->AddLightToVec(light);
+        AddLightFromMap(lightName.c_str(), light);
 
         return pLight;
     }
 
+    // オブジェクトをマップへ追加
+    void CActorManager::AddActorFromMap(const char* name, std::unique_ptr<CActorBase>& pActor) {
+
+        if (!GetActorFromMap(name)) {
+            m_pMapActor[name] = std::move(pActor);
+            return;
+        }
+    }
+
     // オブジェクト取得
-    CActorBase* CActorManager::GetActorFromActorName(const char* name) {
-        for (const auto& actor : m_pVecActor) {
-            if (actor->GetActorName() == name) return actor.get();
+    CActorBase* CActorManager::GetActorFromMap(const char* name) {
+        auto itr = m_pMapActor.find(name);
+
+        if (itr != m_pMapActor.end()) {
+            return itr->second.get();
+        }
+
+        return nullptr;
+    }
+
+    // ライトをマップへ追加
+    void CActorManager::AddLightFromMap(const char* name, std::unique_ptr<CLight>& pLight) {
+
+        if (!GetLightFromMap(name)) {
+            m_pMapLight[name] = std::move(pLight);
+            return;
+        }
+    }
+
+    // ライト取得
+    CActorBase* CActorManager::GetLightFromMap(const char* name) {
+        auto itr = m_pMapLight.find(name);
+
+        if (itr != m_pMapLight.end()) {
+            return itr->second.get();
         }
 
         return nullptr;
@@ -184,8 +192,8 @@ namespace Engine46 {
 
         if (!ofs.is_open()) return false;
 
-        for (const auto& actor : m_pVecActor) {
-            actor->Save(ofs);
+        for (const auto& actor : m_pMapActor) {
+            actor.second->Save(ofs);
         }
 
         return true;
@@ -208,7 +216,7 @@ namespace Engine46 {
 
             if (ifs.eof()) break;
 
-            CActorBase* pActor = this->CreateActor(classType);
+            CActorBase* pActor = this->CreateActor((ActorType)classType);
 
             pActor->Load(ifs);
         }
@@ -222,14 +230,23 @@ namespace Engine46 {
 
     // オブジェクト同士の接続
     void CActorManager::ConnectActor() {
-        for (const auto& actor : m_pVecActor) {
-            int id = actor->GetParentActorID();
-            if (id > -1) {
-                actor->ConnectParentActor(m_pVecActor[id].get());
-            }
+        for (const auto& actor : m_pMapActor) {
+            for (const auto& connectActor : m_pMapActor) {
+                
+                if (actor == connectActor) continue;
 
-            for (auto id : actor->GetChildActorIDList()) {
-                actor->AddChiledActorList(m_pVecActor[id].get());
+                int parentId = actor.second->GetParentActorID();
+                if (parentId > -1) {
+                    if (parentId == connectActor.second->GetActorID()) {
+                        actor.second->ConnectParentActor(connectActor.second.get());
+                    }
+                }
+
+                for (const auto childId : actor.second->GetChildActorIDList()) {
+                    if (childId == connectActor.second->GetActorID()) {
+                        actor.second->AddChiledActorList(connectActor.second.get());
+                    }
+                }
             }
         }
     }

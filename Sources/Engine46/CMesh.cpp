@@ -17,8 +17,7 @@ namespace Engine46 {
     // コンストラクタ
     CMeshBase::CMeshBase() :
         m_meshID(0),
-        m_meshName("Mesh_" + std::to_string(m_meshID)),
-        m_isInitialize(false)
+        m_meshName("Mesh_" + std::to_string(m_meshID))
     {
         m_meshName.resize(m_meshName.size());
     }
@@ -26,8 +25,7 @@ namespace Engine46 {
     // コンストラクタ
     CMeshBase::CMeshBase(const char* meshName) :
         m_meshID(0),
-        m_meshName(meshName),
-        m_isInitialize(false)
+        m_meshName(meshName)
     {
         m_meshName.resize(m_meshName.size());
     }
@@ -63,11 +61,11 @@ namespace Engine46 {
     }
 
     // メッシュ情報を設定
-    void CMeshBase::SetMeshInfo() {
+    void CMeshBase::SetMeshInfo(std::vector<VertexInfo>& vecVertex) {
 
-        if (m_vecVertexInfo.empty()) return;
+        if (vecVertex.empty()) return;
 
-        for (const auto& vertexInfo : m_vecVertexInfo) {
+        for (const auto& vertexInfo : vecVertex) {
             if (m_meshInfo.maxVertexPos.x < vertexInfo.vertex.x) m_meshInfo.maxVertexPos.x = vertexInfo.vertex.x;
             if (m_meshInfo.maxVertexPos.y < vertexInfo.vertex.y) m_meshInfo.maxVertexPos.y = vertexInfo.vertex.y;
             if (m_meshInfo.maxVertexPos.z < vertexInfo.vertex.z) m_meshInfo.maxVertexPos.z = vertexInfo.vertex.z;
@@ -87,8 +85,6 @@ namespace Engine46 {
     // スプライトメッシュ作成
     void CMeshBase::CreateSpriteMesh() {
 
-        if (m_isInitialize) return;
-
         const float r = 1.0f;
 
         m_vecVertexInfo.reserve(4);
@@ -107,18 +103,16 @@ namespace Engine46 {
 
         m_vecIndex = {
             0, 1, 2,
-            3, 2, 1,
+            1, 2, 3,
         };
 
         CreateIndexBuffer();
 
-        SetMeshInfo();
+        SetMeshInfo(m_vecVertexInfo);
     }
 
     // ボックスメッシュ作成
     void CMeshBase::CreateBoxMesh() {
-
-        if (m_isInitialize) return;
 
         const float r = 1.0f;
 
@@ -184,7 +178,7 @@ namespace Engine46 {
 
         CreateIndexBuffer();
 
-        SetMeshInfo();
+        SetMeshInfo(m_vecVertexInfo);
     }
 
 } // namespace

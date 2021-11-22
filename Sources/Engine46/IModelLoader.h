@@ -15,14 +15,14 @@ namespace Engine46 {
     // 前方宣言
     class CMeshBase;
     class CMaterialBase;
-    class CSkeltalMesh;
+    class CModelMesh;
 
     class IModelLoader {
     protected:
         IModelLoader() {}
         virtual ~IModelLoader() {}
 
-        virtual bool LoadModel(CSkeltalMesh* pModel, const std::string& filePath) = 0;
+        virtual bool LoadModel(CModelMesh* pModel, const std::string& filePath) = 0;
 
         virtual bool CreateMesh(CMeshBase* pMesh) { return true; };
         virtual bool CreateMaterial(CMaterialBase* pMaterial) { return true; };

@@ -94,7 +94,7 @@ namespace Engine46 {
     }
 
     // シーン内のアクターを名前で取得
-    CActorBase* CSceneBase::GetActorFromActorName(std::string& actorName) {
+    CActorBase* CSceneBase::GetActorFromMap(std::string& actorName) {
         if (pRootActor) {
             if (pRootActor->GetActorName() == actorName) {
                 return pRootActor;
@@ -127,6 +127,8 @@ namespace Engine46 {
             ray.dirRay = farVec - nearVec;
 
             for (const auto& pActor : pRootActor->GetChildActorList()) {
+                if (!pActor->GetVisible()) continue;
+
                 COBB* pObb = pActor->GetOBB();
                 if (pObb) {
                     pObb->Update(pActor);
@@ -167,40 +169,24 @@ namespace Engine46 {
         return nullptr;
     }
 
-    // シーン内スプライトを全て取得
-    std::vector<CSprite*> CSceneBase::GetSpritesFromScene() {
-        std::vector<CSprite*> vecSprite;
+    // シーン内アクターを全て取得
+    std::vector<CActorBase*> CSceneBase::GetActorsFromScene() {
+        std::vector<CActorBase*> vecActors;
 
         if (pRootActor) {
             std::vector<CActorBase*> pActors;
             this->GetActorsRecursiveInActor(pActors, pRootActor, (int)ActorType::Sprite);
-
-            if (!pActors.empty()) {
-                for (const auto pActor : pActors) {
-                    vecSprite.emplace_back(dynamic_cast<CSprite*>(pActor));
-                }
-            }
-        }
-
-        return vecSprite;
-    }
-
-    // シーン内ボックスを全て取得
-    std::vector<CActorBase*> CSceneBase::GetBoxsFromScene() {
-        std::vector<CActorBase*> vecBox;
-
-        if (pRootActor) {
-            std::vector<CActorBase*> pActors;
             this->GetActorsRecursiveInActor(pActors, pRootActor, (int)ActorType::Box);
+            this->GetActorsRecursiveInActor(pActors, pRootActor, (int)ActorType::Character);
 
             if (!pActors.empty()) {
                 for (const auto pActor : pActors) {
-                    vecBox.emplace_back(pActor);
+                    vecActors.emplace_back(pActor);
                 }
             }
         }
 
-        return vecBox;
+        return vecActors;
     }
 
     // シーン内カメラを全て取得
@@ -274,7 +260,9 @@ namespace Engine46 {
         if (pRootActor) {
             for (const auto pChild : pRootActor->GetChildActorList()) {
                 if (pChild->GetActorName() == actorName) {
-                    pActors.emplace_back(pChild);
+                    if (pChild->GetVisible()) {
+                        pActors.emplace_back(pChild);
+                    }
                 }
 
                 this->GetActorsRecursiveInName(pActors, pChild, actorName);
@@ -287,7 +275,9 @@ namespace Engine46 {
         if (pRootActor) {
             for (const auto pChild : pRootActor->GetChildActorList()) {
                 if (pChild->GetClassID() == actorType) {
-                    pActors.emplace_back(pChild);
+                    if (pChild->GetVisible()) {
+                        pActors.emplace_back(pChild);
+                    }
                 }
 
                 this->GetActorsRecursiveInActor(pActors, pChild, actorType);

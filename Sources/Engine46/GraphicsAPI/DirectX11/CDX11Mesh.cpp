@@ -25,8 +25,6 @@ namespace Engine46 {
     // メッシュ作成
     void CDX11Mesh::CreateVertexBuffer(PRIMITIVE_TOPOLOGY_TYPE type) {
 
-        if (m_isInitialize) return;
-
         if (!m_vecVertexInfo.empty()) {
             D3D11_BUFFER_DESC bufDesc = {};
             bufDesc.ByteWidth = sizeof(m_vecVertexInfo[0]) * (UINT)m_vecVertexInfo.size();
@@ -58,8 +56,6 @@ namespace Engine46 {
                 m_primitiveTopologyType = D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
                 break;
             }
-
-            m_isInitialize = true;
         }
     }
 

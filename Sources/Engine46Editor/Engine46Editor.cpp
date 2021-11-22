@@ -22,7 +22,9 @@ Engine46Editor::Engine46Editor(QWidget* parent)
 {
     ui.setupUi(this);
 
-    this->resize(QSize(1600, 900));
+    resize(QSize(1920, 1200));
+
+    move(QPoint(0, 0));
 
     // レンダーウェジット
     pRenderWidget = std::make_unique<MyRenderWidget>(this);
@@ -36,6 +38,8 @@ Engine46Editor::Engine46Editor(QWidget* parent)
     ui.FileListView->setFlow(QListView::LeftToRight);
 
     // 接続
+    //connect(ui.checkBox_visible, &QCheckBox::clicked, this, )
+
     connect(ui.sceneTreeView, &QAbstractItemView::clicked, this, &Engine46Editor::SelectActorForSceneTreeView);
 
     connect(pRenderWidget.get(), &MyRenderWidget::MouseLeftPress, this, &Engine46Editor::SelectActorForMouseLeftPress);

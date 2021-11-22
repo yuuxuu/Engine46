@@ -15,11 +15,12 @@ namespace Engine46 {
     // 前方宣言
     class CRendererBase;
     class CMeshBase;
-    class CActorBase;
+    class CModelMesh;
 
     class CMeshManager {
     private:
         std::map<std::string, std::unique_ptr<CMeshBase>>   m_pMapMesh;
+        std::map<std::string, std::unique_ptr<CModelMesh>>  m_pMapModelMesh;
 
         CRendererBase* pRenderer;
 
@@ -32,6 +33,12 @@ namespace Engine46 {
         void AddMeshToMap(const char* name, std::unique_ptr<CMeshBase>& pMesh);
 
         CMeshBase* GetMeshFromMap(const char* name);
+
+        CModelMesh* CreateModelMesh(const char* modelName);
+
+        void AddModelMeshToMap(const char* name, std::unique_ptr<CModelMesh>& pModelMesh);
+
+        CModelMesh* GetModelMeshFromMap(const char* name);
     };
 
 } // namespace

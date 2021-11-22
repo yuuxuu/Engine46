@@ -102,11 +102,17 @@ namespace Engine46 {
         m_pCommandList->IASetIndexBuffer(&ibView);
     }
 
-    // インデックス描画
-    void CDX12Command::DrawIndexed(D3D12_PRIMITIVE_TOPOLOGY topology, UINT numIndexes) {
+    void CDX12Command::DrawInstanced(D3D12_PRIMITIVE_TOPOLOGY topology, UINT numVertices) {
         m_pCommandList->IASetPrimitiveTopology(topology);
 
-        m_pCommandList->DrawIndexedInstanced(numIndexes, 1, 0, 0, 0);
+        m_pCommandList->DrawInstanced(numVertices, 1, 0, 0);
+    }
+
+    // インデックス描画
+    void CDX12Command::DrawIndexed(D3D12_PRIMITIVE_TOPOLOGY topology, UINT numIndecies) {
+        m_pCommandList->IASetPrimitiveTopology(topology);
+
+        m_pCommandList->DrawIndexedInstanced(numIndecies, 1, 0, 0, 0);
     }
 
     // Rectを設定

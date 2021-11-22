@@ -15,7 +15,6 @@ namespace Engine46 {
     // 前方宣言
     class CRendererBase;
     class CShaderPackage;
-    class CActorBase;
 
     class CShaderManager {
     private:

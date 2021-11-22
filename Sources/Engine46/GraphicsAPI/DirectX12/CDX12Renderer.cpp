@@ -24,7 +24,7 @@
 
 namespace Engine46 {
 
-    constexpr UINT DESCRIPTORHEAP_MAX = STATIC_MAX + 200;
+    constexpr UINT DESCRIPTORHEAP_MAX = STATIC_MAX + 1000;
 
     // コンストラクタ
     CDX12Renderer::CDX12Renderer() :
@@ -158,6 +158,7 @@ namespace Engine46 {
             m_pRenderSprite->SetWorldConstantBuffer(worldConstantBuffer);
 
             m_pRenderSprite->SetMesh("RenderSpriteMesh");
+
             CMeshBase* pMesh = m_pRenderSprite->GetMesh();
             if (pMesh) {
                 pMesh->SetMaterial("RenderSpriteMaterial");
@@ -271,19 +272,6 @@ namespace Engine46 {
         UINT x = 0;
         UINT y = (UINT)m_windowRect.h - height;
 
-        /*if (m_pDX12PostEffect) {
-            m_pDX12PostEffect->DrawForBloom(m_pRenderSprite.get(), pRenderTexture);
-        }
-
-        if (m_pDeferredRendering) {
-            m_pDeferredRendering->DrawForRenderScene(m_pRenderSprite.get(), x, y, width, height);
-        }
-
-        if (m_pDepthRendring) {
-            x += width * RENDER_TARGET_SIZE;
-            m_pDepthRendring->DrawForRenderScene(m_pRenderSprite.get(), x, y, width, height);
-        }*/
-
         if (m_pRenderSprite) {
             CMeshBase* pMesh = m_pRenderSprite->GetMesh();
             if (pMesh) {
@@ -293,6 +281,19 @@ namespace Engine46 {
 
             m_pRenderSprite->Draw();
         }
+
+        /*if (m_pDX12PostEffect) {
+            m_pDX12PostEffect->DrawForBloom(m_pRenderSprite.get(), pRenderTexture);
+        }*/
+
+        /*if (m_pDeferredRendering) {
+            m_pDeferredRendering->DrawForRenderScene(m_pRenderSprite.get(), x, y, width, height);
+        }*/
+
+        /*if (m_pDepthRendring) {
+            x += width * RENDER_TARGET_SIZE;
+            m_pDepthRendring->DrawForRenderScene(m_pRenderSprite.get(), x, y, width, height);
+        }*/
 
         m_pDX12Command->SetResourceBarrier(m_pRtvResource[index].Get(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
         m_pDX12Command->SetResourceBarrier(m_pDsvResource.Get(), D3D12_RESOURCE_STATE_DEPTH_WRITE, D3D12_RESOURCE_STATE_GENERIC_READ);
@@ -349,13 +350,13 @@ namespace Engine46 {
 
     // テクスチャ作成
     void CDX12Renderer::CreateTexture(std::unique_ptr<CTextureBase>& pTexture, const char* textureName) {
-        FileInfo* fileInfo = CFileSystem::GetFileSystem().GetFileInfoFromMap(textureName);
+        FileInfo* pFileInfo = CFileSystem::GetFileSystem().GetFileInfoFromMap(textureName);
 
-        if (!fileInfo) return;
+        if (!pFileInfo) return;
 
         pTexture = std::make_unique<CDX12Texture>(m_pDX12Device.get(), m_pDX12Command.get(), textureName);
 
-        if (pTexture->LoadTexture(fileInfo->filePath.c_str())) {
+        if (pTexture->LoadTexture(pFileInfo->filePath.c_str())) {
             pTexture->CreateTexture();
 
             dynamic_cast<CDX12Texture*>(pTexture.get())->CreateShaderResourceView(m_pCbDescriptorHeap.Get(), m_descriptorHeapOffsetIndex++);
@@ -364,16 +365,16 @@ namespace Engine46 {
 
     // シェーダー作成
     void CDX12Renderer::CreateShader(std::unique_ptr<CShaderPackage>& pShaderPackage, const char* shaderName) {
-        FileInfo* fileInfo = CFileSystem::GetFileSystem().GetFileInfoFromMap(shaderName);
+        FileInfo* pFileInfo = CFileSystem::GetFileSystem().GetFileInfoFromMap(shaderName);
 
-        if (!fileInfo) return;
+        if (!pFileInfo) return;
 
         pShaderPackage = std::make_unique<CDX12ShaderPackage>(m_pDX12Device.get(), m_pDX12Command.get(), shaderName);
 
         for (const auto& info : SHADER_INFOS) {
             ComPtr<ID3DBlob> pBlob;
 
-            if (pShaderPackage->CompileShader(pBlob, fileInfo->filePath.c_str(), info.entryPoint, info.shaderModel)) {
+            if (pShaderPackage->CompileShader(pBlob, pFileInfo->filePath.c_str(), info.entryPoint, info.shaderModel)) {
                 std::unique_ptr<CShaderBase> shader = std::make_unique<CShaderBase>(shaderName, pBlob, info.shadeType);
 
                 pShaderPackage->AddShaderToVec(shader);
@@ -390,6 +391,7 @@ namespace Engine46 {
             std::string name = std::string(shaderName);
             pDX12Sp->SetRTVFormats(gpsDesc, name);
             pDX12Sp->SetBlendState(gpsDesc, name);
+            pDX12Sp->SetPrimitiveTopologyType(gpsDesc, name);
 
             pDX12Sp->InitializeGraphics(gpsDesc);
 

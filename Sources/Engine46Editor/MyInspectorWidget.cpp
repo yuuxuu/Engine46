@@ -38,6 +38,8 @@ MyInspectorWidget::MyInspectorWidget(QWidget* parent)
     }
 
     // 接続
+    connect(ui.checkBox_visible, &QCheckBox::clicked, this, &MyInspectorWidget::UpdateActorVisible);
+
     connect(ui.lineEdit_ActorName, &QLineEdit::textChanged, this, &MyInspectorWidget::UpdateActorName);
 
     connect(ui.doubleSpinBox_PosX, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &MyInspectorWidget::UpdateActorPosition);
@@ -62,6 +64,8 @@ void MyInspectorWidget::SetSelectActor(Engine46::CActorBase* pActor) {
     if (pSelectActor == pActor) return;
 
     pSelectActor = pActor;
+
+    ui.checkBox_visible->setChecked(pActor->GetVisible());
 
     ui.lineEdit_ActorName->blockSignals(true);
 
@@ -105,6 +109,13 @@ void MyInspectorWidget::SetSelectActor(Engine46::CActorBase* pActor) {
 
 //////////////////////
 // slots 
+
+// アクターの表示を反映
+void MyInspectorWidget::UpdateActorVisible(bool isVisible) {
+    if (!pSelectActor) return;
+
+    pSelectActor->SetVisible(isVisible);
+}
 
 // アクターへ名前を反映
 void MyInspectorWidget::UpdateActorName(const QString& name) {

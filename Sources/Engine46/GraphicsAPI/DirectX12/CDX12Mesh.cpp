@@ -9,6 +9,7 @@
 
 #include "CDX12Device.h"
 #include "CDX12Command.h"
+#include "CDX12ShaderPackage.h"
 
 namespace Engine46 {
 
@@ -26,7 +27,6 @@ namespace Engine46 {
     // メッシュ作成
     void CDX12Mesh::CreateVertexBuffer(PRIMITIVE_TOPOLOGY_TYPE type) {
 
-        if (m_isInitialize) return;
         if (m_vecVertexInfo.empty()) return;
 
         UINT size = sizeof(m_vecVertexInfo[0]) * (UINT)m_vecVertexInfo.size();
@@ -80,15 +80,15 @@ namespace Engine46 {
             m_primitiveTopologyType = D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
             break;
         }
-
-        m_isInitialize = true;
     }
 
     void CDX12Mesh::CreateVertexBuffer(PRIMITIVE_TOPOLOGY_TYPE type, const std::vector<VertexInfo>& vecVertexInfo) {
         
         if (vecVertexInfo.empty()) return;
+
+        m_vecVertexInfo = vecVertexInfo;
         
-        UINT size = sizeof(vecVertexInfo[0]) * (UINT)vecVertexInfo.size();
+        UINT size = sizeof(m_vecVertexInfo[0]) * (UINT)m_vecVertexInfo.size();
 
         D3D12_RESOURCE_DESC rDesc = {};
 
@@ -113,14 +113,14 @@ namespace Engine46 {
             m_pVertexResource->Unmap(0, nullptr);
         }
         else {
-            memcpy(pBuf, &vecVertexInfo[0], size);
+            memcpy(pBuf, &m_vecVertexInfo[0], size);
 
             m_pVertexResource->Unmap(0, nullptr);
         }
 
         m_vbView.BufferLocation = m_pVertexResource->GetGPUVirtualAddress();
         m_vbView.SizeInBytes = size;
-        m_vbView.StrideInBytes = sizeof(vecVertexInfo[0]);
+        m_vbView.StrideInBytes = sizeof(m_vecVertexInfo[0]);
 
         switch (type) {
         case PRIMITIVE_TOPOLOGY_TYPE::POINTLIST:
@@ -183,8 +183,10 @@ namespace Engine46 {
     void CDX12Mesh::CreateIndexBuffer(const std::vector<DWORD>& vecIndex) {
         
         if (vecIndex.empty()) return;
+
+        m_vecIndex = vecIndex;
         
-        UINT size = sizeof(vecIndex[0]) * (UINT)vecIndex.size();
+        UINT size = sizeof(m_vecIndex[0]) * (UINT)m_vecIndex.size();
 
         D3D12_RESOURCE_DESC rDesc = {};
 
@@ -209,7 +211,7 @@ namespace Engine46 {
             m_pIndexResource->Unmap(0, nullptr);
         }
         else {
-            memcpy(pBuf, &vecIndex[0], size);
+            memcpy(pBuf, &m_vecIndex[0], size);
 
             m_pIndexResource->Unmap(0, nullptr);
         }
@@ -224,7 +226,12 @@ namespace Engine46 {
 
         pDX12Command->SetBuffer(m_vbView, m_ibView);
 
-        pDX12Command->DrawIndexed((D3D12_PRIMITIVE_TOPOLOGY)m_primitiveTopologyType, (UINT)m_vecIndex.size());
+        if (m_ibView.SizeInBytes != 0) {
+            pDX12Command->DrawIndexed((D3D12_PRIMITIVE_TOPOLOGY)m_primitiveTopologyType, (UINT)m_vecIndex.size());
+        }
+        else {
+            pDX12Command->DrawInstanced((D3D12_PRIMITIVE_TOPOLOGY)m_primitiveTopologyType, (UINT)m_vecVertexInfo.size());
+        }
     }
 
 } // namespace

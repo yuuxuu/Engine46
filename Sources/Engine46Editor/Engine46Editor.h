@@ -13,8 +13,6 @@
 #include "MyRenderWidget.h"
 #include "MyInspectorWidget.h"
 
-#include "Engine46/CActor.h"
-
 #include "ui_Engine46Editor.h"
 
 class Engine46Editor : public QMainWindow {

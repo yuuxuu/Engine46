@@ -25,6 +25,7 @@ namespace Engine46 {
         UINT cameraCount;
         UINT spriteCount;
         UINT boxCount;
+        UINT charctorCount;
         UINT lightCount;
 
         classCount() :
@@ -33,14 +34,15 @@ namespace Engine46 {
             cameraCount(0),
             spriteCount(0),
             boxCount(0),
+            charctorCount(0),
             lightCount(0)
         {}
     };
 
     class CActorManager {
     private:
-        std::vector<std::unique_ptr<CActorBase>>    m_pVecActor;
-        std::vector<std::unique_ptr<CLight>>        m_pVecLight;
+        std::map<std::string, std::unique_ptr<CActorBase>>    m_pMapActor;
+        std::map<std::string, std::unique_ptr<CLight>>        m_pMapLight;
 
         CRendererBase* pRenderer;
 
@@ -50,13 +52,14 @@ namespace Engine46 {
         explicit CActorManager(CRendererBase* pRenderer);
         ~CActorManager();
 
-        CActorBase* CreateActor(int actorType);
-        CLight* CreateLight(int lightType);
+        CActorBase* CreateActor(ActorType actorType);
+        CLight* CreateLight(LightType lightType);
 
-        void AddActorToVec(std::unique_ptr<CActorBase>& pActor) { m_pVecActor.emplace_back(std::move(pActor)); }
-        void AddLightToVec(std::unique_ptr<CLight>& pLight) { m_pVecLight.emplace_back(std::move(pLight)); }
+        void AddActorFromMap(const char* name, std::unique_ptr<CActorBase>& pActor);
+        CActorBase* GetActorFromMap(const char* name);
 
-        CActorBase* GetActorFromActorName(const char* name);
+        void AddLightFromMap(const char* name, std::unique_ptr<CLight>& pLight);
+        CActorBase* GetLightFromMap(const char* name);
 
         bool SaveActor();
         bool LoadActor();

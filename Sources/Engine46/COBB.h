@@ -17,6 +17,8 @@ namespace Engine46 {
 
     class COBB {
     private:
+        CMeshBase* pMesh;
+
         VECTOR3 m_c;
         VECTOR3 m_u[3];
         VECTOR3 m_e;
@@ -25,8 +27,10 @@ namespace Engine46 {
         COBB();
         ~COBB();
 
-        void Initialize(MeshInfo& meshInfo, Transform& transform);
         void Update(CActorBase* pActor);
+        void Draw(CActorBase* pActor);
+
+        void CreateOBBMesh(const char* meshName);
 
         bool IsRayHit(Ray& ray);
     };

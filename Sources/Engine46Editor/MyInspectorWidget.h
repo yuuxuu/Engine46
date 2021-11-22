@@ -27,9 +27,9 @@ public:
     void SetSelectActor(Engine46::CActorBase* pActor);
 
 public slots:
+    void UpdateActorVisible(bool isVisible);
     void UpdateActorName(const QString& name);
     void UpdateActorPosition(double value);
     void UpdateActorRotation(double value);
     void UpdateActorScale(double value);
 };
-

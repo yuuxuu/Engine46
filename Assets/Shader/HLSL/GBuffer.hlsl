@@ -31,7 +31,7 @@ struct PS_OUT {
     float4 pos		: SV_TARGET3;
 };
 
-[RootSignature(RS_01)]
+[RootSignature(RS_MODEL)]
 VS_OUT VS_main(VS_IN input) {
     VS_OUT output = (VS_OUT)0;
 
@@ -51,7 +51,7 @@ typedef VS_OUT PS_IN;
 PS_OUT PS_main(PS_IN input) {
     PS_OUT output;
 
-    output.diffuse = diffuseTex.Sample(sampleState, input.uv);
+    output.diffuse = diffuseTex.Sample(sampleState, input.uv) * material.diffuse;
 
     output.specular = material.specular;
 

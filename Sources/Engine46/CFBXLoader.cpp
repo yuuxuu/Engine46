@@ -13,7 +13,8 @@
 #include "CMeshManager.h"
 #include "CMaterialManager.h"
 #include "CTextureManager.h"
-#include "CSkeltalMesh.h"
+#include "CModelMesh.h"
+#include "CFileSystem.h"
 
 namespace Engine46 {
 
@@ -26,7 +27,7 @@ namespace Engine46 {
     {}
 
     // FBXモデルの読み込み
-    bool CFBXLoader::LoadModel(CSkeltalMesh* pModel, const std::string& filePath) {
+    bool CFBXLoader::LoadModel(CModelMesh* pModel, const std::string& filePath) {
 
         if (!pModel) return false;
 
@@ -44,11 +45,25 @@ namespace Engine46 {
         fbxInporter->Import(fbxScene);
         fbxInporter->Destroy();
 
+        // 軸の設定
+        FbxAxisSystem ourAxisSystem = FbxAxisSystem::DirectX;
+
+        // DirectX系に変換
+        FbxAxisSystem sceneAxisSystem = fbxScene->GetGlobalSettings().GetAxisSystem();
+        if (ourAxisSystem != sceneAxisSystem) {
+            FbxAxisSystem::DirectX.ConvertScene(fbxScene);
+        }
+
+        // 単位系の統一
+        FbxSystemUnit SceneSystemUnit = fbxScene->GetGlobalSettings().GetSystemUnit();
+        if (SceneSystemUnit.GetScaleFactor() != 1.0f)
+        {
+            // センチメーター単位にコンバートする。
+            FbxSystemUnit::cm.ConvertScene(fbxScene);
+        }
+
         FbxNode* pRootNode = fbxScene->GetRootNode();
         if (!pRootNode) return false;
-
-        // 検討中・・・先にFbxNodeだけを取得し、
-        // 後にメッシュとマテリアルをコンバート
 
         std::vector<FbxNode*> vecFbxMeshNode;
 
@@ -120,20 +135,38 @@ namespace Engine46 {
         int numIndex = pFbxMesh->GetPolygonVertexCount();
         std::cout << "総インデックス数 = " << numPolygon << std::endl;
 
-        std::vector<DWORD> vecIndex(numIndex);
+        std::vector<DWORD> vecIndex;
 
-        int* numPolygonVertices = pFbxMesh->GetPolygonVertices();
-        for (int i = 0; i < numIndex; ++i) {
-            vecIndex[i] = static_cast<DWORD>(numPolygonVertices[i]);
+        static const int indexOrder[] = {
+            0, 1, 2,
+            1, 2, 3, // 四角形
+            2, 3, 4, // 五角形
+            3, 4, 5, // 六角形
+            4, 5, 6, // 七角形
+            5, 6, 7, // 八角形
+        };
+
+        // インデックスの再構築中
+        for (int i = 0; i < numPolygon; ++i) {
+            int polygonSize = pFbxMesh->GetPolygonSize(i);
+
+            int count = 3;
+            if (polygonSize > 3) {
+                count = (polygonSize - 2) * 3;
+            }
+            for (int j = 0; j < count; ++j) {
+                int index = pFbxMesh->GetPolygonVertex(i, indexOrder[j]);
+                vecIndex.emplace_back(index);
+            }
         }
 
         std::vector<VertexInfo> vecVetexInfo(numVertex);
 
-        FbxVector4* fbxVertex = pFbxMesh->GetControlPoints();
+        FbxVector4* vertices = pFbxMesh->GetControlPoints();
         for (int i = 0; i < numVertex; ++i) {
-            vecVetexInfo[i].vertex.x = static_cast<float>(pFbxMesh->GetControlPointAt(i)[0]);
-            vecVetexInfo[i].vertex.y = static_cast<float>(pFbxMesh->GetControlPointAt(i)[1]);
-            vecVetexInfo[i].vertex.z = static_cast<float>(pFbxMesh->GetControlPointAt(i)[2]);
+            vecVetexInfo[i].vertex.x = static_cast<float>(vertices[i][0]);
+            vecVetexInfo[i].vertex.y = static_cast<float>(vertices[i][1]);
+            vecVetexInfo[i].vertex.z = static_cast<float>(vertices[i][2]);
         }
 
         int numNormalLayer = pFbxMesh->GetElementNormalCount();
@@ -169,29 +202,24 @@ namespace Engine46 {
                         }
                     }
                 }
-                else if (referenceMode == FbxGeometryElement::eIndexToDirect) {
-
-                }
             }
             else if (mappingMode == FbxGeometryElement::eByPolygonVertex) {
                 if (referenceMode == FbxGeometryElement::eDirect) {
-                    for (int j = 0; j < numNormal; ++j) {
-                        int index = static_cast<int>(vecIndex[j]);
-
+                    for (int j = 0; j < numVertex; ++j) {
                         if (pFbxNormal) {
-                            vecVetexInfo[index].normal.x = static_cast<float>(pFbxNormal->GetDirectArray().GetAt(j)[0]);
-                            vecVetexInfo[index].normal.y = static_cast<float>(pFbxNormal->GetDirectArray().GetAt(j)[1]);
-                            vecVetexInfo[index].normal.z = static_cast<float>(pFbxNormal->GetDirectArray().GetAt(j)[2]);
+                            vecVetexInfo[j].normal.x = static_cast<float>(pFbxNormal->GetDirectArray().GetAt(j)[0]);
+                            vecVetexInfo[j].normal.y = static_cast<float>(pFbxNormal->GetDirectArray().GetAt(j)[1]);
+                            vecVetexInfo[j].normal.z = static_cast<float>(pFbxNormal->GetDirectArray().GetAt(j)[2]);
                         }
                         if (pFbxTangent) {
-                            vecVetexInfo[index].tangent.x = static_cast<float>(pFbxTangent->GetDirectArray().GetAt(j)[0]);
-                            vecVetexInfo[index].tangent.y = static_cast<float>(pFbxTangent->GetDirectArray().GetAt(j)[1]);
-                            vecVetexInfo[index].tangent.z = static_cast<float>(pFbxTangent->GetDirectArray().GetAt(j)[2]);
+                            vecVetexInfo[j].tangent.x = static_cast<float>(pFbxTangent->GetDirectArray().GetAt(j)[0]);
+                            vecVetexInfo[j].tangent.y = static_cast<float>(pFbxTangent->GetDirectArray().GetAt(j)[1]);
+                            vecVetexInfo[j].tangent.z = static_cast<float>(pFbxTangent->GetDirectArray().GetAt(j)[2]);
                         }
                         if (pFbxBinormal) {
-                            vecVetexInfo[index].binormal.x = static_cast<float>(pFbxBinormal->GetDirectArray().GetAt(j)[0]);
-                            vecVetexInfo[index].binormal.y = static_cast<float>(pFbxBinormal->GetDirectArray().GetAt(j)[1]);
-                            vecVetexInfo[index].binormal.z = static_cast<float>(pFbxBinormal->GetDirectArray().GetAt(j)[2]);
+                            vecVetexInfo[j].binormal.x = static_cast<float>(pFbxBinormal->GetDirectArray().GetAt(j)[0]);
+                            vecVetexInfo[j].binormal.y = static_cast<float>(pFbxBinormal->GetDirectArray().GetAt(j)[1]);
+                            vecVetexInfo[j].binormal.z = static_cast<float>(pFbxBinormal->GetDirectArray().GetAt(j)[2]);
                         }
                     }
                 }
@@ -202,19 +230,19 @@ namespace Engine46 {
                         int index = static_cast<int>(pFbxNormal->GetIndexArray().GetAt(j));
 
                         if (pFbxNormal) {
-                            vecVetexInfo[index].normal.x = static_cast<float>(pFbxNormal->GetDirectArray().GetAt(index)[0]);
-                            vecVetexInfo[index].normal.y = static_cast<float>(pFbxNormal->GetDirectArray().GetAt(index)[1]);
-                            vecVetexInfo[index].normal.z = static_cast<float>(pFbxNormal->GetDirectArray().GetAt(index)[2]);
+                            vecVetexInfo[vecIndex[j]].normal.x = static_cast<float>(pFbxNormal->GetDirectArray().GetAt(index)[0]);
+                            vecVetexInfo[vecIndex[j]].normal.y = static_cast<float>(pFbxNormal->GetDirectArray().GetAt(index)[1]);
+                            vecVetexInfo[vecIndex[j]].normal.z = static_cast<float>(pFbxNormal->GetDirectArray().GetAt(index)[2]);
                         }
                         if (pFbxTangent) {
-                            vecVetexInfo[index].tangent.x = static_cast<float>(pFbxTangent->GetDirectArray().GetAt(index)[0]);
-                            vecVetexInfo[index].tangent.y = static_cast<float>(pFbxTangent->GetDirectArray().GetAt(index)[1]);
-                            vecVetexInfo[index].tangent.z = static_cast<float>(pFbxTangent->GetDirectArray().GetAt(index)[2]);
+                            vecVetexInfo[vecIndex[j]].tangent.x = static_cast<float>(pFbxTangent->GetDirectArray().GetAt(index)[0]);
+                            vecVetexInfo[vecIndex[j]].tangent.y = static_cast<float>(pFbxTangent->GetDirectArray().GetAt(index)[1]);
+                            vecVetexInfo[vecIndex[j]].tangent.z = static_cast<float>(pFbxTangent->GetDirectArray().GetAt(index)[2]);
                         }
                         if (pFbxBinormal) {
-                            vecVetexInfo[index].binormal.x = static_cast<float>(pFbxBinormal->GetDirectArray().GetAt(index)[0]);
-                            vecVetexInfo[index].binormal.y = static_cast<float>(pFbxBinormal->GetDirectArray().GetAt(index)[1]);
-                            vecVetexInfo[index].binormal.z = static_cast<float>(pFbxBinormal->GetDirectArray().GetAt(index)[2]);
+                            vecVetexInfo[vecIndex[j]].binormal.x = static_cast<float>(pFbxBinormal->GetDirectArray().GetAt(index)[0]);
+                            vecVetexInfo[vecIndex[j]].binormal.y = static_cast<float>(pFbxBinormal->GetDirectArray().GetAt(index)[1]);
+                            vecVetexInfo[vecIndex[j]].binormal.z = static_cast<float>(pFbxBinormal->GetDirectArray().GetAt(index)[2]);
                         }
                     }
                 }
@@ -240,19 +268,14 @@ namespace Engine46 {
                         vecVetexInfo[j].color.w = static_cast<float>(pFbxColor->GetDirectArray().GetAt(j)[3]);
                     }
                 }
-                else if (referenceMode == FbxGeometryElement::eIndexToDirect) {
-
-                }
             }
             else if (mappingMode == FbxGeometryElement::eByPolygonVertex) {
                 if (referenceMode == FbxGeometryElement::eDirect) {
-                    for (int j = 0; j < numColor; ++j) {
-                        int index = static_cast<int>(vecIndex[j]);
-
-                        vecVetexInfo[index].color.x = static_cast<float>(pFbxColor->GetDirectArray().GetAt(j)[0]);
-                        vecVetexInfo[index].color.y = static_cast<float>(pFbxColor->GetDirectArray().GetAt(j)[1]);
-                        vecVetexInfo[index].color.z = static_cast<float>(pFbxColor->GetDirectArray().GetAt(j)[2]);
-                        vecVetexInfo[index].color.w = static_cast<float>(pFbxColor->GetDirectArray().GetAt(j)[3]);
+                    for (int j = 0; j < numVertex; ++j) {
+                        vecVetexInfo[j].color.x = static_cast<float>(pFbxColor->GetDirectArray().GetAt(j)[0]);
+                        vecVetexInfo[j].color.y = static_cast<float>(pFbxColor->GetDirectArray().GetAt(j)[1]);
+                        vecVetexInfo[j].color.z = static_cast<float>(pFbxColor->GetDirectArray().GetAt(j)[2]);
+                        vecVetexInfo[j].color.w = static_cast<float>(pFbxColor->GetDirectArray().GetAt(j)[3]);
                     }
                 }
                 else if (referenceMode == FbxGeometryElement::eIndexToDirect) {
@@ -261,10 +284,10 @@ namespace Engine46 {
                     for (int j = 0; j < numColorIndex; ++j) {
                         int index = static_cast<int>(pFbxColor->GetIndexArray().GetAt(j));
 
-                        vecVetexInfo[index].color.x = static_cast<float>(pFbxColor->GetDirectArray().GetAt(index)[0]);
-                        vecVetexInfo[index].color.y = static_cast<float>(pFbxColor->GetDirectArray().GetAt(index)[1]);
-                        vecVetexInfo[index].color.z = static_cast<float>(pFbxColor->GetDirectArray().GetAt(index)[2]);
-                        vecVetexInfo[index].color.w = static_cast<float>(pFbxColor->GetDirectArray().GetAt(index)[3]);
+                        vecVetexInfo[vecIndex[j]].color.x = static_cast<float>(pFbxColor->GetDirectArray().GetAt(index)[0]);
+                        vecVetexInfo[vecIndex[j]].color.y = static_cast<float>(pFbxColor->GetDirectArray().GetAt(index)[1]);
+                        vecVetexInfo[vecIndex[j]].color.z = static_cast<float>(pFbxColor->GetDirectArray().GetAt(index)[2]);
+                        vecVetexInfo[vecIndex[j]].color.w = static_cast<float>(pFbxColor->GetDirectArray().GetAt(index)[3]);
                     }
                 }
             }
@@ -311,8 +334,8 @@ namespace Engine46 {
                     for (int j = 0; j < numUVIndex; ++j) {
                         int index = static_cast<int>(pFbxUV->GetIndexArray().GetAt(j));
 
-                        vecVetexInfo[index].uv.x = static_cast<float>(pFbxUV->GetDirectArray().GetAt(index)[0]);
-                        vecVetexInfo[index].uv.y = 1.0f - static_cast<float>(pFbxUV->GetDirectArray().GetAt(index)[1]);
+                        vecVetexInfo[vecIndex[j]].uv.x = static_cast<float>(pFbxUV->GetDirectArray().GetAt(index)[0]);
+                        vecVetexInfo[vecIndex[j]].uv.y = 1.0f - static_cast<float>(pFbxUV->GetDirectArray().GetAt(index)[1]);
                     }
                 }
             }
@@ -320,6 +343,8 @@ namespace Engine46 {
 
         pMesh->CreateVertexBuffer(PRIMITIVE_TOPOLOGY_TYPE::TRIANGLELIST, vecVetexInfo);
         pMesh->CreateIndexBuffer(vecIndex);
+
+        pMesh->SetMeshInfo(vecVetexInfo);
 
         return pMesh;
     }
@@ -332,7 +357,12 @@ namespace Engine46 {
         CMaterialBase* pMaterial = materialManager->CreateMaterial(pFbxMaterial->GetName());
         if (!pMaterial) return nullptr;
 
-        std::cout << "マテリアル名 = " << pFbxMaterial->GetName();
+        std::cout << "マテリアル名 = " << pFbxMaterial->GetName() << std::endl;
+
+
+        if (std::string("PictureBorder") == pFbxMaterial->GetName()) {
+            std::cout << "マテリアル名 = " << pFbxMaterial->GetName() << std::endl;
+        }
 
         if (pFbxMaterial->GetClassId().Is(FbxSurfaceLambert::ClassId)) {
             FbxSurfaceLambert* lambert = static_cast<FbxSurfaceLambert*>(pFbxMaterial);
@@ -341,19 +371,19 @@ namespace Engine46 {
             diffuse.x = static_cast<float>(lambert->Diffuse.Get()[0]);
             diffuse.y = static_cast<float>(lambert->Diffuse.Get()[1]);
             diffuse.z = static_cast<float>(lambert->Diffuse.Get()[2]);
-            diffuse.w = static_cast<float>(lambert->Diffuse.Get()[3]);
+            diffuse.w = 1.0f;
 
             VECTOR4 ambient;
             ambient.x = static_cast<float>(lambert->Ambient.Get()[0]);
             ambient.y = static_cast<float>(lambert->Ambient.Get()[1]);
             ambient.z = static_cast<float>(lambert->Ambient.Get()[2]);
-            ambient.w = static_cast<float>(lambert->Ambient.Get()[3]);
+            ambient.w = 1.0f;
 
             VECTOR4 emissive;
             emissive.x = static_cast<float>(lambert->Emissive.Get()[0]);
             emissive.y = static_cast<float>(lambert->Emissive.Get()[1]);
             emissive.z = static_cast<float>(lambert->Emissive.Get()[2]);
-            emissive.w = static_cast<float>(lambert->Emissive.Get()[3]);
+            emissive.w = 1.0f;
             
             pMaterial->SetDiffuse(diffuse);
             pMaterial->SetAmbient(ambient);
@@ -366,25 +396,25 @@ namespace Engine46 {
             diffuse.x = static_cast<float>(phong->Diffuse.Get()[0]);
             diffuse.y = static_cast<float>(phong->Diffuse.Get()[1]);
             diffuse.z = static_cast<float>(phong->Diffuse.Get()[2]);
-            diffuse.w = static_cast<float>(phong->Diffuse.Get()[3]);
+            diffuse.w = 1.0f;
 
             VECTOR4 specular;
             specular.x = static_cast<float>(phong->Specular.Get()[0]);
             specular.y = static_cast<float>(phong->Specular.Get()[1]);
             specular.z = static_cast<float>(phong->Specular.Get()[2]);
-            specular.w = static_cast<float>(phong->Specular.Get()[3]);
+            specular.w = 1.0f;
 
             VECTOR4 ambient;
             ambient.x = static_cast<float>(phong->Ambient.Get()[0]);
             ambient.y = static_cast<float>(phong->Ambient.Get()[1]);
             ambient.z = static_cast<float>(phong->Ambient.Get()[2]);
-            ambient.w = static_cast<float>(phong->Ambient.Get()[3]);
+            ambient.w = 1.0f;
 
             VECTOR4 emissive;
             emissive.x = static_cast<float>(phong->Emissive.Get()[0]);
             emissive.y = static_cast<float>(phong->Emissive.Get()[1]);
             emissive.z = static_cast<float>(phong->Emissive.Get()[2]);
-            emissive.w = static_cast<float>(phong->Emissive.Get()[3]);
+            emissive.w = 1.0f;
 
             pMaterial->SetDiffuse(diffuse);
             pMaterial->SetSpecular(specular);
@@ -403,9 +433,28 @@ namespace Engine46 {
             FbxFileTexture* pFbxTexture = pFbxProp.GetSrcObject<FbxFileTexture>(i);
             if (!pFbxTexture) continue;
 
-            std::cout << "テクスチャ名 = " << pFbxTexture->GetName() << std::endl;
+            std::cout << "テクスチャ名 = " << pFbxTexture->GetRelativeFileName() << std::endl;
 
-            CTextureBase* pTexture = textureManager->CreateTexture(pFbxTexture->GetName());
+            const UINT charSize = 128;
+
+            char drive[charSize];
+            char dir[charSize];
+            char name[charSize];
+            char extension[charSize];
+
+            _splitpath_s(pFbxTexture->GetRelativeFileName(), drive, dir, name, extension);
+
+            std::string filename(name);
+            filename += extension;
+
+            FileInfo* pFileInfo = CFileSystem::GetFileSystem().GetFileInfoFromMap(filename.c_str());
+
+            if (!pFileInfo) {
+                filename = name;
+                filename += +".jpg";
+            }
+
+            CTextureBase* pTexture = textureManager->CreateTexture(filename.c_str());
             if (!pTexture) continue;
 
             pMaterial->AddTexture(pTexture);

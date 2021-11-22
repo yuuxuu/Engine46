@@ -39,7 +39,7 @@ namespace Engine46 {
 
         vecDataRecord.clear();
 
-        vecDataRecord.emplace_back(std::make_unique<CDataRecordBase>(offsetof(CShaderBase, m_shaderType), sizeof(m_shaderType)));
+        vecDataRecord.emplace_back(std::make_unique<CDataRecordBase>(offsetof(CShaderBase, m_shaderType), sizeof(UINT)));
         vecDataRecord.emplace_back(std::make_unique<CStrDataRecord>(offsetof(CShaderBase, m_shaderName), m_shaderName));
         vecDataRecord.emplace_back(std::make_unique<CDataRecordBase>(offsetof(CShaderBase, m_byteSize), sizeof(m_byteSize)));
         vecDataRecord.emplace_back(std::make_unique<CBufDataRecord>(m_pBuf, m_byteSize));

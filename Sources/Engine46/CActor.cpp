@@ -16,6 +16,7 @@
 #include "CRendererSystem.h"
 #include "CCamera.h"
 #include "COBB.h"
+#include "CModelMesh.h"
 
 #include "CRenderer.h"
 
@@ -28,7 +29,8 @@ namespace Engine46 {
         m_actorName("Actor_" + std::to_string(m_actorID)),
         m_transform(Transform()),
         pParentActor(nullptr),
-        m_parentActorID(-1)
+        m_parentActorID(-1),
+        m_visible(true)
     {
         m_actorName.resize(m_actorName.size());
     }
@@ -40,7 +42,8 @@ namespace Engine46 {
         m_actorName(actorName),
         m_transform(transform),
         pParentActor(nullptr),
-        m_parentActorID(-1)
+        m_parentActorID(-1),
+        m_visible(true)
     {
         m_actorName.resize(m_actorName.size());
     }
@@ -84,6 +87,10 @@ namespace Engine46 {
             if (pMesh) {
                 pMesh->Set();
                 pMesh->Draw();
+            }
+
+            if (pModelMesh) {
+                pModelMesh->Draw();
             }
         }
 
@@ -141,6 +148,20 @@ namespace Engine46 {
         }
     }
 
+    // モデルメッシュを設定
+    void CActorBase::SetModelMesh(CModelMesh* pModelMesh) {
+        this->pModelMesh = pModelMesh;
+    }
+
+    // モデルメッシュを設定
+    void CActorBase::SetModelMesh(const std::string& modelName) {
+        CMeshManager* meshManager = CGameSystem::GetGameSystem().GetMeshManager();
+        CModelMesh* pModelMesh = meshManager->CreateModelMesh(modelName.c_str());
+        if (pModelMesh) {
+            this->pModelMesh = pModelMesh;
+        }
+    }
+
     // シェーダーパッケージを設定
     void CActorBase::SetShaderPackage(CShaderPackage* pShaderPackage) {
         if (pShaderPackage) {
@@ -160,12 +181,11 @@ namespace Engine46 {
     // アクターのOBB作成
     void CActorBase::CreateOBB() {
 
-        if (!pMesh) return;
-
-        MeshInfo meshInfo = pMesh->GetMeshInfo();
+        if (!pMesh && !pModelMesh) return;
 
         m_pObb = std::make_unique<COBB>();
-        m_pObb->Initialize(meshInfo, m_transform);
+        m_pObb->Update(this);
+        m_pObb->CreateOBBMesh(std::string(m_actorName + "_obbMesh").c_str());
     }
 
     // インプットを設定
@@ -225,6 +245,24 @@ namespace Engine46 {
             }
 
             pChiledActor->ConnectParentActor(this);
+        }
+    }
+
+    void CActorBase::SetVisible(bool visible) {
+        m_visible = visible;
+
+        if (pMesh) {
+            pMesh->SetVisible(visible);
+        }
+        else {
+            if (pModelMesh) {
+                if (pModelMesh->GetVecMesh().empty()) return;
+
+                MeshInfo meshInfo;
+                for (const auto pMesh : pModelMesh->GetVecMesh()) {
+                    pMesh->SetVisible(visible);
+                }
+            }
         }
     }
 

@@ -50,7 +50,7 @@
     <ClCompile Include="CShader.cpp" />
     <ClCompile Include="CShaderManager.cpp" />
     <ClCompile Include="CShaderPackage.cpp" />
-    <ClCompile Include="CSkeltalMesh.cpp" />
+    <ClCompile Include="CModelMesh.cpp" />
     <ClCompile Include="CSpotLight.cpp" />
     <ClCompile Include="CSprite.cpp" />
     <ClCompile Include="CTexture.cpp" />
@@ -149,7 +149,7 @@
     <ClInclude Include="CShader.h" />
     <ClInclude Include="CShaderManager.h" />
     <ClInclude Include="CShaderPackage.h" />
-    <ClInclude Include="CSkeltalMesh.h" />
+    <ClInclude Include="CModelMesh.h" />
     <ClInclude Include="CSpotLight.h" />
     <ClInclude Include="CSprite.h" />
     <ClInclude Include="CTexture.h" />
@@ -192,6 +192,16 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\..\Assets\Shader\HLSL\CS_LuminanceExtraction.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\..\Assets\Shader\HLSL\Model_Line.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>

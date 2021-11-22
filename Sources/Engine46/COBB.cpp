@@ -8,6 +8,13 @@
 #include "COBB.h"
 #include "CActor.h"
 #include "CMesh.h"
+#include "CModelMesh.h"
+#include "CConstantBuffer.h"
+
+#include "CGameSystem.h"
+#include "CMeshManager.h"
+#include "CShaderManager.h"
+#include "CShaderPackage.h"
 
 namespace Engine46 {
 
@@ -18,21 +25,6 @@ namespace Engine46 {
     // デストラクタ
     COBB::~COBB()
     {}
-
-    // 初期化
-    void COBB::Initialize(MeshInfo& meshInfo, Transform& transform) {
-
-        Matrix matRotate;
-        matRotate.dx_m = DirectX::XMMatrixRotationRollPitchYaw(transform.rotation.x, transform.rotation.y, transform.rotation.z);
-
-        m_c = meshInfo.vertexCenterPos + transform.pos;
-
-        m_u[0] = VECTOR3(matRotate._11, matRotate._12, matRotate._13);
-        m_u[1] = VECTOR3(matRotate._21, matRotate._22, matRotate._23);
-        m_u[2] = VECTOR3(matRotate._31, matRotate._32, matRotate._33);
-
-        m_e = meshInfo.vertexE * transform.scale;
-    }
 
     // 更新
     void COBB::Update(CActorBase* pActor) {
@@ -49,13 +41,105 @@ namespace Engine46 {
         m_u[2] = VECTOR3(matRotate._31, matRotate._32, matRotate._33);
 
         CMeshBase* pMesh = pActor->GetMesh();
-        if (!pMesh) return;
+        if (pMesh) {
+            MeshInfo meshInfo = pMesh->GetMeshInfo();
 
-        MeshInfo meshInfo = pMesh->GetMeshInfo();
+            m_c = meshInfo.vertexCenterPos + transform.pos;
 
-        m_c = meshInfo.vertexCenterPos + transform.pos;
+            m_e = meshInfo.vertexE * transform.scale;
+        }
+        else {
+            CModelMesh* pModelMesh = pActor->GetModelMesh();
+            if (pModelMesh->GetVecMesh().empty()) return;
 
-        m_e = meshInfo.vertexE * transform.scale;
+            MeshInfo meshInfo;
+            for (const auto pMesh : pModelMesh->GetVecMesh()) {
+                MeshInfo modelMeshInfo = pMesh->GetMeshInfo();
+
+                if (meshInfo.maxVertexPos.x < modelMeshInfo.maxVertexPos.x) meshInfo.maxVertexPos.x = modelMeshInfo.maxVertexPos.x;
+                if (meshInfo.maxVertexPos.y < modelMeshInfo.maxVertexPos.y) meshInfo.maxVertexPos.y = modelMeshInfo.maxVertexPos.y;
+                if (meshInfo.maxVertexPos.z < modelMeshInfo.maxVertexPos.z) meshInfo.maxVertexPos.z = modelMeshInfo.maxVertexPos.z;
+
+                if (meshInfo.minVertexPos.x > modelMeshInfo.minVertexPos.x) meshInfo.minVertexPos.x = modelMeshInfo.minVertexPos.x;
+                if (meshInfo.minVertexPos.y > modelMeshInfo.minVertexPos.y) meshInfo.minVertexPos.y = modelMeshInfo.minVertexPos.y;
+                if (meshInfo.minVertexPos.z > modelMeshInfo.minVertexPos.z) meshInfo.minVertexPos.z = modelMeshInfo.minVertexPos.z;
+            }
+
+            meshInfo.vertexCenterPos = (meshInfo.minVertexPos + meshInfo.maxVertexPos) * 0.5f;
+
+            meshInfo.vertexE.x = fabsf(meshInfo.maxVertexPos.x - meshInfo.minVertexPos.x) * 0.5f;
+            meshInfo.vertexE.y = fabsf(meshInfo.maxVertexPos.y - meshInfo.minVertexPos.y) * 0.5f;
+            meshInfo.vertexE.z = fabsf(meshInfo.maxVertexPos.z - meshInfo.minVertexPos.z) * 0.5f;
+
+            m_c = meshInfo.vertexCenterPos + transform.pos;
+
+            m_e = meshInfo.vertexE * transform.scale;
+        }
+    }
+
+    // 描画
+    void COBB::Draw(CActorBase* pActor) {
+        if (pMesh) {
+            pMesh->Draw();
+        }
+    }
+
+    // OBBメッシュを作成
+    void COBB::CreateOBBMesh(const char* meshName) {
+        
+        if (!pMesh) {
+            CMeshManager* manager = CGameSystem::GetGameSystem().GetMeshManager();
+            if (!manager) return;
+
+            pMesh = manager->CreateMesh(meshName);
+            if (!pMesh) return;
+        }
+
+        VECTOR4 color(1.0f, 0.0f, 0.0f, 1.0f);
+
+        // OBBの描画調整中
+        std::vector<VertexInfo> vecVertex = {
+            // vertex
+            { VECTOR3(m_c.x + m_e.x, m_c.y + m_e.y, m_c.z - m_e.z), color},
+            { VECTOR3(m_c.x + m_e.x, m_c.y - m_e.y, m_c.z - m_e.z), color},
+
+            { VECTOR3(m_c.x - m_e.x, m_c.y + m_e.y, m_c.z - m_e.z), color},
+            { VECTOR3(m_c.x - m_e.x, m_c.y - m_e.y, m_c.z - m_e.z), color},
+
+            { VECTOR3(m_c.x - m_e.x, m_c.y + m_e.y, m_c.z + m_e.z), color},
+            { VECTOR3(m_c.x - m_e.x, m_c.y - m_e.y, m_c.z + m_e.z), color},
+
+            { VECTOR3(m_c.x + m_e.x, m_c.y + m_e.y, m_c.z + m_e.z), color},
+            { VECTOR3(m_c.x + m_e.x, m_c.y - m_e.y, m_c.z + m_e.z), color},
+
+
+            { VECTOR3(m_c.x + m_e.x, m_c.y + m_e.y, m_c.z - m_e.z), color},
+            { VECTOR3(m_c.x - m_e.x, m_c.y + m_e.y, m_c.z - m_e.z), color},
+
+            { VECTOR3(m_c.x + m_e.x, m_c.y + m_e.y, m_c.z + m_e.z), color},
+            { VECTOR3(m_c.x - m_e.x, m_c.y + m_e.y, m_c.z + m_e.z), color},
+
+            { VECTOR3(m_c.x + m_e.x, m_c.y - m_e.y, m_c.z + m_e.z), color},
+            { VECTOR3(m_c.x - m_e.x, m_c.y - m_e.y, m_c.z + m_e.z), color},
+
+            { VECTOR3(m_c.x + m_e.x, m_c.y - m_e.y, m_c.z - m_e.z), color},
+            { VECTOR3(m_c.x - m_e.x, m_c.y - m_e.y, m_c.z - m_e.z), color},
+
+
+            { VECTOR3(m_c.x + m_e.x, m_c.y + m_e.y, m_c.z + m_e.z), color},
+            { VECTOR3(m_c.x + m_e.x, m_c.y + m_e.y, m_c.z - m_e.z), color},
+
+            { VECTOR3(m_c.x + m_e.x, m_c.y - m_e.y, m_c.z + m_e.z), color},
+            { VECTOR3(m_c.x + m_e.x, m_c.y - m_e.y, m_c.z - m_e.z), color},
+
+            { VECTOR3(m_c.x - m_e.x, m_c.y + m_e.y, m_c.z + m_e.z), color},
+            { VECTOR3(m_c.x - m_e.x, m_c.y + m_e.y, m_c.z - m_e.z), color},
+
+            { VECTOR3(m_c.x - m_e.x, m_c.y - m_e.y, m_c.z + m_e.z), color},
+            { VECTOR3(m_c.x - m_e.x, m_c.y - m_e.y, m_c.z - m_e.z), color},
+        };
+
+        pMesh->CreateVertexBuffer(PRIMITIVE_TOPOLOGY_TYPE::LINELIST, vecVertex);
     }
 
     // レイがヒットしたか？

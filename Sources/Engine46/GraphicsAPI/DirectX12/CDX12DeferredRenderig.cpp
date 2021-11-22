@@ -19,6 +19,8 @@
 #include "../CMaterial.h"
 #include "../CMesh.h"
 #include "../CLight.h"
+#include "../CModelMesh.h"
+#include "../COBB.h"
 
 namespace Engine46 {
 
@@ -209,40 +211,62 @@ namespace Engine46 {
             pSp->SetShader();
             pSp->SetSceneConstantBufferToShader((UINT)CB_TYPE::CAMERA);
 
-            std::vector<CSprite*> vecSprites = pScene->GetSpritesFromScene();
-            for (const auto& pSprite : vecSprites) {
-                Matrix matW = pSprite->GetWorldMatrix();
+            std::vector<CActorBase*> vecActors = pScene->GetActorsFromScene();
+            for (const auto& pActor : vecActors) {
+                Matrix matW = pActor->GetWorldMatrix();
                 matW.dx_m = DirectX::XMMatrixTranspose(matW.dx_m);
 
                 worldCB cb = {
                     matW,
                 };
-                pSprite->UpdateWorldConstantBuffer(&cb);
+                pActor->UpdateWorldConstantBuffer(&cb);
 
-                pSprite->GetMesh()->Set();
-
-                pSprite->GetMesh()->Draw();
+                CMeshBase* pMesh = pActor->GetMesh();
+                if (pMesh) {
+                    pMesh->Set();
+                    pMesh->Draw();
+                }
+                else {
+                    CModelMesh* pModelMesh = pActor->GetModelMesh();
+                    if (pModelMesh) {
+                        pModelMesh->Draw();
+                    }
+                }
             }
 
-            std::vector<CActorBase*> vecBoxs = pScene->GetBoxsFromScene();
-            for (const auto& pBox : vecBoxs) {
-                Matrix matW = pBox->GetWorldMatrix();
-                matW.dx_m = DirectX::XMMatrixTranspose(matW.dx_m);
-
-                worldCB cb = {
-                    matW,
-                };
-                pBox->UpdateWorldConstantBuffer(&cb);
-
-                pBox->GetMesh()->Set();
-
-                pBox->GetMesh()->Draw();
+            std::vector<CLight*> vecLight = pScene->GetLightsFromScene();
+            for (const auto& pLight : vecLight) {
+                pLight->Draw();
             }
-        }
 
-        std::vector<CLight*> vecLight = pScene->GetLightsFromScene();
-        for (const auto& pLight : vecLight) {
-            pLight->Draw();
+            pSp = pShaderManager->CreateShaderPackage("Model_Line.hlsl");
+            if (pSp) {
+                pSp->SetShader();
+                pSp->SetSceneConstantBufferToShader((UINT)CB_TYPE::CAMERA);
+
+                for (const auto& pActor : vecActors) {
+                    COBB* pObb = pActor->GetOBB();
+                    if (!pObb) continue;
+
+                    CConstantBufferBase* pWorldCb = pActor->GetWorldConstantBuffer();
+                    if (!pWorldCb) continue;
+
+                    pWorldCb->Set((UINT)CB_TYPE::WORLD);
+                    pObb->Update(pActor);
+                    pObb->Draw(pActor);
+                }
+                for (const auto& pLight : vecLight) {
+                    COBB* pObb = pLight->GetOBB();
+                    if (!pObb) continue;
+
+                    CConstantBufferBase* pWorldCb = pLight->GetWorldConstantBuffer();
+                    if (!pWorldCb) continue;
+
+                    pWorldCb->Set((UINT)CB_TYPE::WORLD);
+                    pObb->Update(pLight);
+                    pObb->Draw(pLight);
+                }
+            }
         }
 
         End();
@@ -303,14 +327,16 @@ namespace Engine46 {
 
         if (!pSprite) return;
 
+        CMeshBase* pMesh = pSprite->GetMesh();
+        if (!pMesh) return;
+
+        CMaterialBase* pMaterial = pMesh->GetMaterial();
+        if (!pMaterial) return;
+
         for (const auto& pRenderTex : m_pVecRenderTex) {
             pDX12Command->SetViewPort(x, y, width, height);
 
-            CMeshBase* pMesh = pSprite->GetMesh();
-            if (pMesh) {
-                CMaterialBase* pMaterial = pMesh->GetMaterial();
-                pMaterial->SetTexture(pRenderTex.get());
-            }
+            pMaterial->SetTexture(pRenderTex.get());
 
             pSprite->Draw();
 

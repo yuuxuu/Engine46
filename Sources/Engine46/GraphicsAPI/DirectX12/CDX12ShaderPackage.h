@@ -55,6 +55,7 @@ namespace Engine46 {
         void SetDepthStencilState(D3D12_GRAPHICS_PIPELINE_STATE_DESC& gpsDesc);
         void SetRasterizerState(D3D12_GRAPHICS_PIPELINE_STATE_DESC& gpsDesc);
         void SetBlendState(D3D12_GRAPHICS_PIPELINE_STATE_DESC& gpsDesc, std::string& shaderName);
+        void SetPrimitiveTopologyType(D3D12_GRAPHICS_PIPELINE_STATE_DESC& gpsDesc, std::string& shaderName);
 
         void SetDescriptorHeap(ID3D12DescriptorHeap* pDescriptorHeap) { this->pDescriptorHeap = pDescriptorHeap; }
     };

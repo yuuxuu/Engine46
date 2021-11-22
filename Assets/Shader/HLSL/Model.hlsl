@@ -28,7 +28,7 @@ struct PS_OUT {
     float4 color	: SV_TARGET;
 };
 
-[RootSignature(RS_01)]
+[RootSignature(RS_MODEL)]
 VS_OUT VS_main(VS_IN input) {
     VS_OUT output = (VS_OUT)0;
 

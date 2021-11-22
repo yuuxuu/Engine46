@@ -8,6 +8,7 @@
 #include "MyRenderWidget.h"
 
 #include "Engine46/CGameSystem.h"
+#include "Engine46/CActor.h"
 #include "Engine46/CInput.h"
 
 #include <QMouseEvent>
