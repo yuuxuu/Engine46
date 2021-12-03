@@ -21,6 +21,7 @@ namespace Engine46 {
     class CCamera;
     class CLight;
     class CSprite;
+    class CParticleEmitter;
 
     class CSceneBase {
     protected:
@@ -56,6 +57,7 @@ namespace Engine46 {
         std::vector<CActorBase*> GetActorsFromScene();
         std::vector<CCamera*> GetCamerasFromScene();
         std::vector<CLight*> GetLightsFromScene();
+        std::vector<CParticleEmitter*> GetParticleEmittersFromScene();
 
         void SetRootActor(CActorBase* pRootActor) { this->pRootActor = pRootActor; }
         CActorBase* GetRootActor() const { return pRootActor; }

@@ -42,14 +42,14 @@ namespace Engine46 {
         SetDepthStencilState(gpsDesc);
         SetRasterizerState(gpsDesc);
 
-        D3D12_INPUT_ELEMENT_DESC IEDesc[] = {
+        D3D12_INPUT_ELEMENT_DESC ieDesc[] = {
             { "POSITION" , 0, DXGI_FORMAT_R32G32B32_FLOAT	, 0,  0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
             { "COLOR"    , 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
             { "TEXCOORD" , 0, DXGI_FORMAT_R32G32_FLOAT		, 0, 28, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
             { "NORMAL"   , 0, DXGI_FORMAT_R32G32B32_FLOAT   , 0, 36, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
         };
 
-        gpsDesc.InputLayout = { IEDesc, _countof(IEDesc) };
+        gpsDesc.InputLayout = { ieDesc, _countof(ieDesc) };
         gpsDesc.pRootSignature = m_pGraphicsRootSignature.Get();
         gpsDesc.SampleDesc = { 1, 0 };
         gpsDesc.SampleMask = UINT_MAX;
@@ -176,6 +176,7 @@ namespace Engine46 {
             "GBuffer_Lighting.hlsl",
             "LuminanceExtraction.hlsl",
             "Model_Line.hlsl",
+            "PointSprite.hlsl"
         };
 
         for (const auto& name : shaderNames) {
@@ -238,18 +239,16 @@ namespace Engine46 {
     }
 
     void CDX12ShaderPackage::SetPrimitiveTopologyType(D3D12_GRAPHICS_PIPELINE_STATE_DESC& gpsDesc, std::string& shaderName) {
-        
-        gpsDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 
-        std::vector<std::string> shaderNames = {
-            "Model_Line.hlsl",
-        };
-
-        for (const auto& name : shaderNames) {
-            if (name == shaderName) {
-                gpsDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE;
-                break;
-            }
+        if ("Model_Line.hlsl" == shaderName) {
+            gpsDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE;
+        }
+        else if ("PointSprite.hlsl" == shaderName) {
+            gpsDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT;
+        }
+        else
+        {
+            gpsDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
         }
     }
 

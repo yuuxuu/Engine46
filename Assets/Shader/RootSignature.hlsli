@@ -152,4 +152,7 @@
 #define RS_CS_CLEAR_COLOR "RootFlags(ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT),"\
                                     "DescriptorTable(UAV(u0, numDescriptors = 1, space = 0), visibility = SHADER_VISIBILITY_ALL),"\
 
+#define RS_CS_GPUPARTICLE "RootFlags(ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT),"\
+                                    "DescriptorTable(UAV(u0, numDescriptors = 1, space = 0), visibility = SHADER_VISIBILITY_ALL),"\
+
 #endif

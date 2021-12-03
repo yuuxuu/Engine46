@@ -11,6 +11,8 @@
 #include "CDirectionalLight.h"
 #include "CPointLight.h"
 #include "CSpotLight.h"
+#include "CParticleEmitter.h"
+
 #include "CMesh.h"
 #include "CMaterial.h"
 
@@ -62,6 +64,11 @@ namespace Engine46 {
             actorName = "Character_" + std::to_string(m_classCount.charctorCount++);
 
             actor = std::make_unique<CActorBase>((UINT)actorType, actorName.c_str(), Transform());
+            break;
+        case ActorType::ParticleEmitter:
+            actorName = "ParticleEmitter_" + std::to_string(m_classCount.particeleEmitterCount++);
+
+            actor = std::make_unique<CParticleEmitter>(actorName.c_str());
             break;
         case ActorType::Light:
             return nullptr;

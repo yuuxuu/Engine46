@@ -9,11 +9,13 @@
 #include "CRendererSystem.h"
 #include "CWinow.h"
 #include "CInput.h"
-#include "CActor.h"
-#include "CLight.h"
 #include "CScene.h"
 #include "CMaterial.h"
 #include "CMesh.h"
+
+#include "CActor.h"
+#include "CLight.h"
+#include "CParticleEmitter.h"
 
 #include "CSceneManager.h"
 #include "CActorManager.h"
@@ -117,7 +119,6 @@ namespace Engine46 {
                 CMaterialBase* pMaterial = pMesh->GetMaterial();
                 if (pMaterial) {
                     pMaterial->SetDiffuse(VECTOR4(1.0f, 0.0f, 0.0f, 1.0f));
-                    pMaterial->SetEmissive(VECTOR4(1.0f, 0.0f, 0.0f, 1.0f));
                 }
             }
             pPointLight->SetLightDiffuse(VECTOR4(1.0f, 0.0f, 0.0f, 1.0f));
@@ -130,7 +131,6 @@ namespace Engine46 {
                 CMaterialBase* pMaterial = pMesh->GetMaterial();
                 if (pMaterial) {
                     pMaterial->SetDiffuse(VECTOR4(0.0f, 1.0f, 0.0f, 1.0f));
-                    pMaterial->SetEmissive(VECTOR4(0.0f, 3.0f, 0.0f, 1.0f));
                 }
             }
             pPointLight->SetLightDiffuse(VECTOR4(0.0f, 1.0f, 0.0f, 1.0f));
@@ -143,11 +143,38 @@ namespace Engine46 {
                 CMaterialBase* pMaterial = pMesh->GetMaterial();
                 if (pMaterial) {
                     pMaterial->SetDiffuse(VECTOR4(0.0f, 0.0f, 1.0f, 1.0f));
-                    pMaterial->SetEmissive(VECTOR4(0.0f, 0.0f, 3.0f, 1.0f));
                 }
             }
             pPointLight->SetLightDiffuse(VECTOR4(0.0f, 0.0f, 1.0f, 1.0f));
             pScene->AddActorToScene(pPointLight);
+
+            CActorBase* pActor = m_pActorManager->CreateActor(ActorType::ParticleEmitter);
+            CParticleEmitter* pParticleEmitter = dynamic_cast<CParticleEmitter*>(pActor);
+            if (pParticleEmitter) {
+                pParticleEmitter->Initialize();
+
+                std::random_device rd;
+                std::mt19937 mt(rd());
+
+                std::uniform_real_distribution<float> rand_pos(-300.0f, 300.0f);
+                std::uniform_real_distribution<float> rand_color(0.0f, 1.0f);
+                std::uniform_real_distribution<float> rand_lifeTime(3.0f, 15.0f);
+                std::uniform_real_distribution<float> rand_velocity(-1.0f, 1.0f);
+
+                std::vector<Particle> vecParticle(DEFAULT_MAX_PARTICLE);
+                for (auto& particle : vecParticle) {
+                    particle.pos = VECTOR3(static_cast<float>(rand_pos(mt)), static_cast<float>(rand_pos(mt)), static_cast<float>(rand_pos(mt)));
+                    particle.color = VECTOR4(static_cast<float>(rand_color(mt)), static_cast<float>(rand_color(mt)), static_cast<float>(rand_color(mt)), 1.0f);
+                    
+                    particle.initPos = particle.pos;
+                    particle.velocity = VECTOR3(0.0f, static_cast<float>(rand_velocity(mt)), 0.0f);
+                    particle.lifeTime = static_cast<float>(rand_lifeTime(mt));
+                    particle.gravity = 9.8f;
+                }
+                pParticleEmitter->Update(vecParticle);
+
+                pScene->AddActorToScene(pParticleEmitter);
+            }
         }
 
         // イベントハンドル生成

@@ -41,6 +41,7 @@
     <ClCompile Include="CMesh.cpp" />
     <ClCompile Include="CMeshManager.cpp" />
     <ClCompile Include="COBB.cpp" />
+    <ClCompile Include="CParticleEmitter.cpp" />
     <ClCompile Include="CPointLight.cpp" />
     <ClCompile Include="CRenderer.cpp" />
     <ClCompile Include="CRendererSystem.cpp" />
@@ -140,6 +141,7 @@
     <ClInclude Include="CMesh.h" />
     <ClInclude Include="CMeshManager.h" />
     <ClInclude Include="COBB.h" />
+    <ClInclude Include="CParticleEmitter.h" />
     <ClInclude Include="CPointLight.h" />
     <ClInclude Include="CRenderer.h" />
     <ClInclude Include="CRendererSystem.h" />
@@ -186,6 +188,12 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\..\Assets\Shader\HLSL\CS_ClearColor.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\..\Assets\Shader\HLSL\CS_GPUParticle.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
@@ -249,7 +257,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
-    <FxCompile Include="..\..\Assets\Shader\HLSL\GPUParticle.hlsl">
+    <FxCompile Include="..\..\Assets\Shader\HLSL\PointSprite.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>

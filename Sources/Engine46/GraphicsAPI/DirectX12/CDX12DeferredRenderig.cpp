@@ -19,6 +19,7 @@
 #include "../CMaterial.h"
 #include "../CMesh.h"
 #include "../CLight.h"
+#include "../CParticleEmitter.h"
 #include "../CModelMesh.h"
 #include "../COBB.h"
 
@@ -237,6 +238,11 @@ namespace Engine46 {
             std::vector<CLight*> vecLight = pScene->GetLightsFromScene();
             for (const auto& pLight : vecLight) {
                 pLight->Draw();
+            }
+
+            std::vector<CParticleEmitter*> vecParticleEmitter = pScene->GetParticleEmittersFromScene();
+            for (const auto& particleEmitter : vecParticleEmitter) {
+                particleEmitter->Draw();
             }
 
             pSp = pShaderManager->CreateShaderPackage("Model_Line.hlsl");

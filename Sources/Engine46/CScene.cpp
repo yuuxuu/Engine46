@@ -11,6 +11,7 @@
 #include "CCamera.h"
 #include "CLight.h"
 #include "CSprite.h"
+#include "CParticleEmitter.h"
 #include "COBB.h"
 
 namespace Engine46 {
@@ -223,6 +224,24 @@ namespace Engine46 {
         }
 
         return vecLights;
+    }
+
+    // シーン内のパーティクルエミッターを全て取得
+    std::vector<CParticleEmitter*> CSceneBase::GetParticleEmittersFromScene() {
+        std::vector<CParticleEmitter*> vecParticleEmitters;
+
+        if (pRootActor) {
+            std::vector<CActorBase*> pActors;
+            this->GetActorsRecursiveInActor(pActors, pRootActor, (int)ActorType::ParticleEmitter);
+
+            if (!pActors.empty()) {
+                for (const auto pActor : pActors) {
+                    vecParticleEmitters.emplace_back(dynamic_cast<CParticleEmitter*>(pActor));
+                }
+            }
+        }
+
+        return vecParticleEmitters;
     }
 
     // 指定アクター名のアクターを再帰検索して取得

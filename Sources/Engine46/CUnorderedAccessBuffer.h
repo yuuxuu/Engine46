@@ -28,9 +28,13 @@ namespace Engine46 {
 
         virtual void CreateUnorderedAccessBuffer(UINT byteWidth, UINT byteSize) {};
         virtual void CreateUnorderedAccessBufferView() {};
+        virtual void WriteBufferData(void* srcData, UINT size) {};
         virtual void Set(UINT slot) {};
         virtual void SetCompute(UINT slot) {};
-        virtual void WirteBufferData(void* srcData) {};
+        virtual void Dispatch(UINT dispatchX, UINT dispatchY, UINT dispatchZ) {};
+
+        virtual void Draw() {};
+        virtual void CreateVertexBufferView() {};
 
         UINT GetTextureWidth() const { return m_texWidth; }
         UINT GetTextureHeight() const { return m_texHeight; }

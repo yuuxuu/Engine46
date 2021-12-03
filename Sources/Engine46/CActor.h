@@ -31,6 +31,7 @@ namespace Engine46 {
         Sprite,
         Box,
         Character,
+        ParticleEmitter,
         Light,
     };
 

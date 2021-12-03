@@ -36,15 +36,21 @@ namespace Engine46 {
         D3D12_CPU_DESCRIPTOR_HANDLE     m_uavCpuHandle;
         D3D12_GPU_DESCRIPTOR_HANDLE	    m_uavGpuHandle;
 
+        D3D12_VERTEX_BUFFER_VIEW        m_vbView;
+
     public:
         CDX12UnorderedAccessBuffer(CDX12Device* pDevice, CDX12Command* pCommand);
         ~CDX12UnorderedAccessBuffer();
 
         void CreateUnorderedAccessBuffer(UINT byteWidth, UINT byteSize) override;
         void CreateUnorderedAccessBufferView() override;
+        void WriteBufferData(void* srcData, UINT size) override;
         void Set(UINT slot) override;
         void SetCompute(UINT slot) override;
-        void WirteBufferData(void* srcData) override;
+        void Dispatch(UINT dispatchX, UINT dispatchY, UINT dispatchZ) override;
+
+        void Draw() override;
+        void CreateVertexBufferView() override;
 
         void SetResource(ComPtr<ID3D12Resource>& pResource);
 

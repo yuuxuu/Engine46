@@ -68,11 +68,11 @@ namespace Engine46 {
         }
 
         if (pTexture) {
-            pTexture->Set((UINT)MyRS_01::SRV_diffuse);
+            pTexture->Set((UINT)MyRS_Model::SRV_diffuse);
         }
         else {
             for (const auto pTexture : m_pVecTexture) {
-                pTexture->Set((UINT)MyRS_01::SRV_diffuse);
+                pTexture->Set((UINT)MyRS_Model::SRV_diffuse);
             }
         }
     }

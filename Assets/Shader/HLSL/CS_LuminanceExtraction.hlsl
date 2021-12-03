@@ -14,7 +14,7 @@ RWTexture2D<float4> inTexture  : register(u0);
 RWTexture2D<float4> outTexture : register(u1);
 
 // è‡’l(‚µ‚«‚¢’l)
-static const float threshold = 1.3f;
+static const float threshold = 0.8f;
 
 [RootSignature(RS_CS_LuminanceExtraction)]
 [numthreads(8, 8, 1)]

@@ -26,6 +26,7 @@ namespace Engine46 {
         UINT spriteCount;
         UINT boxCount;
         UINT charctorCount;
+        UINT particeleEmitterCount;
         UINT lightCount;
 
         classCount() :
@@ -35,6 +36,7 @@ namespace Engine46 {
             spriteCount(0),
             boxCount(0),
             charctorCount(0),
+            particeleEmitterCount(0),
             lightCount(0)
         {}
     };

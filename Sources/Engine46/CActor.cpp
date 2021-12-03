@@ -78,7 +78,7 @@ namespace Engine46 {
 
         if (pShaderPackage) {
             pShaderPackage->SetShader();
-            pShaderPackage->SetSceneConstantBufferToShader((UINT)MyRS_01::CBV_CAMERA);
+            pShaderPackage->SetSceneConstantBufferToShader((UINT)MyRS_Model::CBV_CAMERA);
 
             if (m_pWorldConstantBuffer) {
                 m_pWorldConstantBuffer->Set((UINT)CB_TYPE::WORLD);

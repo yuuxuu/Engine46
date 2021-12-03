@@ -40,6 +40,12 @@ float4x4 GetRotationMatrix(float4x4 rotationMat) {
     return mat;
 }
 
+// 0.0f～1.0fのランダムな数値を取得
+float GetRandomNumber(float2 texCoord)
+{
+    return frac(sin(dot(texCoord.xy, float2(12.9898, 78.233))) * 43758.5453);
+}
+
 // ガンマ値を取得
 float GetGumma(float3 color) {
     return dot(color, float3(0.299f, 0.587f, 0.144f));

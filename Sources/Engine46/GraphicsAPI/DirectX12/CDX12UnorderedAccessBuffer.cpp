@@ -28,6 +28,11 @@ namespace Engine46 {
 
         CD3DX12_HEAP_PROPERTIES prop = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_CUSTOM);
 
+        prop.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
+        prop.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;
+        prop.CreationNodeMask = 1;
+        prop.VisibleNodeMask = 1;
+
         D3D12_RESOURCE_DESC rDesc = {};
 
         rDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
@@ -77,6 +82,11 @@ namespace Engine46 {
         pDX12Device->CreateUnorderedAccessView(m_pUabResource.Get(), uavDesc, m_uavCpuHandle);
     }
 
+    // ソースバッファをマッピングバッファへ書き込み
+    void CDX12UnorderedAccessBuffer::WriteBufferData(void* srcData, UINT size) {
+        memcpy(m_mappedBuffer, srcData, size);
+    }
+
     // アンオーダードアクセスバッファをシェーダーへ設定
     void CDX12UnorderedAccessBuffer::Set(UINT slot) {
         if (m_srvGpuHandle.ptr != 0) {
@@ -91,9 +101,37 @@ namespace Engine46 {
         }
     }
 
-    // ソースバッファをマッピングバッファへ書き込み
-    void CDX12UnorderedAccessBuffer::WirteBufferData(void* srcData) {
-        memcpy(m_mappedBuffer, srcData, m_byteWidth * m_byteSize);
+    // アンオーダードアクセスバッファをディスパッチ
+    void CDX12UnorderedAccessBuffer::Dispatch(UINT dispatchX, UINT dispatchY, UINT dispatchZ) {
+        pDX12Command->SetResourceBarrier(m_pUabResource.Get(), D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
+
+        pDX12Command->Dispatch(dispatchX, dispatchY, dispatchZ);
+
+        pDX12Command->SetResourceBarrier(m_pUabResource.Get(), D3D12_RESOURCE_STATE_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_GENERIC_READ);
+    }
+
+    // バーテックスバッファビューを設定
+    void CDX12UnorderedAccessBuffer::Draw() {
+        if (m_vbView.BufferLocation != 0)
+        {
+            pDX12Command->SetResourceBarrier(m_pUabResource.Get(), D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
+
+            D3D12_INDEX_BUFFER_VIEW ibView{};
+            pDX12Command->SetBuffer(m_vbView, ibView);
+
+            pDX12Command->DrawInstanced(D3D12_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_POINTLIST, m_byteSize);
+
+            pDX12Command->SetResourceBarrier(m_pUabResource.Get(), D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER, D3D12_RESOURCE_STATE_GENERIC_READ);
+        }
+    }
+
+    // バーテックスバッファビュー作成
+    void CDX12UnorderedAccessBuffer::CreateVertexBufferView() {
+        if (m_pUabResource) {
+            m_vbView.BufferLocation = m_pUabResource->GetGPUVirtualAddress();
+            m_vbView.StrideInBytes = m_byteWidth;
+            m_vbView.SizeInBytes = m_byteSize * m_byteWidth;
+        }
     }
 
     // リソースを設定

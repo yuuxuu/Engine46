@@ -201,6 +201,9 @@
     <ClCompile Include="..\stdafx.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="CParticleEmitter.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GraphicsAPI\DirectX11\CDX11ConstantBuffer.h">
@@ -383,6 +386,9 @@
     <ClInclude Include="..\stdafx.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="CParticleEmitter.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\..\Assets\Shader\HLSL\CPUParticle.hlsl">
@@ -397,7 +403,7 @@
     <FxCompile Include="..\..\Assets\Shader\HLSL\GBuffer_Lighting.hlsl">
       <Filter>リソース ファイル\HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="..\..\Assets\Shader\HLSL\GPUParticle.hlsl">
+    <FxCompile Include="..\..\Assets\Shader\HLSL\PointSprite.hlsl">
       <Filter>リソース ファイル\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="..\..\Assets\Shader\HLSL\Model.hlsl">
@@ -440,6 +446,9 @@
       <Filter>リソース ファイル\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="..\..\Assets\Shader\HLSL\Model_Line.hlsl">
+      <Filter>リソース ファイル\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Assets\Shader\HLSL\CS_GPUParticle.hlsl">
       <Filter>リソース ファイル\HLSL</Filter>
     </FxCompile>
   </ItemGroup>

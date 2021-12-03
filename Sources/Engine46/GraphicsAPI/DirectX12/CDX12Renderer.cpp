@@ -272,7 +272,7 @@ namespace Engine46 {
         UINT x = 0;
         UINT y = (UINT)m_windowRect.h - height;
 
-        if (m_pRenderSprite) {
+        /*if (m_pRenderSprite) {
             CMeshBase* pMesh = m_pRenderSprite->GetMesh();
             if (pMesh) {
                 CMaterialBase* pMaterial = pMesh->GetMaterial();
@@ -280,11 +280,11 @@ namespace Engine46 {
             }
 
             m_pRenderSprite->Draw();
-        }
-
-        /*if (m_pDX12PostEffect) {
-            m_pDX12PostEffect->DrawForBloom(m_pRenderSprite.get(), pRenderTexture);
         }*/
+
+        if (m_pDX12PostEffect) {
+            m_pDX12PostEffect->DrawForBloom(m_pRenderSprite.get(), pRenderTexture);
+        }
 
         /*if (m_pDeferredRendering) {
             m_pDeferredRendering->DrawForRenderScene(m_pRenderSprite.get(), x, y, width, height);

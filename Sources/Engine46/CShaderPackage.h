@@ -29,7 +29,7 @@ namespace Engine46 {
         { "CS_main", "cs_5_0", SHADER_TYPE::TYPE_COMPUTE },
     };
 
-    enum class MyRS_01 {
+    enum class MyRS_Model {
         CBV_WORLD,
         CBV_MATERIAL,
         CBV_CAMERA,
@@ -79,6 +79,10 @@ namespace Engine46 {
     };
 
     enum class MyRS_ClearColor {
+        UAV_0,
+    };
+
+    enum class MyRS_CS_GpuParticle {
         UAV_0,
     };
 
