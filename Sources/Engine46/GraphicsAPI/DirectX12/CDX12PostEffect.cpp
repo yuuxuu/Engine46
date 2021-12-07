@@ -43,17 +43,7 @@ namespace Engine46 {
 
         UINT w = width;
         UINT h = height;
-        UINT count = 0;
-        for (;;) {
-            if (w < 64 || h < 64) break;
-
-            w >>= 1;
-            h >>= 1;
-
-            count++;
-        }
-
-        count *= 2;
+        UINT count = 8;
 
         D3D12_DESCRIPTOR_HEAP_DESC dhDesc = {};
 
@@ -111,6 +101,7 @@ namespace Engine46 {
                 {
                     w >>= 1;
                     h >>= 1;
+                    if (w == 1 || h == 1) break;
                 }
 
                 D3D12_RESOURCE_DESC rDesc = {};

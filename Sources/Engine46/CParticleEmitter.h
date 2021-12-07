@@ -21,13 +21,18 @@ namespace Engine46 {
     struct Particle {
         VECTOR3 pos;
         VECTOR4 color;
-        VECTOR2	uv;
-        VECTOR3	normal;
+        VECTOR2 uv;
+        VECTOR3 normal;
 
         VECTOR3 initPos;
         VECTOR3 velocity;
         float lifeTime;
         float gravity;
+
+        Particle() :
+            lifeTime(0.0f),
+            gravity(9.8f)
+        {}
     };
 
     class CParticleEmitter : public CActorBase {
@@ -37,12 +42,11 @@ namespace Engine46 {
         UINT                                        m_maxParticle;
 
         std::unique_ptr<CUnorderedAccessBufferBase> m_pParticleUab;
-
     public:
         explicit CParticleEmitter(const char* particleEmitterName);
         ~CParticleEmitter();
 
-        void Initialize() override;
+        void Initialize(UINT numParticle);
         void Update() override;
         void Draw() override;
 

@@ -26,10 +26,12 @@ namespace Engine46 {
     {}
 
     // 初期化
-    void CParticleEmitter::Initialize() {
+    void CParticleEmitter::Initialize(UINT numParticle) {
 
         CDX12Renderer* pDX12Renderer = dynamic_cast<CDX12Renderer*>(CRendererSystem::GetRendererSystem().GetRenderer());
         if (!pDX12Renderer) return;
+
+        m_maxParticle = numParticle;
 
         pDX12Renderer->CreateUnorderedAccessBuffer(m_pParticleUab, sizeof(Particle), m_maxParticle);
         if (!m_pParticleUab) return;
@@ -41,41 +43,40 @@ namespace Engine46 {
     }
 
     // 更新
-    void CParticleEmitter::Update() {
-        /*if (m_pParticleUab) {
-            CShaderManager* pShaderManager = CGameSystem::GetGameSystem().GetShaderManager();
-
-            CShaderPackage* pSp = pShaderManager->CreateShaderPackage("CS_GPUParticle.hlsl");
-            if (pSp) {
-                pSp->SetShader();
-
-                m_pParticleUab->SetCompute((UINT)MyRS_CS_GpuParticle::UAV_0);
-
-                m_pParticleUab->Dispatch(m_maxParticle / 100, 1, 1);
-            }
-        }*/
-    }
+    void CParticleEmitter::Update() 
+    {}
 
     // 描画
     void CParticleEmitter::Draw() {
         if (m_pParticleUab) {
             CShaderManager* pShaderManager = CGameSystem::GetGameSystem().GetShaderManager();
 
-            CShaderPackage* pSp = pShaderManager->CreateShaderPackage("CS_GPUParticle.hlsl");
+            CShaderPackage* pSp = pShaderManager->CreateShaderPackage("CS_ButterFly.hlsl");
             if (pSp) {
                 pSp->SetShader();
 
+                Matrix matW = GetWorldMatrix();
+                matW.dx_m = DirectX::XMMatrixTranspose(matW.dx_m);
+
+                worldCB cb = {
+                    matW,
+                };
+                m_pWorldConstantBuffer->Update(&cb);
+                m_pWorldConstantBuffer->SetCompute((UINT)MyRS_CS_GpuParticle::CBV_0);
+
                 m_pParticleUab->SetCompute((UINT)MyRS_CS_GpuParticle::UAV_0);
 
-                m_pParticleUab->Dispatch(m_maxParticle / 1024, 1, 1);
+                UINT x = m_maxParticle > 1000 ? m_maxParticle / 1000 : m_maxParticle;
+
+                m_pParticleUab->Dispatch(x, 1, 1);
             }
 
-            pSp = pShaderManager->CreateShaderPackage("PointSprite.hlsl");
+            pSp = pShaderManager->CreateShaderPackage("ButterFly.hlsl");
             if (pSp) {
                 pSp->SetShader();
                 pSp->SetSceneConstantBufferToShader((UINT)MyRS_Model::CBV_CAMERA);
 
-                Matrix matW = GetBillboradMatrix();
+                Matrix matW = GetWorldMatrix();
                 matW.dx_m = DirectX::XMMatrixTranspose(matW.dx_m);
 
                 worldCB cb = {

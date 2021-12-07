@@ -39,6 +39,10 @@ Texture2D           BlurTex0        : register(t13);
 Texture2D           BlurTex1        : register(t14);
 Texture2D           BlurTex2        : register(t15);
 Texture2D           BlurTex3        : register(t16);
+Texture2D           BlurTex4        : register(t17);
+Texture2D           BlurTex5        : register(t18);
+Texture2D           BlurTex6        : register(t19);
+Texture2D           BlurTex7        : register(t20);
 
 // サンプラー
 SamplerState sampleState                    : register(s0);
@@ -115,9 +119,6 @@ cbuffer CbSpotLight : register(b5)
 cbuffer CbPostEffect : register(b6)
 {
 	float4 blurOffset[OFFSET_MAX];
-
-    uint texWidth;
-    uint texHeight;
 }
 
 //// 行列コンスタントバッファ

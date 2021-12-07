@@ -83,6 +83,7 @@ namespace Engine46 {
     };
 
     enum class MyRS_CS_GpuParticle {
+        CBV_0,
         UAV_0,
     };
 

@@ -103,7 +103,7 @@ typedef GS_OUT PS_IN;
 PS_OUT PS_main(PS_IN input) {
     PS_OUT output = (PS_OUT)0;
 
-    output.color = diffuseTex.Sample(sampleState, input.uv) * input.color;// *material.diffuse* material.emissive;
+    output.color = diffuseTex.Sample(sampleState, input.uv) * input.color * 2;// *material.diffuse* material.emissive;
 
     if (output.color.a <= 0.3f) discard;
 

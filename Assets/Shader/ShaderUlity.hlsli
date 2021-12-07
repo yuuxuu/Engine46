@@ -10,50 +10,109 @@
 
 #define PI 3.141592
 
+// ラジアンから度数へ変換
+float DegreeToRadian(float degree) {
+    return degree * (PI / 180.0f);
+}
+
+// 度数からラジアンへ変換
+float RadianToDegree(float radian) {
+    return radian * (180.0f / PI);
+}
+
+// float3同士の外積
+float3 float3Cross(float3 vec1, float3 vec2) {
+    return float3(vec1.y * vec2.z - vec1.z * vec2.y, vec1.z * vec2.x - vec1.x * vec2.z, vec1.x * vec2.y - vec1.y * vec2.x);
+}
+
+// スケール行列を取得
 float4x4 GetScaleMatrix(float3 scale) {
     float4x4 mat = {
-        float4(scale.x,       0,       0,    0),
-        float4(0, scale.y,       0,    0),
-        float4(0,       0, scale.z,    0),
-        float4(0,       0,       0, 1.0f),
+        float4(scale.x,    0.0f,    0.0f, 0.0f),
+        float4(   0.0f, scale.y,    0.0f, 0.0f),
+        float4(   0.0f,    0.0f, scale.z, 0.0f),
+        float4(   0.0f,    0.0f,    0.0f, 1.0f),
     };
     return mat;
 }
 
+// X軸回転行列を取得
+float4x4 GetRotationXMatrix(float angle) {
+    float radian = DegreeToRadian(angle);
+
+    float4x4 mat = {
+        float4(1.0f,        0.0f,        0.0f, 0.0f),
+        float4(0.0f, cos(radian), sin(radian), 0.0f),
+        float4(0.0f,-sin(radian), cos(radian), 0.0f),
+        float4(0.0f,        0.0f,        0.0f, 1.0f),
+    };
+    return mat;
+}
+
+// Y軸回転行列を取得
+float4x4 GetRotationYMatrix(float angle) {
+    float radian = DegreeToRadian(angle);
+    
+    float4x4 mat = {
+        float4(cos(radian), 0.0f,-sin(radian), 0.0f),
+        float4(       0.0f, 1.0f,        0.0f, 0.0f),
+        float4(sin(radian), 0.0f, cos(radian), 0.0f),
+        float4(       0.0f, 0.0f,        0.0f, 1.0f),
+    };
+    return mat;
+}
+
+// Z軸回転行列を取得
+float4x4 GetRotationZMatrix(float angle) {
+    float radian = DegreeToRadian(angle);
+
+    float4x4 mat = {
+        float4( cos(radian), sin(radian), 0.0f, 0.0f),
+        float4(-sin(radian), cos(radian), 0.0f, 0.0f),
+        float4(        0.0f,        0.0f, 0.0f, 0.0f),
+        float4(        0.0f,        0.0f, 0.0f, 1.0f),
+    };
+    return mat;
+}
+
+// 平行移動行列を取得
 float4x4 GetTransMatrix(float3 pos) {
     float4x4 mat = {
-        float4(1.0f,     0,     0,    0),
-        float4(0,  1.0f,     0,    0),
-        float4(0,     0,  1.0f,    0),
+        float4( 1.0f,  0.0f,  0.0f, 0.0f),
+        float4( 0.0f,  1.0f,  0.0f, 0.0f),
+        float4( 0.0f,  0.0f,  1.0f, 0.0f),
         float4(pos.x, pos.y, pos.z, 1.0f),
     };
     return mat;
 }
 
-float4x4 GetRotationMatrix(float4x4 rotationMat) {
+float4x4 GetLookAtMatrix(float3 pos, float3 look, float3 up) {
+    float3 z = look - pos;
+    z = normalize(z);
+
+    float3 x = float3Cross(up, z);
+    x = normalize(x);
+
+    float3 y = float3Cross(z, x);
+    y = normalize(y);
+
     float4x4 mat = {
-        float4(rotationMat._11, rotationMat._12, rotationMat._13,    0),
-        float4(rotationMat._21, rotationMat._22, rotationMat._23,    0),
-        float4(rotationMat._31, rotationMat._32, rotationMat._33,    0),
-        float4(0,               0,               0, 1.0f),
+        float4( x.x,  x.y,  x.z, 0.0f),
+        float4( y.x,  y.y,  y.z, 0.0f),
+        float4( z.x,  z.y,  z.z, 0.0f),
+        float4(0.0f, 0.0f, 0.0f, 1.0f),
     };
     return mat;
 }
 
 // 0.0f～1.0fのランダムな数値を取得
-float GetRandomNumber(float2 texCoord)
-{
+float GetRandomNumber(float2 texCoord) {
     return frac(sin(dot(texCoord.xy, float2(12.9898, 78.233))) * 43758.5453);
 }
 
 // ガンマ値を取得
 float GetGumma(float3 color) {
     return dot(color, float3(0.299f, 0.587f, 0.144f));
-}
-
-// 高輝度の取得
-float GetBrightness(float3 color) {
-    return max(color.r, max(color.g, color.b));
 }
 
 // ランバート

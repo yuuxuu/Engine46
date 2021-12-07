@@ -115,6 +115,10 @@
                             "DescriptorTable(SRV(t14, numDescriptors = 1, space = 0), visibility = SHADER_VISIBILITY_PIXEL),"\
                             "DescriptorTable(SRV(t15, numDescriptors = 1, space = 0), visibility = SHADER_VISIBILITY_PIXEL),"\
                             "DescriptorTable(SRV(t16, numDescriptors = 1, space = 0), visibility = SHADER_VISIBILITY_PIXEL),"\
+                            "DescriptorTable(SRV(t17, numDescriptors = 1, space = 0), visibility = SHADER_VISIBILITY_PIXEL),"\
+                            "DescriptorTable(SRV(t18, numDescriptors = 1, space = 0), visibility = SHADER_VISIBILITY_PIXEL),"\
+                            "DescriptorTable(SRV(t19, numDescriptors = 1, space = 0), visibility = SHADER_VISIBILITY_PIXEL),"\
+                            "DescriptorTable(SRV(t20, numDescriptors = 1, space = 0), visibility = SHADER_VISIBILITY_PIXEL),"\
                             "StaticSampler(s0,"\
                                 "filter = FILTER_MIN_MAG_MIP_LINEAR,"\
                                 "addressU = TEXTURE_ADDRESS_BORDER,"\
@@ -153,6 +157,7 @@
                                     "DescriptorTable(UAV(u0, numDescriptors = 1, space = 0), visibility = SHADER_VISIBILITY_ALL),"\
 
 #define RS_CS_GPUPARTICLE "RootFlags(ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT),"\
+                                    "DescriptorTable(CBV(b0, numDescriptors = 1, space = 0), visibility = SHADER_VISIBILITY_ALL),"\
                                     "DescriptorTable(UAV(u0, numDescriptors = 1, space = 0), visibility = SHADER_VISIBILITY_ALL),"\
 
 #endif

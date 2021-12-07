@@ -176,7 +176,8 @@ namespace Engine46 {
             "GBuffer_Lighting.hlsl",
             "LuminanceExtraction.hlsl",
             "Model_Line.hlsl",
-            "PointSprite.hlsl"
+            "PointSprite.hlsl",
+            "ButterFly.hlsl"
         };
 
         for (const auto& name : shaderNames) {
@@ -240,11 +241,20 @@ namespace Engine46 {
 
     void CDX12ShaderPackage::SetPrimitiveTopologyType(D3D12_GRAPHICS_PIPELINE_STATE_DESC& gpsDesc, std::string& shaderName) {
 
+        std::vector<std::string> shaderNames = {
+            "PointSprite.hlsl",
+            "ButterFly.hlsl"
+        };
+        for (const auto& name : shaderNames) {
+            if (name == shaderName) {
+                gpsDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT;
+
+                return;
+            }
+        }
+
         if ("Model_Line.hlsl" == shaderName) {
             gpsDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE;
-        }
-        else if ("PointSprite.hlsl" == shaderName) {
-            gpsDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT;
         }
         else
         {

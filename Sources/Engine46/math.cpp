@@ -33,11 +33,7 @@ namespace Engine46 {
     VECTOR3 Vec3Normalize(VECTOR3 vec) {
         float len = Vec3Lenght(vec);
 
-        if (len > 0.0f) {
-            len = 1.0f / len;
-        }
-
-        return VECTOR3(vec.x * len, vec.y * len, vec.z * len);
+        return VECTOR3(vec.x / len, vec.y /len, vec.z / len);
     }
 
     // VECTOR3同士の内積
@@ -68,7 +64,7 @@ namespace Engine46 {
         return outVec;
     }
 
-    // 視線方向に向いた行列を取得
+    // 視線方向に向いた回転行列を取得
     Matrix MatrixLookAt(VECTOR3 pos, VECTOR3 look, VECTOR3 up) {
         VECTOR3 z = look - pos;
         z = Vec3Normalize(z);
@@ -79,12 +75,12 @@ namespace Engine46 {
         VECTOR3 y = Vec3Cross(z, x);
         y = Vec3Normalize(y);
 
-        Matrix matLookAt;
-        matLookAt._11 = x.x; matLookAt._12 = x.y; matLookAt._13 = x.z;
-        matLookAt._21 = y.x; matLookAt._22 = y.y; matLookAt._23 = y.z;
-        matLookAt._31 = z.x; matLookAt._32 = z.y; matLookAt._33 = z.z;
+        Matrix mat;
+        mat._11 = x.x; mat._12 = x.y; mat._13 = x.z;
+        mat._21 = y.x; mat._22 = y.y; mat._23 = y.z;
+        mat._31 = z.x; mat._32 = z.y; mat._33 = z.z;
 
-        return matLookAt;
+        return mat;
     }
 
     // ビューポート行列を取得
@@ -93,13 +89,13 @@ namespace Engine46 {
         float w = screenWidth * 0.5f;
         float h = screenHeight * 0.5f;
         
-        Matrix matViewPort;
-        matViewPort._11 = w;
-        matViewPort._22 = -h;
+        Matrix mat;
+        mat._11 = w;
+        mat._22 = -h;
 
-        matViewPort._41 = w;
-        matViewPort._42 = h;
+        mat._41 = w;
+        mat._42 = h;
 
-        return matViewPort;
+        return mat;
     }
 }

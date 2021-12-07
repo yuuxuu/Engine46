@@ -46,6 +46,10 @@ PS_OUT PS_main(PS_IN input) {
     output.color += BlurTex1.Sample(sampleState, input.uv);
     output.color += BlurTex2.Sample(sampleState, input.uv);
     output.color += BlurTex3.Sample(sampleState, input.uv);
+    output.color += BlurTex4.Sample(sampleState, input.uv);
+    output.color += BlurTex5.Sample(sampleState, input.uv);
+    output.color += BlurTex6.Sample(sampleState, input.uv);
+    output.color += BlurTex7.Sample(sampleState, input.uv);
 
     return output;
 }

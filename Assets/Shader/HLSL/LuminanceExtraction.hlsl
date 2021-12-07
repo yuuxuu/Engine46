@@ -46,7 +46,7 @@ PS_OUT PS_main(PS_IN input) {
 
     output.color = diffuseTex.Sample(sampleState, input.uv);
 
-    float gumma = GetGumma(float3(output.color.rgb));
+    float gumma = GetGumma(output.color.rgb);
     // è‡’lˆÈã‚ÌF‚ğo—Í
     if (gumma < threshold) discard;
 

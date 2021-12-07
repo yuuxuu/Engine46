@@ -79,7 +79,9 @@ namespace Engine46 {
             pCamera->SetInput(m_pInput.get());
             pScene->AddActorToScene(pCamera);
 
-            CActorBase* pBox = m_pActorManager->CreateActor(ActorType::Box);
+            CMeshBase* pMesh = nullptr;
+
+            /*CActorBase* pBox = m_pActorManager->CreateActor(ActorType::Box);
             pBox->SetMesh("BoxMesh");
 
             CMeshBase* pMesh = pBox->GetMesh();
@@ -96,9 +98,9 @@ namespace Engine46 {
                 }
             }
             pBox->SetShaderPackage("Model.hlsl");
-            pScene->AddActorToScene(pBox);
+            pScene->AddActorToScene(pBox);*/
 
-            CActorBase* pCharacter = m_pActorManager->CreateActor(ActorType::Character);
+            /*CActorBase* pCharacter = m_pActorManager->CreateActor(ActorType::Character);
             pCharacter->SetModelMesh("star-wars-arc-170-pbr_.fbx");
 
             CModelMesh* pModelMesh = pCharacter->GetModelMesh();
@@ -106,7 +108,7 @@ namespace Engine46 {
                 pCharacter->CreateOBB();
             }
             pCharacter->SetShaderPackage("Model.hlsl");
-            pScene->AddActorToScene(pCharacter);
+            pScene->AddActorToScene(pCharacter);*/
 
             CLight* pDirectionalLight = m_pActorManager->CreateLight(LightType::Directional);
             pDirectionalLight->SetPos(VECTOR3(0.0f, 0.0f, 1000.0f));
@@ -148,28 +150,32 @@ namespace Engine46 {
             pPointLight->SetLightDiffuse(VECTOR4(0.0f, 0.0f, 1.0f, 1.0f));
             pScene->AddActorToScene(pPointLight);
 
+            UINT numParticle = DEFAULT_MAX_PARTICLE;
+
             CActorBase* pActor = m_pActorManager->CreateActor(ActorType::ParticleEmitter);
             CParticleEmitter* pParticleEmitter = dynamic_cast<CParticleEmitter*>(pActor);
             if (pParticleEmitter) {
-                pParticleEmitter->Initialize();
+                pParticleEmitter->Initialize(numParticle);
 
                 std::random_device rd;
                 std::mt19937 mt(rd());
 
+                std::uniform_int_distribution<> rand_degree(0, 360);
+
                 std::uniform_real_distribution<float> rand_pos(-300.0f, 300.0f);
                 std::uniform_real_distribution<float> rand_color(0.0f, 1.0f);
-                std::uniform_real_distribution<float> rand_lifeTime(3.0f, 15.0f);
-                std::uniform_real_distribution<float> rand_velocity(-1.0f, 1.0f);
+                std::uniform_real_distribution<float> rand_velocity(-0.1f, 0.1f);
+                std::uniform_real_distribution<float> rand_speed(5.0f, 20.0f);
 
-                std::vector<Particle> vecParticle(DEFAULT_MAX_PARTICLE);
+                std::vector<Particle> vecParticle(numParticle);
                 for (auto& particle : vecParticle) {
-                    particle.pos = VECTOR3(static_cast<float>(rand_pos(mt)), static_cast<float>(rand_pos(mt)), static_cast<float>(rand_pos(mt)));
-                    particle.color = VECTOR4(static_cast<float>(rand_color(mt)), static_cast<float>(rand_color(mt)), static_cast<float>(rand_color(mt)), 1.0f);
-                    
+                    particle.pos = VECTOR3(rand_pos(mt), rand_pos(mt), rand_pos(mt));
+                    particle.color = VECTOR4(rand_color(mt), rand_color(mt), rand_color(mt), 1.0f);
+                    particle.uv = VECTOR2(static_cast<float>(rand_degree(mt)), rand_speed(mt));
+                    particle.normal = VECTOR3(rand_velocity(mt), rand_velocity(mt), rand_velocity(mt));
+
                     particle.initPos = particle.pos;
-                    particle.velocity = VECTOR3(0.0f, static_cast<float>(rand_velocity(mt)), 0.0f);
-                    particle.lifeTime = static_cast<float>(rand_lifeTime(mt));
-                    particle.gravity = 9.8f;
+                    particle.velocity = particle.normal;
                 }
                 pParticleEmitter->Update(vecParticle);
 
