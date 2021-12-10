@@ -48,7 +48,7 @@ namespace Engine46 {
         D3D12_DESCRIPTOR_HEAP_DESC dhDesc = {};
 
         dhDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
-        dhDesc.NumDescriptors = count + 1;
+        dhDesc.NumDescriptors = count + 3;
         dhDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
 
         pDX12Device->CreateDescriptorHeap(m_pRtvDescriptorHeap, dhDesc);
@@ -56,46 +56,11 @@ namespace Engine46 {
         UINT heapSize = pDX12Device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 
         {
-            D3D12_RESOURCE_DESC rDesc = {};
-
-            rDesc.Width = width;
-            rDesc.Height = height;
-            rDesc.MipLevels = 1;
-            rDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
-            rDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET | D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
-            rDesc.DepthOrArraySize = 1;
-            rDesc.SampleDesc = { 1 , 0 };
-            rDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-            rDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
-
-            D3D12_CLEAR_VALUE clearValue = {};
-
-            clearValue.Format = rDesc.Format;
-            clearValue.Color[0] = 0.0f;
-            clearValue.Color[1] = 0.0f;
-            clearValue.Color[2] = 0.0f;
-            clearValue.Color[3] = 1.0f;
-
-            D3D12_RENDER_TARGET_VIEW_DESC rtvDesc = {};
-
-            rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
-            rtvDesc.Format = rDesc.Format;
-
-            pDX12Renderer->CreateRenderTexture(m_pLuminanceExtractionTexture, rDesc, clearValue);
-            pDX12Renderer->CreateShaderResourceView(m_pLuminanceExtractionTexture.get());
-            pDX12Renderer->CreateUnorderedAccessBufferView(m_pLuminanceExtractionTexture.get());
-
-            m_luminanceExtractionHandle = m_pRtvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
-
-            pDX12Device->CreateRenderTargetView(m_pLuminanceExtractionTexture->GetResource(), &rtvDesc, m_luminanceExtractionHandle);
-        }
-
-        {
             UINT w = width;
             UINT h = height;
             for (UINT i = 0; i < count; ++i) {
                 D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = m_pRtvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
-                rtvHandle.ptr += heapSize * (i + 1);
+                rtvHandle.ptr += heapSize * (i);
 
                 if ((i % 2) == 0)
                 {
@@ -145,6 +110,62 @@ namespace Engine46 {
 
                 m_pVecBlurCb.emplace_back(std::move(blurCb));
             }
+        }
+
+        {
+            D3D12_RESOURCE_DESC rDesc = {};
+
+            rDesc.Width = width;
+            rDesc.Height = height;
+            rDesc.MipLevels = 1;
+            rDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
+            rDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET | D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
+            rDesc.DepthOrArraySize = 1;
+            rDesc.SampleDesc = { 1 , 0 };
+            rDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+            rDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
+
+            D3D12_CLEAR_VALUE clearValue = {};
+
+            clearValue.Format = rDesc.Format;
+            clearValue.Color[0] = 0.0f;
+            clearValue.Color[1] = 0.0f;
+            clearValue.Color[2] = 0.0f;
+            clearValue.Color[3] = 1.0f;
+
+            D3D12_RENDER_TARGET_VIEW_DESC rtvDesc = {};
+
+            rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
+            rtvDesc.Format = rDesc.Format;
+
+            pDX12Renderer->CreateRenderTexture(m_pBloomTexture, rDesc, clearValue);
+            pDX12Renderer->CreateShaderResourceView(m_pBloomTexture.get());
+            pDX12Renderer->CreateUnorderedAccessBufferView(m_pBloomTexture.get());
+
+            m_bloomHandle = m_pRtvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
+            m_bloomHandle.ptr += heapSize * count++;
+
+            pDX12Device->CreateRenderTargetView(m_pBloomTexture->GetResource(), &rtvDesc, m_bloomHandle);
+
+
+            pDX12Renderer->CreateRenderTexture(m_pLuminanceExtractionTexture, rDesc, clearValue);
+            pDX12Renderer->CreateShaderResourceView(m_pLuminanceExtractionTexture.get());
+            pDX12Renderer->CreateUnorderedAccessBufferView(m_pLuminanceExtractionTexture.get());
+
+            m_luminanceExtractionHandle = m_pRtvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
+            m_luminanceExtractionHandle.ptr += heapSize * count++;
+
+            pDX12Device->CreateRenderTargetView(m_pLuminanceExtractionTexture->GetResource(), &rtvDesc, m_luminanceExtractionHandle);
+
+
+            pDX12Renderer->CreateRenderTexture(m_pToneMapTexture, rDesc, clearValue);
+            pDX12Renderer->CreateShaderResourceView(m_pToneMapTexture.get());
+            pDX12Renderer->CreateUnorderedAccessBufferView(m_pToneMapTexture.get());
+
+            m_toneMapHandle = m_pRtvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
+            m_toneMapHandle.ptr += heapSize * count++;
+
+            pDX12Device->CreateRenderTargetView(m_pToneMapTexture->GetResource(), &rtvDesc, m_toneMapHandle);
         }
 
         {
@@ -240,28 +261,6 @@ namespace Engine46 {
         pCb->Update(&blurCb);
     }
 
-    // ブルーム結果を描画
-    void CDX12PostEffect::DrawForBloom(CSprite* pSprite, CDX12Texture* pDX12Texture) {
-        if (!pSprite) return;
-        if (!pDX12Texture) return;
-
-        CShaderManager* pShaderManager = CGameSystem::GetGameSystem().GetShaderManager();
-
-        CShaderPackage* pSp = pShaderManager->CreateShaderPackage("PostEffect_Bloom.hlsl");
-        if (pSp) {
-            pSp->SetShader();
-
-            pDX12Texture->Set((UINT)MyRS_Bloom::SRV_0);
-
-            UINT index = (UINT)MyRS_Bloom::SRV_1;
-            for (int i = 1; i < m_pVecBlurTexture.size(); i += 2) {
-                m_pVecBlurTexture[i]->Set(index++);
-            }
-
-            pSprite->GetMesh()->Draw();
-        }
-    }
-
     // クリアカラー(コンピュートシェーダー用)
     void CDX12PostEffect::ClearColor_CS(CDX12Texture* pDX12Texture) {
         if (!pDX12Texture) return;
@@ -294,6 +293,23 @@ namespace Engine46 {
         pDX12Command->Dispatch(w / THREAD_X_SIZE, h / THREAD_Y_SIZE, THREAD_Z_SIZE);
 
         pDX12Command->SetResourceBarrier(pDX12OutTexture->GetResource(), D3D12_RESOURCE_STATE_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_GENERIC_READ);
+    }
+
+    // トーンマッピング(コンピュートシェーダー用)
+    void CDX12PostEffect::ToneMap_CS(CDX12Texture* pDX12Texture) {
+        if (!pDX12Texture) return;
+
+        UINT w = pDX12Texture->GetTextureWidth();
+        UINT h = pDX12Texture->GetTextureHeight();
+
+        pDX12Command->SetResourceBarrier(m_pToneMapTexture->GetResource(), D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
+
+        pDX12Texture->SetCompute((UINT)MyRS_CS_ToneMap::UAV_0);
+        m_pToneMapTexture->SetCompute((UINT)MyRS_CS_ToneMap::UAV_1);
+
+        pDX12Command->Dispatch(w / THREAD_X_SIZE, h / THREAD_Y_SIZE, THREAD_Z_SIZE);
+
+        pDX12Command->SetResourceBarrier(m_pToneMapTexture->GetResource(), D3D12_RESOURCE_STATE_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_GENERIC_READ);
     }
 
     // ポストエフェクトブラー(コンピュートシェーダー用)
@@ -441,6 +457,41 @@ namespace Engine46 {
             }
 
             pDX12Command->SetResourceBarrier(m_pDsvResource.Get(), D3D12_RESOURCE_STATE_DEPTH_WRITE, D3D12_RESOURCE_STATE_GENERIC_READ);
+        }
+    }
+
+    // ブルーム
+    void CDX12PostEffect::PostEffectBloom(CDX12Texture* pDX12Texture, CSprite* pSprite) {
+        if (!pSprite) return;
+        if (!pDX12Texture) return;
+
+        CShaderManager* pShaderManager = CGameSystem::GetGameSystem().GetShaderManager();
+
+        CShaderPackage* pSp = pShaderManager->CreateShaderPackage("PostEffect_Bloom.hlsl");
+        if (pSp) {
+            pSp->SetShader();
+
+            pDX12Texture->Set((UINT)MyRS_Bloom::SRV_0);
+
+            UINT index = (UINT)MyRS_Bloom::SRV_1;
+            for (int i = 1; i < m_pVecBlurTexture.size(); i += 2) {
+                m_pVecBlurTexture[i]->Set(index++);
+            }
+
+            pDX12Command->SetResourceBarrier(m_pDsvResource.Get(), D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_DEPTH_WRITE);
+
+            pDX12Command->ClearDepthStencilView(m_dsvHandle, D3D12_CLEAR_FLAG_DEPTH);
+
+            RenderingForPostEffect(m_pBloomTexture.get(), m_bloomHandle, pSprite);
+
+            pDX12Command->SetResourceBarrier(m_pDsvResource.Get(), D3D12_RESOURCE_STATE_DEPTH_WRITE, D3D12_RESOURCE_STATE_GENERIC_READ);
+        }
+
+        pSp = pShaderManager->CreateShaderPackage("CS_ToneMap.hlsl");
+        if (pSp) {
+            pSp->SetShader();
+
+            ToneMap_CS(m_pBloomTexture.get());
         }
     }
 

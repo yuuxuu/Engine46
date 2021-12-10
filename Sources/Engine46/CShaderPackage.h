@@ -50,12 +50,6 @@ namespace Engine46 {
         SRV_3,
     };
 
-    enum class MyRS_CS_Blur {
-        CBV_Blur,
-        UAV_0,
-        UAV_1,
-    };
-
     enum class MyRS_Blur {
         CBV_Blur,
         SRV_0,
@@ -69,13 +63,24 @@ namespace Engine46 {
         SRV_4,
     };
 
+    enum class MyRS_LuminanceExtraction {
+        SRV_0,
+    };
+
+    enum class MyRS_CS_Blur {
+        CBV_Blur,
+        UAV_0,
+        UAV_1,
+    };
+
     enum class MyRS_CS_LuminanceExtraction {
         UAV_0,
         UAV_1,
     };
 
-    enum class MyRS_LuminanceExtraction {
-        SRV_0,
+    enum class MyRS_CS_ToneMap {
+        UAV_0,
+        UAV_1,
     };
 
     enum class MyRS_ClearColor {

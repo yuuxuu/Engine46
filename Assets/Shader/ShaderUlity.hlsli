@@ -115,6 +115,11 @@ float GetGumma(float3 color) {
     return dot(color, float3(0.299f, 0.587f, 0.144f));
 }
 
+// 高輝度の取得
+float GetLuminance(float3 color) {
+    return max(color.r, max(color.g, color.b));
+}
+
 // ランバート
 float Lambert(float3 normal, float3 light) {
     return saturate(dot(normal, light));

@@ -254,8 +254,12 @@ namespace Engine46 {
             pRenderTexture = dynamic_cast<CDX12DeferredRenderig*>(m_pDeferredRendering.get())->GetRenderTexture();
 
             m_pDX12PostEffect->PostEffectBlur(pRenderTexture, m_pRenderSprite.get());
-            Reset();
             //m_pDX12PostEffect->PostEffectBlur_CS(pRenderTexture);
+            Reset();
+
+            m_pDX12PostEffect->PostEffectBloom(pRenderTexture, m_pRenderSprite.get());
+
+            pRenderTexture = m_pDX12PostEffect->GetToneMapTexture();
         }
 
         UINT index = m_pDX12Device->GetCurrentBackBufferIndex();
@@ -267,12 +271,7 @@ namespace Engine46 {
         m_pDX12Command->ClearDepthStencilView(m_dsvHandle, D3D12_CLEAR_FLAG_DEPTH);
         m_pDX12Command->SetRenderTargetView(&m_rtvHandle[index], &m_dsvHandle);
 
-        UINT width = (UINT)m_windowRect.w / (RENDER_TARGET_SIZE + 1);
-        UINT height = m_windowRect.h / (RENDER_TARGET_SIZE + 1);
-        UINT x = 0;
-        UINT y = (UINT)m_windowRect.h - height;
-
-        /*if (m_pRenderSprite) {
+        if (m_pRenderSprite) {
             CMeshBase* pMesh = m_pRenderSprite->GetMesh();
             if (pMesh) {
                 CMaterialBase* pMaterial = pMesh->GetMaterial();
@@ -280,11 +279,12 @@ namespace Engine46 {
             }
 
             m_pRenderSprite->Draw();
-        }*/
-
-        if (m_pDX12PostEffect) {
-            m_pDX12PostEffect->DrawForBloom(m_pRenderSprite.get(), pRenderTexture);
         }
+
+        UINT width = (UINT)m_windowRect.w / (RENDER_TARGET_SIZE + 1);
+        UINT height = m_windowRect.h / (RENDER_TARGET_SIZE + 1);
+        UINT x = 0;
+        UINT y = (UINT)m_windowRect.h - height;
 
         /*if (m_pDeferredRendering) {
             m_pDeferredRendering->DrawForRenderScene(m_pRenderSprite.get(), x, y, width, height);

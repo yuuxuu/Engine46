@@ -110,11 +110,13 @@ namespace Engine46 {
             pCharacter->SetShaderPackage("Model.hlsl");
             pScene->AddActorToScene(pCharacter);*/
 
+
+            UINT numParticle = DEFAULT_MAX_PARTICLE;
             CLight* pDirectionalLight = m_pActorManager->CreateLight(LightType::Directional);
             pDirectionalLight->SetPos(VECTOR3(0.0f, 0.0f, 1000.0f));
             pScene->AddActorToScene(pDirectionalLight);
 
-            CLight* pPointLight = m_pActorManager->CreateLight(LightType::Point);
+            /*CLight* pPointLight = m_pActorManager->CreateLight(LightType::Point);
             pPointLight->SetPos(VECTOR3(0.0f, 0.0f, 10.0f));
             pMesh = pPointLight->GetMesh();
             if (pMesh) {
@@ -148,9 +150,7 @@ namespace Engine46 {
                 }
             }
             pPointLight->SetLightDiffuse(VECTOR4(0.0f, 0.0f, 1.0f, 1.0f));
-            pScene->AddActorToScene(pPointLight);
-
-            UINT numParticle = DEFAULT_MAX_PARTICLE;
+            pScene->AddActorToScene(pPointLight);*/
 
             CActorBase* pActor = m_pActorManager->CreateActor(ActorType::ParticleEmitter);
             CParticleEmitter* pParticleEmitter = dynamic_cast<CParticleEmitter*>(pActor);

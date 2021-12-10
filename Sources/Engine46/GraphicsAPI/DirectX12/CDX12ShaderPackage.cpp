@@ -173,6 +173,7 @@ namespace Engine46 {
         std::vector<std::string> shaderNames = {
             "CPUParticle.hlsl",
             "PostEffect_Blur.hlsl",
+            "PostEffect_Bloom.hlsl",
             "GBuffer_Lighting.hlsl",
             "LuminanceExtraction.hlsl",
             "Model_Line.hlsl",

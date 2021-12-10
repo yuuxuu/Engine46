@@ -391,12 +391,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="..\..\Assets\Shader\HLSL\CPUParticle.hlsl">
-      <Filter>リソース ファイル\HLSL</Filter>
-    </FxCompile>
-    <FxCompile Include="..\..\Assets\Shader\HLSL\DepthStencil.hlsl">
-      <Filter>リソース ファイル\HLSL</Filter>
-    </FxCompile>
     <FxCompile Include="..\..\Assets\Shader\HLSL\GBuffer.hlsl">
       <Filter>リソース ファイル\HLSL</Filter>
     </FxCompile>
@@ -409,19 +403,7 @@
     <FxCompile Include="..\..\Assets\Shader\HLSL\Model.hlsl">
       <Filter>リソース ファイル\HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="..\..\Assets\Shader\HLSL\Model_Instance.hlsl">
-      <Filter>リソース ファイル\HLSL</Filter>
-    </FxCompile>
-    <FxCompile Include="..\..\Assets\Shader\HLSL\Shadow.hlsl">
-      <Filter>リソース ファイル\HLSL</Filter>
-    </FxCompile>
     <FxCompile Include="..\..\Assets\Shader\HLSL\Sprite.hlsl">
-      <Filter>リソース ファイル\HLSL</Filter>
-    </FxCompile>
-    <FxCompile Include="..\..\Assets\Shader\HLSL\SpriteDepthDebug.hlsl">
-      <Filter>リソース ファイル\HLSL</Filter>
-    </FxCompile>
-    <FxCompile Include="..\..\Assets\Shader\HLSL\SpriteStencilDebug.hlsl">
       <Filter>リソース ファイル\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="..\..\Assets\Shader\HLSL\CS_HorizonalBlur.hlsl">
@@ -455,6 +437,9 @@
       <Filter>リソース ファイル\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="..\..\Assets\Shader\HLSL\CS_ButterFly.hlsl">
+      <Filter>リソース ファイル\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Assets\Shader\HLSL\CS_ToneMap.hlsl">
       <Filter>リソース ファイル\HLSL</Filter>
     </FxCompile>
   </ItemGroup>

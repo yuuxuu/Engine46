@@ -31,8 +31,14 @@ namespace Engine46 {
         CDX12Device*                                        pDX12Device;
         CDX12Command*                                       pDX12Command;
 
+        std::unique_ptr<CDX12Texture>                       m_pBloomTexture;
+        D3D12_CPU_DESCRIPTOR_HANDLE                         m_bloomHandle;
+
         std::unique_ptr<CDX12Texture>                       m_pLuminanceExtractionTexture;
         D3D12_CPU_DESCRIPTOR_HANDLE                         m_luminanceExtractionHandle;
+
+        std::unique_ptr<CDX12Texture>                       m_pToneMapTexture;
+        D3D12_CPU_DESCRIPTOR_HANDLE                         m_toneMapHandle;
 
         std::vector<std::unique_ptr<CDX12Texture>>          m_pVecBlurTexture;
         std::vector<D3D12_CPU_DESCRIPTOR_HANDLE>            m_vecBlurHandle;
@@ -53,16 +59,19 @@ namespace Engine46 {
 
         void UpdateBlurConstantBuffer(CConstantBufferBase* pCb, UINT width, UINT height, VECTOR2& BlurDir, float m);
 
-        void DrawForBloom(CSprite* pSprite, CDX12Texture* pDX12Texture);
-
         void ClearColor_CS(CDX12Texture* pDX12Texture);
         void LuminanceExtraction_CS(CDX12Texture* pDX12InTexture, CDX12Texture* pDX12OutTexture);
+        void ToneMap_CS(CDX12Texture* pDX12Texture);
         void PostEffectBlur_CS(CDX12Texture* pDX12Texture);
         void Blur_CS(CDX12Texture* pDX12InTexture, CDX12Texture* pDX12OutTexture);
 
         void LuminanceExtraction(CDX12Texture* pDX12Texture, CSprite* pSprite);
         void PostEffectBlur(CDX12Texture* pDX12Texture, CSprite* pSprite);
+        void PostEffectBloom(CDX12Texture* pDX12Texture, CSprite* pSprite);
         void RenderingForPostEffect(CDX12Texture* pDX12Texture, D3D12_CPU_DESCRIPTOR_HANDLE handle, CSprite* pSprite);
+
+        CDX12Texture* GetBloomTexture() const { return m_pBloomTexture.get(); }
+        CDX12Texture* GetToneMapTexture() const { return m_pToneMapTexture.get(); }
     };
 
 } // namespace
