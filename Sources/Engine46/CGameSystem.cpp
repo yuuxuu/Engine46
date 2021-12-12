@@ -12,6 +12,7 @@
 #include "CScene.h"
 #include "CMaterial.h"
 #include "CMesh.h"
+#include "CModelMesh.h"
 
 #include "CActor.h"
 #include "CLight.h"
@@ -81,6 +82,26 @@ namespace Engine46 {
 
             CMeshBase* pMesh = nullptr;
 
+            CActorBase* pBox = m_pActorManager->CreateActor(ActorType::Box);
+            CActorBase* pSkyDome = m_pActorManager->CreateActor(ActorType::SkyDome);
+            pSkyDome->SetModelMesh("SM_SkySphere.FBX");
+
+            CModelMesh* pModelMesh = pSkyDome->GetModelMesh();
+            if (pModelMesh) {
+                std::vector<CMeshBase*> pVecMesh = pModelMesh->GetVecMesh();
+                for (const auto& pMesh : pVecMesh) {
+                    CMaterialBase* pMaterial = pMesh->GetMaterial();
+                    if (!pMaterial) {
+                        pMesh->SetMaterial("skydome");
+
+                        pMaterial = pMesh->GetMaterial();
+                    }
+                    pMaterial->SetTexture("Road_to_MonumentValley_8k.jpg");
+                }
+            }
+            pSkyDome->SetShaderPackage("SkyDome.hlsl");
+            pScene->AddActorToScene(pSkyDome);
+
             /*CActorBase* pBox = m_pActorManager->CreateActor(ActorType::Box);
             pBox->SetMesh("BoxMesh");
 
@@ -103,15 +124,13 @@ namespace Engine46 {
             /*CActorBase* pCharacter = m_pActorManager->CreateActor(ActorType::Character);
             pCharacter->SetModelMesh("star-wars-arc-170-pbr_.fbx");
 
-            CModelMesh* pModelMesh = pCharacter->GetModelMesh();
+            pModelMesh = pCharacter->GetModelMesh();
             if (pModelMesh) {
                 pCharacter->CreateOBB();
             }
             pCharacter->SetShaderPackage("Model.hlsl");
             pScene->AddActorToScene(pCharacter);*/
 
-
-            UINT numParticle = DEFAULT_MAX_PARTICLE;
             CLight* pDirectionalLight = m_pActorManager->CreateLight(LightType::Directional);
             pDirectionalLight->SetPos(VECTOR3(0.0f, 0.0f, 1000.0f));
             pScene->AddActorToScene(pDirectionalLight);
@@ -154,6 +173,8 @@ namespace Engine46 {
 
             CActorBase* pActor = m_pActorManager->CreateActor(ActorType::ParticleEmitter);
             CParticleEmitter* pParticleEmitter = dynamic_cast<CParticleEmitter*>(pActor);
+
+            UINT numParticle = DEFAULT_MAX_PARTICLE;
             if (pParticleEmitter) {
                 pParticleEmitter->Initialize(numParticle);
 

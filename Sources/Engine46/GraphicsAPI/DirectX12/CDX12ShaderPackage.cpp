@@ -178,7 +178,8 @@ namespace Engine46 {
             "LuminanceExtraction.hlsl",
             "Model_Line.hlsl",
             "PointSprite.hlsl",
-            "ButterFly.hlsl"
+            "ButterFly.hlsl",
+            "SkyDome.hlsl",
         };
 
         for (const auto& name : shaderNames) {

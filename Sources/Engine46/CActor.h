@@ -32,6 +32,7 @@ namespace Engine46 {
         Box,
         Character,
         ParticleEmitter,
+        SkyDome,
         Light,
     };
 

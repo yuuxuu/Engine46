@@ -10,6 +10,9 @@
 
 #define PI 3.141592
 
+#define TRI_POINTS 3
+#define QUAD_POINTS 4
+
 // ƒ‰ƒWƒAƒ“‚©‚ç“x”‚Ö•ÏŠ·
 float DegreeToRadian(float degree) {
     return degree * (PI / 180.0f);

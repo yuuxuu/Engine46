@@ -57,6 +57,8 @@ void CS_main(uint3 DTid : SV_DispatchThreadID, uint GI : SV_GroupIndex) {
     //float luminance = GetLuminance(avgColor);
     //// 露光値
     //float exposure = (keyValue / luminance);
+    // 
+    //float4 color = inTexture[DTid.xy] * exposure;
     
     // トーンマップ
     float4 color = Reinhard(inTexture[DTid.xy]);
