@@ -82,7 +82,6 @@ namespace Engine46 {
 
             CMeshBase* pMesh = nullptr;
 
-            CActorBase* pBox = m_pActorManager->CreateActor(ActorType::Box);
             CActorBase* pSkyDome = m_pActorManager->CreateActor(ActorType::SkyDome);
             pSkyDome->SetModelMesh("SM_SkySphere.FBX");
 
@@ -124,7 +123,7 @@ namespace Engine46 {
             /*CActorBase* pCharacter = m_pActorManager->CreateActor(ActorType::Character);
             pCharacter->SetModelMesh("star-wars-arc-170-pbr_.fbx");
 
-            pModelMesh = pCharacter->GetModelMesh();
+            CModelMesh* pModelMesh = pCharacter->GetModelMesh();
             if (pModelMesh) {
                 pCharacter->CreateOBB();
             }
