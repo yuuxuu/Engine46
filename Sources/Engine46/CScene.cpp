@@ -142,6 +142,19 @@ namespace Engine46 {
 
         return nullptr;
     }
+    
+    // シーン内のスカイドームを取得
+    CActorBase* CSceneBase::GetSkyDomeFromScene() {
+        if (pRootActor) {
+            if (pRootActor->GetClassID() == (int)ActorType::SkyDome) {
+                return pRootActor;
+            }
+            CActorBase* pSkyDome = this->GetActorRecursiveInActor(pRootActor, (int)ActorType::SkyDome);
+            return pSkyDome;
+        }
+
+        return nullptr;
+    }
 
     // シーン内のカメラを取得
     CCamera* CSceneBase::GetCameraFromScene() {

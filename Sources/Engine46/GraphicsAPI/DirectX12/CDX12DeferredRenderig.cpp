@@ -204,6 +204,23 @@ namespace Engine46 {
 
         Begine();
 
+        CActorBase* pSkyDome = pScene->GetSkyDomeFromScene();
+        if (pSkyDome) {
+            CConstantBufferBase* pCb = pSkyDome->GetWorldConstantBuffer();
+            if (pCb) {
+                Matrix matW = pSkyDome->GetWorldMatrix();
+                matW.dx_m = DirectX::XMMatrixTranspose(matW.dx_m);
+
+                worldCB cb = {
+                    matW,
+                };
+
+                pCb->Update(&cb);
+                pSkyDome->Draw();
+            }
+
+        }
+
         CShaderManager* pShaderManager = CGameSystem::GetGameSystem().GetShaderManager();
 
         CShaderPackage* pSp = pShaderManager->CreateShaderPackage("GBuffer.hlsl");
@@ -239,7 +256,7 @@ namespace Engine46 {
                 pLight->Draw();
             }
 
-            pSp = pShaderManager->CreateShaderPackage("Model_Line.hlsl");
+            /*pSp = pShaderManager->CreateShaderPackage("Model_Line.hlsl");
             if (pSp) {
                 pSp->SetShader();
                 pSp->SetSceneConstantBufferToShader((UINT)CB_TYPE::CAMERA);
@@ -266,7 +283,7 @@ namespace Engine46 {
                     pObb->Update(pLight);
                     pObb->Draw(pLight);
                 }
-            }
+            }*/
         }
 
         End();

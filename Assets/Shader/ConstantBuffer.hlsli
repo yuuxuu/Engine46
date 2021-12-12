@@ -8,17 +8,6 @@
 #ifndef _CONSTANT_BUFFER_H_
 #define _CONSTANT_BUFFER_H_
 
-#define POSITION_MAX    25000
-
-#define OFFSET_MAX      15
-
-#define TRI_POINTS      3
-#define QUAD_POINTS     4
-
-#define LIGHT_MAX       1024 / 2
-
-#define INSTANCE_MAX    1024
-
 // テクスチャ
 Texture2D           diffuseTex      : register(t0);
 Texture2D           specularTex     : register(t1);
@@ -90,6 +79,8 @@ struct PointLight {
     float4  attenuation;
 };
 
+#define LIGHT_MAX 1024 / 2
+
 cbuffer CbPointLight : register(b4)
 {
     PointLight pointLights[LIGHT_MAX];
@@ -111,6 +102,8 @@ cbuffer CbSpotLight : register(b5)
 
     int numSpotLight;
 }
+
+#define OFFSET_MAX 15
 
 cbuffer CbPostEffect : register(b6)
 {

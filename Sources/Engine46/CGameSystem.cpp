@@ -14,6 +14,7 @@
 #include "CScene.h"
 #include "CMaterial.h"
 #include "CMesh.h"
+#include "CModelMesh.h"
 
 #include "CSceneManager.h"
 #include "CActorManager.h"
@@ -77,6 +78,25 @@ namespace Engine46 {
             pCamera->SetInput(m_pInput.get());
             pScene->AddActorToScene(pCamera);
 
+            CActorBase* pSkyDome = m_pActorManager->CreateActor(ActorType::SkyDome);
+            pSkyDome->SetModelMesh("SM_SkySphere.FBX");
+
+            CModelMesh* pModelMesh = pSkyDome->GetModelMesh();
+            if (pModelMesh) {
+                std::vector<CMeshBase*> pVecMesh = pModelMesh->GetVecMesh();
+                for (const auto& pMesh : pVecMesh) {
+                    CMaterialBase* pMaterial = pMesh->GetMaterial();
+                    if (!pMaterial) {
+                        pMesh->SetMaterial("skydome");
+
+                        pMaterial = pMesh->GetMaterial();
+                    }
+                    pMaterial->SetTexture("Road_to_MonumentValley_8k.jpg");
+                }
+            }
+            pSkyDome->SetShaderPackage("SkyDome.hlsl");
+            pScene->AddActorToScene(pSkyDome);
+
             CActorBase* pBox = m_pActorManager->CreateActor(ActorType::Box);
             pBox->SetMesh("BoxMesh");
 
@@ -99,7 +119,7 @@ namespace Engine46 {
             CActorBase* pCharacter = m_pActorManager->CreateActor(ActorType::Character);
             pCharacter->SetModelMesh("star-wars-arc-170-pbr_.fbx");
 
-            CModelMesh* pModelMesh = pCharacter->GetModelMesh();
+            pModelMesh = pCharacter->GetModelMesh();
             if (pModelMesh) {
                 pCharacter->CreateOBB();
             }

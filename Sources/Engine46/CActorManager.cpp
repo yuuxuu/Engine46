@@ -63,6 +63,11 @@ namespace Engine46 {
 
             actor = std::make_unique<CActorBase>((UINT)actorType, actorName.c_str(), Transform());
             break;
+        case ActorType::SkyDome:
+            actorName = "SkyDome_" + std::to_string(0);
+
+            actor = std::make_unique<CActorBase>((UINT)actorType, actorName.c_str(), Transform());
+            break;
         case ActorType::Light:
             return nullptr;
         }

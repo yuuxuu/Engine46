@@ -176,6 +176,7 @@ namespace Engine46 {
             "GBuffer_Lighting.hlsl",
             "LuminanceExtraction.hlsl",
             "Model_Line.hlsl",
+            "SkyDome.hlsl",
         };
 
         for (const auto& name : shaderNames) {

@@ -10,6 +10,9 @@
 
 #define PI 3.141592
 
+#define TRI_POINTS 3
+#define QUAD_POINTS 4
+
 float4x4 GetScaleMatrix(float3 scale) {
     float4x4 mat = {
         float4(scale.x,       0,       0,    0),
