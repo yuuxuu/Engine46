@@ -51,6 +51,7 @@ namespace Engine46 {
 
         CActorBase* GetMouseSelectActorFromScene(VECTOR2& screenSize, VECTOR2& mousePos);
 
+        CActorBase* GetSkyDomeFromScene();
         CCamera* GetCameraFromScene();
         CLight* GetLightFromScene();
 

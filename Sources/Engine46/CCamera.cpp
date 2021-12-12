@@ -13,7 +13,7 @@
 namespace Engine46 {
 
     constexpr float Z_NEAR = 0.1f;
-    constexpr float Z_FAR = 1000.0f;
+    constexpr float Z_FAR = 100000.0f;
 
     // コンストラクタ
     CCamera::CCamera(const char* actorName, const int sWidth, const int sHeight) :
