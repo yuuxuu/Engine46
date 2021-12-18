@@ -52,6 +52,7 @@ PS_OUT PS_main(PS_IN input) {
         float phi = acos(input.posw.y / r);
 
         uv.x = theta / (2.0f * PI);
+        if (uv.x <= 0.0f) uv.x += 1.0f;
         uv.y = phi / PI;
     }
 

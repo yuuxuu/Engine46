@@ -172,7 +172,7 @@ namespace Engine46 {
 
         if(!pCubeTexture){
             CTextureManager* textureManager = CGameSystem::GetGameSystem().GetTextureManager();
-            pCubeTexture = textureManager->CreateTexture("TRoad_to_MonumentValley_8k.jpg");
+            pCubeTexture = textureManager->CreateTexture("Snow_Bg.jpg");
             if (pCubeTexture) {
                 pCubeTexture->CreateCubeTexture();
 

@@ -53,6 +53,8 @@ PS_OUT PS_main(PS_IN input) {
 
     output.diffuse = diffuseTex.Sample(sampleState, input.uv) * material.diffuse;
 
+    output.diffuse = all(output.diffuse.xyz) ? output.diffuse : float4(1.0f, 1.0f, 1.0f, 1.0f);
+
     output.specular = material.specular;
 
     float3 n = normalize(input.normalw);
@@ -65,7 +67,7 @@ PS_OUT PS_main(PS_IN input) {
     float3 v = normalize(input.posw.xyz - cameraPos);
     float3 ref = reflect(v, n);
 
-    output.diffuse *= cubeTex.Sample(sampleState, ref);
+    //output.diffuse *= cubeTex.Sample(sampleState, ref);
 
     return output;
 }

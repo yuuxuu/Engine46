@@ -135,11 +135,11 @@ namespace Engine46 {
         int numIndex = pFbxMesh->GetPolygonVertexCount();
         std::cout << "総インデックス数 = " << numPolygon << std::endl;
 
-        std::vector<DWORD> vecIndex;
-
         int* pIndex = pFbxMesh->GetPolygonVertices();
+        std::vector<DWORD> vecIndex(numIndex);
+
         for (int i = 0; i < numIndex; ++i) {
-            vecIndex.push_back(pIndex[i]);
+            vecIndex[i] = static_cast<DWORD>(pIndex[i]);
         }
 
         //static const int indexOrder[] = {
@@ -178,6 +178,8 @@ namespace Engine46 {
             vecVetexInfo[i].vertex.z = static_cast<float>(vertices[i][2]);
         }
 
+        std::vector<VECTOR3> vecNormal;
+
         int numNormalLayer = pFbxMesh->GetElementNormalCount();
         for (int i = 0; i < numNormalLayer; ++i) {
             FbxGeometryElementNormal* pFbxNormal = pFbxMesh->GetElementNormal(i);
@@ -185,8 +187,14 @@ namespace Engine46 {
             FbxGeometryElementBinormal* pFbxBinormal = pFbxMesh->GetElementBinormal(i);
 
             int numNormal = pFbxNormal->GetDirectArray().GetCount();
-
             std::cout << "法線数 = " << numNormal << std::endl;
+
+            int numNormalIndex = pFbxNormal->GetIndexArray().GetCount();
+            std::cout << "法線インデックス数 = " << numNormalIndex << std::endl;
+
+            numNormalIndex = numNormalIndex < 1 ? numIndex : numNormalIndex;
+
+            vecNormal.reserve(numNormalIndex);
 
             FbxGeometryElement::EMappingMode mappingMode = pFbxNormal->GetMappingMode();
             FbxGeometryElement::EReferenceMode referenceMode = pFbxNormal->GetReferenceMode();
@@ -214,13 +222,20 @@ namespace Engine46 {
             }
             else if (mappingMode == FbxGeometryElement::eByPolygonVertex) {
                 if (referenceMode == FbxGeometryElement::eDirect) {
-                    for (int j = 0; j < numIndex; ++j) {
+                    for (int j = 0; j < numNormalIndex; ++j) {
                         int index = vecIndex[j];
 
                         if (pFbxNormal) {
                             vecVetexInfo[index].normal.x = static_cast<float>(pFbxNormal->GetDirectArray().GetAt(j)[0]);
                             vecVetexInfo[index].normal.y = static_cast<float>(pFbxNormal->GetDirectArray().GetAt(j)[1]);
                             vecVetexInfo[index].normal.z = static_cast<float>(pFbxNormal->GetDirectArray().GetAt(j)[2]);
+
+                            VECTOR3 normal;
+                            normal.x = static_cast<float>(pFbxNormal->GetDirectArray().GetAt(j)[0]);
+                            normal.y = static_cast<float>(pFbxNormal->GetDirectArray().GetAt(j)[1]);
+                            normal.z = static_cast<float>(pFbxNormal->GetDirectArray().GetAt(j)[2]);
+
+                            vecNormal.push_back(normal);
                         }
                         if (pFbxTangent) {
                             vecVetexInfo[index].tangent.x = static_cast<float>(pFbxTangent->GetDirectArray().GetAt(j)[0]);
@@ -235,8 +250,6 @@ namespace Engine46 {
                     }
                 }
                 else if (referenceMode == FbxGeometryElement::eIndexToDirect) {
-                    int numNormalIndex = pFbxNormal->GetIndexArray().GetCount();
-
                     for (int j = 0; j < numNormalIndex; ++j) {
                         int index = static_cast<int>(pFbxNormal->GetIndexArray().GetAt(j));
 
@@ -267,6 +280,9 @@ namespace Engine46 {
             int numColor = pFbxColor->GetDirectArray().GetCount();
             std::cout << "頂点カラー数 = " << numColor << std::endl;
 
+            int numColorIndex = pFbxColor->GetIndexArray().GetCount();
+            std::cout << "頂点カラーインデクッス数 = " << numColor << std::endl;
+
             FbxGeometryElement::EMappingMode mappingMode = pFbxColor->GetMappingMode();
             FbxGeometryElement::EReferenceMode referenceMode = pFbxColor->GetReferenceMode();
 
@@ -282,7 +298,7 @@ namespace Engine46 {
             }
             else if (mappingMode == FbxGeometryElement::eByPolygonVertex) {
                 if (referenceMode == FbxGeometryElement::eDirect) {
-                    for (int j = 0; j < numIndex; ++j) {
+                    for (int j = 0; j < numColorIndex; ++j) {
                         int index = vecIndex[j];
 
                         vecVetexInfo[index].color.x = static_cast<float>(pFbxColor->GetDirectArray().GetAt(j)[0]);
@@ -292,8 +308,6 @@ namespace Engine46 {
                     }
                 }
                 else if (referenceMode == FbxGeometryElement::eIndexToDirect) {
-                    int numColorIndex = pFbxColor->GetIndexArray().GetCount();
-                    
                     for (int j = 0; j < numColorIndex; ++j) {
                         int index = static_cast<int>(pFbxColor->GetIndexArray().GetAt(j));
 
@@ -306,12 +320,21 @@ namespace Engine46 {
             }
         }
 
+        std::vector<VECTOR2> vecUV;
+
         int numUVLayer = pFbxMesh->GetElementUVCount();
+        numUVLayer = numUVLayer > 1 ? 1 : numUVLayer;
+
         for (int i = 0; i < numUVLayer; ++i) {
             FbxGeometryElementUV* pFbxUV = pFbxMesh->GetElementUV(i);
 
             int numUV = pFbxUV->GetDirectArray().GetCount();
             std::cout << "頂点UV数 = " << numUV << std::endl;
+
+            int numUVIndex = pFbxUV->GetIndexArray().GetCount();
+            std::cout << "頂点UVインデクッス数 = " << numUVIndex << std::endl;
+
+            vecUV.reserve(numUVIndex);
 
             std::cout << "UVセット名 = " << pFbxUV->GetName() << std::endl;
 
@@ -336,28 +359,39 @@ namespace Engine46 {
             }
             else if (mappingMode == FbxGeometryElement::eByPolygonVertex) {
                 if (referenceMode == FbxGeometryElement::eDirect) {
-                    for (int j = 0; j < numIndex; ++j) {
-                        int index = vecIndex[j];
-
-                        vecVetexInfo[index].uv.x = static_cast<float>(pFbxUV->GetDirectArray().GetAt(j)[0]);
-                        vecVetexInfo[index].uv.y = 1.0f - static_cast<float>(pFbxUV->GetDirectArray().GetAt(j)[1]);
+                    for (int j = 0; j < numUVIndex; ++j) {
+                        vecVetexInfo[vecIndex[j]].uv.x = static_cast<float>(pFbxUV->GetDirectArray().GetAt(j)[0]);
+                        vecVetexInfo[vecIndex[j]].uv.y = 1.0f - static_cast<float>(pFbxUV->GetDirectArray().GetAt(j)[1]);
                     }
                 }
                 else if (referenceMode == FbxGeometryElement::eIndexToDirect) {
-                    int numUVIndex = pFbxUV->GetIndexArray().GetCount();
-                    
                     for (int j = 0; j < numUVIndex; ++j) {
-                        int index = static_cast<int>(pFbxUV->GetIndexArray().GetAt(j));
+                        int index = pFbxUV->GetIndexArray().GetAt(j);
 
                         vecVetexInfo[vecIndex[j]].uv.x = static_cast<float>(pFbxUV->GetDirectArray().GetAt(index)[0]);
                         vecVetexInfo[vecIndex[j]].uv.y = 1.0f - static_cast<float>(pFbxUV->GetDirectArray().GetAt(index)[1]);
+
+                        VECTOR2 uv;
+                        uv.x = static_cast<float>(pFbxUV->GetDirectArray().GetAt(index)[0]);
+                        uv.y = 1.0f - static_cast<float>(pFbxUV->GetDirectArray().GetAt(index)[1]);
+
+                        vecUV.push_back(uv);
                     }
                 }
             }
         }
 
-        pMesh->CreateVertexBuffer(PRIMITIVE_TOPOLOGY_TYPE::TRIANGLELIST, vecVetexInfo);
-        pMesh->CreateIndexBuffer(vecIndex);
+        std::vector<VertexInfo> vertexInfos(numIndex);
+
+        for (int i = 0; i < numIndex; ++i) {
+            vertexInfos[i] = vecVetexInfo[vecIndex[i]];
+            vertexInfos[i].uv = vecUV[i];
+            vertexInfos[i].normal = vecNormal[i];
+        }
+
+        pMesh->CreateVertexBuffer(PRIMITIVE_TOPOLOGY_TYPE::TRIANGLELIST, vertexInfos);
+        //pMesh->CreateVertexBuffer(PRIMITIVE_TOPOLOGY_TYPE::TRIANGLELIST, vecVetexInfo);
+        //pMesh->CreateIndexBuffer(vecIndex);
 
         pMesh->SetMeshInfo(vecVetexInfo);
 

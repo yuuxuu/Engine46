@@ -96,7 +96,7 @@ namespace Engine46 {
 
                         pMaterial = pMesh->GetMaterial();
                     }
-                    pMaterial->SetTexture("Road_to_MonumentValley_8k.jpg");
+                    pMaterial->SetTexture("Snow_Bg.jpg");
                 }
             }
             pSkyDome->SetShaderPackage("SkyDome.hlsl");
@@ -129,6 +129,7 @@ namespace Engine46 {
             pScene->AddActorToScene(pSphere);*/
 
             CActorBase* pCharacter = m_pActorManager->CreateActor(ActorType::Character);
+            pCharacter->SetScale(VECTOR3(0.1f, 0.1f, 0.1f));
             pCharacter->SetModelMesh("star-wars-arc-170-pbr_.fbx");
 
             pModelMesh = pCharacter->GetModelMesh();
@@ -191,7 +192,7 @@ namespace Engine46 {
                 std::uniform_int_distribution<> rand_degree(0, 360);
 
                 std::uniform_real_distribution<float> rand_pos(-300.0f, 300.0f);
-                std::uniform_real_distribution<float> rand_color(0.0f, 1.0f);
+                std::uniform_real_distribution<float> rand_color(1.0f, 2.0f);
                 std::uniform_real_distribution<float> rand_velocity(-0.1f, 0.1f);
                 std::uniform_real_distribution<float> rand_speed(5.0f, 20.0f);
 

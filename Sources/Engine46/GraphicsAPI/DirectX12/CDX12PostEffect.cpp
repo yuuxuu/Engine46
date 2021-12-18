@@ -302,6 +302,7 @@ namespace Engine46 {
         UINT w = pDX12Texture->GetTextureWidth();
         UINT h = pDX12Texture->GetTextureHeight();
 
+        pDX12Command->SetResourceBarrier(pDX12Texture->GetResource(), D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
         pDX12Command->SetResourceBarrier(m_pToneMapTexture->GetResource(), D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
 
         pDX12Texture->SetCompute((UINT)MyRS_CS_ToneMap::UAV_0);
@@ -309,6 +310,7 @@ namespace Engine46 {
 
         pDX12Command->Dispatch(w / THREAD_X_SIZE, h / THREAD_Y_SIZE, THREAD_Z_SIZE);
 
+        pDX12Command->SetResourceBarrier(pDX12Texture->GetResource(), D3D12_RESOURCE_STATE_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_GENERIC_READ);
         pDX12Command->SetResourceBarrier(m_pToneMapTexture->GetResource(), D3D12_RESOURCE_STATE_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_GENERIC_READ);
     }
 
