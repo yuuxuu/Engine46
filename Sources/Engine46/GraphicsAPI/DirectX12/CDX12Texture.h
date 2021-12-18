@@ -27,6 +27,11 @@ namespace Engine46 {
 
         ComPtr<ID3D12Resource>                      m_pTextureResource;
         ComPtr<ID3D12DescriptorHeap>                m_SrvDescriptorHeap;
+        
+        ComPtr<ID3D12Resource>                      m_pCubeTextureResource;
+
+        D3D12_CPU_DESCRIPTOR_HANDLE                 m_cubeSrvCpuHandle;
+        D3D12_GPU_DESCRIPTOR_HANDLE                 m_cubeSrvGpuHandle;
 
         D3D12_CPU_DESCRIPTOR_HANDLE                 m_srvCpuHandle;
         D3D12_GPU_DESCRIPTOR_HANDLE                 m_srvGpuHandle;
@@ -39,14 +44,17 @@ namespace Engine46 {
         ~CDX12Texture();
 
         void CreateTexture() override;
+        void CreateCubeTexture() override;
         void CreateShaderResourceView() override;
         void Set(UINT slot) override;
+        void SetCubeTexture(UINT slot) override;
         void SetCompute(UINT slot) override;
 
         void CreateTexture(D3D12_RESOURCE_DESC& rDesc, D3D12_HEAP_PROPERTIES& prop, D3D12_CLEAR_VALUE clearValue, D3D12_RESOURCE_STATES states = D3D12_RESOURCE_STATE_GENERIC_READ);
         void CreateDepthTexture(D3D12_RESOURCE_DESC& rDesc, D3D12_HEAP_PROPERTIES& prop, D3D12_CLEAR_VALUE clearValue);
         void CreateStencilTexture(D3D12_RESOURCE_DESC& rDesc, D3D12_HEAP_PROPERTIES& prop, D3D12_CLEAR_VALUE clearValue);
         void CreateShaderResourceView(ID3D12DescriptorHeap* pDescriptorHeap, UINT heapIndex);
+        void CreateCubeTextureShaderResourceView(ID3D12DescriptorHeap* pDescriptorHeap, UINT heapIndex);
         void CreateUnorderedAccessBufferView(ID3D12DescriptorHeap* pDescriptorHeap, UINT heapIndex);
 
         ID3D12Resource* GetResource() const { return m_pTextureResource.Get(); }

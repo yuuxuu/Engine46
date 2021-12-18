@@ -17,6 +17,8 @@
 #include "CDX12DepthRendering.h"
 #include "CDX12DeferredRenderig.h"
 
+#include "../CTextureManager.h"
+#include "../CGameSystem.h"
 #include "../CFileSystem.h"
 #include "../CLight.h"
 #include "../CCamera.h"
@@ -168,6 +170,16 @@ namespace Engine46 {
             m_pRenderSprite->SetShaderPackage("Sprite.hlsl");
         }
 
+        if(!pCubeTexture){
+            CTextureManager* textureManager = CGameSystem::GetGameSystem().GetTextureManager();
+            pCubeTexture = textureManager->CreateTexture("TRoad_to_MonumentValley_8k.jpg");
+            if (pCubeTexture) {
+                pCubeTexture->CreateCubeTexture();
+
+                CreateCubeTextureShaderResourceView(dynamic_cast<CDX12Texture*>(pCubeTexture));
+            }
+        }
+
         if (pScene) {
             CCamera* pCamera = pScene->GetCameraFromScene();
             if (pCamera) {
@@ -303,6 +315,26 @@ namespace Engine46 {
         return m_pDX12Device->Present();
     }
 
+    void CDX12Renderer::SetSceneConstantBuffers(UINT startSlot) {
+        if (m_pCameraCB) {
+            m_pCameraCB->Set(startSlot);
+        }
+        if (m_pDirectionalLightCB) {
+            m_pDirectionalLightCB->Set(startSlot + 1);
+        }
+        if (m_pPointLightCB) {
+            m_pPointLightCB->Set(startSlot + 2);
+        }
+        if (m_pSpotLightCB) {
+            m_pSpotLightCB->Set(startSlot + 3);
+        }
+    }
+
+    void CDX12Renderer::SetCubeTexture(UINT slot) {
+        if (!pCubeTexture)return;
+        pCubeTexture->SetCubeTexture(slot);
+    }
+
     // コマンドを発行しリセット
     void CDX12Renderer::Reset() {
 
@@ -312,13 +344,6 @@ namespace Engine46 {
 
         m_pDX12Command->SetRect(m_windowRect.w, m_windowRect.h);
         m_pDX12Command->SetViewPort(0, 0, m_windowRect.w, m_windowRect.h);
-    }
-
-    void CDX12Renderer::SetSceneConstantBuffers(UINT startSlot) {
-        m_pCameraCB->Set(startSlot);
-        m_pDirectionalLightCB->Set(startSlot + 1);
-        m_pPointLightCB->Set(startSlot + 2);
-        m_pSpotLightCB->Set(startSlot + 3);
     }
 
     // コンスタントバッファ作成
@@ -432,6 +457,15 @@ namespace Engine46 {
         if (pDX12Texture) {
             if (m_descriptorHeapOffsetIndex <= DESCRIPTORHEAP_MAX) {
                 pDX12Texture->CreateShaderResourceView(m_pCbDescriptorHeap.Get(), m_descriptorHeapOffsetIndex++);
+            }
+        }
+    }
+
+    // キューブテクスチャシェーダーリソースビュー作成
+    void CDX12Renderer::CreateCubeTextureShaderResourceView(CDX12Texture* pDX12Texture) {
+        if (pDX12Texture) {
+            if (m_descriptorHeapOffsetIndex <= DESCRIPTORHEAP_MAX) {
+                pDX12Texture->CreateCubeTextureShaderResourceView(m_pCbDescriptorHeap.Get(), m_descriptorHeapOffsetIndex++);
             }
         }
     }

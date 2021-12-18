@@ -445,6 +445,9 @@
     <FxCompile Include="..\..\Assets\Shader\HLSL\SkyDome.hlsl">
       <Filter>リソース ファイル\HLSL</Filter>
     </FxCompile>
+    <FxCompile Include="..\..\Assets\Shader\HLSL\CubeMapReflection.hlsl">
+      <Filter>リソース ファイル\HLSL</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Assets\Shader\ConstantBuffer.hlsli">

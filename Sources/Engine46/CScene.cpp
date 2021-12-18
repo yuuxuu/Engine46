@@ -148,12 +148,16 @@ namespace Engine46 {
     CActorBase* CSceneBase::GetSkyDomeFromScene() {
         if (pRootActor) {
             if (pRootActor->GetClassID() == (int)ActorType::SkyDome) {
-                return pRootActor;
+                if (pRootActor->GetVisible()) {
+                    return pRootActor;
+                }
+                return nullptr;
             }
             CActorBase* pSkyDome = this->GetActorRecursiveInActor(pRootActor, (int)ActorType::SkyDome);
-            return pSkyDome;
+            if (pSkyDome->GetVisible()) {
+                return pSkyDome;
+            }
         }
-
         return nullptr;
     }
 
@@ -161,12 +165,16 @@ namespace Engine46 {
     CCamera* CSceneBase::GetCameraFromScene() {
         if (pRootActor) {
             if (pRootActor->GetClassID() == (int)ActorType::Camera) {
-                return dynamic_cast<CCamera*>(pRootActor);
+                if (pRootActor->GetVisible()) {
+                    return dynamic_cast<CCamera*>(pRootActor);
+                }
+                return nullptr;
             }
             CActorBase* pCamera = this->GetActorRecursiveInActor(pRootActor, (int)ActorType::Camera);
-            return dynamic_cast<CCamera*>(pCamera);
+            if (pCamera->GetVisible()) {
+                return dynamic_cast<CCamera*>(pCamera);
+            }
         }
-
         return nullptr;
     }
 
@@ -174,12 +182,16 @@ namespace Engine46 {
     CLight* CSceneBase::GetLightFromScene() {
         if (pRootActor) {
             if (pRootActor->GetClassID() == (int)ActorType::Light) {
-                return dynamic_cast<CLight*>(pRootActor);
+                if (pRootActor->GetVisible()) {
+                    return dynamic_cast<CLight*>(pRootActor);
+                }
+                return nullptr;
             }
             CActorBase* pLight = this->GetActorRecursiveInActor(pRootActor, (int)ActorType::Light);
-            return dynamic_cast<CLight*>(pLight);
+            if (pLight->GetVisible()) {
+                return dynamic_cast<CLight*>(pLight);
+            }
         }
-
         return nullptr;
     }
 

@@ -74,7 +74,11 @@ namespace Engine46 {
             pSp = pShaderManager->CreateShaderPackage("ButterFly.hlsl");
             if (pSp) {
                 pSp->SetShader();
-                pSp->SetSceneConstantBufferToShader((UINT)MyRS_Model::CBV_CAMERA);
+                
+                CRendererBase* pRenderer = CRendererSystem::GetRendererSystem().GetRenderer();
+                if (pRenderer) {
+                    pRenderer->SetSceneConstantBuffers((UINT)MyRS_Model::CBV_Camera);
+                }
 
                 Matrix matW = GetWorldMatrix();
                 matW.dx_m = DirectX::XMMatrixTranspose(matW.dx_m);

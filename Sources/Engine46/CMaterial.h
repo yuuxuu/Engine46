@@ -19,7 +19,7 @@ namespace Engine46 {
 
     class CMaterialBase {
     protected:
-        CTextureBase*                               pTexture;                                                  
+        CTextureBase*                               pTexture;
 
         std::vector<CTextureBase*>                  m_pVecTexture;
 
@@ -56,6 +56,7 @@ namespace Engine46 {
         void SetAmbient(const VECTOR4& ambient) { m_ambient = ambient; }
         void SetEmissive(const VECTOR4& emissive) { m_emissive = emissive; }
 
+        CTextureBase* GetTexture() const { return pTexture; }
 
         CConstantBufferBase* GetMaterialConstantBuffer() const { return m_pMaterialConstantBuffer.get(); }
 

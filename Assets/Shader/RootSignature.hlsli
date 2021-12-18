@@ -16,6 +16,7 @@
                              "DescriptorTable(CBV(b4, numDescriptors = 1, space = 0), visibility = SHADER_VISIBILITY_ALL),"\
                              "DescriptorTable(CBV(b5, numDescriptors = 1, space = 0), visibility = SHADER_VISIBILITY_ALL),"\
                              "DescriptorTable(SRV(t0, numDescriptors = 1, space = 0), visibility = SHADER_VISIBILITY_PIXEL),"\
+                             "DescriptorTable(SRV(t4, numDescriptors = 1, space = 0), visibility = SHADER_VISIBILITY_PIXEL),"\
                              "StaticSampler(s0,"\
                                  "filter = FILTER_MIN_MAG_MIP_LINEAR,"\
                                  "addressU = TEXTURE_ADDRESS_WRAP,"\
