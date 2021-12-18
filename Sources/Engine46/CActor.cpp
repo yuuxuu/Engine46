@@ -78,7 +78,11 @@ namespace Engine46 {
 
         if (pShaderPackage) {
             pShaderPackage->SetShader();
-            pShaderPackage->SetSceneConstantBufferToShader((UINT)MyRS_Model::CBV_CAMERA);
+
+            CRendererBase* pRenderer = CRendererSystem::GetRendererSystem().GetRenderer();
+            if (pRenderer) {
+                pRenderer->SetSceneConstantBuffers((UINT)MyRS_Model::CBV_Camera);
+            }
 
             if (m_pWorldConstantBuffer) {
                 m_pWorldConstantBuffer->Set((UINT)CB_TYPE::WORLD);

@@ -81,11 +81,12 @@ namespace Engine46 {
             pScene->AddActorToScene(pCamera);
 
             CMeshBase* pMesh = nullptr;
+            CModelMesh* pModelMesh = nullptr;
 
             CActorBase* pSkyDome = m_pActorManager->CreateActor(ActorType::SkyDome);
             pSkyDome->SetModelMesh("SM_SkySphere.FBX");
 
-            CModelMesh* pModelMesh = pSkyDome->GetModelMesh();
+            pModelMesh = pSkyDome->GetModelMesh();
             if (pModelMesh) {
                 std::vector<CMeshBase*> pVecMesh = pModelMesh->GetVecMesh();
                 for (const auto& pMesh : pVecMesh) {
@@ -95,7 +96,7 @@ namespace Engine46 {
 
                         pMaterial = pMesh->GetMaterial();
                     }
-                    pMaterial->SetTexture("Road_to_MonumentValley_8k.jpg");
+                    pMaterial->SetTexture("Snow_Bg.jpg");
                 }
             }
             pSkyDome->SetShaderPackage("SkyDome.hlsl");
@@ -104,7 +105,7 @@ namespace Engine46 {
             /*CActorBase* pBox = m_pActorManager->CreateActor(ActorType::Box);
             pBox->SetMesh("BoxMesh");
 
-            CMeshBase* pMesh = pBox->GetMesh();
+            pMesh = pBox->GetMesh();
             if (pMesh) {
                 pMesh->SetMaterial("BoxMaterial");
 
@@ -120,15 +121,23 @@ namespace Engine46 {
             pBox->SetShaderPackage("Model.hlsl");
             pScene->AddActorToScene(pBox);*/
 
-            /*CActorBase* pCharacter = m_pActorManager->CreateActor(ActorType::Character);
+            /*CActorBase* pSphere = m_pActorManager->CreateActor(ActorType::Character);
+            pSphere->SetScale(VECTOR3(0.1f, 0.1f, 0.1f));
+            pSphere->SetModelMesh("SM_SkySphere.FBX");
+
+            pSphere->SetShaderPackage("Model.hlsl");
+            pScene->AddActorToScene(pSphere);*/
+
+            CActorBase* pCharacter = m_pActorManager->CreateActor(ActorType::Character);
+            pCharacter->SetScale(VECTOR3(0.1f, 0.1f, 0.1f));
             pCharacter->SetModelMesh("star-wars-arc-170-pbr_.fbx");
 
-            CModelMesh* pModelMesh = pCharacter->GetModelMesh();
+            pModelMesh = pCharacter->GetModelMesh();
             if (pModelMesh) {
                 pCharacter->CreateOBB();
             }
             pCharacter->SetShaderPackage("Model.hlsl");
-            pScene->AddActorToScene(pCharacter);*/
+            pScene->AddActorToScene(pCharacter);
 
             CLight* pDirectionalLight = m_pActorManager->CreateLight(LightType::Directional);
             pDirectionalLight->SetPos(VECTOR3(0.0f, 0.0f, 1000.0f));
@@ -183,7 +192,7 @@ namespace Engine46 {
                 std::uniform_int_distribution<> rand_degree(0, 360);
 
                 std::uniform_real_distribution<float> rand_pos(-300.0f, 300.0f);
-                std::uniform_real_distribution<float> rand_color(0.0f, 1.0f);
+                std::uniform_real_distribution<float> rand_color(1.0f, 2.0f);
                 std::uniform_real_distribution<float> rand_velocity(-0.1f, 0.1f);
                 std::uniform_real_distribution<float> rand_speed(5.0f, 20.0f);
 

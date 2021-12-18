@@ -11,6 +11,8 @@
 #include "CDX12Renderer.h"
 
 #include "../CRendererSystem.h"
+#include "../CGameSystem.h"
+#include "../CTextureManager.h"
 
 namespace Engine46 {
 
@@ -110,14 +112,6 @@ namespace Engine46 {
 
         if (m_pComputePiplineState) {
             pDX12Command->SetPipelineState(m_pComputePiplineState.Get());
-        }
-    }
-
-    // シーンコンスタントバッファをシェーダーへ設定
-    void CDX12ShaderPackage::SetSceneConstantBufferToShader(UINT startSlot) {
-        CDX12Renderer* pRenderer = dynamic_cast<CDX12Renderer*>(CRendererSystem::GetRendererSystem().GetRenderer());
-        if (pRenderer) {
-            pRenderer->SetSceneConstantBuffers(startSlot);
         }
     }
 

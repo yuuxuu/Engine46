@@ -51,9 +51,10 @@ namespace Engine46 {
         void Finalize() override;
         void Begine(CSceneBase* pScene) override;
         bool Render(CSceneBase* pScene) override;
+        void SetSceneConstantBuffers(UINT startSlot) override;
+        void SetCubeTexture(UINT slot) override;
 
         void Reset();
-        void SetSceneConstantBuffers(UINT startSlot);
 
         void CreateConstantBuffer(std::unique_ptr<CConstantBufferBase>& pConstantBuffer, UINT byteWidth) override;
         void CreateUnorderedAccessBuffer(std::unique_ptr<CUnorderedAccessBufferBase>& pUnorderedAccessBuffer, UINT byteWidth, UINT byteSize) override;
@@ -66,6 +67,7 @@ namespace Engine46 {
         void CreateRenderTexture(std::unique_ptr<CDX12Texture>& pDX12RenderTexture, D3D12_RESOURCE_DESC& rDesc, D3D12_CLEAR_VALUE& clearValue, TextureType type = TextureType::Render);
 
         void CreateShaderResourceView(CDX12Texture* pDX12Texture);
+        void CreateCubeTextureShaderResourceView(CDX12Texture* pDX12Texture);
         void CreateUnorderedAccessBufferView(CDX12Texture* pDX12Texture);
 
         void CreateUnorderedAccessBuffer(std::unique_ptr<CDX12UnorderedAccessBuffer>& pUnorderedAccessBuffer);

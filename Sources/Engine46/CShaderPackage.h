@@ -30,17 +30,18 @@ namespace Engine46 {
     };
 
     enum class MyRS_Model {
-        CBV_WORLD,
-        CBV_MATERIAL,
-        CBV_CAMERA,
+        CBV_World,
+        CBV_Material,
+        CBV_Camera,
         CBV_DirectionalLight,
         CBV_PointLight,
         CBV_SpotLight,
         SRV_diffuse,
+        SRV_CubeMap,
     };
 
     enum class MyRS_GBuffer_Ligthing {
-        CBV_CAMERA,
+        CBV_Camera,
         CBV_DirectionalLight,
         CBV_PointLight,
         CBV_SpotLight,
@@ -106,8 +107,6 @@ namespace Engine46 {
         virtual bool Initialize() { return true; };
 
         virtual void SetShader() {};
-
-        virtual void SetSceneConstantBufferToShader(UINT startSlot) {};
 
         bool CompileShader(ComPtr<ID3DBlob>& pBlob, const char* fileName, const char* entrPoint, const char* shaderModel);
 

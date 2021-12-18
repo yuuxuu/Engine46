@@ -70,6 +70,7 @@ namespace Engine46 {
         void PostEffectBloom(CDX12Texture* pDX12Texture, CSprite* pSprite);
         void RenderingForPostEffect(CDX12Texture* pDX12Texture, D3D12_CPU_DESCRIPTOR_HANDLE handle, CSprite* pSprite);
 
+        CDX12Texture* GetLuminanceExtractionTexture() const { return m_pLuminanceExtractionTexture.get(); }
         CDX12Texture* GetBloomTexture() const { return m_pBloomTexture.get(); }
         CDX12Texture* GetToneMapTexture() const { return m_pToneMapTexture.get(); }
     };

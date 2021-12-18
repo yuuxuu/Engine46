@@ -227,7 +227,12 @@ namespace Engine46 {
         CShaderPackage* pSp = pShaderManager->CreateShaderPackage("GBuffer.hlsl");
         if (pSp) {
             pSp->SetShader();
-            pSp->SetSceneConstantBufferToShader((UINT)CB_TYPE::CAMERA);
+            
+            CRendererBase* pRenderer = CRendererSystem::GetRendererSystem().GetRenderer();
+            if (pRenderer) {
+                pRenderer->SetSceneConstantBuffers((UINT)MyRS_Model::CBV_Camera);
+                pRenderer->SetCubeTexture((UINT)MyRS_Model::SRV_CubeMap);
+            }
 
             std::vector<CActorBase*> vecActors = pScene->GetActorsFromScene();
             for (const auto& pActor : vecActors) {
@@ -312,7 +317,11 @@ namespace Engine46 {
             pDX12Command->SetRenderTargetView(&m_rtvHandle, &m_dsvHandle);
 
             pSp->SetShader();
-            pSp->SetSceneConstantBufferToShader((UINT)MyRS_GBuffer_Ligthing::CBV_CAMERA);
+            
+            CRendererBase* pRenderer = CRendererSystem::GetRendererSystem().GetRenderer();
+            if (pRenderer) {
+                pRenderer->SetSceneConstantBuffers((UINT)MyRS_GBuffer_Ligthing::CBV_Camera);
+            }
 
             UINT index = (UINT)MyRS_GBuffer_Ligthing::SRV_0;
             for (const auto& pTexture : m_pVecRenderTex) {

@@ -10,25 +10,25 @@
 #include "../RootSignature.hlsli"
 
 struct VS_IN {
-    float3 pos		: POSITION;
-    float4 color	: COLOR;
-    float2 uv		: TEXCOORD;
-    float3 normal	: NORMAL;
+    float3 pos      : POSITION;
+    float4 color    : COLOR;
+    float2 uv       : TEXCOORD;
+    float3 normal   : NORMAL;
 };
 
 struct VS_OUT {
-    float4 pos		: SV_POSITION;
-    float4 color	: COLOR;
-    float2 uv		: TEXCOORD0;
-    float3 normalw	: NORMAL;
-    float4 posw		: TEXCOORD1;
+    float4 pos      : SV_POSITION;
+    float4 color    : COLOR;
+    float2 uv       : TEXCOORD0;
+    float3 normalw  : NORMAL;
+    float4 posw     : TEXCOORD1;
 };
 
 struct PS_OUT {
-    float4 diffuse	: SV_TARGET0;
+    float4 diffuse  : SV_TARGET0;
     float4 specular : SV_TARGET1;
-    float4 normal	: SV_TARGET2;
-    float4 pos		: SV_TARGET3;
+    float4 normal   : SV_TARGET2;
+    float4 pos      : SV_TARGET3;
 };
 
 [RootSignature(RS_MODEL)]
@@ -53,14 +53,21 @@ PS_OUT PS_main(PS_IN input) {
 
     output.diffuse = diffuseTex.Sample(sampleState, input.uv) * material.diffuse;
 
+    output.diffuse = all(output.diffuse.xyz) ? output.diffuse : float4(1.0f, 1.0f, 1.0f, 1.0f);
+
     output.specular = material.specular;
 
-    float3 n = normalize(input.normalw.xyz);
+    float3 n = normalize(input.normalw);
     float depth = input.posw.z / input.posw.w;
 
     output.normal = float4(n * 0.5f + 0.5f, depth);
 
     output.pos = input.posw;
+
+    float3 v = normalize(input.posw.xyz - cameraPos);
+    float3 ref = reflect(v, n);
+
+    //output.diffuse *= cubeTex.Sample(sampleState, ref);
 
     return output;
 }

@@ -101,6 +101,8 @@ namespace Engine46 {
         DirectX::XMVECTOR up = { m_up.x, m_up.y, m_up.z };
 
         m_matView.dx_m = DirectX::XMMatrixLookAtLH(eye, forcus, up);
+
+        m_transform.pos = m_eye;
     }
 
     // ビュー行列とプロジェクション行列を合成し取得

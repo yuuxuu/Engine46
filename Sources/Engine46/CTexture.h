@@ -15,6 +15,8 @@ namespace Engine46 {
     struct TextureData {
         std::unique_ptr<uint8_t[]>  pData;
 
+        UINT                        pixelsSize;
+
         UINT                        rowPitch;
         UINT                        slicePitch;
 
@@ -25,6 +27,31 @@ namespace Engine46 {
 
         TextureData() :
             pData(nullptr),
+            pixelsSize(0),
+            rowPitch(0),
+            slicePitch(0),
+            width(0),
+            height(0),
+            format(DXGI_FORMAT_UNKNOWN)
+        {}
+    };
+
+    constexpr UINT CUBE_FACE_MAX = 6;
+
+    struct CubeTextureData {
+        std::array<std::unique_ptr<uint8_t[]>, CUBE_FACE_MAX>  pDatas;
+
+        UINT                        pixelsSize;
+
+        UINT                        rowPitch;
+        UINT                        slicePitch;
+
+        UINT                        width;
+        UINT                        height;
+
+        DXGI_FORMAT                 format;
+
+        CubeTextureData() :
             rowPitch(0),
             slicePitch(0),
             width(0),
@@ -46,6 +73,8 @@ namespace Engine46 {
 
         TextureData	m_textureData;
 
+        CubeTextureData m_cubeTextureData;
+
     public:
         CTextureBase();
         CTextureBase(const char* textureName);
@@ -55,9 +84,13 @@ namespace Engine46 {
 
         bool LoadTexture(const char* filePath);
 
+        void TextureConvertToCubeMapTexture();
+
         virtual void CreateTexture() {};
+        virtual void CreateCubeTexture() {};
         virtual void CreateShaderResourceView() {};
         virtual void Set(UINT slot) {};
+        virtual void SetCubeTexture(UINT slot) {};
         virtual void SetCompute(UINT slot) {};
 
         std::string GetTextureName() const { return m_textureName.c_str(); }

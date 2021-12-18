@@ -35,11 +35,11 @@ void CS_main(uint3 DTid : SV_DispatchThreadID)
     int degree = int(butterFlyParticleSB[index].uv.x + butterFlyParticleSB[index].uv.y);
     butterFlyParticleSB[index].uv.x = float(degree % 360);
 
-    butterFlyParticleSB[index].lifeTime -= 0.016f;
-
     butterFlyParticleSB[index].pos += butterFlyParticleSB[index].velocity;
 
-    if (butterFlyParticleSB[index].lifeTime <= 0.0f) {
+    float3 pos = butterFlyParticleSB[index].pos;
+
+    if (abs(pos.x) >= 10000.0f || abs(pos.y) >= 10000.0f || abs(pos.z) >= 10000.0f) {
         butterFlyParticleSB[index].pos = butterFlyParticleSB[index].initPos;
 
         if (index % 2 == 0) {
@@ -48,7 +48,5 @@ void CS_main(uint3 DTid : SV_DispatchThreadID)
         else {
             butterFlyParticleSB[index].color = float4(0.4f, 1.0f, 1.0f, 1.0f);
         }
-
-        butterFlyParticleSB[index].lifeTime = GetRandomNumber(float2(1.0f / index, 1.0f / index)) * 15.0f;
     }
 }

@@ -46,8 +46,6 @@ namespace Engine46 {
 
         void SetShader() override;
 
-        void SetSceneConstantBufferToShader(UINT startSlot) override;
-
         void CopyDescriptorHandle(D3D12_CPU_DESCRIPTOR_HANDLE srcHandle, UINT destIndex);
 
         void SetShaderByteCode(D3D12_GRAPHICS_PIPELINE_STATE_DESC& gpsDesc);

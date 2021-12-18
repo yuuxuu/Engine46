@@ -26,7 +26,7 @@ struct PS_OUT {
 };
 
 // è‡’l(‚µ‚«‚¢’l)
-static const float threshold = 0.8f;
+static const float threshold = 1.3f;
 
 [RootSignature(RS_LuminanceExtraction)]
 VS_OUT VS_main(VS_IN input) {

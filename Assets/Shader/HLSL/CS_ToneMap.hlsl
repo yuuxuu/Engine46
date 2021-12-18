@@ -14,9 +14,9 @@ RWTexture2D<float4> inTexture  : register(u0);
 RWTexture2D<float4> outTexture : register(u1);
 
 // 共有メモリ
-//groupshared float4 sharedPixel[8 * 8];
-//
-//static const float keyValue = 0.18f;
+groupshared float4 sharedPixel[8 * 8];
+
+static const float keyValue = 0.18f;
 
 float4 Reinhard(float4 color) {
     return color / (1.0f + color);
@@ -52,16 +52,16 @@ void CS_main(uint3 DTid : SV_DispatchThreadID, uint GI : SV_GroupIndex) {
     //    sharedPixel[GI] += sharedPixel[1 + GI];
     //GroupMemoryBarrierWithGroupSync();
 
-    //float3 avgColor = sharedPixel[0].xyz / 64;
-
-    //float luminance = GetLuminance(avgColor);
+    //float luminance = GetLuminance(sharedPixel[0].xyz);
+    //luminance = log(luminance + 0.5f) / 64;
     //// 露光値
     //float exposure = (keyValue / luminance);
-    // 
-    //float4 color = inTexture[DTid.xy] * exposure;
-    
+
     // トーンマップ
-    float4 color = Reinhard(inTexture[DTid.xy]);
+    float4 color = inTexture[DTid.xy];
+    color = Reinhard(color);
+   
     // ガンマ補正
-    outTexture[DTid.xy] = GammaCorrection(color, 2.2f);
+    //outTexture[DTid.xy] = GammaCorrection(color, 2.2f);
+    outTexture[DTid.xy] = color;
 }

@@ -40,6 +40,8 @@ namespace Engine46 {
 
         std::unique_ptr<CSprite>                m_pRenderSprite;
 
+        CTextureBase*                           pCubeTexture;
+
     public:
         CRendererBase();
         virtual ~CRendererBase();
@@ -48,6 +50,8 @@ namespace Engine46 {
         virtual void Finalize() override {};
         virtual void Begine(CSceneBase* pScene) override {};
         virtual bool Render(CSceneBase* pScene) override { return true; };
+        virtual void SetSceneConstantBuffers(UINT startSlot) {};
+        virtual void SetCubeTexture(UINT slot) {};
 
         virtual void CreateConstantBuffer(std::unique_ptr<CConstantBufferBase>& pConstantBuffer, UINT byteWidth) {};
         virtual void CreateUnorderedAccessBuffer(std::unique_ptr<CUnorderedAccessBufferBase>& pUnorderedAccessBuffer, UINT byteWidth, UINT byteSize) {};

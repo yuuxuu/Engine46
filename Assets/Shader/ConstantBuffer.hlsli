@@ -14,9 +14,10 @@ Texture2D           specularTex     : register(t1);
 Texture2D           normalTex       : register(t2);
 Texture2D           posTex          : register(t3);
 
-Texture2D<float>    depthTex        : register(t4);
-Texture2D<uint2>    stencilTex      : register(t5);
-TextureCube	        cubeTex	        : register(t6);
+TextureCube	        cubeTex	        : register(t4);
+
+Texture2D<float>    depthTex        : register(t5);
+Texture2D<uint2>    stencilTex      : register(t6);
 TextureCube	        dynamicCubeTex  : register(t7);
 Texture2D           albedoTex       : register(t8);
 Texture2D           displacementTex	: register(t9);
