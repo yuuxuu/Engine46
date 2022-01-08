@@ -11,14 +11,14 @@
 
 namespace Engine46 {
 
-	class CPointLight : public CLight {
-	private:
-		float m_radius;
+    class CPointLight : public CLight {
+    private:
+        float m_radius;
 
-	public:
-		explicit CPointLight(const char* lightName);
-		~CPointLight();
-	};
+    public:
+        explicit CPointLight(const char* lightName);
+        ~CPointLight();
+    };
 
 } // namespace
 

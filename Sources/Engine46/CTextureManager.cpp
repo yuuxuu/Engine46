@@ -7,74 +7,59 @@
 
 #include "CTextureManager.h"
 #include "CTexture.h"
-#include "CRenderer.h"
 #include "CActor.h"
+
+#include "CRenderer.h"
 
 namespace Engine46 {
 
-	// コンストラクタ
-	CTextureManager::CTextureManager(CRendererBase* pRenderer) :
-		pRenderer(pRenderer)
-	{}
+    // コンストラクタ
+    CTextureManager::CTextureManager(CRendererBase* pRenderer) :
+        pRenderer(pRenderer)
+    {}
 
-	// デストラクタ
-	CTextureManager::~CTextureManager()
-	{}
+    // デストラクタ
+    CTextureManager::~CTextureManager()
+    {}
 
-	// テクスチャを作成
-	CTextureBase* CTextureManager::CreateTexture(const char* textureName) {
-		CTextureBase* pTexture = GetTextureFromMap(textureName);
+    // テクスチャを作成
+    CTextureBase* CTextureManager::CreateTexture(const char* textureName) {
+        CTextureBase* pTexture = GetTextureFromMap(textureName);
 
-		if (pTexture) return pTexture;
+        if (pTexture) return pTexture;
 
-		std::unique_ptr<CTextureBase> texture;
+        std::unique_ptr<CTextureBase> texture;
 
-		pRenderer->CreateTexture(texture, textureName);
+        pRenderer->CreateTexture(texture, textureName);
 
-		if (texture) {
-			pTexture = texture.get();
+        if (texture) {
+            pTexture = texture.get();
 
-			this->AddTextureToMap(textureName, texture);
+            this->AddTextureToMap(textureName, texture);
 
-			return pTexture;
-		}
+            return pTexture;
+        }
 
-		return nullptr;
-	}
+        return nullptr;
+    }
 
-	// テクスチャをマップへ追加
-	void CTextureManager::AddTextureToMap(const char* name, std::unique_ptr<CTextureBase>& pTexture) {
+    // テクスチャをマップへ追加
+    void CTextureManager::AddTextureToMap(const char* name, std::unique_ptr<CTextureBase>& pTexture) {
 
-		if (!GetTextureFromMap(name)) {
-			m_mapTexture[name] = std::move(pTexture);
-		}
-	}
+        if (!GetTextureFromMap(name)) {
+            m_mapTexture[name] = std::move(pTexture);
+        }
+    }
 
-	// テクスチャを取得
-	CTextureBase* CTextureManager::GetTextureFromMap(const char* name) {
-		auto itr = m_mapTexture.find(name);
+    // テクスチャを取得
+    CTextureBase* CTextureManager::GetTextureFromMap(const char* name) {
+        auto itr = m_mapTexture.find(name);
 
-		if (itr != m_mapTexture.end()) {
-			return itr->second.get();
-		}
+        if (itr != m_mapTexture.end()) {
+            return itr->second.get();
+        }
 
-		return nullptr;
-	}
-
-	// アクターへテクスチャを設定
-	void CTextureManager::SetTextureToActor(CActorBase* pActor, const char* textureName) {
-		CTextureBase* pTexture = GetTextureFromMap(textureName);
-		
-		if (pTexture) {
-			pActor->SetTexture(pTexture);
-			return;
-		}
-
-		pTexture = CreateTexture(textureName);
-
-		if (pTexture) {
-			pActor->SetTexture(pTexture);
-		}
-	}
+        return nullptr;
+    }
 
 } // namespace

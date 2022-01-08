@@ -14,19 +14,19 @@
 
 namespace Engine46 {
 
-	class IRenderer {
-	protected:
-		IRenderer() {};
-		virtual ~IRenderer() {};
+    class IRenderer {
+    protected:
+        IRenderer() {};
+        virtual ~IRenderer() {};
 
-		virtual bool Initialize(HWND hwnd, UINT width, UINT height) = 0;
-		
-		virtual void Finalize() = 0;
+        virtual bool Initialize(HWND hwnd, UINT width, UINT height) = 0;
 
-		virtual void Begine(CSceneBase* pScene) = 0;
+        virtual void Finalize() = 0;
 
-		virtual bool Render(CSceneBase* pScene) = 0;
-	};
+        virtual void Begine(CSceneBase* pScene) = 0;
+
+        virtual bool Render(CSceneBase* pScene) = 0;
+    };
 
 } // namespace
 

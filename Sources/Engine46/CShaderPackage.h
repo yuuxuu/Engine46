@@ -14,49 +14,113 @@
 
 namespace Engine46 {
 
-	struct ShaderInfo {
-		const char* entryPoint;
-		const char* shaderModel;
-		SHADER_TYPE shadeType;
-	};
+    struct ShaderInfo {
+        const char* entryPoint;
+        const char* shaderModel;
+        SHADER_TYPE shadeType;
+    };
 
-	static const std::vector<ShaderInfo> SHADER_INFOS = {
-		{ "VS_main", "vs_5_0", SHADER_TYPE::TYPE_VERTEX },
-		{ "PS_main", "ps_5_0", SHADER_TYPE::TYPE_PIXEL },
-		{ "HS_main", "hs_5_0", SHADER_TYPE::TYPE_HULL },
-		{ "DS_main", "ds_5_0", SHADER_TYPE::TYPE_DOMAIN },
-		{ "GS_main", "gs_5_0", SHADER_TYPE::TYPE_GEOMETRY },
-		{ "CS_main", "cs_5_0", SHADER_TYPE::TYPE_COMPUTE },
-	};
+    static const std::vector<ShaderInfo> SHADER_INFOS = {
+        { "VS_main", "vs_5_0", SHADER_TYPE::TYPE_VERTEX },
+        { "PS_main", "ps_5_0", SHADER_TYPE::TYPE_PIXEL },
+        { "HS_main", "hs_5_0", SHADER_TYPE::TYPE_HULL },
+        { "DS_main", "ds_5_0", SHADER_TYPE::TYPE_DOMAIN },
+        { "GS_main", "gs_5_0", SHADER_TYPE::TYPE_GEOMETRY },
+        { "CS_main", "cs_5_0", SHADER_TYPE::TYPE_COMPUTE },
+    };
 
-	class CShaderPackage {
-	protected:
-		std::vector<std::unique_ptr<CShaderBase>>	m_pVecShader;
+    enum class MyRS_Model {
+        CBV_World,
+        CBV_Material,
+        CBV_Camera,
+        CBV_DirectionalLight,
+        CBV_PointLight,
+        CBV_SpotLight,
+        SRV_diffuse,
+        SRV_CubeMap,
+    };
 
-		const char*									m_PakageName;
+    enum class MyRS_GBuffer_Ligthing {
+        CBV_Camera,
+        CBV_DirectionalLight,
+        CBV_PointLight,
+        CBV_SpotLight,
+        SRV_0,
+        SRV_1,
+        SRV_2,
+        SRV_3,
+    };
 
-	public:
-		explicit CShaderPackage(const char* name);
-		CShaderPackage();
-		~CShaderPackage();
+    enum class MyRS_Blur {
+        CBV_Blur,
+        SRV_0,
+    };
 
-		virtual void SetShader() {};
+    enum class MyRS_Bloom {
+        SRV_0,
+        SRV_1,
+        SRV_2,
+        SRV_3,
+        SRV_4,
+    };
 
-		virtual bool Initialize() { return true; };
+    enum class MyRS_LuminanceExtraction {
+        SRV_0,
+    };
 
-		bool CompileShader(ComPtr<ID3DBlob>& pBlob, const char* fileName, const char* entrPoint, const char* shaderModel);
+    enum class MyRS_CS_Blur {
+        CBV_Blur,
+        UAV_0,
+        UAV_1,
+    };
 
-		void AddShaderToVec(std::unique_ptr<CShaderBase>& pShader) { m_pVecShader.emplace_back(move(pShader)); }
+    enum class MyRS_CS_LuminanceExtraction {
+        UAV_0,
+        UAV_1,
+    };
 
-		bool SavePackage(std::ofstream& ofs);
-		bool LoadPackage(std::ifstream& ifs);
+    enum class MyRS_CS_ToneMap {
+        UAV_0,
+        UAV_1,
+    };
 
-		CShaderBase* GetShader(SHADER_TYPE type);
+    enum class MyRS_ClearColor {
+        UAV_0,
+    };
 
-		const char* GetPackageName() const { return m_PakageName; }
+    enum class MyRS_CS_GpuParticle {
+        CBV_0,
+        UAV_0,
+    };
 
-		bool IsCompile() const { return !m_pVecShader.empty(); }
-	};
+    class CShaderPackage {
+    protected:
+        std::vector<std::unique_ptr<CShaderBase>>   m_pVecShader;
+
+        const char* m_PakageName;
+
+    public:
+        explicit CShaderPackage(const char* name);
+        CShaderPackage();
+        ~CShaderPackage();
+
+        virtual bool Initialize() { return true; };
+
+        virtual void SetShader() {};
+
+        bool CompileShader(ComPtr<ID3DBlob>& pBlob, const char* fileName, const char* entrPoint, const char* shaderModel);
+
+        void AddShaderToVec(std::unique_ptr<CShaderBase>& pShader) { m_pVecShader.emplace_back(move(pShader)); }
+
+        bool SavePackage(std::ofstream& ofs);
+        bool LoadPackage(std::ifstream& ifs);
+
+        CShaderBase* GetShader(SHADER_TYPE type);
+
+        const char* GetPackageName() const { return m_PakageName; }
+
+        bool IsCompile() const { return !m_pVecShader.empty(); }
+    };
 
 } // namespace
 

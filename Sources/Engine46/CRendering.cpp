@@ -6,19 +6,15 @@
  */
 
 #include "CRendering.h"
-#include "CRendererSystem.h"
-#include "CScene.h"
-#include "CCamera.h"
-#include "CLight.h"
 
 namespace Engine46 {
 
-	// コンストラクタ
-	CRenderingBase::CRenderingBase()
-	{}
+    // コンストラクタ
+    CRenderingBase::CRenderingBase()
+    {}
 
-	// デストラクタ
-	CRenderingBase::~CRenderingBase()
-	{}
+    // デストラクタ
+    CRenderingBase::~CRenderingBase()
+    {}
 
 } // namespace

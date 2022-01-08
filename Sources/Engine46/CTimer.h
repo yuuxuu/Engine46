@@ -12,17 +12,17 @@
 
 namespace Engine46 {
 
-	class CTimer {
-	private:
-		DWORD	m_nowTime;
-		DWORD	m_oldTime;
+    class CTimer {
+    private:
+        DWORD m_nowTime;
+        DWORD m_oldTime;
 
-	public:
-		CTimer();
-		~CTimer();
+    public:
+        CTimer();
+        ~CTimer();
 
-		void Update();
-	};
+        void Update();
+    };
 
 } // namespace
 

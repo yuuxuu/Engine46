@@ -9,12 +9,12 @@
 
 namespace Engine46 {
 
-	// コンストラクタ
-	CRendererBase::CRendererBase()
-	{}
-	
-	// デストラクタ
-	CRendererBase::~CRendererBase()
-	{}
+    // コンストラクタ
+    CRendererBase::CRendererBase()
+    {}
+
+    // デストラクタ
+    CRendererBase::~CRendererBase()
+    {}
 
 } // namespace

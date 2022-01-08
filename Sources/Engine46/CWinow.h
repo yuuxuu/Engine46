@@ -14,38 +14,38 @@
 
 namespace Engine46 {
 
-	class CWindow {
-	private:
-		HWND		m_hwnd;
-		HINSTANCE	m_hInstance;
-		const char* m_className;
+    class CWindow {
+    private:
+        HWND        m_hwnd;
+        HINSTANCE   m_hInstance;
+        const char* m_className;
 
-		RECT		m_windowSize;
-		RECT		m_clientSize;
+        RECT        m_windowSize;
+        RECT        m_clientSize;
 
-	public:
-		CWindow();
-		~CWindow();
+    public:
+        CWindow();
+        ~CWindow();
 
-		bool		Initialize(HINSTANCE hInstance, const char* className, const char* titleName);
+        bool Initialize(HINSTANCE hInstance, const char* className, const char* titleName);
 
-		void		ChangeSizeWindow(const int posx, const int posy, const int width, const int height);
-					
-		void		ScreenShotWindow();
+        void ChangeSizeWindow(const int posx, const int posy, const int width, const int height);
 
-		HWND		GetHwnd() const { return m_hwnd; }
+        void ScreenShotWindow();
 
-		HINSTANCE	GethInstance() const { return m_hInstance; }
-			 
-		RECT		GetWindowSize() const { return m_windowSize; }
+        HWND GetHwnd() const { return m_hwnd; }
 
-		RECT		GetClientSize() const { return m_clientSize; }
-	private:
-		static LRESULT CALLBACK	WindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
+        HINSTANCE GethInstance() const { return m_hInstance; }
 
-		bool	GetBuffer(std::unique_ptr<BYTE[]>& pBuf);
+        RECT GetWindowSize() const { return m_windowSize; }
 
-	};
+        RECT GetClientSize() const { return m_clientSize; }
+    private:
+        static LRESULT CALLBACK	WindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
+
+        bool GetBuffer(std::unique_ptr<BYTE[]>& pBuf);
+
+    };
 
 } // namespace
 

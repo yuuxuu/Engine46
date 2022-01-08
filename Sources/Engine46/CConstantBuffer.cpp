@@ -9,12 +9,12 @@
 
 namespace Engine46 {
 
-	// コンストラクタ
-	CConstantBufferBase::CConstantBufferBase()
-	{}
+    // コンストラクタ
+    CConstantBufferBase::CConstantBufferBase()
+    {}
 
-	// デストラクタ
-	CConstantBufferBase::~CConstantBufferBase()
-	{}
+    // デストラクタ
+    CConstantBufferBase::~CConstantBufferBase()
+    {}
 
 } // namespace

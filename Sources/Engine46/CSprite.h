@@ -14,17 +14,16 @@
 
 namespace Engine46 {
 
-	class CSprite : public CActorBase {
-	private:
+    class CSprite : public CActorBase {
+    private:
 
-	public:
-		explicit CSprite(const char* actorName);
-		~CSprite();
+    public:
+        explicit CSprite(const char* actorName);
+        ~CSprite();
 
-		void InitializeResource(CRendererBase* pRenderer) override;
-
-		void Update() override;
-	};
+        void Update() override;
+        void Draw() override;
+    };
 
 } // namespace
 

@@ -12,29 +12,34 @@
 
 namespace Engine46 {
 
-	// 前方宣言
-	class CRendererBase;
-	class CMeshBase;
-	class CActorBase;
+    // 前方宣言
+    class CRendererBase;
+    class CMeshBase;
+    class CModelMesh;
 
-	class CMeshManager {
-	private:
-		std::map<std::string, std::unique_ptr<CMeshBase>>	m_pMapMesh;
+    class CMeshManager {
+    private:
+        std::map<std::string, std::unique_ptr<CMeshBase>>   m_pMapMesh;
+        std::map<std::string, std::unique_ptr<CModelMesh>>  m_pMapModelMesh;
 
-		CRendererBase*										pRenderer;
+        CRendererBase* pRenderer;
 
-	public:
-		explicit CMeshManager(CRendererBase* pRenderer);
-		~CMeshManager();
+    public:
+        explicit CMeshManager(CRendererBase* pRenderer);
+        ~CMeshManager();
 
-		CMeshBase* CreateMesh(const char* meshName);
+        CMeshBase* CreateMesh(const char* meshName);
 
-		void AddMeshToMap(const char* name, std::unique_ptr<CMeshBase>& pMesh);
+        void AddMeshToMap(const char* name, std::unique_ptr<CMeshBase>& pMesh);
 
-		CMeshBase* GetMeshFromMap(const char* name);
+        CMeshBase* GetMeshFromMap(const char* name);
 
-		void SetMeshToActor(CActorBase* pActor, const char* meshName);
-	};
+        CModelMesh* CreateModelMesh(const char* modelName);
+
+        void AddModelMeshToMap(const char* name, std::unique_ptr<CModelMesh>& pModelMesh);
+
+        CModelMesh* GetModelMeshFromMap(const char* name);
+    };
 
 } // namespace
 

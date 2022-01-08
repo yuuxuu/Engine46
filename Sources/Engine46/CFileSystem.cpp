@@ -9,135 +9,135 @@
 
 namespace Engine46 {
 
-	// コンストラクタ
-	CFileSystem::CFileSystem()
-	{}
+    // コンストラクタ
+    CFileSystem::CFileSystem()
+    {}
 
-	// デストラクタ
-	CFileSystem::~CFileSystem()
-	{}
+    // デストラクタ
+    CFileSystem::~CFileSystem()
+    {}
 
-	// 初期化
-	bool CFileSystem::Initialize() {
+    // 初期化
+    bool CFileSystem::Initialize() {
 
-		const std::vector<const char*> vecDirName = {
-			RESOURCE_ROOT_PATH
-		};
+        const std::vector<const char*> vecDirName = {
+            RESOURCE_ROOT_PATH
+        };
 
-		for (const auto name : vecDirName) {
-			std::filesystem::recursive_directory_iterator itr = std::filesystem::recursive_directory_iterator(name);
+        for (const auto name : vecDirName) {
+            std::filesystem::recursive_directory_iterator itr = std::filesystem::recursive_directory_iterator(name);
 
-			for (const auto& entry : itr) {
-				FileInfo* fileInfo = CreateFileInfo(entry.path().string().c_str());
-			}
-		}
+            for (const auto& entry : itr) {
+                FileInfo* fileInfo = CreateFileInfo(entry.path().string().c_str());
+            }
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	// ファイル情報を作成
-	FileInfo* CFileSystem::CreateFileInfo(const char* filePath) {
-		const UINT charSize = 128;
+    // ファイル情報を作成
+    FileInfo* CFileSystem::CreateFileInfo(const char* filePath) {
+        const UINT charSize = 128;
 
-		char drive[charSize];
-		char dir[charSize];
-		char name[charSize];
-		char extension[charSize];
+        char drive[charSize];
+        char dir[charSize];
+        char name[charSize];
+        char extension[charSize];
 
-		std::string str;
+        std::string str;
 
-		_splitpath_s(filePath, drive, dir, name, extension);
+        _splitpath_s(filePath, drive, dir, name, extension);
 
-		// 拡張子が無ければディレクトリー
-		if (strlen(extension) == 0) return nullptr;
+        // 拡張子が無ければディレクトリー
+        if (strlen(extension) == 0) return nullptr;
 
-		FileInfo* pFileInfo = GetFileInfoFromMap(name);
+        FileInfo* pFileInfo = GetFileInfoFromMap(name);
 
-		if (!pFileInfo) {
-			std::unique_ptr<FileInfo> fileInfo = std::make_unique<FileInfo>();
+        if (!pFileInfo) {
+            std::unique_ptr<FileInfo> fileInfo = std::make_unique<FileInfo>();
 
-			fileInfo->filePath = filePath;
+            fileInfo->filePath = filePath;
 
-			fileInfo->driveName = drive;
+            fileInfo->driveName = drive;
 
-			fileInfo->directryName = dir;
+            fileInfo->directryName = dir;
 
-			fileInfo->fileName = name;
-			fileInfo->fileName += extension;
+            fileInfo->fileName = name;
+            fileInfo->fileName += extension;
 
-			fileInfo->extensionName = extension;
+            fileInfo->extensionName = extension;
 
-			SYSTEMTIME sysTime;
-			WIN32_FIND_DATA findData;
-			HANDLE handle;
+            SYSTEMTIME sysTime;
+            WIN32_FIND_DATA findData;
+            HANDLE handle;
 
-			handle = FindFirstFile(filePath, &findData);
-			GetFileTime(handle, &findData.ftCreationTime, &findData.ftLastAccessTime, &findData.ftLastWriteTime);
+            handle = FindFirstFile(filePath, &findData);
+            GetFileTime(handle, &findData.ftCreationTime, &findData.ftLastAccessTime, &findData.ftLastWriteTime);
 
-			if (FileTimeToSystemTime(&findData.ftLastWriteTime, &sysTime)) {
-				fileInfo->lastWriteTime = sysTime.wYear;
-			}
-			if (FileTimeToSystemTime(&findData.ftLastAccessTime, &sysTime)) {
-				fileInfo->lastAccessTime = sysTime.wYear;
-			}
+            if (FileTimeToSystemTime(&findData.ftLastWriteTime, &sysTime)) {
+                fileInfo->lastWriteTime = sysTime.wYear;
+            }
+            if (FileTimeToSystemTime(&findData.ftLastAccessTime, &sysTime)) {
+                fileInfo->lastAccessTime = sysTime.wYear;
+            }
 
-			pFileInfo = fileInfo.get();
+            pFileInfo = fileInfo.get();
 
-			this->AddFileInfoToMap(name, fileInfo);
-		}
+            this->AddFileInfoToMap(name, fileInfo);
+        }
 
-		return pFileInfo;
-	}
+        return pFileInfo;
+    }
 
-	// ファイル情報を追加
-	void CFileSystem::AddFileInfoToMap(const char* name, std::unique_ptr<FileInfo>& pFileInfo) {
+    // ファイル情報を追加
+    void CFileSystem::AddFileInfoToMap(const char* name, std::unique_ptr<FileInfo>& pFileInfo) {
 
-		if (!GetFileInfoFromMap(name)) {
-			m_pMapFileInfo[pFileInfo->fileName] = std::move(pFileInfo);
-		}
-	}
+        if (!GetFileInfoFromMap(name)) {
+            m_pMapFileInfo[pFileInfo->fileName] = std::move(pFileInfo);
+        }
+    }
 
-	// ファイル情報を取得
-	FileInfo* CFileSystem::GetFileInfoFromMap(const char* fileName) {
-		auto itr = m_pMapFileInfo.find(fileName);
+    // ファイル情報を取得
+    FileInfo* CFileSystem::GetFileInfoFromMap(const char* fileName) {
+        auto itr = m_pMapFileInfo.find(fileName);
 
-		if (itr != m_pMapFileInfo.end()) {
-			return itr->second.get();
-		}
+        if (itr != m_pMapFileInfo.end()) {
+            return itr->second.get();
+        }
 
-		return nullptr;
-	}
+        return nullptr;
+    }
 
-	// ファイルの書き込み
-	bool CFileSystem::WriteFile(const char* writeFileName, std::ios::openmode mode, void* pBuffers, size_t size) {
-		std::ofstream ofs;
+    // ファイルの書き込み
+    bool CFileSystem::WriteFile(const char* writeFileName, std::ios::openmode mode, void* pBuffers, size_t size) {
+        std::ofstream ofs;
 
-		ofs.open(writeFileName, mode);
+        ofs.open(writeFileName, mode);
 
-		if (!ofs.is_open()) return false;
+        if (!ofs.is_open()) return false;
 
-		ofs.write((char*)pBuffers, size);
+        ofs.write((char*)pBuffers, size);
 
-		return true;
-	}
+        return true;
+    }
 
-	// ファイルの読み込み
-	bool CFileSystem::ReadFile(const char* readFileName, std::ios::openmode mode, void*& pBuffers, size_t size) {
-		std::ifstream ifs;
+    // ファイルの読み込み
+    bool CFileSystem::ReadFile(const char* readFileName, std::ios::openmode mode, void*& pBuffers, size_t size) {
+        std::ifstream ifs;
 
-		ifs.open(readFileName, mode);
+        ifs.open(readFileName, mode);
 
-		if (!ifs.is_open()) return false;
+        if (!ifs.is_open()) return false;
 
-		ifs.seekg(0, ifs.end);
-		size = static_cast<size_t>(ifs.tellg());
-		ifs.seekg(0, ifs.beg);
+        ifs.seekg(0, ifs.end);
+        size = static_cast<size_t>(ifs.tellg());
+        ifs.seekg(0, ifs.beg);
 
-		pBuffers = new void*[size];
+        pBuffers = new void* [size];
 
-		ifs.read((char*)pBuffers, size);
+        ifs.read((char*)pBuffers, size);
 
-		return true;
-	}
+        return true;
+    }
 
 } // namespace

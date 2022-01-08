@@ -9,14 +9,14 @@
 
 namespace Engine46 {
 
-	// コンストラクタ
-	CPointLight::CPointLight(const char* lightName) :
-		CLight(lightName),
-		m_radius(0)
-	{}
+    // コンストラクタ
+    CPointLight::CPointLight(const char* lightName) :
+        CLight(lightName),
+        m_radius(0)
+    {}
 
-	// デストラクタ
-	CPointLight::~CPointLight()
-	{}
+    // デストラクタ
+    CPointLight::~CPointLight()
+    {}
 
 } // namespace

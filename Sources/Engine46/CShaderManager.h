@@ -12,32 +12,29 @@
 
 namespace Engine46 {
 
-	// 前方宣言
-	class CRendererBase;
-	class CShaderPackage;
-	class CActorBase;
+    // 前方宣言
+    class CRendererBase;
+    class CShaderPackage;
 
-	class CShaderManager {
-	private:
-		std::map<std::string, std::unique_ptr<CShaderPackage>>	m_pMapShaderPackage;
+    class CShaderManager {
+    private:
+        std::map<std::string, std::unique_ptr<CShaderPackage>>  m_pMapShaderPackage;
 
-		CRendererBase*											pRenderer;
+        CRendererBase* pRenderer;
 
-	public:
-		explicit CShaderManager(CRendererBase* pRenderer);
-		~CShaderManager();
+    public:
+        explicit CShaderManager(CRendererBase* pRenderer);
+        ~CShaderManager();
 
-		CShaderPackage* CreateShaderPackage(const char* packageName);
+        CShaderPackage* CreateShaderPackage(const char* packageName);
 
-		void AddShaderPackageToMap(const char* name, std::unique_ptr<CShaderPackage>& pSp);
+        void AddShaderPackageToMap(const char* name, std::unique_ptr<CShaderPackage>& pSp);
 
-		CShaderPackage* GetShaderPackageFromMap(const char* name);
+        CShaderPackage* GetShaderPackageFromMap(const char* name);
 
-		bool SaveShaderPackageList();
-		bool LoadShaderPackageList();
-
-		void SetShaderPackageToActor(CActorBase* pActor, const char* shaderPackageName);
-	};
+        bool SaveShaderPackageList();
+        bool LoadShaderPackageList();
+    };
 
 } // namespace
 

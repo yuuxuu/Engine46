@@ -26,7 +26,7 @@
     <QtRcc Include="Engine46Editor.qrc">
       <Filter>Resource Files</Filter>
     </QtRcc>
-    <ClCompile Include="Engine46MainEditor.cpp">
+    <ClCompile Include="Engine46Editor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -34,54 +34,38 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Engine46SceneEditor.cpp">
+    <ClCompile Include="MyInspectorWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Engine46ActorEditor.cpp">
+    <ClCompile Include="MyRenderWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="QMyRenderWidget.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="QMyTreeView.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine46FileEditor.cpp">
+    <ClCompile Include="MyStandardItem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <QtUic Include="Engine46ActorEditor.ui">
+    <QtUic Include="InspectorWidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
-    <QtUic Include="Engine46MainEditor.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
-    <QtUic Include="Engine46SceneEditor.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
-    <QtUic Include="Engine46FileEditor.ui">
+    <QtUic Include="Engine46Editor.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Engine46FileEditor.h">
+    <ClInclude Include="MyInspectorWidget.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Engine46ActorEditor.h">
+    <ClInclude Include="Engine46Editor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="QMyRenderWidget.h">
+    <ClInclude Include="MyStandardItem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="QMyTreeView.h">
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="MyRenderWidget.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine46SceneEditor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine46MainEditor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+    </QtMoc>
   </ItemGroup>
 </Project>

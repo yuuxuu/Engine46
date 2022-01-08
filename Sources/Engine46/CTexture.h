@@ -12,55 +12,92 @@
 
 namespace Engine46 {
 
-	struct TextureData {
-		std::unique_ptr<uint8_t[]>	pData;
+    struct TextureData {
+        std::unique_ptr<uint8_t[]>  pData;
 
-		size_t						rowPitch;
-		size_t						slicePitch;
+        UINT                        pixelsSize;
 
-		UINT						width;
-		UINT						height;
+        UINT                        rowPitch;
+        UINT                        slicePitch;
 
-		DXGI_FORMAT					format;
+        UINT                        width;
+        UINT                        height;
 
-		TextureData() :
-			pData(nullptr),
-			rowPitch(0),
-			slicePitch(0),
-			width(0),
-			height(0),
-			format(DXGI_FORMAT_UNKNOWN)
-		{}
-	};
+        DXGI_FORMAT                 format;
 
-	enum class TextureType {
-		Render,
-		Depth,
-		Stencil,
-		Image,
-	};
+        TextureData() :
+            pData(nullptr),
+            pixelsSize(0),
+            rowPitch(0),
+            slicePitch(0),
+            width(0),
+            height(0),
+            format(DXGI_FORMAT_UNKNOWN)
+        {}
+    };
 
-	class CTextureBase {
-	protected:
-		std::string	m_textureName;
+    constexpr UINT CUBE_FACE_MAX = 6;
 
-		TextureData	m_textureData;
+    struct CubeTextureData {
+        std::array<std::unique_ptr<uint8_t[]>, CUBE_FACE_MAX>  pDatas;
 
-	public:
-		CTextureBase();
-		CTextureBase(const char* textureName);
-		virtual ~CTextureBase();
+        UINT                        pixelsSize;
 
-		bool Initialize();
+        UINT                        rowPitch;
+        UINT                        slicePitch;
 
-		bool LoadTexture(const char* filePath);
+        UINT                        width;
+        UINT                        height;
 
-		virtual void CreateTexture() {};
-		virtual void CreateShaderResourceView() {};
-		virtual void Set(UINT slot) {};
+        DXGI_FORMAT                 format;
 
-		std::string GetTextureName() const { return m_textureName.c_str(); }
-	};
+        CubeTextureData() :
+            rowPitch(0),
+            slicePitch(0),
+            width(0),
+            height(0),
+            format(DXGI_FORMAT_UNKNOWN)
+        {}
+    };
+
+    enum class TextureType {
+        Render,
+        Depth,
+        Stencil,
+        Image,
+    };
+
+    class CTextureBase {
+    protected:
+        std::string	m_textureName;
+
+        TextureData	m_textureData;
+
+        CubeTextureData m_cubeTextureData;
+
+    public:
+        CTextureBase();
+        CTextureBase(const char* textureName);
+        virtual ~CTextureBase();
+
+        bool Initialize();
+
+        bool LoadTexture(const char* filePath);
+
+        void TextureConvertToCubeMapTexture();
+
+        virtual void CreateTexture() {};
+        virtual void CreateCubeTexture() {};
+        virtual void CreateShaderResourceView() {};
+        virtual void Set(UINT slot) {};
+        virtual void SetCubeTexture(UINT slot) {};
+        virtual void SetCompute(UINT slot) {};
+
+        std::string GetTextureName() const { return m_textureName.c_str(); }
+
+        UINT GetTextureWidth() const { return m_textureData.width; }
+        UINT GetTextureHeight() const { return m_textureData.height; }
+    };
 
 } // namespace
 

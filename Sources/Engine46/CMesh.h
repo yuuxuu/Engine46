@@ -14,57 +14,91 @@
 
 namespace Engine46 {
 
-	struct vertexInfo {
-		VECTOR3	vertex;
-		VECTOR4	color;
-		VECTOR2	uv;
-		VECTOR3	normal;
-		VECTOR3	tangent;
-		VECTOR3	binormal;
-	};
+    // 前方宣言
+    class CMaterialBase;
 
-	enum class PRIMITIVE_TOPOLOGY_TYPE {
-		POINTLIST,
-		LINELIST,
-		LINESTRIP,
-		TRIANGLELIST,
-		TRIANGLESTRIP,
-	};
+    struct VertexInfo {
+        VECTOR3	vertex;
+        VECTOR4	color;
+        VECTOR2	uv;
+        VECTOR3	normal;
+        VECTOR3	tangent;
+        VECTOR3	binormal;
+    };
 
-	class CMeshBase {
-	protected:
-		std::vector<vertexInfo>	m_vecVertexInfo;
+    struct MeshInfo {
+        VECTOR3 vertexE;
+        VECTOR3 vertexCenterPos;
+        VECTOR3 maxVertexPos;
+        VECTOR3 minVertexPos;
 
-		std::vector<DWORD>		m_vecIndexes;
+        MeshInfo() :
+            vertexE(0.0f, 0.0f, 0.0f),
+            vertexCenterPos(0.0f, 0.0f, 0.0f),
+            maxVertexPos(0.0f, 0.0f, 0.0f),
+            minVertexPos(10000.0f, 10000.0f, 10000.0f)
+        {}
+    };
 
-		int						m_meshID;
+    enum class PRIMITIVE_TOPOLOGY_TYPE {
+        POINTLIST,
+        LINELIST,
+        LINESTRIP,
+        TRIANGLELIST,
+        TRIANGLESTRIP,
+    };
 
-		std::string				m_meshName;
+    class CMeshBase {
+    protected:
+        CMaterialBase*              pMaterial;
 
-		bool					m_isInitialize;
+        std::vector<CMaterialBase*> m_pVecMaterial;
 
-		UINT					m_primitiveTopologyType;
+        std::vector<VertexInfo>	    m_vecVertexInfo;
 
-	public:
-		CMeshBase();
-		explicit CMeshBase(const char* meshName);
-		virtual ~CMeshBase();
+        std::vector<DWORD>          m_vecIndex;
 
-		virtual void CreateVertexBuffer(PRIMITIVE_TOPOLOGY_TYPE type) {};
-		virtual void CreateIndexBuffer() {};
-		virtual void Draw() {};
+        MeshInfo                    m_meshInfo;
 
-		void ReserveVertex(int reserveSize);
-		void ReserveIndex(int reserveSize);
+        int                         m_meshID;
 
-		void AddVertexInfo(vertexInfo info) { m_vecVertexInfo.emplace_back(info); }
+        std::string                 m_meshName;
 
-		void AddIndex(const DWORD index) { m_vecIndexes.emplace_back(index); }
+        UINT                        m_primitiveTopologyType;
 
-		std::string GetMeshName() const { return m_meshName.c_str(); }
+        bool                        m_visible;
 
-		bool IsInitialize() const { return m_isInitialize; }
-	};
+    public:
+        CMeshBase();
+        explicit CMeshBase(const char* meshName);
+        virtual ~CMeshBase();
+
+        virtual void CreateVertexBuffer(PRIMITIVE_TOPOLOGY_TYPE type) {};
+        virtual void CreateVertexBuffer(PRIMITIVE_TOPOLOGY_TYPE type, const std::vector<VertexInfo>& vecVertexInfo) {};
+        virtual void CreateIndexBuffer() {};
+        virtual void CreateIndexBuffer(const std::vector<DWORD>& vecIndex) {};
+        virtual void Draw() {};
+
+        void Set();
+
+        CMaterialBase* GetMaterial() const { return pMaterial; }
+        void SetMaterial(const std::string& materialName);
+        void SetMaterial(CMaterialBase* pMaterial) { this->pMaterial = pMaterial; };
+
+        void AddMaterial(CMaterialBase* pMaterial) { m_pVecMaterial.emplace_back(pMaterial); }
+
+        void SetMeshInfo(std::vector<VertexInfo>& vecVertex);
+
+        void CreateSpriteMesh();
+        void CreateBoxMesh();
+
+        const MeshInfo& GetMeshInfo() const { return m_meshInfo; }
+
+        std::string GetMeshName() const { return m_meshName.c_str(); }
+
+        bool GetVisible() const { return m_visible; }
+        void SetVisible(bool visible) { m_visible = visible; }
+    };
 
 } // namespace
 

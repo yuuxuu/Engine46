@@ -12,31 +12,28 @@
 
 namespace Engine46 {
 
-	// 前方宣言
-	class CRendererBase;
-	class CMaterialBase;
-	class CActorBase;
+    // 前方宣言
+    class CRendererBase;
+    class CMaterialBase;
 
-	class CMaterialManager {
-	private:
-		std::map<std::string, std::unique_ptr<CMaterialBase>>	m_pMapMaterial;
+    class CMaterialManager {
+    private:
+        std::map<std::string, std::unique_ptr<CMaterialBase>>   m_pMapMaterial;
 
-		CRendererBase*											pRenderer;
+        CRendererBase* pRenderer;
 
-		int														m_materialCount;
+        int                                                     m_materialCount;
 
-	public:
-		explicit CMaterialManager(CRendererBase* pRenderer);
-		~CMaterialManager();
+    public:
+        explicit CMaterialManager(CRendererBase* pRenderer);
+        ~CMaterialManager();
 
-		CMaterialBase* CreateMaterial(const char* materialName);
+        CMaterialBase* CreateMaterial(const char* materialName);
 
-		void AddMaterialToMap(const char* name, std::unique_ptr<CMaterialBase>& pMaterial);
+        void AddMaterialToMap(const char* name, std::unique_ptr<CMaterialBase>& pMaterial);
 
-		CMaterialBase* GetMaterialFromMap(const char* name);
-
-		void SetMaterialToActor(CActorBase* pActor, const char* materialName);
-	};
+        CMaterialBase* GetMaterialFromMap(const char* name);
+    };
 
 } // namespace
 

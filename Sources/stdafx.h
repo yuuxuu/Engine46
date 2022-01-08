@@ -15,6 +15,8 @@
 
 #include <thread>
 
+#include <random>
+
 #include <iostream>
 #include <fstream>
 #include <filesystem>
@@ -31,6 +33,13 @@
 
 #include <DirectXTex/DirectXTex.h>
 
+#include <fbxsdk.h>
+
+#include <dinput.h>
+
+#pragma comment(lib, "dinput8.lib")
+#pragma comment(lib, "dxguid.lib")
+
 #pragma comment(lib, "winmm.lib")
 
 #pragma comment(lib, "d3d11.lib")
@@ -42,5 +51,4 @@
 
 #pragma comment(lib, "DirectXTex.lib")
 
-
-
+#pragma comment(lib, "libfbxsdk-mt.lib")

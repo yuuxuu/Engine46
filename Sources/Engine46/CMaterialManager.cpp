@@ -7,73 +7,73 @@
 
 #include "CMaterialManager.h"
 #include "CMaterial.h"
-#include "CRenderer.h"
 #include "CActor.h"
+
+#include "CRenderer.h"
 
 namespace Engine46 {
 
-	// コンストラクタ
-	CMaterialManager::CMaterialManager(CRendererBase* pRenderer) :
-		pRenderer(pRenderer),
-		m_materialCount(0)
-	{}
+    // コンストラクタ
+    CMaterialManager::CMaterialManager(CRendererBase* pRenderer) :
+        pRenderer(pRenderer),
+        m_materialCount(0)
+    {}
 
-	// デストラクタ
-	CMaterialManager::~CMaterialManager()
-	{}
+    // デストラクタ
+    CMaterialManager::~CMaterialManager()
+    {}
 
-	// マテリアルを作成
-	CMaterialBase* CMaterialManager::CreateMaterial(const char* materialName) {
-		CMaterialBase* pMaterial = GetMaterialFromMap(materialName);
+    // マテリアルを作成
+    CMaterialBase* CMaterialManager::CreateMaterial(const char* materialName) {
+        CMaterialBase* pMaterial = GetMaterialFromMap(materialName);
 
-		if (pMaterial) return pMaterial;
+        std::string name(materialName);
+        if (pMaterial) {
+            int count = 0;
+            for (;;) {
+                name = std::string(materialName) + "_" + std::to_string(count++);
+                    
+                if (!GetMaterialFromMap(name.c_str())) {
+                    break;
+                }
+            }
+        }
 
-		std::unique_ptr<CMaterialBase> material = std::make_unique<CMaterialBase>(materialName);
+        std::unique_ptr<CMaterialBase> material = std::make_unique<CMaterialBase>(name.c_str());
 
-		if (material) {
-			pMaterial = material.get();
+        if (material) {
+            std::unique_ptr<CConstantBufferBase> pMaterialConstantBuffer;
+            pRenderer->CreateConstantBuffer(pMaterialConstantBuffer, sizeof(materialCB));
+            material->SetMaterialConstantBuffer(pMaterialConstantBuffer);
 
-			this->AddMaterialToMap(materialName, material);
+            CMaterialBase* pMaterial = material.get();
 
-			return pMaterial;
-		}
+            this->AddMaterialToMap(name.c_str(), material);
 
-		return nullptr;
-	}
+            return pMaterial;
+        }
 
-	// マテリアルをマップへ追加
-	void CMaterialManager::AddMaterialToMap(const char* name, std::unique_ptr<CMaterialBase>& pMaterial) {
+        return nullptr;
+    }
 
-		if (!GetMaterialFromMap(name)) {
-			m_pMapMaterial[name] = std::move(pMaterial);
-		}
-	}
+    // マテリアルをマップへ追加
+    void CMaterialManager::AddMaterialToMap(const char* name, std::unique_ptr<CMaterialBase>& pMaterial) {
 
-	// マテリアルを取得
-	CMaterialBase* CMaterialManager::GetMaterialFromMap(const char* name) {
-		auto itr = m_pMapMaterial.find(name);
+        if (!GetMaterialFromMap(name)) {
+            m_pMapMaterial[name] = std::move(pMaterial);
+            return;
+        }
+    }
 
-		if (itr != m_pMapMaterial.end()) {
-			return itr->second.get();
-		}
+    // マテリアルを取得
+    CMaterialBase* CMaterialManager::GetMaterialFromMap(const char* name) {
+        auto itr = m_pMapMaterial.find(name);
 
-		return nullptr;
-	}
+        if (itr != m_pMapMaterial.end()) {
+            return itr->second.get();
+        }
 
-	// アクターへマテリアルを設定
-	void CMaterialManager::SetMaterialToActor(CActorBase* pActor, const char* materialName) {
-		CMaterialBase* pMaterial = GetMaterialFromMap(materialName);
-
-		if (pMaterial){
-			pActor->SetMaterial(pMaterial);
-			return;
-		}
-
-		pMaterial = CreateMaterial(materialName);
-
-		if (pMaterial) {
-			pActor->SetMaterial(pMaterial);
-		}
-	}
+        return nullptr;
+    }
 
 } // namespace

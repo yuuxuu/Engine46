@@ -8,108 +8,111 @@
 #ifndef _CONSTANT_BUFFER_H_
 #define _CONSTANT_BUFFER_H_
 
-#define POSITION_MAX	25000
-
-#define OFFSET_MAX		15
-
-#define TRI_POINTS		3
-#define QUAD_POINTS		4
-
-#define LIGHT_MAX		1024 / 2
-
-#define INSTANCE_MAX	1024
-
 // テクスチャ
-Texture2D			diffuseTex		: register(t0);
-Texture2D			specularTex		: register(t1);
-Texture2D			normalTex		: register(t2);
-Texture2D			posTex			: register(t3);
+Texture2D           diffuseTex      : register(t0);
+Texture2D           specularTex     : register(t1);
+Texture2D           normalTex       : register(t2);
+Texture2D           posTex          : register(t3);
 
-Texture2D<float>	depthTex		: register(t4);
-Texture2D<uint2>	stencilTex		: register(t5);
-TextureCube			cubeTex			: register(t6);
-TextureCube			dynamicCubeTex	: register(t7);
-Texture2D			albedoTex		: register(t8);
-Texture2D			displacementTex	: register(t9);
-Texture2D			roughnessTex	: register(t10);
-Texture2D			hdrTex			: register(t11);
-Texture2D			toneMapTex		: register(t12);
-Texture2D			BlurTex0		: register(t13);
-Texture2D			BlurTex1		: register(t14);
-Texture2D			BlurTex2		: register(t15);
-Texture2D			BlurTex3		: register(t16);
+TextureCube	        cubeTex	        : register(t4);
+
+Texture2D<float>    depthTex        : register(t5);
+Texture2D<uint2>    stencilTex      : register(t6);
+TextureCube	        dynamicCubeTex  : register(t7);
+Texture2D           albedoTex       : register(t8);
+Texture2D           displacementTex	: register(t9);
+Texture2D           roughnessTex    : register(t10);
+Texture2D           hdrTex          : register(t11);
+Texture2D           toneMapTex      : register(t12);
+
+Texture2D           BlurTex0        : register(t13);
+Texture2D           BlurTex1        : register(t14);
+Texture2D           BlurTex2        : register(t15);
+Texture2D           BlurTex3        : register(t16);
+Texture2D           BlurTex4        : register(t17);
+Texture2D           BlurTex5        : register(t18);
+Texture2D           BlurTex6        : register(t19);
+Texture2D           BlurTex7        : register(t20);
 
 // サンプラー
-SamplerState sampleState					: register(s0);
-SamplerComparisonState shadowSamplerState	: register(s1);
-SamplerState sampleState1					: register(s2);
-// アンオーダードアクセスビュー(出力)
-RWByteAddressBuffer outBuffer				: register(u0);
+SamplerState sampleState                    : register(s0);
+SamplerComparisonState shadowSamplerState   : register(s1);
+SamplerState sampleState1                   : register(s2);
 
 cbuffer CbWorld : register(b0)
 {
-	float4x4	matW;	// ワールド行列
+    float4x4 matW;  // ワールド行列
 }
 
 struct Material {
-	float4	diffuse;	// マテリアルディフューズ色
-	float4	specular;	// マテリアルスペキュラー色
-	float4	ambinet;	// マテリアルアンビエント色
-};	float4	emissive;	// マテリアルエミッシブ色
+    float4	diffuse;    // マテリアルディフューズ色
+    float4	specular;   // マテリアルスペキュラー色
+    float4	ambinet;    // マテリアルアンビエント色
+	float4	emissive;   // マテリアルエミッシブ色
+};
 
 // マテリアル
 cbuffer CbMaterial : register(b1)
 {
-	Material material;
+    Material material;
 }
 
 cbuffer CbCamera : register(b2)
 {
-	float4x4	matVP;		// ワールドビュープロジェクション行列
+    float4x4    matVP;      // ワールドビュープロジェクション行列
 
-	float3		cameraPos;	// カメラの位置
+    float3      cameraPos;  // カメラの位置
 }
 
 struct DirectionalLight {
-	float4 pos;
-	float4 diffuse;
-	float4 specular;
+    float4 pos;
+    float4 diffuse;
+    float4 specular;
 };
 
 // ディレクショナルライト
 cbuffer CbDirectionalLight : register(b3)
 {
-	DirectionalLight directionalLight;
+    DirectionalLight directionalLight;
 }
 
 struct PointLight {
-	float3	pos;
-	float	radius;
-	float4	diffuse;
-	float4	specular;
-	float4	attenuation;
+    float3  pos;
+    float   radius;
+    float4  diffuse;
+    float4  specular;
+    float4  attenuation;
 };
+
+#define LIGHT_MAX 1024 / 2
 
 cbuffer CbPointLight : register(b4)
 {
-	PointLight pointLights[LIGHT_MAX];
+    PointLight pointLights[LIGHT_MAX];
 
-	int numPointLight;
+    int numPointLight;
 }
 
 struct SpotLight {
-	float3	pos;
-	float	angle;
-	float4	diffuse;
-	float4	specular;
-	float4	attenuation;
+    float3  pos;
+    float   angle;
+    float4  diffuse;
+    float4  specular;
+    float4  attenuation;
 };
 
 cbuffer CbSpotLight : register(b5)
 {
-	SpotLight spotLights[LIGHT_MAX];
+    SpotLight spotLights[LIGHT_MAX];
 
-	int numSpotLight;
+    int numSpotLight;
+}
+
+#define OFFSET_MAX 15
+
+cbuffer CbPostEffect : register(b6)
+{
+	float4 blurOffset[OFFSET_MAX];
 }
 
 //// 行列コンスタントバッファ

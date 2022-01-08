@@ -6,170 +6,261 @@
  */
 
 #include "CActorManager.h"
-#include "CRenderer.h"
-
 #include "CSprite.h"
 #include "CCamera.h"
-
 #include "CDirectionalLight.h"
 #include "CPointLight.h"
 #include "CSpotLight.h"
+#include "CParticleEmitter.h"
+
+#include "CMesh.h"
+#include "CMaterial.h"
+
+#include "CRenderer.h"
 
 namespace Engine46 {
 
-	constexpr const char* g_ActorListFileName = "ActorListData.bin";
+    constexpr const char* g_ActorListFileName = "ActorListData.bin";
 
-	// コンストラクタ
-	CActorManager::CActorManager(CRendererBase* pRenderer) :
-		pRenderer(pRenderer)
-	{}
+    // コンストラクタ
+    CActorManager::CActorManager(CRendererBase* pRenderer) :
+        pRenderer(pRenderer)
+    {}
 
-	// デストラクタ
-	CActorManager::~CActorManager()
-	{}
+    // デストラクタ
+    CActorManager::~CActorManager()
+    {}
 
-	// オブジェクト作成
-	CActorBase* CActorManager::CreateActor(int classType) {
-		std::unique_ptr<CActorBase> actor;
-		RECT rect;
-		std::string actorName;
+    // オブジェクト作成
+    CActorBase* CActorManager::CreateActor(ActorType actorType) {
+        std::unique_ptr<CActorBase> actor;
+        RECT rect;
+        std::string actorName;
+        CMeshBase* pMesh = nullptr;
 
-		switch ((ClassType)classType) {
-		case ClassType::Root:
-			actorName = "Root_" + std::to_string(m_classCount.rootCount++);
+        switch (actorType) {
+        case ActorType::Root:
+            actorName = "Root_" + std::to_string(m_classCount.rootCount++);
 
-			actor = std::make_unique<CActorBase>(classType, actorName.c_str(), Transform());
-			break;
-		case ClassType::Camera:
-			rect = pRenderer->GetWindowRect();
-			actorName = "Camera_" + std::to_string(m_classCount.cameraCount++);
+            actor = std::make_unique<CActorBase>((UINT)actorType, actorName.c_str(), Transform());
+            break;
+        case ActorType::Camera:
+            rect = pRenderer->GetWindowRect();
+            actorName = "Camera_" + std::to_string(m_classCount.cameraCount++);
 
-			actor = std::make_unique<CCamera>(actorName.c_str(), rect.w, rect.h);
-			break;
-		case ClassType::Sprite:
-			actorName = "Sprite_" + std::to_string(m_classCount.spriteCount++);
+            actor = std::make_unique<CCamera>(actorName.c_str(), rect.w, rect.h);
+            break;
+        case ActorType::Sprite:
+            actorName = "Sprite_" + std::to_string(m_classCount.spriteCount++);
 
-			actor = std::make_unique<CSprite>(actorName.c_str());
-			break;
-		case ClassType::Light:
-			return nullptr;
-		}
+            actor = std::make_unique<CSprite>(actorName.c_str());
+            break;
+        case ActorType::Box:
+            actorName = "Box_" + std::to_string(m_classCount.boxCount++);
 
-		actor->SetActorID(m_classCount.allCount++);
+            actor = std::make_unique<CActorBase>((UINT)actorType, actorName.c_str(), Transform());
+            break;
+        case ActorType::Character:
+            actorName = "Character_" + std::to_string(m_classCount.charctorCount++);
 
-		actor->CActorBase::Initialize();
+            actor = std::make_unique<CActorBase>((UINT)actorType, actorName.c_str(), Transform());
+            break;
+        case ActorType::ParticleEmitter:
+            actorName = "ParticleEmitter_" + std::to_string(m_classCount.particeleEmitterCount++);
 
-		CActorBase* pActor = actor.get();
+            actor = std::make_unique<CParticleEmitter>(actorName.c_str());
+            break;
+        case ActorType::SkyDome:
+            actorName = "SkyDome_" + std::to_string(0);
 
-		this->AddActorToVec(actor);
+            actor = std::make_unique<CActorBase>((UINT)actorType, actorName.c_str(), Transform());
+            break;
+        case ActorType::Light:
+            return nullptr;
+        }
 
-		return pActor;
-	}
+        std::unique_ptr<CConstantBufferBase> worldConstantBuffer;
+        pRenderer->CreateConstantBuffer(worldConstantBuffer, sizeof(worldCB));
+        actor->SetWorldConstantBuffer(worldConstantBuffer);
 
-	// ライト作成
-	CLight* CActorManager::CreateLight(int lightType) {
-		std::unique_ptr<CLight> light;
-		std::string lightName;
+        actor->SetActorID(m_classCount.allCount++);
 
-		switch ((LightType)lightType)
-		{
-		case LightType::Directional:
-			lightName = "DirectionalLight_" + std::to_string(m_classCount.lightCount);
+        actor->CActorBase::Initialize();
 
-			light = std::make_unique<CDirectionalLight>(lightName.c_str());
-			break;
-		case LightType::Point:
-			lightName = "PointLight_" + std::to_string(m_classCount.lightCount);
+        CActorBase* pActor = actor.get();
 
-			light = std::make_unique<CPointLight>(lightName.c_str());
-			break;
-		case LightType::Spot:
-			lightName = "SpotLight_" + std::to_string(m_classCount.lightCount);
+        AddActorFromMap(actorName.c_str(), actor);
 
-			light = std::make_unique<CSpotLight>(lightName.c_str());
-			break;
-		}
+        return pActor;
+    }
 
-		light->SetLightType((LightType)lightType);
-		light->SetActorID(m_classCount.allCount++);
-		light->SetLightID(m_classCount.lightCount++);
+    // ライト作成
+    CLight* CActorManager::CreateLight(LightType lightType) {
+        std::unique_ptr<CLight> light;
+        std::string lightName;
 
-		light->CActorBase::Initialize();
+        switch (lightType)
+        {
+        case LightType::Directional:
+            lightName = "DirectionalLight_" + std::to_string(m_classCount.lightCount);
 
-		CLight* pLight = light.get();
+            light = std::make_unique<CDirectionalLight>(lightName.c_str());
+            break;
+        case LightType::Point:
+            lightName = "PointLight_" + std::to_string(m_classCount.lightCount);
 
-		this->AddLightToVec(light);
+            light = std::make_unique<CPointLight>(lightName.c_str());
+            break;
+        case LightType::Spot:
+            lightName = "SpotLight_" + std::to_string(m_classCount.lightCount);
 
-		return pLight;
-	}
+            light = std::make_unique<CSpotLight>(lightName.c_str());
+            break;
+        }
 
-	// オブジェクト取得
-	CActorBase* CActorManager::GetActorFromActorName(const char* name) {
-		for (const auto& actor : m_pVecActor) {
-			if (actor->GetActorName() == name) return actor.get();
-		}
+        std::unique_ptr<CConstantBufferBase> worldConstantBuffer;
+        pRenderer->CreateConstantBuffer(worldConstantBuffer, sizeof(worldCB));
+        light->SetWorldConstantBuffer(worldConstantBuffer);
 
-		return nullptr;
-	}
+        light->SetLightType(lightType);
 
-	// オブジェクトを保存
-	bool CActorManager::SaveActor() {
+        light->SetMesh("LightMesh");
 
-		std::ios_base::openmode mode = std::ios_base::out | std::ios_base::binary;
+        CMeshBase* pMesh = light->GetMesh();
+        if (pMesh) {
+            pMesh->SetMaterial("LightMaterial");
 
-		std::ofstream ofs;
-		ofs.open(g_ActorListFileName, mode);
-		
-		if (!ofs.is_open()) return false;
+            pMesh->CreateSpriteMesh();
 
-		for (const auto& actor : m_pVecActor) {
-			actor->Save(ofs);
-		}
+            light->CreateOBB();
 
-		return true;
-	}
+            CMaterialBase* pMaterial = pMesh->GetMaterial();
+            if (pMaterial) {
+                pMaterial->SetTexture("particle.png");
+            }
+        }
 
-	// オブジェクトを読み込み
-	bool CActorManager::LoadActor() {
+        light->SetShaderPackage("CPUParticle.hlsl");
 
-		std::ios_base::openmode mode = std::ios_base::in | std::ios_base::binary;
+        light->SetActorID(m_classCount.allCount++);
+        light->SetLightID(m_classCount.lightCount++);
 
-		std::ifstream ifs;
-		ifs.open(g_ActorListFileName, mode);
+        light->CActorBase::Initialize();
 
-		if (!ifs.is_open()) return false;
+        CLight* pLight = light.get();
 
-		while (true) {
+        AddLightFromMap(lightName.c_str(), light);
 
-			int classType = -1;
-			ifs.read((char*)&classType, sizeof(int));
+        return pLight;
+    }
 
-			if (ifs.eof()) break;
+    // オブジェクトをマップへ追加
+    void CActorManager::AddActorFromMap(const char* name, std::unique_ptr<CActorBase>& pActor) {
 
-			CActorBase* pActor = this->CreateActor(classType);
+        if (!GetActorFromMap(name)) {
+            m_pMapActor[name] = std::move(pActor);
+            return;
+        }
+    }
 
-			pActor->Load(ifs);
-		}
+    // オブジェクト取得
+    CActorBase* CActorManager::GetActorFromMap(const char* name) {
+        auto itr = m_pMapActor.find(name);
 
-		std::cout << g_ActorListFileName << "を読み込みしました。" << std::endl;
+        if (itr != m_pMapActor.end()) {
+            return itr->second.get();
+        }
 
-		this->ConnectActor();
+        return nullptr;
+    }
 
-		return true;
-	}
+    // ライトをマップへ追加
+    void CActorManager::AddLightFromMap(const char* name, std::unique_ptr<CLight>& pLight) {
 
-	// オブジェクト同士の接続
-	void CActorManager::ConnectActor() {
-		for (const auto& actor : m_pVecActor) {
-			int id = actor->GetParentActorID();
-			if (id > -1) {
-				actor->ConnectParentActor(m_pVecActor[id].get());
-			}
+        if (!GetLightFromMap(name)) {
+            m_pMapLight[name] = std::move(pLight);
+            return;
+        }
+    }
 
-			for (auto id : actor->GetChildActorIDList()) {
-				actor->AddChiledActorList(m_pVecActor[id].get());
-			}
-		}
-	}
+    // ライト取得
+    CActorBase* CActorManager::GetLightFromMap(const char* name) {
+        auto itr = m_pMapLight.find(name);
+
+        if (itr != m_pMapLight.end()) {
+            return itr->second.get();
+        }
+
+        return nullptr;
+    }
+
+    // オブジェクトを保存
+    bool CActorManager::SaveActor() {
+
+        std::ios_base::openmode mode = std::ios_base::out | std::ios_base::binary;
+
+        std::ofstream ofs;
+        ofs.open(g_ActorListFileName, mode);
+
+        if (!ofs.is_open()) return false;
+
+        for (const auto& actor : m_pMapActor) {
+            actor.second->Save(ofs);
+        }
+
+        return true;
+    }
+
+    // オブジェクトを読み込み
+    bool CActorManager::LoadActor() {
+
+        std::ios_base::openmode mode = std::ios_base::in | std::ios_base::binary;
+
+        std::ifstream ifs;
+        ifs.open(g_ActorListFileName, mode);
+
+        if (!ifs.is_open()) return false;
+
+        while (true) {
+
+            int classType = -1;
+            ifs.read((char*)&classType, sizeof(int));
+
+            if (ifs.eof()) break;
+
+            CActorBase* pActor = this->CreateActor((ActorType)classType);
+
+            pActor->Load(ifs);
+        }
+
+        std::cout << g_ActorListFileName << "を読み込みしました。" << std::endl;
+
+        this->ConnectActor();
+
+        return true;
+    }
+
+    // オブジェクト同士の接続
+    void CActorManager::ConnectActor() {
+        for (const auto& actor : m_pMapActor) {
+            for (const auto& connectActor : m_pMapActor) {
+                
+                if (actor == connectActor) continue;
+
+                int parentId = actor.second->GetParentActorID();
+                if (parentId > -1) {
+                    if (parentId == connectActor.second->GetActorID()) {
+                        actor.second->ConnectParentActor(connectActor.second.get());
+                    }
+                }
+
+                for (const auto childId : actor.second->GetChildActorIDList()) {
+                    if (childId == connectActor.second->GetActorID()) {
+                        actor.second->AddChiledActorList(connectActor.second.get());
+                    }
+                }
+            }
+        }
+    }
 
 } // namespace
