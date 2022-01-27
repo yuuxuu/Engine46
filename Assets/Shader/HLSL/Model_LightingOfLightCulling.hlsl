@@ -1,8 +1,8 @@
 //*****************************************************************************
-//!	@file	Model.hlsl
+//!	@file	Model_LightingOfLightCulling.hlsl
 //!	@brief	
 //!	@note	
-//!	@author	2020/09/16 çÏê¨ÅFñÿë∫óD
+//!	@author	2022/01/24 çÏê¨ÅFñÿë∫óD
 //*****************************************************************************
 
 #include "../ConstantBuffer.hlsli"
@@ -28,7 +28,9 @@ struct PS_OUT {
     float4 color    : SV_TARGET;
 };
 
-[RootSignature(RS_MODEL)]
+RWStructuredBuffer<uint> lightIndices : register(u1);
+
+[RootSignature(RS_MODEL_LIGHTING_OF_LIGHTCULLING)]
 VS_OUT VS_main(VS_IN input) {
     VS_OUT output = (VS_OUT)0;
 
@@ -57,18 +59,39 @@ PS_OUT PS_main(PS_IN input) {
     float d = Lambert(n, l);
     float4 dLight = directionalLight.diffuse * d;
 
+    const int TILE_X = 16;
+    const int TILE_Y = 16;
+
+    uint numCellX = (textureWidth + TILE_X - 1) / TILE_X;
+    
+    float2 viewportPos = input.pos.xy;
+
+    uint tileIndex = floor(viewportPos.x / TILE_X) + floor(viewportPos.y / TILE_X) * numCellX;
+
+    uint start = tileIndex * numPointLight;
+
+    uint end = start + numPointLight;
+
     float4 pLight;
-    for (int i = 0; i < numPointLight; ++i) {
-        float3 l = pointLights[i].pos - input.posw.xyz;
+    for (int i = start; i < end; ++i) {
+
+        uint lightNo = lightIndices[i];
+        if (lightNo == 0xffffffff) {
+            break;
+        }
+
+        PointLight pointLight = pointLights[lightNo];
+
+        float3 l = pointLight.pos - input.posw.xyz;
         float len = length(l);
 
         l = normalize(l);
         // åıåπÇ∆ñ@ê¸ÇÃì‡êœÇåvéZ
         float d = Lambert(n, l);
         // å∏êä
-        float4 att = saturate(1.0f / (pointLights[i].attenuation.x + pointLights[i].attenuation.y * len + pointLights[i].attenuation.z * len * len));
+        float4 att = saturate(1.0f / (pointLight.attenuation.x + pointLight.attenuation.y * len + pointLight.attenuation.z * len * len));
 
-        pLight += (pointLights[i].diffuse * d) * att;
+        pLight += (pointLight.diffuse * d) * att;
     }
 
     output.color *= dLight + pLight;

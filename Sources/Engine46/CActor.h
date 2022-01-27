@@ -68,6 +68,8 @@ namespace Engine46 {
 
         bool                                    m_visible;
 
+        bool                                    m_billboradEnabled;
+
     public:
         CActorBase();
         CActorBase(const UINT classID, const std::string& actorName, const Transform transform);
@@ -122,6 +124,9 @@ namespace Engine46 {
 
         bool GetVisible() const { return m_visible; }
         void SetVisible(bool visible);
+
+        bool GetBillBoardEnabled() const { return m_billboradEnabled; }
+        void SetBillBoardEnabled(bool enabled) { m_billboradEnabled = enabled; }
 
         void SetTransform(const Transform& transform) { m_transform = transform; }
         Transform GetTransform() const { return m_transform; }

@@ -41,6 +41,8 @@ namespace Engine46 {
 
         void Rendering(CSceneBase* pScene);
         void DrawForRenderScene(CSprite* pSprite, UINT x, UINT y, UINT width, UINT height) override;
+
+        CDX12Texture* GetDepthTexture() const { return pDX12DepthTexture; }
     };
 
 } // namespace 

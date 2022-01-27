@@ -36,6 +36,9 @@ namespace Engine46 {
         virtual void Draw() {};
         virtual void CreateVertexBufferView() {};
 
+        UINT GetByteWidth() const { return m_byteWidth; }
+        UINT GetByteSize() const { return m_byteSize; }
+
         UINT GetTextureWidth() const { return m_texWidth; }
         UINT GetTextureHeight() const { return m_texHeight; }
     };

@@ -204,6 +204,9 @@
     <ClCompile Include="CParticleEmitter.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="GraphicsAPI\DirectX12\CDX12TiledForwardRendering.cpp">
+      <Filter>GraphicsAPI\DirectX12</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GraphicsAPI\DirectX11\CDX11ConstantBuffer.h">
@@ -389,6 +392,9 @@
     <ClInclude Include="CParticleEmitter.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="GraphicsAPI\DirectX12\CDX12TiledForwardRendering.h">
+      <Filter>GraphicsAPI\DirectX12</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\..\Assets\Shader\HLSL\GBuffer.hlsl">
@@ -446,6 +452,15 @@
       <Filter>リソース ファイル\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="..\..\Assets\Shader\HLSL\CubeMapReflection.hlsl">
+      <Filter>リソース ファイル\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Assets\Shader\HLSL\CS_LightCulling.hlsl">
+      <Filter>リソース ファイル\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Assets\Shader\HLSL\Model_LightingOfLightCulling.hlsl">
+      <Filter>リソース ファイル\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Assets\Shader\HLSL\Model_Depth.hlsl">
       <Filter>リソース ファイル\HLSL</Filter>
     </FxCompile>
   </ItemGroup>

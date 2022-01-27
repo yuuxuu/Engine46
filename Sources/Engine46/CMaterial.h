@@ -43,6 +43,7 @@ namespace Engine46 {
 
         void Update();
         void Set(UINT slot);
+        void SetTexture(UINT slot);
 
         void SetMaterialConstantBuffer(std::unique_ptr<CConstantBufferBase>& pConstantBuffer);
 

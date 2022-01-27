@@ -92,6 +92,9 @@ namespace Engine46 {
         if (m_srvGpuHandle.ptr != 0) {
             pDX12Command->SetGraphicsRootDescriptorTable(slot, m_srvGpuHandle);
         }
+        else if(m_uavGpuHandle.ptr != 0){
+            pDX12Command->SetGraphicsRootDescriptorTable(slot, m_uavGpuHandle);
+        }
     }
 
     // アンオーダードアクセスバッファをシェーダーへ設定

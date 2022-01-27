@@ -37,6 +37,10 @@ namespace Engine46 {
     struct CameraCB {
         Matrix	matVP;
         VECTOR3	cameraPos;
+        float dummy;
+        Matrix matView;
+        Matrix matProj;
+        Matrix invMatProj;
     };
 
     struct DirectionalLightCB {
@@ -46,7 +50,7 @@ namespace Engine46 {
         VECTOR4 specular;
     };
 
-    constexpr UINT LIGHT_MAX = 1024 / 2;
+    constexpr UINT LIGHT_MAX = 1000;
 
     struct PointLightCB {
         struct PointLight {
@@ -95,6 +99,13 @@ namespace Engine46 {
 
         UINT texWidth;
         UINT texHeight;
+    };
+
+    struct ScreenParamCB {
+        int textureWidth;
+        int textureHeight;
+        float nearZ;
+        float farZ;
     };
 
     class CConstantBufferBase {

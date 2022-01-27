@@ -28,6 +28,7 @@ namespace Engine46 {
     class CRendererBase : public IRenderer {
     protected:
         std::unique_ptr<CRenderingBase>         m_pForwardRendering;
+        std::unique_ptr<CRenderingBase>         m_pTiledForwardRendering;
         std::unique_ptr<CRenderingBase>         m_pDeferredRendering;
         std::unique_ptr<CRenderingBase>         m_pDepthRendring;
 
@@ -37,6 +38,7 @@ namespace Engine46 {
         std::unique_ptr<CConstantBufferBase>    m_pDirectionalLightCB;
         std::unique_ptr<CConstantBufferBase>    m_pPointLightCB;
         std::unique_ptr<CConstantBufferBase>    m_pSpotLightCB;
+        std::unique_ptr<CConstantBufferBase>    m_pScreenParamCB;
 
         std::unique_ptr<CSprite>                m_pRenderSprite;
 
@@ -51,6 +53,11 @@ namespace Engine46 {
         virtual void Begine(CSceneBase* pScene) override {};
         virtual bool Render(CSceneBase* pScene) override { return true; };
         virtual void SetSceneConstantBuffers(UINT startSlot) {};
+        virtual void SetCameraCb(UINT slot, bool useCompute) {};
+        virtual void SetDirectionalLightCb(UINT slot, bool useCompute) {};
+        virtual void SetPointLightCb(UINT slot, bool useCompute) {};
+        virtual void SetSpotLightCb(UINT slot, bool useCompute) {};
+        virtual void SetScreenParamCb(UINT slot, bool useCompute) {};
         virtual void SetCubeTexture(UINT slot) {};
 
         virtual void CreateConstantBuffer(std::unique_ptr<CConstantBufferBase>& pConstantBuffer, UINT byteWidth) {};

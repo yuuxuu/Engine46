@@ -17,6 +17,9 @@ namespace Engine46 {
     // 前方宣言
     class CInput;
 
+    constexpr float Z_NEAR = 0.1f;
+    constexpr float Z_FAR = 100000.0f;
+
     class CCamera : public CActorBase {
     private:
         VECTOR3                     m_eye;
@@ -40,8 +43,12 @@ namespace Engine46 {
         void Initialize() override;
         void Update() override;
 
+        Matrix GetViewMatrix() const { return m_matView; }
+        Matrix GetProjectionMatrix() const { return m_matProj; }
+
         Matrix GetViewProjectionMatrix();
         Matrix GetInvViewMatrix();
+        Matrix GetInvProjectionMatrix();
 
         VECTOR3 GetCameraRightVector();
         VECTOR3 GetCameraUpVector();

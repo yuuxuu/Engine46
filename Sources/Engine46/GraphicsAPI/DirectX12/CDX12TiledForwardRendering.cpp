@@ -1,34 +1,43 @@
 ﻿/**
- * @file CDX12ForwardRendering.cpp
+ * @file CDX12TiledForwardRendering.cpp
  * @brief
  * @author 木村優
- * @date 2021/09/16
+ * @date 2022/01/08
  */
 
-#include "CDX12ForwardRendering.h"
+#include "CDX12TiledForwardRendering.h"
 #include "CDX12Device.h"
 #include "CDX12Command.h"
 #include "CDX12Texture.h"
 #include "CDX12Renderer.h"
+#include "CDX12UnorderedAccessBuffer.h"
 
+#include "../CGameSystem.h"
 #include "../CRendererSystem.h"
+#include "../CShaderManager.h"
 #include "../CMaterial.h"
 #include "../CMesh.h"
+#include "../CModelMesh.h"
+#include "../CLight.h"
 
-namespace Engine46 {
+namespace Engine46{
+
+    constexpr UINT TILE_SIZE_X = 16;
+    constexpr UINT TILE_SIZE_Y = 16;
+    constexpr UINT TILE_SIZE = TILE_SIZE_X * TILE_SIZE_Y;
 
     // コンストラクタ
-    CDX12ForwardRendering::CDX12ForwardRendering(CDX12Device* pDevice, CDX12Command* pCommand) :
+    CDX12TiledForwardRendering::CDX12TiledForwardRendering(CDX12Device* pDevice, CDX12Command* pCommand) :
         pDX12Device(pDevice),
         pDX12Command(pCommand)
     {}
 
     // デストラクタ
-    CDX12ForwardRendering::~CDX12ForwardRendering()
+    CDX12TiledForwardRendering::~CDX12TiledForwardRendering()
     {}
 
     // 初期化
-    bool CDX12ForwardRendering::Initialize(UINT width, UINT height) {
+    bool CDX12TiledForwardRendering::Initialize(UINT width, UINT height) {
 
         CDX12Renderer* pRenderer = dynamic_cast<CDX12Renderer*>(CRendererSystem::GetRendererSystem().GetRenderer());
         if (!pRenderer) return false;
@@ -123,11 +132,17 @@ namespace Engine46 {
             pDX12Device->CreateDepthStencilView(m_pDsvResource.Get(), &dsvDesc, m_dsvHandle);
         }
 
+        {
+            UINT bufSize = (width / TILE_SIZE_X * height / TILE_SIZE_Y) * LIGHT_MAX;
+
+            pRenderer->CreateUnorderedAccessBuffer(m_pLightIndexUab, sizeof(UINT), bufSize);
+        }
+
         return true;
     }
 
-    // レンダリング開始
-    void CDX12ForwardRendering::Begine() {
+    // 描画開始
+    void CDX12TiledForwardRendering::Begine() {
         pDX12Command->SetResourceBarrier(pDX12RenderTexture->GetResource(), D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_RENDER_TARGET);
         pDX12Command->SetResourceBarrier(m_pDsvResource.Get(), D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_DEPTH_WRITE);
 
@@ -136,24 +151,86 @@ namespace Engine46 {
         pDX12Command->SetRenderTargetView(&m_rtvHandle, &m_dsvHandle);
     }
 
-    // レンダリング終了
-    void CDX12ForwardRendering::End() {
+    // 描画終了
+    void CDX12TiledForwardRendering::End() {
         pDX12Command->SetResourceBarrier(pDX12RenderTexture->GetResource(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_GENERIC_READ);
         pDX12Command->SetResourceBarrier(m_pDsvResource.Get(), D3D12_RESOURCE_STATE_DEPTH_WRITE, D3D12_RESOURCE_STATE_GENERIC_READ);
     }
 
     // シーン描画
-    void CDX12ForwardRendering::Rendering(CSceneBase* pScene) {
+    void CDX12TiledForwardRendering::Rendering(CSceneBase* pScene) {
 
         Begine();
 
-        pScene->Draw();
+        CActorBase* pSkyDome = pScene->GetSkyDomeFromScene();
+        if (pSkyDome) {
+            CConstantBufferBase* pCb = pSkyDome->GetWorldConstantBuffer();
+            if (pCb) {
+                Matrix matW = pSkyDome->GetWorldMatrix();
+                matW.dx_m = DirectX::XMMatrixTranspose(matW.dx_m);
+
+                worldCB cb = {
+                    matW,
+                };
+                pCb->Update(&cb);
+
+                pSkyDome->Draw();
+            }
+        }
+
+        CShaderManager* pShaderManager = CGameSystem::GetGameSystem().GetShaderManager();
+
+        CShaderPackage* pSp = pShaderManager->CreateShaderPackage("Model_LightingOfLightCulling.hlsl");
+        if (pSp) {
+            pSp->SetShader();
+
+            m_pLightIndexUab->Set((UINT)MyRS_ModelLighting_Of_LightCulling::UAV_0);
+
+            CRendererBase* pRenderer = CRendererSystem::GetRendererSystem().GetRenderer();
+            if (pRenderer) {
+                pRenderer->SetSceneConstantBuffers((UINT)MyRS_ModelLighting_Of_LightCulling::CBV_Camera);
+                pRenderer->SetCubeTexture((UINT)MyRS_ModelLighting_Of_LightCulling::SRV_Cube);
+                pRenderer->SetScreenParamCb((UINT)MyRS_ModelLighting_Of_LightCulling::CBV_ScreenParam, false);
+            }
+
+            std::vector<CActorBase*> vecActors = pScene->GetActorsFromScene();
+            for (const auto& pActor : vecActors) {
+                Matrix matW = pActor->GetWorldMatrix();
+                matW.dx_m = DirectX::XMMatrixTranspose(matW.dx_m);
+
+                worldCB cb = {
+                    matW,
+                };
+                pActor->UpdateWorldConstantBuffer(&cb);
+
+                CMeshBase* pMesh = pActor->GetMesh();
+                if (pMesh) {
+                    pMesh->Set();
+                    CMaterialBase* pMaterial = pMesh->GetMaterial();
+                    if (pMaterial) {
+                        pMesh->GetMaterial()->SetTexture((UINT)MyRS_ModelLighting_Of_LightCulling::SRV_Diffuse);
+                    }
+                    pMesh->Draw();
+                }
+                else {
+                    CModelMesh* pModelMesh = pActor->GetModelMesh();
+                    if (pModelMesh) {
+                        pModelMesh->Draw();
+                    }
+                }
+            }
+
+            std::vector<CLight*> vecLight = pScene->GetLightsFromScene();
+            for (const auto& pLight : vecLight) {
+                pLight->Draw();
+            }
+        }
 
         End();
     }
 
     // 描画したシーン描画
-    void CDX12ForwardRendering::RenderingForRenderScene(CSprite* pSprite, UINT x, UINT y, UINT width, UINT height) {
+    void CDX12TiledForwardRendering::RenderingForRenderScene(CSprite* pSprite, UINT x, UINT y, UINT width, UINT height) {
 
         if (!pSprite) return;
 
@@ -166,6 +243,33 @@ namespace Engine46 {
         }
 
         pSprite->Draw();
+    }
+
+    // ライトカリング
+    void CDX12TiledForwardRendering::LightCulling_CS(CDX12Texture* pDX12DepthTexture) {
+
+        CShaderManager* pShaderManger = CGameSystem::GetGameSystem().GetShaderManager();
+
+        CShaderPackage* pSp = pShaderManger->CreateShaderPackage("CS_LightCulling.hlsl");
+        if (pSp) {
+            pSp->SetShader();
+
+            CRendererBase* pRenderer = CRendererSystem::GetRendererSystem().GetRenderer();
+            if (pRenderer) {
+                pRenderer->SetCameraCb((UINT)MyRS_CS_LightCulling::CBV_Camera, true);
+                pRenderer->SetPointLightCb((UINT)MyRS_CS_LightCulling::CBV_PointLight, true);
+                pRenderer->SetScreenParamCb((UINT)MyRS_CS_LightCulling::CBV_ScreenParam, true);
+            }
+
+            UINT width = pDX12RenderTexture->GetTextureWidth();
+            UINT height = pDX12RenderTexture->GetTextureHeight();
+
+            pDX12DepthTexture->SetCompute((UINT)MyRS_CS_LightCulling::SRV_Depth);
+
+            m_pLightIndexUab->SetCompute((UINT)MyRS_CS_LightCulling::UAV_0);
+
+            m_pLightIndexUab->Dispatch(width / TILE_SIZE_X, height / TILE_SIZE_Y, 1);
+        }
     }
 
 } // namespace

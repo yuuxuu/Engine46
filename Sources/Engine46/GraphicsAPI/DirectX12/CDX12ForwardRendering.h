@@ -36,7 +36,7 @@ namespace Engine46 {
         D3D12_CPU_DESCRIPTOR_HANDLE     m_dsvHandle;
 
     public:
-        CDX12ForwardRendering(CDX12Device* pDX12Device, CDX12Command* pCommand);
+        CDX12ForwardRendering(CDX12Device* pDevice, CDX12Command* pCommand);
         ~CDX12ForwardRendering();
 
         bool Initialize(UINT width, UINT height) override;

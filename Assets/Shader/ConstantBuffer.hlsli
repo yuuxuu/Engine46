@@ -13,10 +13,9 @@ Texture2D           diffuseTex      : register(t0);
 Texture2D           specularTex     : register(t1);
 Texture2D           normalTex       : register(t2);
 Texture2D           posTex          : register(t3);
-
 TextureCube	        cubeTex	        : register(t4);
-
 Texture2D<float>    depthTex        : register(t5);
+
 Texture2D<uint2>    stencilTex      : register(t6);
 TextureCube	        dynamicCubeTex  : register(t7);
 Texture2D           albedoTex       : register(t8);
@@ -45,10 +44,10 @@ cbuffer CbWorld : register(b0)
 }
 
 struct Material {
-    float4	diffuse;    // マテリアルディフューズ色
-    float4	specular;   // マテリアルスペキュラー色
-    float4	ambinet;    // マテリアルアンビエント色
-	float4	emissive;   // マテリアルエミッシブ色
+    float4  diffuse;    // マテリアルディフューズ色
+    float4  specular;   // マテリアルスペキュラー色
+    float4  ambinet;    // マテリアルアンビエント色
+	float4  emissive;   // マテリアルエミッシブ色
 };
 
 // マテリアル
@@ -59,9 +58,14 @@ cbuffer CbMaterial : register(b1)
 
 cbuffer CbCamera : register(b2)
 {
-    float4x4    matVP;      // ワールドビュープロジェクション行列
+    float4x4    matVP;      // ビュープロジェクション行列
 
     float3      cameraPos;  // カメラの位置
+    float       dummy;
+
+    float4x4    matView;
+    float4x4    matProj;
+    float4x4    invMatProj;
 }
 
 struct DirectionalLight {
@@ -84,7 +88,7 @@ struct PointLight {
     float4  attenuation;
 };
 
-#define LIGHT_MAX 1024 / 2
+#define LIGHT_MAX 1000
 
 cbuffer CbPointLight : register(b4)
 {
@@ -112,7 +116,15 @@ cbuffer CbSpotLight : register(b5)
 
 cbuffer CbPostEffect : register(b6)
 {
-	float4 blurOffset[OFFSET_MAX];
+    float4 blurOffset[OFFSET_MAX];
+}
+
+cbuffer CbScreenParam : register(b7)
+{
+    int textureWidth;
+    int textureHeight;
+    float nearZ;
+    float farZ;
 }
 
 //// 行列コンスタントバッファ

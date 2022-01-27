@@ -219,7 +219,6 @@ namespace Engine46 {
                 pCb->Update(&cb);
                 pSkyDome->Draw();
             }
-
         }
 
         CShaderManager* pShaderManager = CGameSystem::GetGameSystem().GetShaderManager();
@@ -231,7 +230,7 @@ namespace Engine46 {
             CRendererBase* pRenderer = CRendererSystem::GetRendererSystem().GetRenderer();
             if (pRenderer) {
                 pRenderer->SetSceneConstantBuffers((UINT)MyRS_Model::CBV_Camera);
-                pRenderer->SetCubeTexture((UINT)MyRS_Model::SRV_CubeMap);
+                pRenderer->SetCubeTexture((UINT)MyRS_Model::SRV_Cube);
             }
 
             std::vector<CActorBase*> vecActors = pScene->GetActorsFromScene();
@@ -247,6 +246,10 @@ namespace Engine46 {
                 CMeshBase* pMesh = pActor->GetMesh();
                 if (pMesh) {
                     pMesh->Set();
+                    CMaterialBase* pMaterial = pMesh->GetMaterial();
+                    if (pMaterial) {
+                        pMaterial->SetTexture((UINT)MyRS_Model::SRV_Diffuse);
+                    }
                     pMesh->Draw();
                 }
                 else {
@@ -323,7 +326,7 @@ namespace Engine46 {
                 pRenderer->SetSceneConstantBuffers((UINT)MyRS_GBuffer_Ligthing::CBV_Camera);
             }
 
-            UINT index = (UINT)MyRS_GBuffer_Ligthing::SRV_0;
+            UINT index = (UINT)MyRS_GBuffer_Ligthing::SRV_Diffuse;
             for (const auto& pTexture : m_pVecRenderTex) {
                 pTexture->Set(index++);
             }

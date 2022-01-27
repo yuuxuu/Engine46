@@ -36,8 +36,26 @@ namespace Engine46 {
         CBV_DirectionalLight,
         CBV_PointLight,
         CBV_SpotLight,
-        SRV_diffuse,
-        SRV_CubeMap,
+        SRV_Diffuse,
+        SRV_Cube,
+    };
+
+    enum class MyRS_ModelLighting_Of_LightCulling {
+        CBV_World,
+        CBV_Material,
+        CBV_Camera,
+        CBV_DirectionalLight,
+        CBV_PointLight,
+        CBV_SpotLight,
+        CBV_ScreenParam,
+        SRV_Diffuse,
+        SRV_Cube,
+        UAV_0,
+    };
+
+    enum class MyRS_ModelDepth {
+        CBV_World,
+        CBV_Camera,
     };
 
     enum class MyRS_GBuffer_Ligthing {
@@ -45,27 +63,27 @@ namespace Engine46 {
         CBV_DirectionalLight,
         CBV_PointLight,
         CBV_SpotLight,
-        SRV_0,
-        SRV_1,
-        SRV_2,
-        SRV_3,
+        SRV_Diffuse,
+        SRV_Specular,
+        SRV_Normal,
+        SRV_Pos,
     };
 
     enum class MyRS_Blur {
         CBV_Blur,
-        SRV_0,
+        SRV_Diffuse,
     };
 
     enum class MyRS_Bloom {
-        SRV_0,
-        SRV_1,
-        SRV_2,
-        SRV_3,
-        SRV_4,
+        SRV_Diffuse,
+        SRV_Specular,
+        SRV_Normal,
+        SRV_Pos,
+        SRV_Cube,
     };
 
     enum class MyRS_LuminanceExtraction {
-        SRV_0,
+        SRV_Diffuse,
     };
 
     enum class MyRS_CS_Blur {
@@ -84,12 +102,20 @@ namespace Engine46 {
         UAV_1,
     };
 
-    enum class MyRS_ClearColor {
+    enum class MyRS_CS_ClearColor {
         UAV_0,
     };
 
     enum class MyRS_CS_GpuParticle {
-        CBV_0,
+        CBV_World,
+        UAV_0,
+    };
+
+    enum class MyRS_CS_LightCulling {
+        CBV_Camera,
+        CBV_PointLight,
+        CBV_ScreenParam,
+        SRV_Depth,
         UAV_0,
     };
 

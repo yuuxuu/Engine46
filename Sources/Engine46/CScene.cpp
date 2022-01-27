@@ -319,9 +319,7 @@ namespace Engine46 {
         if (pRootActor) {
             for (const auto pChild : pRootActor->GetChildActorList()) {
                 if (pChild->GetClassID() == actorType) {
-                    if (pChild->GetVisible()) {
-                        pActors.emplace_back(pChild);
-                    }
+                    pActors.emplace_back(pChild);
                 }
 
                 this->GetActorsRecursiveInActor(pActors, pChild, actorType);

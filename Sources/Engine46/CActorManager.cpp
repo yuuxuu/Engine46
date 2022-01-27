@@ -145,6 +145,8 @@ namespace Engine46 {
         light->SetActorID(m_classCount.allCount++);
         light->SetLightID(m_classCount.lightCount++);
 
+        light->SetBillBoardEnabled(true);
+
         light->CActorBase::Initialize();
 
         CLight* pLight = light.get();

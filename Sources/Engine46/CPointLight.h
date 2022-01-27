@@ -18,6 +18,9 @@ namespace Engine46 {
     public:
         explicit CPointLight(const char* lightName);
         ~CPointLight();
+
+        void SetRadius(float radius) { m_radius = radius; }
+        float GetRadius() const { return m_radius; }
     };
 
 } // namespace

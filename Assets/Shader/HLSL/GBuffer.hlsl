@@ -49,7 +49,7 @@ VS_OUT VS_main(VS_IN input) {
 typedef VS_OUT PS_IN;
 
 PS_OUT PS_main(PS_IN input) {
-    PS_OUT output;
+    PS_OUT output = (PS_OUT)0;
 
     output.diffuse = diffuseTex.Sample(sampleState, input.uv) * material.diffuse;
 
@@ -64,8 +64,8 @@ PS_OUT PS_main(PS_IN input) {
 
     output.pos = input.posw;
 
-    float3 v = normalize(input.posw.xyz - cameraPos);
-    float3 ref = reflect(v, n);
+    //float3 v = normalize(input.posw.xyz - cameraPos);
+    //float3 ref = reflect(v, n);
 
     //output.diffuse *= cubeTex.Sample(sampleState, ref);
 

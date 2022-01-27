@@ -62,17 +62,19 @@ namespace Engine46 {
 
     // マテリアルをシェーダーへ設定
     void CMaterialBase::Set(UINT slot) {
-
         if (m_pMaterialConstantBuffer) {
             m_pMaterialConstantBuffer->Set(slot);
         }
+    }
 
+    // テクスチャをシェーダーへ設定
+    void CMaterialBase::SetTexture(UINT slot) {
         if (pTexture) {
-            pTexture->Set((UINT)MyRS_Model::SRV_diffuse);
+            pTexture->Set(slot);
         }
         else {
             for (const auto pTexture : m_pVecTexture) {
-                pTexture->Set((UINT)MyRS_Model::SRV_diffuse);
+                pTexture->Set(slot);
             }
         }
     }

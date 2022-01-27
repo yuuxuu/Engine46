@@ -11,9 +11,12 @@
 #include "CDX12Renderer.h"
 #include "CDX12Texture.h"
 
+#include "../CGameSystem.h"
 #include "../CRendererSystem.h"
+#include "../CShaderManager.h"
 #include "../CMaterial.h"
 #include "../CMesh.h"
+#include "../CModelMesh.h"
 
 namespace Engine46 {
 
@@ -100,7 +103,42 @@ namespace Engine46 {
 
         Begine();
 
-        pScene->Draw();
+        CShaderManager* pShaderManager = CGameSystem::GetGameSystem().GetShaderManager();
+
+        CShaderPackage* pSp = pShaderManager->CreateShaderPackage("Model_Depth.hlsl");
+        if (pSp) {
+            pSp->SetShader();
+
+            CRendererBase* pRenderer = CRendererSystem::GetRendererSystem().GetRenderer();
+            if (pRenderer) {
+                pRenderer->SetCameraCb((UINT)MyRS_ModelDepth::CBV_Camera, false);
+            }
+
+            std::vector<CActorBase*> vecActors = pScene->GetActorsFromScene();
+            for (const auto& pActor : vecActors) {
+                Matrix matW = pActor->GetWorldMatrix();
+                matW.dx_m = DirectX::XMMatrixTranspose(matW.dx_m);
+
+                worldCB cb = {
+                    matW,
+                };
+                pActor->UpdateWorldConstantBuffer(&cb);
+
+                CMeshBase* pMesh = pActor->GetMesh();
+                if (pMesh) {
+                    pMesh->Draw();
+                }
+                else {
+                    CModelMesh* pModelMesh = pActor->GetModelMesh();
+                    if (pModelMesh) {
+                        std::vector<CMeshBase*> vecMesh = pModelMesh->GetVecMesh();
+                        for (const auto& mesh : vecMesh) {
+                            mesh->Draw();
+                        }
+                    }
+                }
+            }
+        }
 
         End();
     }

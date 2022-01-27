@@ -52,6 +52,11 @@ namespace Engine46 {
         void Begine(CSceneBase* pScene) override;
         bool Render(CSceneBase* pScene) override;
         void SetSceneConstantBuffers(UINT startSlot) override;
+        void SetCameraCb(UINT startSlot, bool useCompute) override;
+        void SetDirectionalLightCb(UINT startSlot, bool useCompute) override;
+        void SetPointLightCb(UINT startSlot, bool useCompute) override;
+        void SetSpotLightCb(UINT startSlot, bool useCompute) override;
+        void SetScreenParamCb(UINT slot, bool useCompute) override;
         void SetCubeTexture(UINT slot) override;
 
         void Reset();

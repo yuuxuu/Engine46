@@ -12,9 +12,6 @@
 
 namespace Engine46 {
 
-    constexpr float Z_NEAR = 0.1f;
-    constexpr float Z_FAR = 100000.0f;
-
     // コンストラクタ
     CCamera::CCamera(const char* actorName, const int sWidth, const int sHeight) :
         CActorBase((int)ActorType::Camera, actorName, Transform()),
@@ -24,7 +21,7 @@ namespace Engine46 {
         m_speed(1.0f)
     {
         m_matProj.dx_m = DirectX::XMMatrixPerspectiveFovLH(
-            DirectX::XMConvertToRadians(90.0f),
+            DegreeToRadian(90.0f),
             (float)sWidth / (float)sHeight,
             Z_NEAR,
             Z_FAR);
@@ -113,13 +110,22 @@ namespace Engine46 {
         return matVP;
     }
 
+    // ビュー逆行列を取得
     Matrix CCamera::GetInvViewMatrix() {
-        Matrix matVP;
-        matVP.dx_m = DirectX::XMMatrixInverse(nullptr, m_matView.dx_m);
+        Matrix matView;
+        matView.dx_m = DirectX::XMMatrixInverse(nullptr, m_matView.dx_m);
 
-        matVP._41 = matVP._42 = matVP._43 = 0.0f;
+        matView._41 = matView._42 = matView._43 = 0.0f;
 
-        return matVP;
+        return matView;
+    }
+
+    // プロジェクション逆行列を取得
+    Matrix CCamera::GetInvProjectionMatrix() {
+        Matrix matProj;
+        matProj.dx_m = DirectX::XMMatrixInverse(nullptr, m_matProj.dx_m);
+
+        return matProj;
     }
 
     // カメラのスピードを取得

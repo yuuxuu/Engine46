@@ -59,6 +59,8 @@ namespace Engine46 {
         void CreateShaderResourceView(ID3D12DescriptorHeap* pDescriptorHeap, UINT heapIndex);
 
         ID3D12Resource* GetResource() const { return m_pUabResource.Get(); }
+
+        void* GetMappedBuffer() const { return m_mappedBuffer; }
     };
 
 } // namespace

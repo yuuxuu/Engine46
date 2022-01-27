@@ -16,17 +16,19 @@
 #include "CDX12ForwardRendering.h"
 #include "CDX12DepthRendering.h"
 #include "CDX12DeferredRenderig.h"
+#include "CDX12TiledForwardRendering.h"
 
 #include "../CTextureManager.h"
 #include "../CGameSystem.h"
 #include "../CFileSystem.h"
 #include "../CLight.h"
+#include "../CPointLight.h"
 #include "../CCamera.h"
 #include "../CMaterial.h"
 
 namespace Engine46 {
 
-    constexpr UINT DESCRIPTORHEAP_MAX = STATIC_MAX + 1000;
+    constexpr UINT DESCRIPTORHEAP_MAX = STATIC_MAX + 3000;
 
     // コンストラクタ
     CDX12Renderer::CDX12Renderer() :
@@ -120,17 +122,21 @@ namespace Engine46 {
 
             m_pDX12Device->CreateDescriptorHeap(m_pCbDescriptorHeap, dhDesc);
 
-            this->CreateConstantBuffer(m_pCameraCB, sizeof(CameraCB));
-            this->CreateConstantBuffer(m_pDirectionalLightCB, sizeof(DirectionalLightCB));
-            this->CreateConstantBuffer(m_pPointLightCB, sizeof(PointLightCB));
-            this->CreateConstantBuffer(m_pSpotLightCB, sizeof(SpotLightCB));
+            CreateConstantBuffer(m_pCameraCB, sizeof(CameraCB));
+            CreateConstantBuffer(m_pDirectionalLightCB, sizeof(DirectionalLightCB));
+            CreateConstantBuffer(m_pPointLightCB, sizeof(PointLightCB));
+            CreateConstantBuffer(m_pSpotLightCB, sizeof(SpotLightCB));
+            CreateConstantBuffer(m_pScreenParamCB, sizeof(ScreenParamCB));
         }
 
         //m_pForwardRendering = std::make_unique<CDX12ForwardRendering>(m_pDX12Device.get(), m_pDX12Command.get());
         //if (!m_pForwardRendering->Initialize(width, height)) return false;
 
-        m_pDeferredRendering = std::make_unique<CDX12DeferredRenderig>(m_pDX12Device.get(), m_pDX12Command.get());
-        if (!m_pDeferredRendering->Initialize(width, height)) return false;
+        m_pTiledForwardRendering = std::make_unique<CDX12TiledForwardRendering>(m_pDX12Device.get(), m_pDX12Command.get());
+        if (!m_pTiledForwardRendering->Initialize(width, height)) return false;
+
+        //m_pDeferredRendering = std::make_unique<CDX12DeferredRenderig>(m_pDX12Device.get(), m_pDX12Command.get());
+        //if (!m_pDeferredRendering->Initialize(width, height)) return false;
 
         m_pDepthRendring = std::make_unique<CDX12DepthRendering>(m_pDX12Device.get(), m_pDX12Command.get());
         if (!m_pDepthRendring->Initialize(width, height)) return false;
@@ -180,6 +186,15 @@ namespace Engine46 {
             }
         }
 
+        ScreenParamCB screenParamCb = {
+            m_windowRect.w,
+            m_windowRect.h,
+            Z_NEAR,
+            Z_FAR,
+        };
+
+        m_pScreenParamCB->Update(&screenParamCb);
+
         if (pScene) {
             CCamera* pCamera = pScene->GetCameraFromScene();
             if (pCamera) {
@@ -187,9 +202,22 @@ namespace Engine46 {
                 Matrix matVP = pCamera->GetViewProjectionMatrix();
                 matVP.dx_m = DirectX::XMMatrixTranspose(matVP.dx_m);
 
+                Matrix matView = pCamera->GetViewMatrix();
+                matView.dx_m = DirectX::XMMatrixTranspose(matView.dx_m);
+
+                Matrix matProj = pCamera->GetProjectionMatrix();
+                matProj.dx_m = DirectX::XMMatrixTranspose(matProj.dx_m);
+
+                Matrix invMatProj = pCamera->GetInvProjectionMatrix();
+                //invMatProj.dx_m = DirectX::XMMatrixTranspose(invMatProj.dx_m);
+
                 CameraCB cb = {
                     matVP,
                     pCamera->GetPos(),
+                    0.0f,
+                    matView,
+                    matProj,
+                    invMatProj,
                 };
 
                 m_pCameraCB->Update(&cb);
@@ -204,6 +232,8 @@ namespace Engine46 {
 
                 for (const auto light : pLights)
                 {
+                    CPointLight* pLight = nullptr;
+
                     switch (light->GetLightType())
                     {
                     case LightType::Directional:
@@ -212,10 +242,14 @@ namespace Engine46 {
                         directionalLightCb.specular = light->GetLightSpecular();
                         break;
                     case LightType::Point:
-                        pointLightCb.pointLights[pointLightCb.numPointLight].pos = light->GetPos();
-                        pointLightCb.pointLights[pointLightCb.numPointLight].diffuse = light->GetLightDiffuse();
-                        pointLightCb.pointLights[pointLightCb.numPointLight].specular = light->GetLightSpecular();
-                        pointLightCb.pointLights[pointLightCb.numPointLight].attenuation = light->GetLightAttenuation();
+                        pLight = dynamic_cast<CPointLight*>(light);
+                        if (!pLight) return;
+
+                        pointLightCb.pointLights[pointLightCb.numPointLight].pos = pLight->GetPos();
+                        pointLightCb.pointLights[pointLightCb.numPointLight].diffuse = pLight->GetLightDiffuse();
+                        pointLightCb.pointLights[pointLightCb.numPointLight].specular = pLight->GetLightSpecular();
+                        pointLightCb.pointLights[pointLightCb.numPointLight].attenuation = pLight->GetLightAttenuation();
+                        pointLightCb.pointLights[pointLightCb.numPointLight].radius = pLight->GetRadius();
 
                         pointLightCb.numPointLight++;
                         break;
@@ -250,21 +284,40 @@ namespace Engine46 {
         m_pDX12Command->SetRect(m_windowRect.w, m_windowRect.h);
         m_pDX12Command->SetViewPort(0, 0, m_windowRect.w, m_windowRect.h);
 
+        CDX12Texture* pRenderTexture = nullptr;
+        CDX12Texture* pDepthTexture = nullptr;
+
         if (m_pDepthRendring) {
             m_pDepthRendring->Rendering(pScene);
             Reset();
+
+            pDepthTexture = dynamic_cast<CDX12DepthRendering*>(m_pDepthRendring.get())->GetDepthTexture();
+        }
+
+        if (m_pForwardRendering) {
+            m_pForwardRendering->Rendering(pScene);
+            Reset();
+
+            pRenderTexture = dynamic_cast<CDX12ForwardRendering*>(m_pForwardRendering.get())->GetRenderTexture();
+        }
+
+        if (m_pTiledForwardRendering) {
+            dynamic_cast<CDX12TiledForwardRendering*>(m_pTiledForwardRendering.get())->LightCulling_CS(pDepthTexture);
+            m_pTiledForwardRendering->Rendering(pScene);
+            Reset();
+
+            pRenderTexture = dynamic_cast<CDX12TiledForwardRendering*>(m_pTiledForwardRendering.get())->GetRenderTexture();
         }
 
         if (m_pDeferredRendering) {
             m_pDeferredRendering->Rendering(pScene);
             m_pDeferredRendering->RenderingForSceneLighting(m_pRenderSprite.get());
             Reset();
+
+            pRenderTexture = dynamic_cast<CDX12DeferredRenderig*>(m_pDeferredRendering.get())->GetRenderTexture();
         }
 
-        CDX12Texture* pRenderTexture = nullptr;
         if (m_pDX12PostEffect) {
-            pRenderTexture = dynamic_cast<CDX12DeferredRenderig*>(m_pDeferredRendering.get())->GetRenderTexture();
-
             m_pDX12PostEffect->PostEffectBlur(pRenderTexture, m_pRenderSprite.get());
             //m_pDX12PostEffect->PostEffectBlur_CS(pRenderTexture);
             Reset();
@@ -293,10 +346,14 @@ namespace Engine46 {
             m_pRenderSprite->Draw();
         }
 
-        UINT width = (UINT)m_windowRect.w / (RENDER_TARGET_SIZE + 1);
+        /*UINT width = (UINT)m_windowRect.w / (RENDER_TARGET_SIZE + 1);
         UINT height = m_windowRect.h / (RENDER_TARGET_SIZE + 1);
         UINT x = 0;
-        UINT y = (UINT)m_windowRect.h - height;
+        UINT y = (UINT)m_windowRect.h - height;*/
+
+        /*if (m_pTiledForwardRendering) {
+            m_pTiledForwardRendering->DrawForRenderScene(m_pRenderSprite.get(), 0, 0, m_windowRect.w, m_windowRect.h);
+        }*/
 
         /*if (m_pDeferredRendering) {
             m_pDeferredRendering->DrawForRenderScene(m_pRenderSprite.get(), x, y, width, height);
@@ -328,6 +385,56 @@ namespace Engine46 {
         if (m_pSpotLightCB) {
             m_pSpotLightCB->Set(startSlot + 3);
         }
+    }
+
+    void CDX12Renderer::SetCameraCb(UINT slot, bool useCompute) {
+        if (!m_pCameraCB) return;
+
+        if (useCompute) {
+            m_pCameraCB->SetCompute(slot);
+            return;
+        }
+        m_pCameraCB->Set(slot);
+    }
+
+    void CDX12Renderer::SetDirectionalLightCb(UINT slot, bool useCompute) {
+        if (!m_pDirectionalLightCB) return;
+
+        if (useCompute) {
+            m_pDirectionalLightCB->SetCompute(slot);
+            return;
+        }
+        m_pDirectionalLightCB->Set(slot);
+    }
+
+    void CDX12Renderer::SetPointLightCb(UINT slot, bool useCompute) {
+        if (!m_pPointLightCB) return;
+
+        if (useCompute) {
+            m_pPointLightCB->SetCompute(slot);
+            return;
+        }
+        m_pPointLightCB->Set(slot);
+    }
+
+    void CDX12Renderer::SetSpotLightCb(UINT slot, bool useCompute) {
+        if (!m_pSpotLightCB) return;
+
+        if (useCompute) {
+            m_pSpotLightCB->SetCompute(slot);
+            return;
+        }
+        m_pSpotLightCB->Set(slot);
+    }
+
+    void CDX12Renderer::SetScreenParamCb(UINT slot, bool useCompute) {
+        if (!m_pScreenParamCB) return;
+
+        if (useCompute) {
+            m_pScreenParamCB->SetCompute(slot);
+            return;
+        }
+        m_pScreenParamCB->Set(slot);
     }
 
     void CDX12Renderer::SetCubeTexture(UINT slot) {

@@ -30,32 +30,31 @@
                                  "maxLOD = 3.402823466e+38f,"\
                                  "space = 0,"\
                                  "visibility = SHADER_VISIBILITY_PIXEL),"\
-                             "StaticSampler(s1,"\
-                                 "filter = FILTER_MIN_MAG_MIP_LINEAR,"\
-                                 "addressU = TEXTURE_ADDRESS_BORDER,"\
-                                 "addressV = TEXTURE_ADDRESS_BORDER,"\
-                                 "addressW = TEXTURE_ADDRESS_BORDER,"\
-                                 "mipLodBias = 0.0f,"\
-                                 "maxAnisotropy = 1,"\
-                                 "comparisonFunc = COMPARISON_LESS_EQUAL,"\
-                                 "borderColor = STATIC_BORDER_COLOR_OPAQUE_WHITE,"\
-                                 "minLOD = 0.0f,"\
-                                 "maxLOD = 3.402823466e+38f,"\
-                                 "space = 0,"\
-                                 "visibility = SHADER_VISIBILITY_PIXEL),"\
-                             "StaticSampler(s2,"\
-                                 "filter = FILTER_MIN_MAG_MIP_POINT,"\
-                                 "addressU = TEXTURE_ADDRESS_BORDER,"\
-                                 "addressV = TEXTURE_ADDRESS_BORDER,"\
-                                 "addressW = TEXTURE_ADDRESS_BORDER,"\
-                                 "mipLodBias = 0.0f,"\
-                                 "maxAnisotropy = 16,"\
-                                 "comparisonFunc = COMPARISON_LESS_EQUAL,"\
-                                 "borderColor = STATIC_BORDER_COLOR_OPAQUE_WHITE,"\
-                                 "minLOD = 0.0f,"\
-                                 "maxLOD = 3.402823466e+38f,"\
-                                 "space = 0,"\
-                                 "visibility = SHADER_VISIBILITY_PIXEL)"\
+
+#define RS_MODEL_LIGHTING_OF_LIGHTCULLING "RootFlags(ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT),"\
+                                                        "DescriptorTable(CBV(b0, numDescriptors = 1, space = 0), visibility = SHADER_VISIBILITY_ALL),"\
+                                                        "DescriptorTable(CBV(b1, numDescriptors = 1, space = 0), visibility = SHADER_VISIBILITY_ALL),"\
+                                                        "DescriptorTable(CBV(b2, numDescriptors = 1, space = 0), visibility = SHADER_VISIBILITY_ALL),"\
+                                                        "DescriptorTable(CBV(b3, numDescriptors = 1, space = 0), visibility = SHADER_VISIBILITY_ALL),"\
+                                                        "DescriptorTable(CBV(b4, numDescriptors = 1, space = 0), visibility = SHADER_VISIBILITY_ALL),"\
+                                                        "DescriptorTable(CBV(b5, numDescriptors = 1, space = 0), visibility = SHADER_VISIBILITY_ALL),"\
+                                                        "DescriptorTable(CBV(b7, numDescriptors = 1, space = 0), visibility = SHADER_VISIBILITY_ALL),"\
+                                                        "DescriptorTable(SRV(t0, numDescriptors = 1, space = 0), visibility = SHADER_VISIBILITY_PIXEL),"\
+                                                        "DescriptorTable(SRV(t4, numDescriptors = 1, space = 0), visibility = SHADER_VISIBILITY_PIXEL),"\
+                                                        "DescriptorTable(UAV(u1, numDescriptors = 1, space = 0), visibility = SHADER_VISIBILITY_PIXEL),"\
+                                                        "StaticSampler(s0,"\
+                                                            "filter = FILTER_MIN_MAG_MIP_LINEAR,"\
+                                                            "addressU = TEXTURE_ADDRESS_BORDER,"\
+                                                            "addressV = TEXTURE_ADDRESS_BORDER,"\
+                                                            "addressW = TEXTURE_ADDRESS_BORDER,"\
+                                                            "mipLodBias = 0.0f,"\
+                                                            "maxAnisotropy = 16,"\
+                                                            "comparisonFunc = COMPARISON_NEVER,"\
+                                                            "borderColor = STATIC_BORDER_COLOR_TRANSPARENT_BLACK,"\
+                                                            "minLOD = 0.0f,"\
+                                                            "maxLOD = 3.402823466e+38f,"\
+                                                            "space = 0,"\
+                                                            "visibility = SHADER_VISIBILITY_PIXEL),"\
 
 #define RS_MODEL_LINE "RootFlags(ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT),"\
                                   "DescriptorTable(CBV(b0, numDescriptors = 1, space = 0), visibility = SHADER_VISIBILITY_ALL),"\
@@ -64,6 +63,10 @@
                                   "DescriptorTable(CBV(b3, numDescriptors = 1, space = 0), visibility = SHADER_VISIBILITY_ALL),"\
                                   "DescriptorTable(CBV(b4, numDescriptors = 1, space = 0), visibility = SHADER_VISIBILITY_ALL),"\
                                   "DescriptorTable(CBV(b5, numDescriptors = 1, space = 0), visibility = SHADER_VISIBILITY_ALL),"\
+
+#define RS_MODEL_Depth "RootFlags(ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT),"\
+                                    "DescriptorTable(CBV(b0, numDescriptors = 1, space = 0), visibility = SHADER_VISIBILITY_ALL),"\
+                                    "DescriptorTable(CBV(b2, numDescriptors = 1, space = 0), visibility = SHADER_VISIBILITY_ALL),"\
 
 #define RS_GBUFFER_LIGHTING "RootFlags(ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT),"\
                                         "DescriptorTable(CBV(b2, numDescriptors = 1, space = 0), visibility = SHADER_VISIBILITY_ALL),"\
@@ -165,4 +168,40 @@
                                       "DescriptorTable(CBV(b0, numDescriptors = 1, space = 0), visibility = SHADER_VISIBILITY_ALL),"\
                                       "DescriptorTable(UAV(u0, numDescriptors = 1, space = 0), visibility = SHADER_VISIBILITY_ALL),"\
 
+#define RS_CS_LIGHT_CULLING "RootFlags(ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT),"\
+                                        "DescriptorTable(CBV(b2, numDescriptors = 1, space = 0), visibility = SHADER_VISIBILITY_ALL),"\
+                                        "DescriptorTable(CBV(b4, numDescriptors = 1, space = 0), visibility = SHADER_VISIBILITY_ALL),"\
+                                        "DescriptorTable(CBV(b7, numDescriptors = 1, space = 0), visibility = SHADER_VISIBILITY_ALL),"\
+                                        "DescriptorTable(SRV(t5, numDescriptors = 1, space = 0), visibility = SHADER_VISIBILITY_ALL),"\
+                                        "DescriptorTable(UAV(u0, numDescriptors = 1, space = 0), visibility = SHADER_VISIBILITY_ALL),"\
+
 #endif
+
+/*
+*                              "StaticSampler(s1,"\
+                                 "filter = FILTER_MIN_MAG_MIP_LINEAR,"\
+                                 "addressU = TEXTURE_ADDRESS_BORDER,"\
+                                 "addressV = TEXTURE_ADDRESS_BORDER,"\
+                                 "addressW = TEXTURE_ADDRESS_BORDER,"\
+                                 "mipLodBias = 0.0f,"\
+                                 "maxAnisotropy = 1,"\
+                                 "comparisonFunc = COMPARISON_LESS_EQUAL,"\
+                                 "borderColor = STATIC_BORDER_COLOR_OPAQUE_WHITE,"\
+                                 "minLOD = 0.0f,"\
+                                 "maxLOD = 3.402823466e+38f,"\
+                                 "space = 0,"\
+                                 "visibility = SHADER_VISIBILITY_PIXEL),"\
+                             "StaticSampler(s2,"\
+                                 "filter = FILTER_MIN_MAG_MIP_POINT,"\
+                                 "addressU = TEXTURE_ADDRESS_BORDER,"\
+                                 "addressV = TEXTURE_ADDRESS_BORDER,"\
+                                 "addressW = TEXTURE_ADDRESS_BORDER,"\
+                                 "mipLodBias = 0.0f,"\
+                                 "maxAnisotropy = 16,"\
+                                 "comparisonFunc = COMPARISON_LESS_EQUAL,"\
+                                 "borderColor = STATIC_BORDER_COLOR_OPAQUE_WHITE,"\
+                                 "minLOD = 0.0f,"\
+                                 "maxLOD = 3.402823466e+38f,"\
+                                 "space = 0,"\
+                                 "visibility = SHADER_VISIBILITY_PIXEL)"\
+*/

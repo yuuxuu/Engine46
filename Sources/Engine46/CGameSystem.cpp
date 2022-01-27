@@ -16,6 +16,7 @@
 
 #include "CActor.h"
 #include "CLight.h"
+#include "CPointLight.h"
 #include "CParticleEmitter.h"
 
 #include "CSceneManager.h"
@@ -102,6 +103,27 @@ namespace Engine46 {
             pSkyDome->SetShaderPackage("SkyDome.hlsl");
             pScene->AddActorToScene(pSkyDome);
 
+            CActorBase* pPlane = m_pActorManager->CreateActor(ActorType::Sprite);
+            pPlane->SetMesh("PlaneMesh");
+
+            pMesh = pPlane->GetMesh();
+            if (pMesh) {
+                pMesh->SetMaterial("PlaneMaterial");
+
+                pMesh->CreateSpriteMesh();
+
+                pPlane->CreateOBB();
+
+                CMaterialBase* pMaterial = pMesh->GetMaterial();
+                if (pMaterial) {
+                    pMaterial->SetTexture("floor_tiles_06_diff_4k.jpg");
+                }
+            }
+            pPlane->SetRotation(VECTOR3(DegreeToRadian(-90.0f), 0.0f, 0.0f));
+            pPlane->SetScale(VECTOR3(100.0f, 100.0f, 1.0f));
+            pPlane->SetShaderPackage("Model.hlsl");
+            pScene->AddActorToScene(pPlane);
+
             /*CActorBase* pBox = m_pActorManager->CreateActor(ActorType::Box);
             pBox->SetMesh("BoxMesh");
 
@@ -128,7 +150,7 @@ namespace Engine46 {
             pSphere->SetShaderPackage("Model.hlsl");
             pScene->AddActorToScene(pSphere);*/
 
-            CActorBase* pCharacter = m_pActorManager->CreateActor(ActorType::Character);
+            /*CActorBase* pCharacter = m_pActorManager->CreateActor(ActorType::Character);
             pCharacter->SetScale(VECTOR3(0.1f, 0.1f, 0.1f));
             pCharacter->SetModelMesh("star-wars-arc-170-pbr_.fbx");
 
@@ -137,52 +159,36 @@ namespace Engine46 {
                 pCharacter->CreateOBB();
             }
             pCharacter->SetShaderPackage("Model.hlsl");
-            pScene->AddActorToScene(pCharacter);
+            pScene->AddActorToScene(pCharacter);*/
 
             CLight* pDirectionalLight = m_pActorManager->CreateLight(LightType::Directional);
-            pDirectionalLight->SetPos(VECTOR3(0.0f, 0.0f, 1000.0f));
+            pDirectionalLight->SetPos(VECTOR3(0.0f, 10000.0f, 0.0f));
             pScene->AddActorToScene(pDirectionalLight);
 
-            /*CLight* pPointLight = m_pActorManager->CreateLight(LightType::Point);
-            pPointLight->SetPos(VECTOR3(0.0f, 0.0f, 10.0f));
-            pMesh = pPointLight->GetMesh();
-            if (pMesh) {
-                CMaterialBase* pMaterial = pMesh->GetMaterial();
-                if (pMaterial) {
-                    pMaterial->SetDiffuse(VECTOR4(1.0f, 0.0f, 0.0f, 1.0f));
+            std::random_device rd;
+            std::mt19937 mt(rd());
+
+            std::uniform_real_distribution<float> rand_color(0.0f, 1.0f);
+
+            const int numLight = 100;
+            for (int i = 0; i < LIGHT_MAX; ++i) {
+                CLight* pLight = m_pActorManager->CreateLight(LightType::Point);
+                pLight->SetVisible(false);
+
+                CPointLight* pPointLight = dynamic_cast<CPointLight*>(pLight);
+                if (pPointLight) {
+                    pPointLight->SetPos(VECTOR3(0.0f, 2.0f, 0.0f));
+                    pPointLight->SetRadius(30.0f);
+                    pPointLight->SetLightDiffuse(VECTOR4(rand_color(mt), rand_color(mt), rand_color(mt), 1.0f));
                 }
+
+                pScene->AddActorToScene(pLight);
             }
-            pPointLight->SetLightDiffuse(VECTOR4(1.0f, 0.0f, 0.0f, 1.0f));
-            pScene->AddActorToScene(pPointLight);
 
-            pPointLight = m_pActorManager->CreateLight(LightType::Point);
-            pPointLight->SetPos(VECTOR3(5.0f, 0.0f, 10.0f));
-            pMesh = pPointLight->GetMesh();
-            if (pMesh) {
-                CMaterialBase* pMaterial = pMesh->GetMaterial();
-                if (pMaterial) {
-                    pMaterial->SetDiffuse(VECTOR4(0.0f, 1.0f, 0.0f, 1.0f));
-                }
-            }
-            pPointLight->SetLightDiffuse(VECTOR4(0.0f, 1.0f, 0.0f, 1.0f));
-            pScene->AddActorToScene(pPointLight);
+            //CActorBase* pActor = m_pActorManager->CreateActor(ActorType::ParticleEmitter);
+            //CParticleEmitter* pParticleEmitter = dynamic_cast<CParticleEmitter*>(pActor);
 
-            pPointLight = m_pActorManager->CreateLight(LightType::Point);
-            pPointLight->SetPos(VECTOR3(-5.0f, 0.0f, 10.0f));
-            pMesh = pPointLight->GetMesh();
-            if (pMesh) {
-                CMaterialBase* pMaterial = pMesh->GetMaterial();
-                if (pMaterial) {
-                    pMaterial->SetDiffuse(VECTOR4(0.0f, 0.0f, 1.0f, 1.0f));
-                }
-            }
-            pPointLight->SetLightDiffuse(VECTOR4(0.0f, 0.0f, 1.0f, 1.0f));
-            pScene->AddActorToScene(pPointLight);*/
-
-            CActorBase* pActor = m_pActorManager->CreateActor(ActorType::ParticleEmitter);
-            CParticleEmitter* pParticleEmitter = dynamic_cast<CParticleEmitter*>(pActor);
-
-            UINT numParticle = DEFAULT_MAX_PARTICLE;
+            /*UINT numParticle = DEFAULT_MAX_PARTICLE;
             if (pParticleEmitter) {
                 pParticleEmitter->Initialize(numParticle);
 
@@ -209,7 +215,7 @@ namespace Engine46 {
                 pParticleEmitter->Update(vecParticle);
 
                 pScene->AddActorToScene(pParticleEmitter);
-            }
+            }*/
         }
 
         // イベントハンドル生成

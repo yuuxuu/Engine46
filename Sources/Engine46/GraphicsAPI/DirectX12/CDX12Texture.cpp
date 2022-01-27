@@ -178,6 +178,9 @@ namespace Engine46 {
         if (m_uavGpuHandle.ptr != 0) {
             pDX12Command->SetComputeRootDescriptorTable(slot, m_uavGpuHandle);
         }
+        else if (m_srvGpuHandle.ptr != 0) {
+            pDX12Command->SetComputeRootDescriptorTable(slot, m_srvGpuHandle);
+        }
     }
 
     // テクスチャ作成

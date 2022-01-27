@@ -9,19 +9,19 @@
 #include "../RootSignature.hlsli"
 
 struct VS_IN {
-    float3 pos		: POSITION;
-    float4 color	: COLOR;
-    float2 uv		: TEXCOORD;
+    float3 pos      : POSITION;
+    float4 color    : COLOR;
+    float2 uv       : TEXCOORD;
 };
 
 struct VS_OUT {
-    float4 pos		: SV_POSITION;
-    float4 color	: COLOR;
-    float2 uv		: TEXCOORD;
+    float4 pos      : SV_POSITION;
+    float4 color    : COLOR;
+    float2 uv       : TEXCOORD;
 };
 
 struct PS_OUT {
-    float4 color	: SV_TARGET;
+    float4 color    : SV_TARGET;
 };
 
 [RootSignature(RS_MODEL)]

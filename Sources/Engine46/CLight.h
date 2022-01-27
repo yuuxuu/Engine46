@@ -35,12 +35,15 @@ namespace Engine46 {
         VECTOR4     m_lightEmissive;
         VECTOR4     m_lightAttenuation;
 
+        int         m_degree;
+
+        float       m_r;
+
     public:
         explicit CLight(const char* lightName);
         virtual ~CLight();
 
         virtual void Update() override;
-        virtual void Draw() override;
 
         void SetLightType(LightType type) { m_lightType = type; }
         LightType GetLightType() const { return m_lightType; }

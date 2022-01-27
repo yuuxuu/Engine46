@@ -30,7 +30,8 @@ namespace Engine46 {
         m_transform(Transform()),
         pParentActor(nullptr),
         m_parentActorID(-1),
-        m_visible(true)
+        m_visible(true),
+        m_billboradEnabled(false)
     {
         m_actorName.resize(m_actorName.size());
     }
@@ -43,7 +44,8 @@ namespace Engine46 {
         m_transform(transform),
         pParentActor(nullptr),
         m_parentActorID(-1),
-        m_visible(true)
+        m_visible(true),
+        m_billboradEnabled(false)
     {
         m_actorName.resize(m_actorName.size());
     }
@@ -76,6 +78,8 @@ namespace Engine46 {
     // 描画
     void CActorBase::Draw() {
 
+        if (!m_visible) return;
+
         if (pShaderPackage) {
             pShaderPackage->SetShader();
 
@@ -84,12 +88,20 @@ namespace Engine46 {
                 pRenderer->SetSceneConstantBuffers((UINT)MyRS_Model::CBV_Camera);
             }
 
-            if (m_pWorldConstantBuffer) {
-                m_pWorldConstantBuffer->Set((UINT)CB_TYPE::WORLD);
-            }
+            Matrix matW = m_billboradEnabled ? GetBillboradMatrix() : GetWorldMatrix();
+            matW.dx_m = DirectX::XMMatrixTranspose(matW.dx_m);
+
+            worldCB cb = {
+                matW,
+            };
+            UpdateWorldConstantBuffer(&cb);
 
             if (pMesh) {
                 pMesh->Set();
+                CMaterialBase* pMaterial = pMesh->GetMaterial();
+                if (pMaterial) {
+                    pMaterial->SetTexture((UINT)MyRS_Model::SRV_Diffuse);
+                }
                 pMesh->Draw();
             }
 

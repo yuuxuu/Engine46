@@ -20,10 +20,10 @@
 
 namespace Engine46 {
 
-    constexpr UINT THREAD_X_SIZE = 8;
-    constexpr UINT THREAD_Y_SIZE = 8;
-    constexpr UINT THREAD_Z_SIZE = 1;
-    constexpr UINT THREAD_SIZE = THREAD_X_SIZE * THREAD_Y_SIZE;
+    constexpr UINT THREAD_SIZE_X = 8;
+    constexpr UINT THREAD_SIZE_Y = 8;
+    constexpr UINT THREAD_SIZE_Z = 1;
+    constexpr UINT THREAD_SIZE = THREAD_SIZE_X * THREAD_SIZE_Y;
 
     // コンストラクタ
     CDX12PostEffect::CDX12PostEffect(CDX12Device* pDevice, CDX12Command* pCommand) :
@@ -270,9 +270,9 @@ namespace Engine46 {
 
         pDX12Command->SetResourceBarrier(pDX12Texture->GetResource(), D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
 
-        pDX12Texture->SetCompute((UINT)MyRS_ClearColor::UAV_0);
+        pDX12Texture->SetCompute((UINT)MyRS_CS_ClearColor::UAV_0);
 
-        pDX12Command->Dispatch(w / THREAD_X_SIZE, h / THREAD_Y_SIZE, THREAD_Z_SIZE);
+        pDX12Command->Dispatch(w / THREAD_SIZE_X, h / THREAD_SIZE_Y, THREAD_SIZE_Z);
 
         pDX12Command->SetResourceBarrier(pDX12Texture->GetResource(), D3D12_RESOURCE_STATE_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_GENERIC_READ);
     }
@@ -290,7 +290,7 @@ namespace Engine46 {
         pDX12InTexture->SetCompute((UINT)MyRS_CS_LuminanceExtraction::UAV_0);
         pDX12OutTexture->SetCompute((UINT)MyRS_CS_LuminanceExtraction::UAV_1);
 
-        pDX12Command->Dispatch(w / THREAD_X_SIZE, h / THREAD_Y_SIZE, THREAD_Z_SIZE);
+        pDX12Command->Dispatch(w / THREAD_SIZE_X, h / THREAD_SIZE_Y, THREAD_SIZE_Z);
 
         pDX12Command->SetResourceBarrier(pDX12OutTexture->GetResource(), D3D12_RESOURCE_STATE_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_GENERIC_READ);
     }
@@ -308,7 +308,7 @@ namespace Engine46 {
         pDX12Texture->SetCompute((UINT)MyRS_CS_ToneMap::UAV_0);
         m_pToneMapTexture->SetCompute((UINT)MyRS_CS_ToneMap::UAV_1);
 
-        pDX12Command->Dispatch(w / THREAD_X_SIZE, h / THREAD_Y_SIZE, THREAD_Z_SIZE);
+        pDX12Command->Dispatch(w / THREAD_SIZE_X, h / THREAD_SIZE_Y, THREAD_SIZE_Z);
 
         pDX12Command->SetResourceBarrier(pDX12Texture->GetResource(), D3D12_RESOURCE_STATE_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_GENERIC_READ);
         pDX12Command->SetResourceBarrier(m_pToneMapTexture->GetResource(), D3D12_RESOURCE_STATE_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_GENERIC_READ);
@@ -391,7 +391,7 @@ namespace Engine46 {
         pDX12InTexture->SetCompute((UINT)MyRS_CS_Blur::UAV_0);
         pDX12OutTexture->SetCompute((UINT)MyRS_CS_Blur::UAV_1);
 
-        pDX12Command->Dispatch(w / THREAD_X_SIZE, h / THREAD_Y_SIZE, THREAD_Z_SIZE);
+        pDX12Command->Dispatch(w / THREAD_SIZE_X, h / THREAD_SIZE_Y, THREAD_SIZE_Z);
 
         pDX12Command->SetResourceBarrier(pDX12OutTexture->GetResource(), D3D12_RESOURCE_STATE_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_GENERIC_READ);
     }
@@ -403,7 +403,7 @@ namespace Engine46 {
 
         pDX12Command->ClearDepthStencilView(m_dsvHandle, D3D12_CLEAR_FLAG_DEPTH);
 
-        pDX12Texture->Set((UINT)MyRS_LuminanceExtraction::SRV_0);
+        pDX12Texture->Set((UINT)MyRS_LuminanceExtraction::SRV_Diffuse);
 
         RenderingForPostEffect(m_pLuminanceExtractionTexture.get(), m_luminanceExtractionHandle, pSprite);
 
@@ -432,7 +432,7 @@ namespace Engine46 {
 
             pDX12Command->ClearDepthStencilView(m_dsvHandle, D3D12_CLEAR_FLAG_DEPTH);
 
-            m_pLuminanceExtractionTexture->Set((UINT)MyRS_Blur::SRV_0);
+            m_pLuminanceExtractionTexture->Set((UINT)MyRS_Blur::SRV_Diffuse);
 
             float m = 2.0f;
             int size = (int)m_pVecBlurTexture.size() - 1;
@@ -454,7 +454,7 @@ namespace Engine46 {
                 UpdateBlurConstantBuffer(m_pVecBlurCb[i + 1].get(), w, h, dir, m);
                 m_pVecBlurCb[i + 1]->Set((UINT)MyRS_Blur::CBV_Blur);
 
-                m_pVecBlurTexture[i]->Set((UINT)MyRS_Blur::SRV_0);
+                m_pVecBlurTexture[i]->Set((UINT)MyRS_Blur::SRV_Diffuse);
                 RenderingForPostEffect(m_pVecBlurTexture[i + 1].get(), m_vecBlurHandle[i + 1], pSprite);
             }
 
@@ -473,9 +473,9 @@ namespace Engine46 {
         if (pSp) {
             pSp->SetShader();
 
-            pDX12Texture->Set((UINT)MyRS_Bloom::SRV_0);
+            pDX12Texture->Set((UINT)MyRS_Bloom::SRV_Diffuse);
 
-            UINT index = (UINT)MyRS_Bloom::SRV_1;
+            UINT index = (UINT)MyRS_Bloom::SRV_Specular;
             for (int i = 1; i < m_pVecBlurTexture.size(); i += 2) {
                 m_pVecBlurTexture[i]->Set(index++);
             }

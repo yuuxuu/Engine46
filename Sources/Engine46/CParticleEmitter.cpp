@@ -62,7 +62,7 @@ namespace Engine46 {
                     matW,
                 };
                 m_pWorldConstantBuffer->Update(&cb);
-                m_pWorldConstantBuffer->SetCompute((UINT)MyRS_CS_GpuParticle::CBV_0);
+                m_pWorldConstantBuffer->SetCompute((UINT)MyRS_CS_GpuParticle::CBV_World);
 
                 m_pParticleUab->SetCompute((UINT)MyRS_CS_GpuParticle::UAV_0);
 
@@ -90,7 +90,7 @@ namespace Engine46 {
                 m_pWorldConstantBuffer->Set((UINT)CB_TYPE::WORLD);
 
                 if (pParticleTexture) {
-                    pParticleTexture->Set((UINT)MyRS_Model::SRV_diffuse);
+                    pParticleTexture->Set((UINT)MyRS_Model::SRV_Diffuse);
                 }
 
                 m_pParticleUab->Draw();
