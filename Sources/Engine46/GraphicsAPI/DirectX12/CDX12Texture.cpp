@@ -14,7 +14,7 @@
 namespace Engine46 {
 
     // コンストラクタ
-    CDX12Texture::CDX12Texture(CDX12Device* pDevice, CDX12Command* pCommand, const char* textureName) :
+    CDX12Texture::CDX12Texture(CDX12Device* pDevice, CDX12Command* pCommand, const std::string& textureName) :
         CTextureBase(textureName),
         pDX12Device(pDevice),
         pDX12Command(pCommand)

@@ -25,6 +25,9 @@ namespace Engine46 {
 
     // マテリアルを作成
     CMaterialBase* CMaterialManager::CreateMaterial(const char* materialName) {
+        std::mutex mutex;
+        std::lock_guard<std::mutex> lock(mutex);
+
         CMaterialBase* pMaterial = GetMaterialFromMap(materialName);
 
         std::string name(materialName);

@@ -41,9 +41,9 @@ namespace Engine46 {
         bool Render(CSceneBase* pScene) override;
 
         void CreateConstantBuffer(std::unique_ptr<CConstantBufferBase>& pConstantBuffer, UINT byteWidth) override;
-        void CreateMesh(std::unique_ptr<CMeshBase>& pMesh, const char* meshName) override;
-        void CreateTexture(std::unique_ptr<CTextureBase>& pTexture, const char* textureName) override;
-        void CreateShader(std::unique_ptr<CShaderPackage>& pShaderPackage, const char* shaderName) override;
+        void CreateMesh(std::unique_ptr<CMeshBase>& pMesh, const std::string& meshName) override;
+        void CreateTexture(std::unique_ptr<CTextureBase>& pTexture, const std::string& textureName) override;
+        void CreateShader(std::unique_ptr<CShaderPackage>& pShaderPackage, const std::string& shaderName) override;
 
         void CreateRenderTexture(std::unique_ptr<CDX11Texture>& pDX11Texture, D3D11_TEXTURE2D_DESC& texDesc);
 

@@ -25,7 +25,7 @@ namespace Engine46 {
     {}
 
     // シェーダーパッケージを作成
-    CShaderPackage* CShaderManager::CreateShaderPackage(const char* packageName) {
+    CShaderPackage* CShaderManager::CreateShaderPackage(const std::string& packageName) {
         CShaderPackage* pSp = GetShaderPackageFromMap(packageName);
 
         if (pSp) return pSp;
@@ -45,7 +45,7 @@ namespace Engine46 {
     }
 
     // シェーダーパッケージをマップへ追加
-    void CShaderManager::AddShaderPackageToMap(const char* name, std::unique_ptr<CShaderPackage>& pSp) {
+    void CShaderManager::AddShaderPackageToMap(const std::string& name, std::unique_ptr<CShaderPackage>& pSp) {
 
         if (!GetShaderPackageFromMap(name)) {
             m_pMapShaderPackage[name] = std::move(pSp);
@@ -53,7 +53,7 @@ namespace Engine46 {
     }
 
     // シェーダーパッケージを取得
-    CShaderPackage* CShaderManager::GetShaderPackageFromMap(const char* name) {
+    CShaderPackage* CShaderManager::GetShaderPackageFromMap(const std::string& name) {
         auto itr = m_pMapShaderPackage.find(name);
 
         if (itr != m_pMapShaderPackage.end()) {

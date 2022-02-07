@@ -20,7 +20,7 @@
 
 #include "../CTextureManager.h"
 #include "../CGameSystem.h"
-#include "../CFileSystem.h"
+#include "../CFileManager.h"
 #include "../CLight.h"
 #include "../CPointLight.h"
 #include "../CCamera.h"
@@ -28,7 +28,7 @@
 
 namespace Engine46 {
 
-    constexpr UINT DESCRIPTORHEAP_MAX = STATIC_MAX + 3000;
+    constexpr UINT DESCRIPTORHEAP_MAX = 1500;
 
     // コンストラクタ
     CDX12Renderer::CDX12Renderer() :
@@ -141,8 +141,8 @@ namespace Engine46 {
         m_pDepthRendring = std::make_unique<CDX12DepthRendering>(m_pDX12Device.get(), m_pDX12Command.get());
         if (!m_pDepthRendring->Initialize(width, height)) return false;
 
-        m_pDX12PostEffect = std::make_unique<CDX12PostEffect>(m_pDX12Device.get(), m_pDX12Command.get());
-        if (!m_pDX12PostEffect->Initialize(this, width, height)) return false;
+        //m_pDX12PostEffect = std::make_unique<CDX12PostEffect>(m_pDX12Device.get(), m_pDX12Command.get());
+        //if (!m_pDX12PostEffect->Initialize(this, width, height)) return false;
 
         m_pDX12Command->CloseCommandList();
 
@@ -209,7 +209,6 @@ namespace Engine46 {
                 matProj.dx_m = DirectX::XMMatrixTranspose(matProj.dx_m);
 
                 Matrix invMatProj = pCamera->GetInvProjectionMatrix();
-                //invMatProj.dx_m = DirectX::XMMatrixTranspose(invMatProj.dx_m);
 
                 CameraCB cb = {
                     matVP,
@@ -226,14 +225,19 @@ namespace Engine46 {
             std::vector<CLight*> pLights = pScene->GetLightsFromScene();
             if (!pLights.empty()) {
 
+                if (m_pTiledForwardRendering) {
+                    int numPointLight = static_cast<int>(pLights.size());
+                    dynamic_cast<CDX12TiledForwardRendering*>(m_pTiledForwardRendering.get())->UpdateLightIndexUab(numPointLight);
+                }
+
                 DirectionalLightCB directionalLightCb = {};
                 PointLightCB pointLightCb = {};
                 SpotLightCB spotLightCb = {};
 
+                CPointLight* pLight = nullptr;
+
                 for (const auto light : pLights)
                 {
-                    CPointLight* pLight = nullptr;
-
                     switch (light->GetLightType())
                     {
                     case LightType::Directional:
@@ -476,19 +480,19 @@ namespace Engine46 {
     }
 
     // メッシュ作成
-    void CDX12Renderer::CreateMesh(std::unique_ptr<CMeshBase>& pMesh, const char* meshName) {
+    void CDX12Renderer::CreateMesh(std::unique_ptr<CMeshBase>& pMesh, const std::string& meshName) {
         pMesh = std::make_unique<CDX12Mesh>(m_pDX12Device.get(), m_pDX12Command.get(), meshName);
     }
 
     // テクスチャ作成
-    void CDX12Renderer::CreateTexture(std::unique_ptr<CTextureBase>& pTexture, const char* textureName) {
-        FileInfo* pFileInfo = CFileSystem::GetFileSystem().GetFileInfoFromMap(textureName);
+    void CDX12Renderer::CreateTexture(std::unique_ptr<CTextureBase>& pTexture, const std::string& textureName) {
+        FileInfo* pFileInfo = CGameSystem::GetGameSystem().GetFileManager()->GetFileInfoFromMap(textureName);
 
         if (!pFileInfo) return;
 
         pTexture = std::make_unique<CDX12Texture>(m_pDX12Device.get(), m_pDX12Command.get(), textureName);
 
-        if (pTexture->LoadTexture(pFileInfo->filePath.c_str())) {
+        if (pTexture->LoadTexture(pFileInfo->filePath)) {
             pTexture->CreateTexture();
 
             dynamic_cast<CDX12Texture*>(pTexture.get())->CreateShaderResourceView(m_pCbDescriptorHeap.Get(), m_descriptorHeapOffsetIndex++);
@@ -496,8 +500,8 @@ namespace Engine46 {
     }
 
     // シェーダー作成
-    void CDX12Renderer::CreateShader(std::unique_ptr<CShaderPackage>& pShaderPackage, const char* shaderName) {
-        FileInfo* pFileInfo = CFileSystem::GetFileSystem().GetFileInfoFromMap(shaderName);
+    void CDX12Renderer::CreateShader(std::unique_ptr<CShaderPackage>& pShaderPackage, const std::string& shaderName) {
+        FileInfo* pFileInfo = CGameSystem::GetGameSystem().GetFileManager()->GetFileInfoFromMap(shaderName);
 
         if (!pFileInfo) return;
 
@@ -589,6 +593,10 @@ namespace Engine46 {
     // アンオーダードアクセスバッファ作成
     void CDX12Renderer::CreateUnorderedAccessBuffer(std::unique_ptr<CDX12UnorderedAccessBuffer>& pUnorderedAccessBuffer) {
         pUnorderedAccessBuffer = std::make_unique<CDX12UnorderedAccessBuffer>(m_pDX12Device.get(), m_pDX12Command.get());
+
+        if (m_descriptorHeapOffsetIndex <= DESCRIPTORHEAP_MAX) {
+            dynamic_cast<CDX12UnorderedAccessBuffer*>(pUnorderedAccessBuffer.get())->CreateUnorderedAccessBufferView(m_pCbDescriptorHeap.Get(), m_descriptorHeapOffsetIndex++);
+        }
     }
 
     // アンオーダードアクセスバッファビュー作成

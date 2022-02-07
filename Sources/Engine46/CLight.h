@@ -36,8 +36,10 @@ namespace Engine46 {
         VECTOR4     m_lightAttenuation;
 
         int         m_degree;
+        int         m_turn;
 
         float       m_r;
+        float       m_speed;
 
     public:
         explicit CLight(const char* lightName);

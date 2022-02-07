@@ -22,6 +22,7 @@ namespace Engine46 {
     class CMaterialManager;
     class CTextureManager;
     class CSceneManager;
+    class CFileManager;
     class CInput;
 
     class CGameSystem {
@@ -40,6 +41,8 @@ namespace Engine46 {
         std::unique_ptr<CTextureManager>    m_pTextureManager;
 
         std::unique_ptr<CSceneManager>      m_pSceneManager;
+
+        std::unique_ptr<CFileManager>       m_pFileManager;
 
         std::unique_ptr<CInput>             m_pInput;
 
@@ -68,10 +71,11 @@ namespace Engine46 {
         CMaterialManager* GetMaterialManager() const { return m_pMaterialManager.get(); }
         CTextureManager* GetTextureManager() const { return m_pTextureManager.get(); }
         CSceneManager* GetSceneManager() const { return m_pSceneManager.get(); }
+        CFileManager* GetFileManager() const { return m_pFileManager.get(); }
 
         CInput* GetInput() const { return m_pInput.get(); }
 
-        bool				IsInitialize() const { return m_isInitialize; }
+        bool IsInitialize() const { return m_isInitialize; }
     };
 
 } // namespace

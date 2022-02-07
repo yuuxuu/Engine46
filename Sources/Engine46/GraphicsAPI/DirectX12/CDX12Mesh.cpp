@@ -14,7 +14,7 @@
 namespace Engine46 {
 
     // コンストラクタ
-    CDX12Mesh::CDX12Mesh(CDX12Device* pDevice, CDX12Command* pCommand, const char* meshName) :
+    CDX12Mesh::CDX12Mesh(CDX12Device* pDevice, CDX12Command* pCommand, const std::string& meshName) :
         CMeshBase(meshName),
         pDX12Device(pDevice),
         pDX12Command(pCommand)

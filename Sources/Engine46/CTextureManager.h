@@ -26,11 +26,11 @@ namespace Engine46 {
         explicit CTextureManager(CRendererBase* pRenderer);
         ~CTextureManager();
 
-        CTextureBase* CreateTexture(const char* textureName);
+        CTextureBase* CreateTexture(const std::string& textureName);
 
-        void AddTextureToMap(const char* name, std::unique_ptr<CTextureBase>& pTexture);
+        void AddTextureToMap(const std::string&, std::unique_ptr<CTextureBase>& pTexture);
 
-        CTextureBase* GetTextureFromMap(const char* name);
+        CTextureBase* GetTextureFromMap(const std::string& name);
     };
 
 } // namespace

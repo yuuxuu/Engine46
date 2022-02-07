@@ -77,12 +77,12 @@ namespace Engine46 {
 
     public:
         CTextureBase();
-        CTextureBase(const char* textureName);
+        CTextureBase(const std::string& textureName);
         virtual ~CTextureBase();
 
         bool Initialize();
 
-        bool LoadTexture(const char* filePath);
+        bool LoadTexture(const std::string& filePath);
 
         void TextureConvertToCubeMapTexture();
 

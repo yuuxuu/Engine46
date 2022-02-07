@@ -26,11 +26,11 @@ namespace Engine46 {
         explicit CShaderManager(CRendererBase* pRenderer);
         ~CShaderManager();
 
-        CShaderPackage* CreateShaderPackage(const char* packageName);
+        CShaderPackage* CreateShaderPackage(const std::string& packageName);
 
-        void AddShaderPackageToMap(const char* name, std::unique_ptr<CShaderPackage>& pSp);
+        void AddShaderPackageToMap(const std::string& name, std::unique_ptr<CShaderPackage>& pSp);
 
-        CShaderPackage* GetShaderPackageFromMap(const char* name);
+        CShaderPackage* GetShaderPackageFromMap(const std::string& name);
 
         bool SaveShaderPackageList();
         bool LoadShaderPackageList();

@@ -43,7 +43,7 @@ namespace Engine46 {
 
     public:
         CShaderBase();
-        CShaderBase(const char* name, ComPtr<ID3DBlob>& pBlob, SHADER_TYPE type);
+        CShaderBase(const std::string& name, ComPtr<ID3DBlob>& pBlob, SHADER_TYPE type);
         virtual ~CShaderBase();
 
         void Initialize();

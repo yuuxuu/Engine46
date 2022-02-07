@@ -12,7 +12,7 @@
 
 #include "MyStandardItem.h"
 
-#include "Engine46/CFileSystem.h"
+#include "Engine46/CFileManager.h"
 #include "Engine46/CRendererSystem.h"
 #include "Engine46/CScene.h"
 
@@ -22,7 +22,7 @@ Engine46Editor::Engine46Editor(QWidget* parent)
 {
     ui.setupUi(this);
 
-    resize(QSize(1920, 1200));
+    resize(QSize(1920, 1080));
 
     move(QPoint(0, 0));
 

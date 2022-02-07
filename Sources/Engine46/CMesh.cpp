@@ -23,7 +23,7 @@ namespace Engine46 {
     }
 
     // コンストラクタ
-    CMeshBase::CMeshBase(const char* meshName) :
+    CMeshBase::CMeshBase(const std::string& meshName) :
         m_meshID(0),
         m_meshName(meshName)
     {
@@ -54,10 +54,11 @@ namespace Engine46 {
     // マテリアルを設定
     void CMeshBase::SetMaterial(const std::string& materialName) {
         CMaterialManager* materialManager = CGameSystem::GetGameSystem().GetMaterialManager();
-        CMaterialBase* pMaterial = materialManager->CreateMaterial(materialName.c_str());
-        if (pMaterial) {
-            this->pMaterial = pMaterial;
+        CMaterialBase* pMaterial = materialManager->GetMaterialFromMap(materialName.c_str());
+        if (!pMaterial) {
+            pMaterial = materialManager->CreateMaterial(materialName.c_str());
         }
+        this->pMaterial = pMaterial;
     }
 
     // メッシュ情報を設定

@@ -31,7 +31,7 @@ namespace Engine46 {
         ComPtr<ID3D11ComputeShader>     m_pCS;
 
     public:
-        CDX11ShaderPackage(CDX11Device* pDevice, CDX11DeviceContext* pDeviceContext, const char* shaderName);
+        CDX11ShaderPackage(CDX11Device* pDevice, CDX11DeviceContext* pDeviceContext, const std::string& shaderName);
         ~CDX11ShaderPackage();
 
         bool Initialize() override;

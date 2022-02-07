@@ -11,7 +11,7 @@
 namespace Engine46 {
 
     // コンストラクタ
-    CShaderPackage::CShaderPackage(const char* name) :
+    CShaderPackage::CShaderPackage(const std::string& name) :
         m_PakageName(name)
     {}
 
@@ -61,7 +61,7 @@ namespace Engine46 {
 
     // シェーダーパッケージを保存
     bool CShaderPackage::SavePackage(std::ofstream& ofs) {
-        int strSize = (int)strlen(m_PakageName) + 1;
+        int strSize = (int)strlen(m_PakageName.c_str()) + 1;
         ofs.write((char*)&strSize, sizeof(int));
         ofs.write((char*)&m_PakageName, strSize);
 

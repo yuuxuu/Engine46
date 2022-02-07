@@ -15,7 +15,7 @@
 #include "CDX11Texture.h"
 
 #include "../CGameSystem.h"
-#include "../CFileSystem.h"
+#include "../CFileManager.h"
 #include "../CShaderManager.h"
 #include "../CLight.h"
 #include "../CCamera.h"
@@ -219,36 +219,36 @@ namespace Engine46 {
     }
 
     // メッシュ作成
-    void CDX11Renderer::CreateMesh(std::unique_ptr<CMeshBase>& pMesh, const char* meshName) {
+    void CDX11Renderer::CreateMesh(std::unique_ptr<CMeshBase>& pMesh, const std::string& meshName) {
         pMesh = std::make_unique<CDX11Mesh>(m_pDX11Device.get(), m_pDX11DeviceContext.get(), meshName);
     }
 
     // テクスチャ作成
-    void CDX11Renderer::CreateTexture(std::unique_ptr<CTextureBase>& pTexture, const char* textureName) {
-        FileInfo* fileInfo = CFileSystem::GetFileSystem().GetFileInfoFromMap(textureName);
+    void CDX11Renderer::CreateTexture(std::unique_ptr<CTextureBase>& pTexture, const std::string& textureName) {
+        FileInfo* pFileInfo = CGameSystem::GetGameSystem().GetFileManager()->GetFileInfoFromMap(textureName);
 
-        if (!fileInfo) return;
+        if (!pFileInfo) return;
 
         pTexture = std::make_unique<CDX11Texture>(m_pDX11Device.get(), m_pDX11DeviceContext.get(), textureName);
 
-        if (pTexture->LoadTexture(fileInfo->filePath.c_str())) {
+        if (pTexture->LoadTexture(pFileInfo->filePath.c_str())) {
             pTexture->CreateTexture();
             pTexture->CreateShaderResourceView();
         }
     }
 
     // シェーダー作成
-    void CDX11Renderer::CreateShader(std::unique_ptr<CShaderPackage>& pShaderPackage, const char* shaderName) {
-        FileInfo* fileInfo = CFileSystem::GetFileSystem().GetFileInfoFromMap(shaderName);
+    void CDX11Renderer::CreateShader(std::unique_ptr<CShaderPackage>& pShaderPackage, const std::string& shaderName) {
+        FileInfo* pFileInfo = CGameSystem::GetGameSystem().GetFileManager()->GetFileInfoFromMap(shaderName);
 
-        if (!fileInfo) return;
+        if (!pFileInfo) return;
 
         pShaderPackage = std::make_unique<CDX11ShaderPackage>(m_pDX11Device.get(), m_pDX11DeviceContext.get(), shaderName);
 
         for (const auto& info : SHADER_INFOS) {
             ComPtr<ID3DBlob> pBlob;
 
-            if (pShaderPackage->CompileShader(pBlob, fileInfo->filePath.c_str(), info.entryPoint, info.shaderModel)) {
+            if (pShaderPackage->CompileShader(pBlob, pFileInfo->filePath.c_str(), info.entryPoint, info.shaderModel)) {
                 std::unique_ptr<CShaderBase> shader = std::make_unique<CShaderBase>(shaderName, pBlob, info.shadeType);
 
                 pShaderPackage->AddShaderToVec(shader);

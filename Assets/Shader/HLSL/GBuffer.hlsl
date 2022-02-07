@@ -51,9 +51,9 @@ typedef VS_OUT PS_IN;
 PS_OUT PS_main(PS_IN input) {
     PS_OUT output = (PS_OUT)0;
 
-    output.diffuse = diffuseTex.Sample(sampleState, input.uv) * material.diffuse;
+    output.diffuse = diffuseTex.Sample(sampleState, input.uv);
 
-    output.diffuse = all(output.diffuse.xyz) ? output.diffuse : float4(1.0f, 1.0f, 1.0f, 1.0f);
+    output.diffuse = all(output.diffuse.xyz) ? output.diffuse * material.diffuse : material.diffuse;
 
     output.specular = material.specular;
 

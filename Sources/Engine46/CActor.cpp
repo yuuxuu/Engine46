@@ -106,7 +106,17 @@ namespace Engine46 {
             }
 
             if (pModelMesh) {
-                pModelMesh->Draw();
+                if (pModelMesh) {
+                    std::vector<CMeshBase*> vecMesh = pModelMesh->GetVecMesh();
+                    for (const auto& mesh : vecMesh) {
+                        mesh->Set();
+                        CMaterialBase* pMaterial = mesh->GetMaterial();
+                        if (pMaterial) {
+                            pMaterial->SetTexture((UINT)MyRS_ModelLighting_Of_LightCulling::SRV_Diffuse);
+                        }
+                        mesh->Draw();
+                    }
+                }
             }
         }
 

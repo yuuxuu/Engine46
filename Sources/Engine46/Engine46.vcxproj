@@ -32,7 +32,7 @@
     <ClCompile Include="CDataRecord.cpp" />
     <ClCompile Include="CDirectionalLight.cpp" />
     <ClCompile Include="CFBXLoader.cpp" />
-    <ClCompile Include="CFileSystem.cpp" />
+    <ClCompile Include="CFileManager.cpp" />
     <ClCompile Include="CGameSystem.cpp" />
     <ClCompile Include="CInput.cpp" />
     <ClCompile Include="CLight.cpp" />
@@ -41,6 +41,7 @@
     <ClCompile Include="CMesh.cpp" />
     <ClCompile Include="CMeshManager.cpp" />
     <ClCompile Include="COBB.cpp" />
+    <ClCompile Include="COBJLoader.cpp" />
     <ClCompile Include="CParticleEmitter.cpp" />
     <ClCompile Include="CPointLight.cpp" />
     <ClCompile Include="CRenderer.cpp" />
@@ -54,6 +55,7 @@
     <ClCompile Include="CModelMesh.cpp" />
     <ClCompile Include="CSpotLight.cpp" />
     <ClCompile Include="CSprite.cpp" />
+    <ClCompile Include="CTaskSystem.cpp" />
     <ClCompile Include="CTexture.cpp" />
     <ClCompile Include="CTextureManager.cpp" />
     <ClCompile Include="CTimer.cpp" />
@@ -133,7 +135,7 @@
     <ClInclude Include="CDataRecord.h" />
     <ClInclude Include="CDirectionalLight.h" />
     <ClInclude Include="CFBXLoader.h" />
-    <ClInclude Include="CFileSystem.h" />
+    <ClInclude Include="CFileManager.h" />
     <ClInclude Include="CGameSystem.h" />
     <ClInclude Include="CInput.h" />
     <ClInclude Include="CLight.h" />
@@ -142,6 +144,7 @@
     <ClInclude Include="CMesh.h" />
     <ClInclude Include="CMeshManager.h" />
     <ClInclude Include="COBB.h" />
+    <ClInclude Include="COBJLoader.h" />
     <ClInclude Include="CParticleEmitter.h" />
     <ClInclude Include="CPointLight.h" />
     <ClInclude Include="CRenderer.h" />
@@ -155,6 +158,7 @@
     <ClInclude Include="CModelMesh.h" />
     <ClInclude Include="CSpotLight.h" />
     <ClInclude Include="CSprite.h" />
+    <ClInclude Include="CTaskSystem.h" />
     <ClInclude Include="CTexture.h" />
     <ClInclude Include="CTextureManager.h" />
     <ClInclude Include="CTimer.h" />

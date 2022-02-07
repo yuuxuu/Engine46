@@ -23,7 +23,10 @@ namespace Engine46 {
     {}
 
     // テクスチャを作成
-    CTextureBase* CTextureManager::CreateTexture(const char* textureName) {
+    CTextureBase* CTextureManager::CreateTexture(const std::string& textureName) {
+        std::mutex mutex;
+        std::lock_guard<std::mutex> lock(mutex);
+
         CTextureBase* pTexture = GetTextureFromMap(textureName);
 
         if (pTexture) return pTexture;
@@ -44,7 +47,7 @@ namespace Engine46 {
     }
 
     // テクスチャをマップへ追加
-    void CTextureManager::AddTextureToMap(const char* name, std::unique_ptr<CTextureBase>& pTexture) {
+    void CTextureManager::AddTextureToMap(const std::string& name, std::unique_ptr<CTextureBase>& pTexture) {
 
         if (!GetTextureFromMap(name)) {
             m_mapTexture[name] = std::move(pTexture);
@@ -52,7 +55,7 @@ namespace Engine46 {
     }
 
     // テクスチャを取得
-    CTextureBase* CTextureManager::GetTextureFromMap(const char* name) {
+    CTextureBase* CTextureManager::GetTextureFromMap(const std::string& name) {
         auto itr = m_mapTexture.find(name);
 
         if (itr != m_mapTexture.end()) {

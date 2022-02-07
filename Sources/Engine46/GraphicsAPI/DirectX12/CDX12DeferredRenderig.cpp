@@ -207,17 +207,38 @@ namespace Engine46 {
 
         CActorBase* pSkyDome = pScene->GetSkyDomeFromScene();
         if (pSkyDome) {
-            CConstantBufferBase* pCb = pSkyDome->GetWorldConstantBuffer();
-            if (pCb) {
-                Matrix matW = pSkyDome->GetWorldMatrix();
-                matW.dx_m = DirectX::XMMatrixTranspose(matW.dx_m);
+            CShaderPackage* pSp = pSkyDome->GetShaderPackage();
+            if (pSp) {
+                pSp->SetShader();
 
-                worldCB cb = {
-                    matW,
-                };
+                CRendererBase* pRenderer = CRendererSystem::GetRendererSystem().GetRenderer();
+                if (pRenderer) {
+                    pRenderer->SetSceneConstantBuffers((UINT)CB_TYPE::CAMERA);
+                }
 
-                pCb->Update(&cb);
-                pSkyDome->Draw();
+                CConstantBufferBase* pCb = pSkyDome->GetWorldConstantBuffer();
+                if (pCb) {
+                    Matrix matW = pSkyDome->GetWorldMatrix();
+                    matW.dx_m = DirectX::XMMatrixTranspose(matW.dx_m);
+
+                    worldCB cb = {
+                        matW,
+                    };
+                    pSkyDome->UpdateWorldConstantBuffer(&cb);
+
+                    CModelMesh* pModelMesh = pSkyDome->GetModelMesh();
+                    if (pModelMesh) {
+                        std::vector<CMeshBase*> vecMesh = pModelMesh->GetVecMesh();
+                        for (const auto& mesh : vecMesh) {
+                            mesh->Set();
+                            CMaterialBase* pMaterial = mesh->GetMaterial();
+                            if (pMaterial) {
+                                pMaterial->SetTexture((UINT)MyRS_Model::SRV_Diffuse);
+                            }
+                            mesh->Draw();
+                        }
+                    }
+                }
             }
         }
 
@@ -255,7 +276,15 @@ namespace Engine46 {
                 else {
                     CModelMesh* pModelMesh = pActor->GetModelMesh();
                     if (pModelMesh) {
-                        pModelMesh->Draw();
+                        std::vector<CMeshBase*> vecMesh = pModelMesh->GetVecMesh();
+                        for (const auto& mesh : vecMesh) {
+                            mesh->Set();
+                            CMaterialBase* pMaterial = mesh->GetMaterial();
+                            if (pMaterial) {
+                                pMaterial->SetTexture((UINT)MyRS_Model::SRV_Diffuse);
+                            }
+                            mesh->Draw();
+                        }
                     }
                 }
             }

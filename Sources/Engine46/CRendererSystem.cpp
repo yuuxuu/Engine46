@@ -73,9 +73,7 @@ namespace Engine46 {
 
         while (1) {
             sts = WaitForSingleObject(m_hRenderer, ms);
-            if (sts == WAIT_FAILED) {
-                break;
-            }
+            if (sts == WAIT_FAILED) break;
 
             this->Draw();
         }

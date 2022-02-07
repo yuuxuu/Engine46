@@ -18,7 +18,7 @@ namespace Engine46 {
     {}
 
     // コンストラクタ
-    CShaderBase::CShaderBase(const char* name, ComPtr<ID3DBlob>& pBlob, SHADER_TYPE type) :
+    CShaderBase::CShaderBase(const std::string& name, ComPtr<ID3DBlob>& pBlob, SHADER_TYPE type) :
         m_byteSize(0),
         m_shaderName(name),
         m_shaderType(type)

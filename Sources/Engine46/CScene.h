@@ -29,9 +29,9 @@ namespace Engine46 {
 
         CActorBase*                     pRootActor;
 
-        UINT                            m_SceneID;
+        std::string                     m_sceneName;
 
-        std::string                     m_SceneName;
+        UINT                            m_sceneID;
 
     public:
         CSceneBase();
@@ -63,10 +63,10 @@ namespace Engine46 {
         void SetRootActor(CActorBase* pRootActor) { this->pRootActor = pRootActor; }
         CActorBase* GetRootActor() const { return pRootActor; }
 
-        void SetSceneID(const int id) { m_SceneID = id; }
+        void SetSceneName(const std::string& sceneName) { m_sceneName = sceneName; }
+        std::string GetSceneName() const { return m_sceneName.c_str(); }
 
-        void SetSceneName(const std::string& sceneName) { m_SceneName = sceneName; }
-        std::string GetSceneName() const { return m_SceneName.c_str(); }
+        void SetSceneID(const int id) { m_sceneID = id; }
 
     private:
         CActorBase* GetActorRecursiveInName(CActorBase* pRootActor, std::string& actorName);

@@ -123,10 +123,10 @@ namespace Engine46 {
     protected:
         std::vector<std::unique_ptr<CShaderBase>>   m_pVecShader;
 
-        const char* m_PakageName;
+        std::string m_PakageName;
 
     public:
-        explicit CShaderPackage(const char* name);
+        explicit CShaderPackage(const std::string& name);
         CShaderPackage();
         ~CShaderPackage();
 
@@ -143,7 +143,7 @@ namespace Engine46 {
 
         CShaderBase* GetShader(SHADER_TYPE type);
 
-        const char* GetPackageName() const { return m_PakageName; }
+        std::string GetPackageName() const { return m_PakageName; }
 
         bool IsCompile() const { return !m_pVecShader.empty(); }
     };

@@ -38,6 +38,8 @@ namespace Engine46 {
 
         std::unique_ptr<CUnorderedAccessBufferBase> m_pLightIndexUab;
 
+        UINT                                        m_numLight;
+
     public:
         CDX12TiledForwardRendering(CDX12Device* pDevice, CDX12Command* pCommand);
         ~CDX12TiledForwardRendering();
@@ -49,6 +51,7 @@ namespace Engine46 {
         void Rendering(CSceneBase* pScene) override;
         void RenderingForRenderScene(CSprite* pSprite, UINT x, UINT y, UINT width, UINT height) override;
 
+        void UpdateLightIndexUab(const int numLight);
         void LightCulling_CS(CDX12Texture* pDX12DepthTexture);
 
         CDX12Texture* GetRenderTexture() const { return pDX12RenderTexture; }

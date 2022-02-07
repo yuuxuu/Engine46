@@ -28,17 +28,17 @@ namespace Engine46 {
         explicit CMeshManager(CRendererBase* pRenderer);
         ~CMeshManager();
 
-        CMeshBase* CreateMesh(const char* meshName);
+        CMeshBase* CreateMesh(const std::string& meshName);
 
-        void AddMeshToMap(const char* name, std::unique_ptr<CMeshBase>& pMesh);
+        void AddMeshToMap(const std::string& name, std::unique_ptr<CMeshBase>& pMesh);
 
-        CMeshBase* GetMeshFromMap(const char* name);
+        CMeshBase* GetMeshFromMap(const std::string& name);
 
-        CModelMesh* CreateModelMesh(const char* modelName);
+        CModelMesh* CreateModelMesh(const std::string& modelName);
 
-        void AddModelMeshToMap(const char* name, std::unique_ptr<CModelMesh>& pModelMesh);
+        void AddModelMeshToMap(const std::string& name, std::unique_ptr<CModelMesh>& pModelMesh);
 
-        CModelMesh* GetModelMeshFromMap(const char* name);
+        CModelMesh* GetModelMeshFromMap(const std::string& name);
     };
 
 } // namespace

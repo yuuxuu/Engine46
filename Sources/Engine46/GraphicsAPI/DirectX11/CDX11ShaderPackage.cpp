@@ -12,7 +12,7 @@
 namespace Engine46 {
 
     // コンストラクタ
-    CDX11ShaderPackage::CDX11ShaderPackage(CDX11Device* pDevice, CDX11DeviceContext* pDeviceContext, const char* shaderName) :
+    CDX11ShaderPackage::CDX11ShaderPackage(CDX11Device* pDevice, CDX11DeviceContext* pDeviceContext, const std::string& shaderName) :
         CShaderPackage(shaderName),
         pDX11Device(pDevice),
         pDX11DeviceContext(pDeviceContext)

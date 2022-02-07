@@ -111,7 +111,7 @@
     <ClCompile Include="CFBXLoader.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="CFileSystem.cpp">
+    <ClCompile Include="CFileManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="CGameSystem.cpp">
@@ -207,6 +207,12 @@
     <ClCompile Include="GraphicsAPI\DirectX12\CDX12TiledForwardRendering.cpp">
       <Filter>GraphicsAPI\DirectX12</Filter>
     </ClCompile>
+    <ClCompile Include="COBJLoader.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="CTaskSystem.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GraphicsAPI\DirectX11\CDX11ConstantBuffer.h">
@@ -287,7 +293,7 @@
     <ClInclude Include="CFBXLoader.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="CFileSystem.h">
+    <ClInclude Include="CFileManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="CGameSystem.h">
@@ -394,6 +400,12 @@
     </ClInclude>
     <ClInclude Include="GraphicsAPI\DirectX12\CDX12TiledForwardRendering.h">
       <Filter>GraphicsAPI\DirectX12</Filter>
+    </ClInclude>
+    <ClInclude Include="COBJLoader.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="CTaskSystem.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

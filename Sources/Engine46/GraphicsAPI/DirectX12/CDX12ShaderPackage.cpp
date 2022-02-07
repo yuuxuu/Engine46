@@ -17,7 +17,7 @@
 namespace Engine46 {
 
     // コンストラクタ
-    CDX12ShaderPackage::CDX12ShaderPackage(CDX12Device* pDevice, CDX12Command* pCommand, const char* shaderName) :
+    CDX12ShaderPackage::CDX12ShaderPackage(CDX12Device* pDevice, CDX12Command* pCommand, const std::string& shaderName) :
         CShaderPackage(shaderName),
         pDX12Device(pDevice),
         pDX12Command(pCommand)

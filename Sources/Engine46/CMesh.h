@@ -70,7 +70,7 @@ namespace Engine46 {
 
     public:
         CMeshBase();
-        explicit CMeshBase(const char* meshName);
+        explicit CMeshBase(const std::string& meshName);
         virtual ~CMeshBase();
 
         virtual void CreateVertexBuffer(PRIMITIVE_TOPOLOGY_TYPE type) {};

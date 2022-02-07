@@ -8,12 +8,16 @@
 #pragma once
 
 #include <string>
+#include <regex>
 #include <vector>
 #include <array>
 #include <list>
 #include <map>
+#include <queue>
+#include <sstream>
 
 #include <thread>
+#include <mutex>
 
 #include <random>
 

@@ -23,7 +23,7 @@ namespace Engine46 {
         std::string             m_modelName;
 
     public:
-        explicit CModelMesh(const char* modelName);
+        explicit CModelMesh(const std::string& modelName);
         ~CModelMesh();
 
         void Draw();

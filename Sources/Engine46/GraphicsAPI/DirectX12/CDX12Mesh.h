@@ -32,7 +32,7 @@ namespace Engine46 {
         D3D12_INDEX_BUFFER_VIEW     m_ibView;
 
     public:
-        CDX12Mesh(CDX12Device* pDevice, CDX12Command* pCommand, const char* meshName);
+        CDX12Mesh(CDX12Device* pDevice, CDX12Command* pCommand, const std::string& meshName);
         ~CDX12Mesh();
 
         void CreateVertexBuffer(PRIMITIVE_TOPOLOGY_TYPE type) override;

@@ -29,7 +29,7 @@ namespace Engine46 {
         ComPtr<ID3D11ShaderResourceView>    m_pSrv;
 
     public:
-        CDX11Texture(CDX11Device* pDevice, CDX11DeviceContext* pDeviceContext, const char* name = "");
+        CDX11Texture(CDX11Device* pDevice, CDX11DeviceContext* pDeviceContext, const std::string& name = "");
         ~CDX11Texture();
 
         void CreateTexture() override;

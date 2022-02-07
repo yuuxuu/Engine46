@@ -21,7 +21,7 @@ namespace Engine46 {
         m_lightSpecular(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),
         m_lightAmbinet(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),
         m_lightEmissive(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),
-        m_lightAttenuation(VECTOR4(0.0f, 0.0f, 0.1f, 1.0f)),
+        m_lightAttenuation(VECTOR4(0.1f, 0.1f, 0.0f, 1.0f)),
         m_degree(0),
         m_r(0.0f)
     {
@@ -29,12 +29,14 @@ namespace Engine46 {
         std::mt19937 mt(rd());
 
         std::uniform_int rand_degree(0, 360);
+        std::uniform_real_distribution<float> rand_r(0.0f, 3000.0f);
+        std::uniform_int ran_turn(0, 1);
+        std::uniform_real_distribution<float> rand_speed(0.1f, 1.5f);
 
         m_degree = rand_degree(mt);
-
-        std::uniform_real_distribution<float> randR(0.0f, 1000.0f);
-
-        m_r = randR(mt);
+        m_r = rand_r(mt);
+        m_turn = ran_turn(mt);
+        m_speed = rand_speed(mt);
     }
 
     // デストラクタ
@@ -43,9 +45,11 @@ namespace Engine46 {
 
     // 更新
     void CLight::Update() {
-        float degree = float(++m_degree % 360);
+        if (m_lightType == LightType::Directional) return;
 
-        float rad = DegreeToRadian(degree);
+        float degree = (m_turn == 0) ? float(++m_degree % 360) : float(--m_degree % 360);
+
+        float rad = DegreeToRadian(degree * m_speed);
 
         m_transform.pos.x = m_r * cosf(rad);
         m_transform.pos.z = m_r * sinf(rad);

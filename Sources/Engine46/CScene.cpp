@@ -18,18 +18,18 @@ namespace Engine46 {
 
     // コンストラクタ
     CSceneBase::CSceneBase() :
-        m_SceneID(0),
-        m_SceneName("Scene_" + std::to_string(m_SceneID))
+        m_sceneID(0),
+        m_sceneName("Scene_" + std::to_string(m_sceneID))
     {
-        m_SceneName.resize(m_SceneName.size());
+        m_sceneName.resize(m_sceneName.size());
     }
 
     // コンストラクタ
     CSceneBase::CSceneBase(const char* sceneName) :
-        m_SceneID(0),
-        m_SceneName(sceneName)
+        m_sceneID(0),
+        m_sceneName(sceneName)
     {
-        m_SceneName.resize(m_SceneName.size());
+        m_sceneName.resize(m_sceneName.size());
     }
 
     // デストラクタ
@@ -41,8 +41,8 @@ namespace Engine46 {
 
         vecDataRecords.clear();
 
-        vecDataRecords.emplace_back(CDataRecordBase(offsetof(CSceneBase, m_SceneID), sizeof(m_SceneID)));
-        vecDataRecords.emplace_back(CStrDataRecord(offsetof(CSceneBase, m_SceneName), m_SceneName));
+        vecDataRecords.emplace_back(CDataRecordBase(offsetof(CSceneBase, m_sceneID), sizeof(m_sceneID)));
+        vecDataRecords.emplace_back(CStrDataRecord(offsetof(CSceneBase, m_sceneName), m_sceneName));
     }
 
     // シーン更新
@@ -154,6 +154,8 @@ namespace Engine46 {
                 return nullptr;
             }
             CActorBase* pSkyDome = this->GetActorRecursiveInActor(pRootActor, (int)ActorType::SkyDome);
+            if (!pSkyDome) return nullptr;
+
             if (pSkyDome->GetVisible()) {
                 return pSkyDome;
             }
@@ -171,6 +173,8 @@ namespace Engine46 {
                 return nullptr;
             }
             CActorBase* pCamera = this->GetActorRecursiveInActor(pRootActor, (int)ActorType::Camera);
+            if (!pCamera) return nullptr;
+
             if (pCamera->GetVisible()) {
                 return dynamic_cast<CCamera*>(pCamera);
             }
@@ -188,6 +192,8 @@ namespace Engine46 {
                 return nullptr;
             }
             CActorBase* pLight = this->GetActorRecursiveInActor(pRootActor, (int)ActorType::Light);
+            if (!pLight) return nullptr;
+
             if (pLight->GetVisible()) {
                 return dynamic_cast<CLight*>(pLight);
             }

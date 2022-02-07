@@ -96,7 +96,7 @@ namespace Engine46 {
     // テクスチャを設定
     void CMaterialBase::SetTexture(const std::string& textureName) {
         CTextureManager* textureManager = CGameSystem::GetGameSystem().GetTextureManager();
-        CTextureBase* pTexture = textureManager->CreateTexture(textureName.c_str());
+        CTextureBase* pTexture = textureManager->CreateTexture(textureName);
         if (pTexture) {
             this->pTexture = pTexture;
         }

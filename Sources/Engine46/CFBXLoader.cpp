@@ -14,7 +14,7 @@
 #include "CMaterialManager.h"
 #include "CTextureManager.h"
 #include "CModelMesh.h"
-#include "CFileSystem.h"
+#include "CFileManager.h"
 
 namespace Engine46 {
 
@@ -90,6 +90,8 @@ namespace Engine46 {
             pModel->AddMesh(pMesh);
         }
 
+        fbxManager->Destroy();
+
         return true;
     }
 
@@ -141,33 +143,6 @@ namespace Engine46 {
         for (int i = 0; i < numIndex; ++i) {
             vecIndex[i] = static_cast<DWORD>(pIndex[i]);
         }
-
-        //static const int indexOrder[] = {
-        //    0, 1, 2,
-        //    1, 2, 3, // 四角形
-        //    2, 3, 4, // 五角形
-        //    3, 4, 5, // 六角形
-        //    4, 5, 6, // 七角形
-        //    5, 6, 7, // 八角形
-        //};
-
-        //numIndex = 0;
-
-        //// インデックスの再構築中
-        //for (int i = 0; i < numPolygon; ++i) {
-        //    int polygonSize = pFbxMesh->GetPolygonSize(i);
-
-        //    int count = 3;
-        //    if (polygonSize > 3) {
-        //        count = (polygonSize - 2) * 3;
-        //    }
-        //    for (int j = 0; j < count; ++j) {
-        //        int index = pFbxMesh->GetPolygonVertex(i, indexOrder[j]);
-        //        vecIndex.emplace_back(index);
-
-        //        numIndex++;
-        //    }
-        //}
 
         std::vector<VertexInfo> vecVetexInfo(numVertex);
 
@@ -408,7 +383,6 @@ namespace Engine46 {
 
         std::cout << "マテリアル名 = " << pFbxMaterial->GetName() << std::endl;
 
-
         if (std::string("PictureBorder") == pFbxMaterial->GetName()) {
             std::cout << "マテリアル名 = " << pFbxMaterial->GetName() << std::endl;
         }
@@ -496,14 +470,14 @@ namespace Engine46 {
             std::string filename(name);
             filename += extension;
 
-            FileInfo* pFileInfo = CFileSystem::GetFileSystem().GetFileInfoFromMap(filename.c_str());
+            FileInfo* pFileInfo = CGameSystem::GetGameSystem().GetFileManager()->GetFileInfoFromMap(filename);
 
             if (!pFileInfo) {
                 filename = name;
                 filename += +".jpg";
             }
 
-            CTextureBase* pTexture = textureManager->CreateTexture(filename.c_str());
+            CTextureBase* pTexture = textureManager->CreateTexture(filename);
             if (!pTexture) continue;
 
             pMaterial->AddTexture(pTexture);

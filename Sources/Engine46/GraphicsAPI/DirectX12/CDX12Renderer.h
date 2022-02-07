@@ -63,9 +63,9 @@ namespace Engine46 {
 
         void CreateConstantBuffer(std::unique_ptr<CConstantBufferBase>& pConstantBuffer, UINT byteWidth) override;
         void CreateUnorderedAccessBuffer(std::unique_ptr<CUnorderedAccessBufferBase>& pUnorderedAccessBuffer, UINT byteWidth, UINT byteSize) override;
-        void CreateMesh(std::unique_ptr<CMeshBase>& pMesh, const char* meshName) override;
-        void CreateTexture(std::unique_ptr<CTextureBase>& pTexture, const char* textureName) override;
-        void CreateShader(std::unique_ptr<CShaderPackage>& pShaderPackage, const char* shaderName) override;
+        void CreateMesh(std::unique_ptr<CMeshBase>& pMesh, const std::string& meshName) override;
+        void CreateTexture(std::unique_ptr<CTextureBase>& pTexture, const std::string& textureName) override;
+        void CreateShader(std::unique_ptr<CShaderPackage>& pShaderPackage, const std::string& shaderName) override;
 
         void CreateResource(ComPtr<ID3D12Resource>& pResource, D3D12_RESOURCE_DESC& rDesc);
 

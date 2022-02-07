@@ -50,13 +50,13 @@ typedef VS_OUT PS_IN;
 PS_OUT PS_main(PS_IN input) {
     PS_OUT output = (PS_OUT)0;
 
-    output.color = diffuseTex.Sample(sampleState, input.uv) * material.diffuse;
+    output.color = diffuseTex.Sample(sampleState, input.uv);
 
-    output.color = all(output.color.xyz) ? output.color : float4(1.0f, 1.0f, 1.0f, 1.0f);
+    output.color = all(output.color.xyz) ? output.color * material.diffuse : material.diffuse;
 
     float3 l = normalize(directionalLight.pos.xyz);
     float3 n = normalize(input.normal);
-    float d = Lambert(n, l);
+    float d = HalfLambert(n, l);
     float4 dLight = directionalLight.diffuse * d;
 
     const int TILE_X = 16;
@@ -87,11 +87,11 @@ PS_OUT PS_main(PS_IN input) {
 
         l = normalize(l);
         // åıåπÇ∆ñ@ê¸ÇÃì‡êœÇåvéZ
-        float d = Lambert(n, l);
+        float d = HalfLambert(n, l);
         // å∏êä
-        float4 att = saturate(1.0f / (pointLight.attenuation.x + pointLight.attenuation.y * len + pointLight.attenuation.z * len * len));
+        float affect = 1.0f - min(1.0f, len / pointLight.radius);
 
-        pLight += (pointLight.diffuse * d) * att;
+        pLight += (pointLight.diffuse * d) * affect;
     }
 
     output.color *= dLight + pLight;

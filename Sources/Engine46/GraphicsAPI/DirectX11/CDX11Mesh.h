@@ -29,7 +29,7 @@ namespace Engine46 {
         ComPtr<ID3D11Buffer> m_pIndexBuffer;
 
     public:
-        CDX11Mesh(CDX11Device* pDevice, CDX11DeviceContext* pDeviceContext, const char* meshName);
+        CDX11Mesh(CDX11Device* pDevice, CDX11DeviceContext* pDeviceContext, const std::string& meshName);
         ~CDX11Mesh();
 
         void CreateVertexBuffer(PRIMITIVE_TOPOLOGY_TYPE type) override;

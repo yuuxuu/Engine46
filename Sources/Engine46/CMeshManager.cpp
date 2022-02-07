@@ -11,11 +11,17 @@
 #include "CModelMesh.h"
 
 #include "CRenderer.h"
-#include "CFileSystem.h"
+#include "CFileManager.h"
+#include "CGameSystem.h"
+#include "CTaskSystem.h"
 
 #include "CFBXLoader.h"
+#include "COBJLoader.h"
 
 namespace Engine46 {
+
+    CFBXLoader fbxLoader;
+    COBJLoader objLoader;
 
     // コンストラクタ
     CMeshManager::CMeshManager(CRendererBase* pRenderer) :
@@ -27,7 +33,10 @@ namespace Engine46 {
     {}
 
     // メッシュ作成
-    CMeshBase* CMeshManager::CreateMesh(const char* meshName) {
+    CMeshBase* CMeshManager::CreateMesh(const std::string& meshName) {
+        std::mutex mutex;
+        std::lock_guard<std::mutex> lock(mutex);
+
         CMeshBase* pMesh = GetMeshFromMap(meshName);
 
         std::string name(meshName);
@@ -58,7 +67,7 @@ namespace Engine46 {
     }
 
     // メッシュをマップへ追加
-    void CMeshManager::AddMeshToMap(const char* name, std::unique_ptr<CMeshBase>& pMesh) {
+    void CMeshManager::AddMeshToMap(const std::string& name, std::unique_ptr<CMeshBase>& pMesh) {
 
         if (!GetMeshFromMap(name)) {
             m_pMapMesh[name] = std::move(pMesh);
@@ -66,7 +75,7 @@ namespace Engine46 {
     }
 
     // メッシュを取得
-    CMeshBase* CMeshManager::GetMeshFromMap(const char* name) {
+    CMeshBase* CMeshManager::GetMeshFromMap(const std::string& name) {
         auto itr = m_pMapMesh.find(name);
 
         if (itr != m_pMapMesh.end()) {
@@ -77,20 +86,28 @@ namespace Engine46 {
     }
 
     // モデルメッシュ作成
-    CModelMesh* CMeshManager::CreateModelMesh(const char* modelName) {
+    CModelMesh* CMeshManager::CreateModelMesh(const std::string& modelName) {
         CModelMesh* pModelMesh = GetModelMeshFromMap(modelName);
 
         if (pModelMesh) return pModelMesh;
 
         std::unique_ptr<CModelMesh> modelMesh = std::make_unique<CModelMesh>(modelName);
 
-        FileInfo* pFileInfo = CFileSystem::GetFileSystem().GetFileInfoFromMap(modelName);
+        FileInfo* pFileInfo = CGameSystem::GetGameSystem().GetFileManager()->GetFileInfoFromMap(modelName);
         if (pFileInfo) {
             std::string ext = pFileInfo->extensionName;
             std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
             if (ext == ".fbx") {
-                CFBXLoader fbxLoader;
                 fbxLoader.LoadModel(modelMesh.get(), pFileInfo->filePath);
+
+                //std::thread thread(&CFBXLoader::LoadModel, &fbxLoader, modelMesh.get(), pFileInfo->filePath);
+                //CTaskSystem::GetTaskSystem().AddTask(thread);
+            }
+            else if (ext == ".obj") {
+                objLoader.LoadModel(modelMesh.get(), pFileInfo->filePath);
+
+                //std::thread thread(&COBJLoader::LoadModel, &objLoader, modelMesh.get(), pFileInfo->filePath);
+                //CTaskSystem::GetTaskSystem().AddTask(thread);
             }
         }
 
@@ -102,7 +119,7 @@ namespace Engine46 {
     }
 
     // モデルメッシュをマップへ追加
-    void CMeshManager::AddModelMeshToMap(const char* name, std::unique_ptr<CModelMesh>& pModelMesh) {
+    void CMeshManager::AddModelMeshToMap(const std::string& name, std::unique_ptr<CModelMesh>& pModelMesh) {
 
         if (!GetModelMeshFromMap(name)) {
             m_pMapModelMesh[name] = std::move(pModelMesh);
@@ -111,7 +128,7 @@ namespace Engine46 {
     }
 
     // モデルメッシュを取得
-    CModelMesh* CMeshManager::GetModelMeshFromMap(const char* name) {
+    CModelMesh* CMeshManager::GetModelMeshFromMap(const std::string& name) {
         auto itr = m_pMapModelMesh.find(name);
 
         if (itr != m_pMapModelMesh.end()) {

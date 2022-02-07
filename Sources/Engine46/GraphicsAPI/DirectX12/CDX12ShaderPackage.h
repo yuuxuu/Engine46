@@ -36,7 +36,7 @@ namespace Engine46 {
 
 
     public:
-        CDX12ShaderPackage(CDX12Device* pDevice, CDX12Command* pCommand, const char* shaderName);
+        CDX12ShaderPackage(CDX12Device* pDevice, CDX12Command* pCommand, const std::string& shaderName);
         ~CDX12ShaderPackage();
 
         bool InitializeGraphics(D3D12_GRAPHICS_PIPELINE_STATE_DESC& gpsDesc);

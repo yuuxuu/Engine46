@@ -29,7 +29,8 @@ namespace Engine46{
     // コンストラクタ
     CDX12TiledForwardRendering::CDX12TiledForwardRendering(CDX12Device* pDevice, CDX12Command* pCommand) :
         pDX12Device(pDevice),
-        pDX12Command(pCommand)
+        pDX12Command(pCommand),
+        m_numLight(0)
     {}
 
     // デストラクタ
@@ -132,12 +133,6 @@ namespace Engine46{
             pDX12Device->CreateDepthStencilView(m_pDsvResource.Get(), &dsvDesc, m_dsvHandle);
         }
 
-        {
-            UINT bufSize = (width / TILE_SIZE_X * height / TILE_SIZE_Y) * LIGHT_MAX;
-
-            pRenderer->CreateUnorderedAccessBuffer(m_pLightIndexUab, sizeof(UINT), bufSize);
-        }
-
         return true;
     }
 
@@ -164,17 +159,38 @@ namespace Engine46{
 
         CActorBase* pSkyDome = pScene->GetSkyDomeFromScene();
         if (pSkyDome) {
-            CConstantBufferBase* pCb = pSkyDome->GetWorldConstantBuffer();
-            if (pCb) {
-                Matrix matW = pSkyDome->GetWorldMatrix();
-                matW.dx_m = DirectX::XMMatrixTranspose(matW.dx_m);
+            CShaderPackage* pSp = pSkyDome->GetShaderPackage();
+            if (pSp) {
+                pSp->SetShader();
 
-                worldCB cb = {
-                    matW,
-                };
-                pCb->Update(&cb);
+                CRendererBase* pRenderer = CRendererSystem::GetRendererSystem().GetRenderer();
+                if (pRenderer) {
+                    pRenderer->SetSceneConstantBuffers((UINT)CB_TYPE::CAMERA);
+                }
 
-                pSkyDome->Draw();
+                CConstantBufferBase* pCb = pSkyDome->GetWorldConstantBuffer();
+                if (pCb) {
+                    Matrix matW = pSkyDome->GetWorldMatrix();
+                    matW.dx_m = DirectX::XMMatrixTranspose(matW.dx_m);
+
+                    worldCB cb = {
+                        matW,
+                    };
+                    pSkyDome->UpdateWorldConstantBuffer(&cb);
+
+                    CModelMesh* pModelMesh = pSkyDome->GetModelMesh();
+                    if (pModelMesh) {
+                        std::vector<CMeshBase*> vecMesh = pModelMesh->GetVecMesh();
+                        for (const auto& mesh : vecMesh) {
+                            mesh->Set();
+                            CMaterialBase* pMaterial = mesh->GetMaterial();
+                            if (pMaterial) {
+                                pMaterial->SetTexture((UINT)MyRS_Model::SRV_Diffuse);
+                            }
+                            mesh->Draw();
+                        }
+                    }
+                }
             }
         }
 
@@ -208,21 +224,24 @@ namespace Engine46{
                     pMesh->Set();
                     CMaterialBase* pMaterial = pMesh->GetMaterial();
                     if (pMaterial) {
-                        pMesh->GetMaterial()->SetTexture((UINT)MyRS_ModelLighting_Of_LightCulling::SRV_Diffuse);
+                        pMaterial->SetTexture((UINT)MyRS_ModelLighting_Of_LightCulling::SRV_Diffuse);
                     }
                     pMesh->Draw();
                 }
                 else {
                     CModelMesh* pModelMesh = pActor->GetModelMesh();
                     if (pModelMesh) {
-                        pModelMesh->Draw();
+                        std::vector<CMeshBase*> vecMesh = pModelMesh->GetVecMesh();
+                        for (const auto& mesh : vecMesh) {
+                            mesh->Set();
+                            CMaterialBase* pMaterial = mesh->GetMaterial();
+                            if (pMaterial) {
+                                pMaterial->SetTexture((UINT)MyRS_ModelLighting_Of_LightCulling::SRV_Diffuse);
+                            }
+                            mesh->Draw();
+                        }
                     }
                 }
-            }
-
-            std::vector<CLight*> vecLight = pScene->GetLightsFromScene();
-            for (const auto& pLight : vecLight) {
-                pLight->Draw();
             }
         }
 
@@ -245,8 +264,31 @@ namespace Engine46{
         pSprite->Draw();
     }
 
+    // ライトインデックスを更新
+    void CDX12TiledForwardRendering::UpdateLightIndexUab(const int numLight) {
+        if (m_numLight == numLight) return;
+
+        m_numLight = numLight;
+
+        UINT width = pDX12RenderTexture->GetTextureWidth();
+        UINT height = pDX12RenderTexture->GetTextureHeight();
+        UINT bufSize = (width / TILE_SIZE_X) * (height / TILE_SIZE_Y) * m_numLight;
+
+        if (!m_pLightIndexUab) {
+            CDX12Renderer* pRenderer = dynamic_cast<CDX12Renderer*>(CRendererSystem::GetRendererSystem().GetRenderer());
+            if (!pRenderer) return;
+
+            pRenderer->CreateUnorderedAccessBuffer(m_pLightIndexUab, sizeof(UINT), bufSize);
+        }
+        else {
+            m_pLightIndexUab->CreateUnorderedAccessBuffer(sizeof(UINT), bufSize);
+        }
+
+    }
+
     // ライトカリング
     void CDX12TiledForwardRendering::LightCulling_CS(CDX12Texture* pDX12DepthTexture) {
+        if (!m_pLightIndexUab) return;
 
         CShaderManager* pShaderManger = CGameSystem::GetGameSystem().GetShaderManager();
 

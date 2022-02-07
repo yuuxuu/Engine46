@@ -8,7 +8,6 @@
 #include "Engine46Editor.h"
 
 #include "Engine46/CGameSystem.h"
-#include "Engine46/CFileSystem.h"
 #include "Engine46/CRendererSystem.h"
 
 #include <QApplication>
@@ -22,15 +21,10 @@ int main(int argc, char* argv[])
     Engine46Editor w;
     w.show();
 
-    Engine46::CFileSystem& fileSystem = Engine46::CFileSystem::GetFileSystem();
-    if (!fileSystem.Initialize()) {
-        MessageBoxA(NULL, "ファイルシステム初期化：失敗", "MessageBox", MB_OK);
-        return -1;
-    }
-
     QWidget* pRenderWidget = w.GetRenderWidget();
     HWND hwnd = (HWND)pRenderWidget->winId();
     Engine46::RECT rect = Engine46::RECT(pRenderWidget->width(), pRenderWidget->height());
+    rect = Engine46::RECT(1280, 720);
 
     Engine46::CRendererSystem& rendererSystem = Engine46::CRendererSystem::GetRendererSystem();
     if (!rendererSystem.Initialize(hwnd, rect)) {

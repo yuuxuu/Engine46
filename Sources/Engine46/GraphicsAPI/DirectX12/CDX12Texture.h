@@ -40,7 +40,7 @@ namespace Engine46 {
         D3D12_GPU_DESCRIPTOR_HANDLE                 m_uavGpuHandle;
             
     public:
-        CDX12Texture(CDX12Device* pDevice, CDX12Command* pCommand, const char* textureName = "");
+        CDX12Texture(CDX12Device* pDevice, CDX12Command* pCommand, const std::string& textureName = "");
         ~CDX12Texture();
 
         void CreateTexture() override;

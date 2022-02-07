@@ -1,34 +1,34 @@
 ﻿/**
- * @file CFileSystem.cpp
+ * @file CFileManager.cpp
  * @brief
  * @author 木村優
  * @date 2019/01/16
  */
 
-#include "CFileSystem.h"
+#include "CFileManager.h"
 
 namespace Engine46 {
 
     // コンストラクタ
-    CFileSystem::CFileSystem()
+    CFileManager::CFileManager()
     {}
 
     // デストラクタ
-    CFileSystem::~CFileSystem()
+    CFileManager::~CFileManager()
     {}
 
     // 初期化
-    bool CFileSystem::Initialize() {
+    bool CFileManager::Initialize() {
 
-        const std::vector<const char*> vecDirName = {
+        const std::vector<std::string> vecDirName = {
             RESOURCE_ROOT_PATH
         };
 
-        for (const auto name : vecDirName) {
+        for (const auto& name : vecDirName) {
             std::filesystem::recursive_directory_iterator itr = std::filesystem::recursive_directory_iterator(name);
 
             for (const auto& entry : itr) {
-                FileInfo* fileInfo = CreateFileInfo(entry.path().string().c_str());
+                FileInfo* fileInfo = CreateFileInfo(entry.path().string());
             }
         }
 
@@ -36,7 +36,7 @@ namespace Engine46 {
     }
 
     // ファイル情報を作成
-    FileInfo* CFileSystem::CreateFileInfo(const char* filePath) {
+    FileInfo* CFileManager::CreateFileInfo(const std::string& filePath) {
         const UINT charSize = 128;
 
         char drive[charSize];
@@ -46,7 +46,7 @@ namespace Engine46 {
 
         std::string str;
 
-        _splitpath_s(filePath, drive, dir, name, extension);
+        _splitpath_s(filePath.c_str(), drive, dir, name, extension);
 
         // 拡張子が無ければディレクトリー
         if (strlen(extension) == 0) return nullptr;
@@ -71,7 +71,7 @@ namespace Engine46 {
             WIN32_FIND_DATA findData;
             HANDLE handle;
 
-            handle = FindFirstFile(filePath, &findData);
+            handle = FindFirstFile(filePath.c_str(), &findData);
             GetFileTime(handle, &findData.ftCreationTime, &findData.ftLastAccessTime, &findData.ftLastWriteTime);
 
             if (FileTimeToSystemTime(&findData.ftLastWriteTime, &sysTime)) {
@@ -90,7 +90,7 @@ namespace Engine46 {
     }
 
     // ファイル情報を追加
-    void CFileSystem::AddFileInfoToMap(const char* name, std::unique_ptr<FileInfo>& pFileInfo) {
+    void CFileManager::AddFileInfoToMap(const std::string& name, std::unique_ptr<FileInfo>& pFileInfo) {
 
         if (!GetFileInfoFromMap(name)) {
             m_pMapFileInfo[pFileInfo->fileName] = std::move(pFileInfo);
@@ -98,7 +98,7 @@ namespace Engine46 {
     }
 
     // ファイル情報を取得
-    FileInfo* CFileSystem::GetFileInfoFromMap(const char* fileName) {
+    FileInfo* CFileManager::GetFileInfoFromMap(const std::string& fileName) {
         auto itr = m_pMapFileInfo.find(fileName);
 
         if (itr != m_pMapFileInfo.end()) {
@@ -109,7 +109,7 @@ namespace Engine46 {
     }
 
     // ファイルの書き込み
-    bool CFileSystem::WriteFile(const char* writeFileName, std::ios::openmode mode, void* pBuffers, size_t size) {
+    bool CFileManager::WriteFile(const std::string& writeFileName, std::ios::openmode mode, void* pBuffers, size_t size) {
         std::ofstream ofs;
 
         ofs.open(writeFileName, mode);
@@ -122,7 +122,7 @@ namespace Engine46 {
     }
 
     // ファイルの読み込み
-    bool CFileSystem::ReadFile(const char* readFileName, std::ios::openmode mode, void*& pBuffers, size_t size) {
+    bool CFileManager::ReadFile(const std::string& readFileName, std::ios::openmode mode, void*& pBuffers, size_t size) {
         std::ifstream ifs;
 
         ifs.open(readFileName, mode);
@@ -133,7 +133,7 @@ namespace Engine46 {
         size = static_cast<size_t>(ifs.tellg());
         ifs.seekg(0, ifs.beg);
 
-        pBuffers = new void* [size];
+        pBuffers = new void*[size];
 
         ifs.read((char*)pBuffers, size);
 

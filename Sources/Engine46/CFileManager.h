@@ -1,5 +1,5 @@
 ﻿/**
- * @file CFileSystem.h
+ * @file CFileManager.h
  * @brief
  * @author 木村優
  * @date 2019/01/16
@@ -30,31 +30,25 @@ namespace Engine46 {
         {}
     };
 
-    class CFileSystem {
+    class CFileManager {
     private:
         std::map<std::string, std::unique_ptr<FileInfo>>    m_pMapFileInfo;
 
-    private:
-        CFileSystem();
-        ~CFileSystem();
 
     public:
+        CFileManager();
+        ~CFileManager();
 
         bool Initialize();
 
-        FileInfo* CreateFileInfo(const char* filePath);
+        FileInfo* CreateFileInfo(const std::string& filePath);
 
-        void AddFileInfoToMap(const char* name, std::unique_ptr<FileInfo>& pFileInfo);
+        void AddFileInfoToMap(const std::string& name, std::unique_ptr<FileInfo>& pFileInfo);
 
-        FileInfo* GetFileInfoFromMap(const char* fileName);
+        FileInfo* GetFileInfoFromMap(const std::string& fileName);
 
-        bool WriteFile(const char* writeFileName, std::ios::openmode mode, void* pBuffers, size_t size);
-        bool ReadFile(const char* readFileName, std::ios::openmode mode, void*& pBuffers, size_t size);
-
-        static CFileSystem& GetFileSystem() {
-            static CFileSystem fileSystem;
-            return fileSystem;
-        }
+        static bool WriteFile(const std::string& writeFileName, std::ios::openmode mode, void* pBuffers, size_t size);
+        static bool ReadFile(const std::string& readFileName, std::ios::openmode mode, void*& pBuffers, size_t size);
     };
 } // namespace
 

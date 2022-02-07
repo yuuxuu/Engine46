@@ -19,9 +19,9 @@
                              "DescriptorTable(SRV(t4, numDescriptors = 1, space = 0), visibility = SHADER_VISIBILITY_PIXEL),"\
                              "StaticSampler(s0,"\
                                  "filter = FILTER_MIN_MAG_MIP_LINEAR,"\
-                                 "addressU = TEXTURE_ADDRESS_BORDER,"\
-                                 "addressV = TEXTURE_ADDRESS_BORDER,"\
-                                 "addressW = TEXTURE_ADDRESS_BORDER,"\
+                                 "addressU = TEXTURE_ADDRESS_WRAP,"\
+                                 "addressV = TEXTURE_ADDRESS_WRAP,"\
+                                 "addressW = TEXTURE_ADDRESS_WRAP,"\
                                  "mipLodBias = 0.0f,"\
                                  "maxAnisotropy = 16,"\
                                  "comparisonFunc = COMPARISON_NEVER,"\
@@ -44,9 +44,9 @@
                                                         "DescriptorTable(UAV(u1, numDescriptors = 1, space = 0), visibility = SHADER_VISIBILITY_PIXEL),"\
                                                         "StaticSampler(s0,"\
                                                             "filter = FILTER_MIN_MAG_MIP_LINEAR,"\
-                                                            "addressU = TEXTURE_ADDRESS_BORDER,"\
-                                                            "addressV = TEXTURE_ADDRESS_BORDER,"\
-                                                            "addressW = TEXTURE_ADDRESS_BORDER,"\
+                                                            "addressU = TEXTURE_ADDRESS_WRAP,"\
+                                                            "addressV = TEXTURE_ADDRESS_WRAP,"\
+                                                            "addressW = TEXTURE_ADDRESS_WRAP,"\
                                                             "mipLodBias = 0.0f,"\
                                                             "maxAnisotropy = 16,"\
                                                             "comparisonFunc = COMPARISON_NEVER,"\
