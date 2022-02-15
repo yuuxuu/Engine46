@@ -28,7 +28,10 @@ namespace Engine46 {
             std::filesystem::recursive_directory_iterator itr = std::filesystem::recursive_directory_iterator(name);
 
             for (const auto& entry : itr) {
-                FileInfo* fileInfo = CreateFileInfo(entry.path().string());
+                if (entry.path().extension().empty()) {
+                    continue;
+                }
+                FileInfo* fileInfo = CreateFileInfo(entry.path());
             }
         }
 
@@ -36,42 +39,28 @@ namespace Engine46 {
     }
 
     // ファイル情報を作成
-    FileInfo* CFileManager::CreateFileInfo(const std::string& filePath) {
-        const UINT charSize = 128;
+    FileInfo* CFileManager::CreateFileInfo(const std::filesystem::path& filePath) {
 
-        char drive[charSize];
-        char dir[charSize];
-        char name[charSize];
-        char extension[charSize];
-
-        std::string str;
-
-        _splitpath_s(filePath.c_str(), drive, dir, name, extension);
-
-        // 拡張子が無ければディレクトリー
-        if (strlen(extension) == 0) return nullptr;
-
-        FileInfo* pFileInfo = GetFileInfoFromMap(name);
+        FileInfo* pFileInfo = GetFileInfoFromMap(filePath.filename().string());
 
         if (!pFileInfo) {
             std::unique_ptr<FileInfo> fileInfo = std::make_unique<FileInfo>();
 
-            fileInfo->filePath = filePath;
+            fileInfo->filePath = filePath.generic_string();
 
-            fileInfo->driveName = drive;
+            fileInfo->driveName = filePath.root_name().string();
 
-            fileInfo->directryName = dir;
+            fileInfo->directryName = filePath.parent_path().generic_string();
 
-            fileInfo->fileName = name;
-            fileInfo->fileName += extension;
+            fileInfo->fileName = filePath.filename().string();
 
-            fileInfo->extensionName = extension;
+            fileInfo->extensionName = filePath.extension().string();
 
             SYSTEMTIME sysTime;
             WIN32_FIND_DATA findData;
             HANDLE handle;
 
-            handle = FindFirstFile(filePath.c_str(), &findData);
+            handle = FindFirstFile(fileInfo->filePath.c_str(), &findData);
             GetFileTime(handle, &findData.ftCreationTime, &findData.ftLastAccessTime, &findData.ftLastWriteTime);
 
             if (FileTimeToSystemTime(&findData.ftLastWriteTime, &sysTime)) {
@@ -83,7 +72,7 @@ namespace Engine46 {
 
             pFileInfo = fileInfo.get();
 
-            this->AddFileInfoToMap(name, fileInfo);
+            this->AddFileInfoToMap(fileInfo->fileName, fileInfo);
         }
 
         return pFileInfo;

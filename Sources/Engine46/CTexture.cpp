@@ -9,6 +9,9 @@
 #include "utility.h"
 #include "math.h"
 
+#include "CGameSystem.h"
+#include "CFileManager.h"
+
 namespace Engine46 {
 
     // コンストラクタ
@@ -34,14 +37,19 @@ namespace Engine46 {
     }
 
     // テクスチャを読み込む
-    bool CTextureBase::LoadTexture(const std::string& filePath) {
+    bool CTextureBase::LoadTexture(const std::string& textureName) {
+        if (m_isLoaded) return true;
+        
+        FileInfo* pFileInfo = CGameSystem::GetGameSystem().GetFileManager()->GetFileInfoFromMap(textureName);
+        if (!pFileInfo) return false;
+        
         std::unique_ptr<wchar_t[]> loadName;
-        CharConvertToWchar(loadName, filePath.c_str());
+        CharConvertToWchar(loadName, pFileInfo->filePath.c_str());
 
         DirectX::ScratchImage sImage;
         HRESULT hr = DirectX::LoadFromWICFile(loadName.get(), 0, nullptr, sImage);
         if (FAILED(hr)) {
-            std::string errorStr = filePath;
+            std::string errorStr = pFileInfo->filePath;
             errorStr += "読み込み：失敗";
 
             MessageBox(NULL, errorStr.c_str(), "MessageBox", MB_OK);
@@ -59,6 +67,8 @@ namespace Engine46 {
         m_textureData.width = (UINT)image->width;
         m_textureData.height = (UINT)image->height;
         m_textureData.format = image->format;
+
+        m_isLoaded = true;
 
         return true;
     }

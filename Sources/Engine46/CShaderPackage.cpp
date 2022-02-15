@@ -61,7 +61,7 @@ namespace Engine46 {
 
     // シェーダーパッケージを保存
     bool CShaderPackage::SavePackage(std::ofstream& ofs) {
-        int strSize = (int)strlen(m_PakageName.c_str()) + 1;
+        int strSize = static_cast<int>(m_PakageName.size()) + 1;
         ofs.write((char*)&strSize, sizeof(int));
         ofs.write((char*)&m_PakageName, strSize);
 

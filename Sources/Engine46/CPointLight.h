@@ -16,7 +16,7 @@ namespace Engine46 {
         float m_radius;
 
     public:
-        explicit CPointLight(const char* lightName);
+        CPointLight(const std::string& lightName);
         ~CPointLight();
 
         void SetRadius(float radius) { m_radius = radius; }

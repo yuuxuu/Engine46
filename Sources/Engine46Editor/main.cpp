@@ -9,6 +9,7 @@
 
 #include "Engine46/CGameSystem.h"
 #include "Engine46/CRendererSystem.h"
+#include "Engine46/CThreadPoolSystem.h"
 
 #include <QApplication>
 
@@ -31,6 +32,9 @@ int main(int argc, char* argv[])
         MessageBoxA(NULL, "レンダラーシステム初期化：失敗", "MessageBox", MB_OK);
         return -1;
     }
+
+    Engine46::CThreadPoolSystem& threadPoolSystem = Engine46::CThreadPoolSystem::GetThreadPoolSystem();
+    threadPoolSystem.Initialize(3);
 
     hwnd = (HWND)w.winId();
 

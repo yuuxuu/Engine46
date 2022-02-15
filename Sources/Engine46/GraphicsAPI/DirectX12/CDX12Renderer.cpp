@@ -28,7 +28,7 @@
 
 namespace Engine46 {
 
-    constexpr UINT DESCRIPTORHEAP_MAX = 1500;
+    constexpr UINT DESCRIPTORHEAP_MAX = 3000;
 
     // コンストラクタ
     CDX12Renderer::CDX12Renderer() :
@@ -344,7 +344,9 @@ namespace Engine46 {
             CMeshBase* pMesh = m_pRenderSprite->GetMesh();
             if (pMesh) {
                 CMaterialBase* pMaterial = pMesh->GetMaterial();
-                pMaterial->SetTexture(pRenderTexture);
+                if (pMaterial) {
+                    pMaterial->SetTexture(pRenderTexture);
+                }
             }
 
             m_pRenderSprite->Draw();
@@ -486,23 +488,19 @@ namespace Engine46 {
 
     // テクスチャ作成
     void CDX12Renderer::CreateTexture(std::unique_ptr<CTextureBase>& pTexture, const std::string& textureName) {
-        FileInfo* pFileInfo = CGameSystem::GetGameSystem().GetFileManager()->GetFileInfoFromMap(textureName);
-
-        if (!pFileInfo) return;
-
         pTexture = std::make_unique<CDX12Texture>(m_pDX12Device.get(), m_pDX12Command.get(), textureName);
+    }
 
-        if (pTexture->LoadTexture(pFileInfo->filePath)) {
-            pTexture->CreateTexture();
-
-            dynamic_cast<CDX12Texture*>(pTexture.get())->CreateShaderResourceView(m_pCbDescriptorHeap.Get(), m_descriptorHeapOffsetIndex++);
+    // シェーダーリソースビュー作成
+    void CDX12Renderer::CreateShaderResourceView(CTextureBase* pTexture) {
+        if (pTexture) {
+            dynamic_cast<CDX12Texture*>(pTexture)->CreateShaderResourceView(m_pCbDescriptorHeap.Get(), m_descriptorHeapOffsetIndex++);
         }
     }
 
     // シェーダー作成
     void CDX12Renderer::CreateShader(std::unique_ptr<CShaderPackage>& pShaderPackage, const std::string& shaderName) {
         FileInfo* pFileInfo = CGameSystem::GetGameSystem().GetFileManager()->GetFileInfoFromMap(shaderName);
-
         if (!pFileInfo) return;
 
         pShaderPackage = std::make_unique<CDX12ShaderPackage>(m_pDX12Device.get(), m_pDX12Command.get(), shaderName);
@@ -524,7 +522,7 @@ namespace Engine46 {
 
             D3D12_GRAPHICS_PIPELINE_STATE_DESC gpsDesc = {};
 
-            std::string name = std::string(shaderName);
+            std::string name = shaderName;
             pDX12Sp->SetRTVFormats(gpsDesc, name);
             pDX12Sp->SetBlendState(gpsDesc, name);
             pDX12Sp->SetPrimitiveTopologyType(gpsDesc, name);

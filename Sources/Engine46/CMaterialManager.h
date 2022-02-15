@@ -28,11 +28,11 @@ namespace Engine46 {
         explicit CMaterialManager(CRendererBase* pRenderer);
         ~CMaterialManager();
 
-        CMaterialBase* CreateMaterial(const char* materialName);
+        CMaterialBase* CreateMaterial(const std::string& materialName);
 
-        void AddMaterialToMap(const char* name, std::unique_ptr<CMaterialBase>& pMaterial);
+        void AddMaterialToMap(const std::string& name, std::unique_ptr<CMaterialBase>& pMaterial);
 
-        CMaterialBase* GetMaterialFromMap(const char* name);
+        CMaterialBase* GetMaterialFromMap(const std::string& name);
     };
 
 } // namespace

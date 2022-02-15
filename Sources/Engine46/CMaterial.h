@@ -38,7 +38,7 @@ namespace Engine46 {
 
     public:
         CMaterialBase();
-        explicit CMaterialBase(const char* materialName);
+        CMaterialBase(const std::string& materialName);
         ~CMaterialBase();
 
         void Update();
@@ -61,7 +61,7 @@ namespace Engine46 {
 
         CConstantBufferBase* GetMaterialConstantBuffer() const { return m_pMaterialConstantBuffer.get(); }
 
-        std::string GetMaterialName() const { return m_materialName.c_str(); }
+        std::string GetMaterialName() const { return m_materialName; }
 
         bool IsInitialize() const { return m_isInitialize; }
     };

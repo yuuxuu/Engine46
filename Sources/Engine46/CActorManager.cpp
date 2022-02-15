@@ -42,38 +42,38 @@ namespace Engine46 {
         case ActorType::Root:
             actorName = "Root_" + std::to_string(m_classCount.rootCount++);
 
-            actor = std::make_unique<CActorBase>((UINT)actorType, actorName.c_str(), Transform());
+            actor = std::make_unique<CActorBase>((UINT)actorType, actorName, Transform());
             break;
         case ActorType::Camera:
             rect = pRenderer->GetWindowRect();
             actorName = "Camera_" + std::to_string(m_classCount.cameraCount++);
 
-            actor = std::make_unique<CCamera>(actorName.c_str(), rect.w, rect.h);
+            actor = std::make_unique<CCamera>(actorName, rect.w, rect.h);
             break;
         case ActorType::Sprite:
             actorName = "Sprite_" + std::to_string(m_classCount.spriteCount++);
 
-            actor = std::make_unique<CSprite>(actorName.c_str());
+            actor = std::make_unique<CSprite>(actorName);
             break;
         case ActorType::Box:
             actorName = "Box_" + std::to_string(m_classCount.boxCount++);
 
-            actor = std::make_unique<CActorBase>((UINT)actorType, actorName.c_str(), Transform());
+            actor = std::make_unique<CActorBase>((UINT)actorType, actorName, Transform());
             break;
         case ActorType::Character:
             actorName = "Character_" + std::to_string(m_classCount.charctorCount++);
 
-            actor = std::make_unique<CActorBase>((UINT)actorType, actorName.c_str(), Transform());
+            actor = std::make_unique<CActorBase>((UINT)actorType, actorName, Transform());
             break;
         case ActorType::ParticleEmitter:
             actorName = "ParticleEmitter_" + std::to_string(m_classCount.particeleEmitterCount++);
 
-            actor = std::make_unique<CParticleEmitter>(actorName.c_str());
+            actor = std::make_unique<CParticleEmitter>(actorName);
             break;
         case ActorType::SkyDome:
             actorName = "SkyDome_" + std::to_string(0);
 
-            actor = std::make_unique<CActorBase>((UINT)actorType, actorName.c_str(), Transform());
+            actor = std::make_unique<CActorBase>((UINT)actorType, actorName, Transform());
             break;
         case ActorType::Light:
             return nullptr;
@@ -85,11 +85,11 @@ namespace Engine46 {
 
         actor->SetActorID(m_classCount.allCount++);
 
-        actor->CActorBase::Initialize();
+        //actor->CActorBase::Initialize();
 
         CActorBase* pActor = actor.get();
 
-        AddActorFromMap(actorName.c_str(), actor);
+        AddActorFromMap(actorName, actor);
 
         return pActor;
     }
@@ -104,17 +104,17 @@ namespace Engine46 {
         case LightType::Directional:
             lightName = "DirectionalLight_" + std::to_string(m_classCount.lightCount);
 
-            light = std::make_unique<CDirectionalLight>(lightName.c_str());
+            light = std::make_unique<CDirectionalLight>(lightName);
             break;
         case LightType::Point:
             lightName = "PointLight_" + std::to_string(m_classCount.lightCount);
 
-            light = std::make_unique<CPointLight>(lightName.c_str());
+            light = std::make_unique<CPointLight>(lightName);
             break;
         case LightType::Spot:
             lightName = "SpotLight_" + std::to_string(m_classCount.lightCount);
 
-            light = std::make_unique<CSpotLight>(lightName.c_str());
+            light = std::make_unique<CSpotLight>(lightName);
             break;
         }
 
@@ -124,11 +124,11 @@ namespace Engine46 {
 
         light->SetLightType(lightType);
 
-        light->SetMesh("LightMesh");
+        light->SetMesh(lightName);
 
         CMeshBase* pMesh = light->GetMesh();
         if (pMesh) {
-            pMesh->SetMaterial("LightMaterial");
+            pMesh->SetMaterial(lightName);
 
             pMesh->CreateSpriteMesh();
 
@@ -151,13 +151,13 @@ namespace Engine46 {
 
         CLight* pLight = light.get();
 
-        AddLightFromMap(lightName.c_str(), light);
+        AddLightFromMap(lightName, light);
 
         return pLight;
     }
 
     // オブジェクトをマップへ追加
-    void CActorManager::AddActorFromMap(const char* name, std::unique_ptr<CActorBase>& pActor) {
+    void CActorManager::AddActorFromMap(const std::string& name, std::unique_ptr<CActorBase>& pActor) {
 
         if (!GetActorFromMap(name)) {
             m_pMapActor[name] = std::move(pActor);
@@ -166,7 +166,7 @@ namespace Engine46 {
     }
 
     // オブジェクト取得
-    CActorBase* CActorManager::GetActorFromMap(const char* name) {
+    CActorBase* CActorManager::GetActorFromMap(const std::string& name) {
         auto itr = m_pMapActor.find(name);
 
         if (itr != m_pMapActor.end()) {
@@ -177,7 +177,7 @@ namespace Engine46 {
     }
 
     // ライトをマップへ追加
-    void CActorManager::AddLightFromMap(const char* name, std::unique_ptr<CLight>& pLight) {
+    void CActorManager::AddLightFromMap(const std::string& name, std::unique_ptr<CLight>& pLight) {
 
         if (!GetLightFromMap(name)) {
             m_pMapLight[name] = std::move(pLight);
@@ -186,7 +186,7 @@ namespace Engine46 {
     }
 
     // ライト取得
-    CActorBase* CActorManager::GetLightFromMap(const char* name) {
+    CActorBase* CActorManager::GetLightFromMap(const std::string& name) {
         auto itr = m_pMapLight.find(name);
 
         if (itr != m_pMapLight.end()) {

@@ -30,6 +30,8 @@ namespace Engine46 {
 
         if (!pDevice->CreateFence(m_pFence)) return false;
 
+        if (!CloseCommandList()) return false;
+
         return true;
     }
 

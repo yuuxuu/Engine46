@@ -24,12 +24,10 @@ namespace Engine46 {
         m_materialID(0),
         m_materialName("Material_" + std::to_string(m_materialID)),
         m_isInitialize(false)
-    {
-        m_materialName.resize(m_materialName.size());
-    }
+    {}
 
     // コンストラクタ
-    CMaterialBase::CMaterialBase(const char* materialName) :
+    CMaterialBase::CMaterialBase(const std::string& materialName) :
         m_diffuse(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),
         m_specular(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),
         m_ambient(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),
@@ -38,9 +36,7 @@ namespace Engine46 {
         m_materialID(0),
         m_materialName(materialName),
         m_isInitialize(false)
-    {
-        m_materialName.resize(m_materialName.size());
-    }
+    {}
 
     // デストラクタ
     CMaterialBase::~CMaterialBase()

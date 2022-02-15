@@ -126,7 +126,7 @@ namespace Engine46 {
         std::string m_PakageName;
 
     public:
-        explicit CShaderPackage(const std::string& name);
+        CShaderPackage(const std::string& name);
         CShaderPackage();
         ~CShaderPackage();
 

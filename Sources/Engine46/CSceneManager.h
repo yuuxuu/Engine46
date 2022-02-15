@@ -23,7 +23,7 @@ namespace Engine46 {
         CSceneManager();
         ~CSceneManager();
 
-        CSceneBase* CreateScene(const char* sceneName = nullptr);
+        CSceneBase* CreateScene(const std::string& sceneName = "");
 
         void AddSceneToVec(std::unique_ptr<CSceneBase>& pScene) { m_pVecScene.emplace_back(std::move(pScene)); }
 

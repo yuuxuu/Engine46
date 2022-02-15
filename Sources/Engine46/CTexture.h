@@ -69,11 +69,13 @@ namespace Engine46 {
 
     class CTextureBase {
     protected:
-        std::string	m_textureName;
+        std::string	    m_textureName;
 
-        TextureData	m_textureData;
+        TextureData	    m_textureData;
 
         CubeTextureData m_cubeTextureData;
+
+        bool            m_isLoaded;
 
     public:
         CTextureBase();
@@ -82,7 +84,7 @@ namespace Engine46 {
 
         bool Initialize();
 
-        bool LoadTexture(const std::string& filePath);
+        bool LoadTexture(const std::string& textureName);
 
         void TextureConvertToCubeMapTexture();
 
@@ -93,7 +95,7 @@ namespace Engine46 {
         virtual void SetCubeTexture(UINT slot) {};
         virtual void SetCompute(UINT slot) {};
 
-        std::string GetTextureName() const { return m_textureName.c_str(); }
+        std::string GetTextureName() const { return m_textureName; }
 
         UINT GetTextureWidth() const { return m_textureData.width; }
         UINT GetTextureHeight() const { return m_textureData.height; }

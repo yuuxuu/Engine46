@@ -13,7 +13,7 @@
 namespace Engine46 {
 
     // コンストラクタ
-    CSprite::CSprite(const char* actorName) :
+    CSprite::CSprite(const std::string& actorName) :
         CActorBase((int)ActorType::Sprite, actorName, Transform(VECTOR3(), VECTOR3(), VECTOR3(10.0f, 10.0f, 10.0f)))
     {}
 
@@ -24,19 +24,6 @@ namespace Engine46 {
     // 更新
     void CSprite::Update() {
 
-    }
-
-    // 描画
-    void CSprite::Draw() {
-        Matrix matW = GetWorldMatrix();
-        matW.dx_m = DirectX::XMMatrixTranspose(matW.dx_m);
-
-        worldCB cb = {
-            matW,
-        };
-        m_pWorldConstantBuffer->Update(&cb);
-
-        CActorBase::Draw();
     }
 
 } // namespace

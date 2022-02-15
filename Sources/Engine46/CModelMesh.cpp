@@ -13,9 +13,7 @@ namespace Engine46 {
     // コンストラクタ
     CModelMesh::CModelMesh(const std::string& modelName) :
         m_modelName(modelName)
-    {
-        m_modelName.resize(m_modelName.size());
-    }
+    {}
 
     // デストラクタ
     CModelMesh::~CModelMesh()

@@ -55,7 +55,7 @@
     <ClCompile Include="CModelMesh.cpp" />
     <ClCompile Include="CSpotLight.cpp" />
     <ClCompile Include="CSprite.cpp" />
-    <ClCompile Include="CTaskSystem.cpp" />
+    <ClCompile Include="CThreadPoolSystem.cpp" />
     <ClCompile Include="CTexture.cpp" />
     <ClCompile Include="CTextureManager.cpp" />
     <ClCompile Include="CTimer.cpp" />
@@ -158,7 +158,7 @@
     <ClInclude Include="CModelMesh.h" />
     <ClInclude Include="CSpotLight.h" />
     <ClInclude Include="CSprite.h" />
-    <ClInclude Include="CTaskSystem.h" />
+    <ClInclude Include="CThreadPoolSystem.h" />
     <ClInclude Include="CTexture.h" />
     <ClInclude Include="CTextureManager.h" />
     <ClInclude Include="CTimer.h" />
@@ -227,12 +227,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\..\Assets\Shader\HLSL\CS_ToneMap.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="..\..\Assets\Shader\HLSL\CubeMapReflection.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>

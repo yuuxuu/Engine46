@@ -30,7 +30,7 @@ namespace Engine46 {
         void Update(CActorBase* pActor);
         void Draw(CActorBase* pActor);
 
-        void CreateOBBMesh(const char* meshName);
+        void CreateOBBMesh(const std::string& meshName);
 
         bool IsRayHit(Ray& ray);
     };

@@ -231,7 +231,7 @@ namespace Engine46 {
 
         pTexture = std::make_unique<CDX11Texture>(m_pDX11Device.get(), m_pDX11DeviceContext.get(), textureName);
 
-        if (pTexture->LoadTexture(pFileInfo->filePath.c_str())) {
+        if (pTexture->LoadTexture(pFileInfo->filePath)) {
             pTexture->CreateTexture();
             pTexture->CreateShaderResourceView();
         }

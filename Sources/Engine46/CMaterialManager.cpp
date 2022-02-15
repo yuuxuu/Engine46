@@ -24,25 +24,12 @@ namespace Engine46 {
     {}
 
     // マテリアルを作成
-    CMaterialBase* CMaterialManager::CreateMaterial(const char* materialName) {
-        std::mutex mutex;
-        std::lock_guard<std::mutex> lock(mutex);
-
+    CMaterialBase* CMaterialManager::CreateMaterial(const std::string& materialName) {
         CMaterialBase* pMaterial = GetMaterialFromMap(materialName);
 
-        std::string name(materialName);
-        if (pMaterial) {
-            int count = 0;
-            for (;;) {
-                name = std::string(materialName) + "_" + std::to_string(count++);
-                    
-                if (!GetMaterialFromMap(name.c_str())) {
-                    break;
-                }
-            }
-        }
+        if (pMaterial) return pMaterial;
 
-        std::unique_ptr<CMaterialBase> material = std::make_unique<CMaterialBase>(name.c_str());
+        std::unique_ptr<CMaterialBase> material = std::make_unique<CMaterialBase>(materialName);
 
         if (material) {
             std::unique_ptr<CConstantBufferBase> pMaterialConstantBuffer;
@@ -51,7 +38,7 @@ namespace Engine46 {
 
             CMaterialBase* pMaterial = material.get();
 
-            this->AddMaterialToMap(name.c_str(), material);
+            this->AddMaterialToMap(materialName, material);
 
             return pMaterial;
         }
@@ -60,7 +47,7 @@ namespace Engine46 {
     }
 
     // マテリアルをマップへ追加
-    void CMaterialManager::AddMaterialToMap(const char* name, std::unique_ptr<CMaterialBase>& pMaterial) {
+    void CMaterialManager::AddMaterialToMap(const std::string& name, std::unique_ptr<CMaterialBase>& pMaterial) {
 
         if (!GetMaterialFromMap(name)) {
             m_pMapMaterial[name] = std::move(pMaterial);
@@ -69,7 +56,7 @@ namespace Engine46 {
     }
 
     // マテリアルを取得
-    CMaterialBase* CMaterialManager::GetMaterialFromMap(const char* name) {
+    CMaterialBase* CMaterialManager::GetMaterialFromMap(const std::string& name) {
         auto itr = m_pMapMaterial.find(name);
 
         if (itr != m_pMapMaterial.end()) {

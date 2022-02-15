@@ -36,7 +36,7 @@ namespace Engine46 {
         if (sp) {
             pSp = sp.get();
 
-            this->AddShaderPackageToMap(packageName, sp);
+            AddShaderPackageToMap(packageName, sp);
 
             return pSp;
         }

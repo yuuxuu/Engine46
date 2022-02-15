@@ -13,7 +13,7 @@
 #include "CRenderer.h"
 #include "CFileManager.h"
 #include "CGameSystem.h"
-#include "CTaskSystem.h"
+#include "CThreadPoolSystem.h"
 
 #include "CFBXLoader.h"
 #include "COBJLoader.h"
@@ -34,31 +34,17 @@ namespace Engine46 {
 
     // メッシュ作成
     CMeshBase* CMeshManager::CreateMesh(const std::string& meshName) {
-        std::mutex mutex;
-        std::lock_guard<std::mutex> lock(mutex);
-
         CMeshBase* pMesh = GetMeshFromMap(meshName);
 
-        std::string name(meshName);
-        if (pMesh) {
-            int count = 0;
-            for (;;) {
-                name = std::string(meshName) + "_" + std::to_string(count++);
-
-                if (!GetMeshFromMap(name.c_str())) {
-                    break;
-                }
-            }
-        }
+        if (pMesh) return pMesh;
 
         std::unique_ptr<CMeshBase> mesh;
-
-        pRenderer->CreateMesh(mesh, name.c_str());
+        pRenderer->CreateMesh(mesh, meshName);
 
         if (mesh) {
             pMesh = mesh.get();
 
-            this->AddMeshToMap(name.c_str(), mesh);
+            this->AddMeshToMap(meshName, mesh);
 
             return pMesh;
         }
@@ -93,25 +79,38 @@ namespace Engine46 {
 
         std::unique_ptr<CModelMesh> modelMesh = std::make_unique<CModelMesh>(modelName);
 
+        pModelMesh = modelMesh.get();
+
         FileInfo* pFileInfo = CGameSystem::GetGameSystem().GetFileManager()->GetFileInfoFromMap(modelName);
         if (pFileInfo) {
             std::string ext = pFileInfo->extensionName;
             std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
-            if (ext == ".fbx") {
-                fbxLoader.LoadModel(modelMesh.get(), pFileInfo->filePath);
 
-                //std::thread thread(&CFBXLoader::LoadModel, &fbxLoader, modelMesh.get(), pFileInfo->filePath);
-                //CTaskSystem::GetTaskSystem().AddTask(thread);
+            if (ext == ".fbx") {
+                std::function<void()> task = [=] {
+                    if (!fbxLoader.LoadModel(pModelMesh, pFileInfo->filePath)) {
+                        std::string errorStr = pFileInfo->filePath;
+                        errorStr += "読み込み：失敗";
+
+                        MessageBox(NULL, errorStr.c_str(), "MessageBox", MB_OK);
+                    }
+                };
+
+                CThreadPoolSystem::GetThreadPoolSystem().AddWorkTask(task);
             }
             else if (ext == ".obj") {
-                objLoader.LoadModel(modelMesh.get(), pFileInfo->filePath);
+                std::function<void()> task = [=] {
+                    if (!objLoader.LoadModel(pModelMesh, pFileInfo->filePath)) {
+                        std::string errorStr = pFileInfo->filePath;
+                        errorStr += "読み込み：失敗";
 
-                //std::thread thread(&COBJLoader::LoadModel, &objLoader, modelMesh.get(), pFileInfo->filePath);
-                //CTaskSystem::GetTaskSystem().AddTask(thread);
+                        MessageBox(NULL, errorStr.c_str(), "MessageBox", MB_OK);
+                    }
+                };
+
+                CThreadPoolSystem::GetThreadPoolSystem().AddWorkTask(task);
             }
         }
-
-        pModelMesh = modelMesh.get();
 
         AddModelMeshToMap(modelName, modelMesh);
 
