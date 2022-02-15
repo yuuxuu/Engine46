@@ -32,9 +32,7 @@ namespace Engine46 {
         m_parentActorID(-1),
         m_visible(true),
         m_billboradEnabled(false)
-    {
-        m_actorName.resize(m_actorName.size());
-    }
+    {}
 
     // コンストラクタ
     CActorBase::CActorBase(const UINT classID, const std::string& actorName, const Transform transform) :
@@ -46,9 +44,7 @@ namespace Engine46 {
         m_parentActorID(-1),
         m_visible(true),
         m_billboradEnabled(false)
-    {
-        m_actorName.resize(m_actorName.size());
-    }
+    {}
 
     // デストラクタ
     CActorBase::~CActorBase()
@@ -168,7 +164,7 @@ namespace Engine46 {
     // メッシュを設定
     void CActorBase::SetMesh(const std::string& meshName) {
         CMeshManager* meshManager = CGameSystem::GetGameSystem().GetMeshManager();
-        CMeshBase* pMesh = meshManager->CreateMesh(meshName.c_str());
+        CMeshBase* pMesh = meshManager->CreateMesh(meshName);
         if (pMesh) {
             this->pMesh = pMesh;
         }
@@ -182,7 +178,7 @@ namespace Engine46 {
     // モデルメッシュを設定
     void CActorBase::SetModelMesh(const std::string& modelName) {
         CMeshManager* meshManager = CGameSystem::GetGameSystem().GetMeshManager();
-        CModelMesh* pModelMesh = meshManager->CreateModelMesh(modelName.c_str());
+        CModelMesh* pModelMesh = meshManager->CreateModelMesh(modelName);
         if (pModelMesh) {
             this->pModelMesh = pModelMesh;
         }
@@ -198,7 +194,7 @@ namespace Engine46 {
     // シェーダーパッケージを設定
     void CActorBase::SetShaderPackage(const std::string& shaderPackageName) {
         CShaderManager* shaderManager = CGameSystem::GetGameSystem().GetShaderManager();
-        CShaderPackage* pShaderPackage = shaderManager->CreateShaderPackage(shaderPackageName.c_str());
+        CShaderPackage* pShaderPackage = shaderManager->CreateShaderPackage(shaderPackageName);
         if (pShaderPackage) {
             this->pShaderPackage = pShaderPackage;
         }
@@ -211,7 +207,7 @@ namespace Engine46 {
 
         m_pObb = std::make_unique<COBB>();
         m_pObb->Update(this);
-        m_pObb->CreateOBBMesh(std::string(m_actorName + "_obbMesh").c_str());
+        m_pObb->CreateOBBMesh(m_actorName + "_obbMesh");
     }
 
     // インプットを設定

@@ -6,9 +6,12 @@
  */
 
 #include "CTextureManager.h"
+#include "CFileManager.h"
+
+#include "CGameSystem.h"
+
 #include "CTexture.h"
 #include "CActor.h"
-
 #include "CRenderer.h"
 
 namespace Engine46 {
@@ -24,19 +27,20 @@ namespace Engine46 {
 
     // テクスチャを作成
     CTextureBase* CTextureManager::CreateTexture(const std::string& textureName) {
-        std::mutex mutex;
-        std::lock_guard<std::mutex> lock(mutex);
-
         CTextureBase* pTexture = GetTextureFromMap(textureName);
 
         if (pTexture) return pTexture;
-
+        
         std::unique_ptr<CTextureBase> texture;
-
         pRenderer->CreateTexture(texture, textureName);
 
         if (texture) {
             pTexture = texture.get();
+
+            if (pTexture->LoadTexture(textureName)) {
+                pTexture->CreateTexture();
+                pRenderer->CreateShaderResourceView(pTexture);
+            }
 
             this->AddTextureToMap(textureName, texture);
 

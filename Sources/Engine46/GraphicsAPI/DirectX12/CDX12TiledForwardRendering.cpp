@@ -234,15 +234,30 @@ namespace Engine46{
                         std::vector<CMeshBase*> vecMesh = pModelMesh->GetVecMesh();
                         for (const auto& mesh : vecMesh) {
                             mesh->Set();
-                            CMaterialBase* pMaterial = mesh->GetMaterial();
-                            if (pMaterial) {
-                                pMaterial->SetTexture((UINT)MyRS_ModelLighting_Of_LightCulling::SRV_Diffuse);
+                            std::vector<CMaterialBase*> vecMaterial = mesh->GetVecMaterial();
+                            if (!vecMaterial.empty()) {
+                                for (const auto& material : vecMaterial) {
+                                    if (material) {
+                                        material->SetTexture((UINT)MyRS_ModelLighting_Of_LightCulling::SRV_Diffuse);
+                                    }
+                                }
+                            }
+                            else {
+                                CMaterialBase* pMaterial = mesh->GetMaterial();
+                                if (pMaterial) {
+                                    pMaterial->SetTexture((UINT)MyRS_ModelLighting_Of_LightCulling::SRV_Diffuse);
+                                }
                             }
                             mesh->Draw();
                         }
                     }
                 }
             }
+        }
+
+        std::vector<CLight*> vecLight = pScene->GetLightsFromScene();
+        for (const auto& light : vecLight) {
+            light->Draw();
         }
 
         End();

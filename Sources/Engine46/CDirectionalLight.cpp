@@ -10,7 +10,7 @@
 namespace Engine46 {
 
     // コンストラクタ
-    CDirectionalLight::CDirectionalLight(const char* lightName) :
+    CDirectionalLight::CDirectionalLight(const std::string& lightName) :
         CLight(lightName),
         m_intensity(0)
     {}

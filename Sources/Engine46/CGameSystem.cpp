@@ -7,9 +7,12 @@
 
 #include "CGameSystem.h"
 #include "CRendererSystem.h"
+#include "CThreadPoolSystem.h"
+
 #include "CWinow.h"
 #include "CInput.h"
 #include "CScene.h"
+
 #include "CMaterial.h"
 #include "CMesh.h"
 #include "CModelMesh.h"
@@ -88,7 +91,7 @@ namespace Engine46 {
             CMeshBase* pMesh = nullptr;
             CModelMesh* pModelMesh = nullptr;
 
-            CActorBase* pSkyDome = m_pActorManager->CreateActor(ActorType::SkyDome);
+            /*CActorBase* pSkyDome = m_pActorManager->CreateActor(ActorType::SkyDome);
             pSkyDome->SetModelMesh("SM_SkySphere.FBX");
 
             pModelMesh = pSkyDome->GetModelMesh();
@@ -105,7 +108,7 @@ namespace Engine46 {
                 }
             }
             pSkyDome->SetShaderPackage("SkyDome.hlsl");
-            pScene->AddActorToScene(pSkyDome);
+            pScene->AddActorToScene(pSkyDome);*/
 
             /*CActorBase* pPlane = m_pActorManager->CreateActor(ActorType::Sprite);
             pPlane->SetMesh("PlaneMesh");
@@ -154,7 +157,7 @@ namespace Engine46 {
             pSphere->SetShaderPackage("Model.hlsl");
             pScene->AddActorToScene(pSphere);*/
 
-            /*CActorBase* pCharacter = m_pActorManager->CreateActor(ActorType::Character);
+            CActorBase* pCharacter = m_pActorManager->CreateActor(ActorType::Character);
             pCharacter->SetModelMesh("sponza.obj");
 
             pModelMesh = pCharacter->GetModelMesh();
@@ -162,17 +165,17 @@ namespace Engine46 {
                 pCharacter->CreateOBB();
             }
             pCharacter->SetShaderPackage("Model.hlsl");
-            pScene->AddActorToScene(pCharacter);*/
-
+            pScene->AddActorToScene(pCharacter);
 
             CLight* pDirectionalLight = m_pActorManager->CreateLight(LightType::Directional);
+            pDirectionalLight->SetVisible(false);
             pScene->AddActorToScene(pDirectionalLight);
 
             std::random_device rd;
             std::mt19937 mt(rd());
 
             std::uniform_real_distribution<float> rand_color(0.0f, 1.0f);
-            std::uniform_real_distribution<float> rand_radius(5.0f, 100.0f);
+            std::uniform_real_distribution<float> rand_radius(50.0f, 100.0f);
             std::uniform_real_distribution<float> rand_posY(0.0f, 1000.0f);
 
             const int numLight = LIGHT_MAX;
@@ -243,7 +246,9 @@ namespace Engine46 {
 
     // 終了
     void CGameSystem::Finalize() {
-        // レンダラースレッドを先に終了
+        // スレッドプールを終了
+        CThreadPoolSystem::GetThreadPoolSystem().Finalize();
+        // レンダラースレッドを終了
         CRendererSystem::GetRendererSystem().Finalize();
 
         if (m_hGame) {

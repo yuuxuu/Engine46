@@ -90,8 +90,6 @@ namespace Engine46 {
             pModel->AddMesh(pMesh);
         }
 
-        fbxManager->Destroy();
-
         return true;
     }
 
@@ -480,7 +478,7 @@ namespace Engine46 {
             CTextureBase* pTexture = textureManager->CreateTexture(filename);
             if (!pTexture) continue;
 
-            pMaterial->AddTexture(pTexture);
+            pMaterial->SetTexture(pTexture);
         }
 
         return pMaterial;

@@ -26,7 +26,7 @@ namespace Engine46 {
         bool LoadModel(CModelMesh* pModel, const std::string& filePath) override;
 
         bool LoadMesh(CModelMesh* pModel, std::ifstream& ifs);
-        bool LoadMaterial(std::ifstream& ifs);
+        bool LoadMaterial(const std::string& fileName);
     };
 
 } // namespace

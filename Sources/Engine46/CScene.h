@@ -35,7 +35,7 @@ namespace Engine46 {
 
     public:
         CSceneBase();
-        explicit CSceneBase(const char* sceneName);
+        CSceneBase(const std::string& sceneName);
         ~CSceneBase();
 
         void Initialize();
@@ -64,7 +64,7 @@ namespace Engine46 {
         CActorBase* GetRootActor() const { return pRootActor; }
 
         void SetSceneName(const std::string& sceneName) { m_sceneName = sceneName; }
-        std::string GetSceneName() const { return m_sceneName.c_str(); }
+        std::string GetSceneName() const { return m_sceneName; }
 
         void SetSceneID(const int id) { m_sceneID = id; }
 

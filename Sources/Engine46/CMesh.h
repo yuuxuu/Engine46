@@ -70,7 +70,7 @@ namespace Engine46 {
 
     public:
         CMeshBase();
-        explicit CMeshBase(const std::string& meshName);
+        CMeshBase(const std::string& meshName);
         virtual ~CMeshBase();
 
         virtual void CreateVertexBuffer(PRIMITIVE_TOPOLOGY_TYPE type) {};
@@ -85,6 +85,7 @@ namespace Engine46 {
         void SetMaterial(const std::string& materialName);
         void SetMaterial(CMaterialBase* pMaterial) { this->pMaterial = pMaterial; };
 
+        std::vector<CMaterialBase*> GetVecMaterial() const { return m_pVecMaterial; }
         void AddMaterial(CMaterialBase* pMaterial) { m_pVecMaterial.emplace_back(pMaterial); }
 
         void SetMeshInfo(std::vector<VertexInfo>& vecVertex);
@@ -94,7 +95,7 @@ namespace Engine46 {
 
         const MeshInfo& GetMeshInfo() const { return m_meshInfo; }
 
-        std::string GetMeshName() const { return m_meshName.c_str(); }
+        std::string GetMeshName() const { return m_meshName; }
 
         bool GetVisible() const { return m_visible; }
         void SetVisible(bool visible) { m_visible = visible; }

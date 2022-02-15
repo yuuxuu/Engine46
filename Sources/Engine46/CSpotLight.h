@@ -16,7 +16,7 @@ namespace Engine46 {
         float m_angle;
 
     public:
-        explicit CSpotLight(const char* lightName);
+        CSpotLight(const std::string& lightName);
         ~CSpotLight();
 
     };

@@ -57,11 +57,11 @@ namespace Engine46 {
         CActorBase* CreateActor(ActorType actorType);
         CLight* CreateLight(LightType lightType);
 
-        void AddActorFromMap(const char* name, std::unique_ptr<CActorBase>& pActor);
-        CActorBase* GetActorFromMap(const char* name);
+        void AddActorFromMap(const std::string& name, std::unique_ptr<CActorBase>& pActor);
+        CActorBase* GetActorFromMap(const std::string& name);
 
-        void AddLightFromMap(const char* name, std::unique_ptr<CLight>& pLight);
-        CActorBase* GetLightFromMap(const char* name);
+        void AddLightFromMap(const std::string& name, std::unique_ptr<CLight>& pLight);
+        CActorBase* GetLightFromMap(const std::string& name);
 
         bool SaveActor();
         bool LoadActor();

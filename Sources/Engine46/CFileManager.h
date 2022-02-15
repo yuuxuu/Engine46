@@ -41,7 +41,7 @@ namespace Engine46 {
 
         bool Initialize();
 
-        FileInfo* CreateFileInfo(const std::string& filePath);
+        FileInfo* CreateFileInfo(const std::filesystem::path& filePath);
 
         void AddFileInfoToMap(const std::string& name, std::unique_ptr<FileInfo>& pFileInfo);
 

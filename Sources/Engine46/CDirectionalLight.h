@@ -16,7 +16,7 @@ namespace Engine46 {
         float m_intensity;
 
     public:
-        explicit CDirectionalLight(const char* lightName);
+        CDirectionalLight(const std::string& lightName);
         ~CDirectionalLight();
 
     };

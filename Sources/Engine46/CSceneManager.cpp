@@ -24,10 +24,10 @@ namespace Engine46 {
     {}
 
     // シーン作成
-    CSceneBase* CSceneManager::CreateScene(const char* sceneName) {
+    CSceneBase* CSceneManager::CreateScene(const std::string& sceneName) {
         std::unique_ptr<CSceneBase> scene;
 
-        if (sceneName) {
+        if (!sceneName.empty()) {
             scene = std::make_unique<CSceneBase>(sceneName);
         }
         else {

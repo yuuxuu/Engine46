@@ -18,11 +18,10 @@ namespace Engine46 {
     private:
 
     public:
-        explicit CSprite(const char* actorName);
+        CSprite(const std::string& actorName);
         ~CSprite();
 
         void Update() override;
-        void Draw() override;
     };
 
 } // namespace

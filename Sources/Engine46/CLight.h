@@ -35,14 +35,14 @@ namespace Engine46 {
         VECTOR4     m_lightEmissive;
         VECTOR4     m_lightAttenuation;
 
-        int         m_degree;
-        int         m_turn;
-
+        float       m_degree;
         float       m_r;
         float       m_speed;
 
+        int         m_turn;
+
     public:
-        explicit CLight(const char* lightName);
+        CLight(const std::string& lightName);
         virtual ~CLight();
 
         virtual void Update() override;

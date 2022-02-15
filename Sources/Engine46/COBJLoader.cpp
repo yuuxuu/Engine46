@@ -33,8 +33,8 @@ namespace Engine46 {
     bool COBJLoader::LoadModel(CModelMesh* pModel, const std::string& filePath) {
         std::ifstream ifs;
 
-        ifs.open(filePath, std::ios_base::in);
-        if (!ifs.is_open()) return false;
+        ifs.open(filePath);
+        if (!ifs) return false;
 
         if (!LoadMesh(pModel, ifs)) return false;
 
@@ -74,17 +74,8 @@ namespace Engine46 {
 
                 if (key == "mtllib ") {
                     if (mtlLibName.empty()) {
-                        std::string libName = lineStr.substr(key.size(), lineStr.size() - key.size());
-                        FileInfo* pFileInfo = CGameSystem::GetGameSystem().GetFileManager()->GetFileInfoFromMap(libName);
-                        if (pFileInfo) {
-                            std::ifstream ifs;
-
-                            ifs.open(pFileInfo->filePath, std::ios_base::in);
-                            if (!ifs.is_open()) break;
-
-                            if (!LoadMaterial(ifs)) return false;
-                        }
-                        mtlLibName = libName;
+                        mtlLibName = lineStr.substr(key.size(), lineStr.size() - key.size());
+                        if (!LoadMaterial(mtlLibName)) return false;
                     }
                     break;
                 }
@@ -117,7 +108,7 @@ namespace Engine46 {
                             vecNormalIndices.clear();
                             vecUVIndices.clear();
 
-                            CMeshBase* pMesh = meshManager->CreateMesh(meshName.c_str());
+                            CMeshBase* pMesh = meshManager->CreateMesh(meshName);
 
                             pMesh->CreateVertexBuffer(PRIMITIVE_TOPOLOGY_TYPE::TRIANGLELIST, vecVertexInfo);
 
@@ -160,7 +151,7 @@ namespace Engine46 {
                             vecNormalIndices.clear();
                             vecUVIndices.clear();
 
-                            CMeshBase* pMesh = meshManager->CreateMesh(materialName.c_str());
+                            CMeshBase* pMesh = meshManager->CreateMesh(meshName + materialName);
 
                             pMesh->CreateVertexBuffer(PRIMITIVE_TOPOLOGY_TYPE::TRIANGLELIST, vecVertexInfo);
 
@@ -221,6 +212,8 @@ namespace Engine46 {
                     std::string bufStr;
                     const int typeCnt = 3;
                     while (std::getline(ss, bufStr, ' ')) {
+                        if (bufStr.empty()) continue;
+
                         bufStr += "/";
 
                         int indedxType[typeCnt] = { -1, -1, -1 };
@@ -333,91 +326,100 @@ namespace Engine46 {
         return true;
     }
 
-    bool COBJLoader::LoadMaterial(std::ifstream& ifs) {
-        CMaterialManager* materialManager = CGameSystem::GetGameSystem().GetMaterialManager();
-        if (!materialManager) return false;
-        CTextureManager* textureManager = CGameSystem::GetGameSystem().GetTextureManager();
-        if (!textureManager) return false;
+    bool COBJLoader::LoadMaterial(const std::string& fileName) {
 
-        std::string materialName;
-        std::string findKeyStr("newmtl ");
-        
-        std::string diffuseTexStr;
+        FileInfo* pFileInfo = CGameSystem::GetGameSystem().GetFileManager()->GetFileInfoFromMap(fileName);
+        if (pFileInfo) {
+            std::ifstream ifs;
 
-        VECTOR4 diffuse;
-        VECTOR4 ambient;
-        VECTOR4 specular;
+            ifs.open(pFileInfo->filePath);
+            if (!ifs) return false;
 
-        std::string lineStr;
-        while (!ifs.eof()) {
-            std::getline(ifs, lineStr);
-            if (lineStr.empty()) continue;
+            CMaterialManager* materialManager = CGameSystem::GetGameSystem().GetMaterialManager();
+            if (!materialManager) return false;
 
-            std::string str = lineStr.substr(0, findKeyStr.size());
-            if (findKeyStr == str) {
-                if (!materialName.empty()) {
-                    CMaterialBase* pMaterial = materialManager->CreateMaterial(materialName.c_str());
-                    if (!pMaterial) continue;
-                    
-                    pMaterial->SetDiffuse(diffuse);
-                    pMaterial->SetAmbient(ambient);
-                    pMaterial->SetSpecular(specular);
-                    pMaterial->SetTexture(diffuseTexStr);
+            std::string materialName;
+            std::string findKeyStr("newmtl ");
+
+            std::string diffuseTexStr;
+
+            VECTOR4 diffuse;
+            VECTOR4 ambient;
+            VECTOR4 specular;
+
+            std::string lineStr;
+            while (!ifs.eof()) {
+                std::getline(ifs, lineStr);
+                if (lineStr.empty()) continue;
+
+                std::string str = lineStr.substr(0, findKeyStr.size());
+                if (findKeyStr == str) {
+                    if (!materialName.empty()) {
+                        CMaterialBase* pMaterial = materialManager->CreateMaterial(materialName);
+                        if (!pMaterial) continue;
+
+                        pMaterial->SetDiffuse(diffuse);
+                        pMaterial->SetAmbient(ambient);
+                        pMaterial->SetSpecular(specular);
+                        pMaterial->SetTexture(diffuseTexStr);
+                    }
+                    materialName = lineStr.substr(findKeyStr.size(), lineStr.size() - findKeyStr.size());
                 }
-                materialName = lineStr.substr(findKeyStr.size(), lineStr.size() - findKeyStr.size());
-            }
 
-            std::stringstream ss(lineStr);
+                std::stringstream ss(lineStr);
 
-            std::string bufStr;
-            while (std::getline(ss, bufStr, '\t')) {
-                if (bufStr.empty())  continue;
+                std::string bufStr;
+                while (std::getline(ss, bufStr, '\t')) {
 
-                static const std::vector<std::string> keyStrs = {
-                    "Ka ",
-                    "Kd ",
-                    "Ks ",
-                    "map_Kd ",
-                };
-                for (const auto& key : keyStrs) {
-                    std::string keyStr = bufStr.substr(0, key.size());
+                    static const std::vector<std::string> keyStrs = {
+                        "Ka ",
+                        "Kd ",
+                        "Ks ",
+                        "map_Kd ",
+                    };
+                    for (const auto& key : keyStrs) {
+                        std::string keyStr = bufStr.substr(0, key.size());
 
-                    if (keyStr == "Ka ") {
-                        std::stringstream ss(bufStr.substr(key.size()));
+                        if (keyStr == "Ka ") {
+                            std::stringstream ss(bufStr.substr(key.size()));
 
-                        ss >> ambient.x >> ambient.y >> ambient.z;
-                        ambient.w = 1.0f;
-                        break;
-                    }
-                    else if (keyStr == "Kd ") {
-                        std::stringstream ss(bufStr.substr(key.size()));
+                            ss >> ambient.x >> ambient.y >> ambient.z;
+                            ambient.w = 1.0f;
+                            break;
+                        }
+                        else if (keyStr == "Kd ") {
+                            std::stringstream ss(bufStr.substr(key.size()));
 
-                        ss >> diffuse.x >> diffuse.y >> diffuse.z;
-                        diffuse.w = 1.0f;
-                        break;
-                    }
-                    else if (keyStr == "Ks ") {
-                        std::stringstream ss(bufStr.substr(key.size()));
+                            ss >> diffuse.x >> diffuse.y >> diffuse.z;
+                            diffuse.w = 1.0f;
+                            break;
+                        }
+                        else if (keyStr == "Ks ") {
+                            std::stringstream ss(bufStr.substr(key.size()));
 
-                        ss >> specular.x >> specular.y >> specular.z;
-                        specular.w = 1.0f;
-                        break;
-                    }
-                    else if (keyStr == "map_Kd ") {
-                        std::stringstream ss(bufStr.substr(key.size()));
-                        while (std::getline(ss, diffuseTexStr, '\\')) {}
-                        break;
+                            ss >> specular.x >> specular.y >> specular.z;
+                            specular.w = 1.0f;
+                            break;
+                        }
+                        else if (keyStr == "map_Kd ") {
+                            std::stringstream ss(bufStr.substr(key.size()));
+                            while (std::getline(ss, diffuseTexStr, '\\')) {}
+
+                            ss = std::stringstream(diffuseTexStr);
+                            while (std::getline(ss, diffuseTexStr, ' ')) {}
+                            break;
+                        }
                     }
                 }
             }
-        }
-        if (!materialName.empty()) {
+            if (!materialName.empty()) {
 
-            CMaterialBase* pMaterial = materialManager->CreateMaterial(materialName.c_str());
-            pMaterial->SetDiffuse(diffuse);
-            pMaterial->SetAmbient(ambient);
-            pMaterial->SetSpecular(specular);
-            pMaterial->SetTexture(diffuseTexStr);
+                CMaterialBase* pMaterial = materialManager->CreateMaterial(materialName);
+                pMaterial->SetDiffuse(diffuse);
+                pMaterial->SetAmbient(ambient);
+                pMaterial->SetSpecular(specular);
+                pMaterial->SetTexture(diffuseTexStr);
+            }
         }
 
         return true;

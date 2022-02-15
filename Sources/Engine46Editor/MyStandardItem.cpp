@@ -10,7 +10,7 @@
 MyStandardItem::MyStandardItem(Engine46::CActorBase* pActor) :
     pActor(pActor)
 {
-    setText(pActor->GetActorName().c_str());
+    setText(QString(pActor->GetActorName().c_str()));
 }
 
 MyStandardItem::~MyStandardItem() 

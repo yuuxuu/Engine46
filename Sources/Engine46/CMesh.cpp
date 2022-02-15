@@ -18,17 +18,13 @@ namespace Engine46 {
     CMeshBase::CMeshBase() :
         m_meshID(0),
         m_meshName("Mesh_" + std::to_string(m_meshID))
-    {
-        m_meshName.resize(m_meshName.size());
-    }
+    {}
 
     // コンストラクタ
     CMeshBase::CMeshBase(const std::string& meshName) :
         m_meshID(0),
         m_meshName(meshName)
-    {
-        m_meshName.resize(m_meshName.size());
-    }
+    {}
 
     // デストラクタ
     CMeshBase::~CMeshBase()
@@ -54,9 +50,9 @@ namespace Engine46 {
     // マテリアルを設定
     void CMeshBase::SetMaterial(const std::string& materialName) {
         CMaterialManager* materialManager = CGameSystem::GetGameSystem().GetMaterialManager();
-        CMaterialBase* pMaterial = materialManager->GetMaterialFromMap(materialName.c_str());
+        CMaterialBase* pMaterial = materialManager->GetMaterialFromMap(materialName);
         if (!pMaterial) {
-            pMaterial = materialManager->CreateMaterial(materialName.c_str());
+            pMaterial = materialManager->CreateMaterial(materialName);
         }
         this->pMaterial = pMaterial;
     }

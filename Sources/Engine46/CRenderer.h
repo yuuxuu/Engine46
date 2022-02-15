@@ -64,6 +64,7 @@ namespace Engine46 {
         virtual void CreateUnorderedAccessBuffer(std::unique_ptr<CUnorderedAccessBufferBase>& pUnorderedAccessBuffer, UINT byteWidth, UINT byteSize) {};
         virtual void CreateMesh(std::unique_ptr<CMeshBase>& pMesh, const std::string& meshName) {};
         virtual void CreateTexture(std::unique_ptr<CTextureBase>& pTexture, const std::string& textureName) {};
+        virtual void CreateShaderResourceView(CTextureBase* pTexture) {};
         virtual void CreateShader(std::unique_ptr<CShaderPackage>& pShaderPackage, const std::string& shaderName) {};
 
         RECT GetWindowRect() const { return m_windowRect; }

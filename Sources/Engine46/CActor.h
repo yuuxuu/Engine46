@@ -88,7 +88,7 @@ namespace Engine46 {
         void SetActorID(const UINT id) { m_actorID = id; }
 
         void SetActorName(const std::string& actorName) { m_actorName = actorName; }
-        std::string GetActorName() const { return m_actorName.c_str(); }
+        std::string GetActorName() const { return m_actorName; }
 
         CConstantBufferBase* GetWorldConstantBuffer() const { return m_pWorldConstantBuffer.get(); }
         void UpdateWorldConstantBuffer(void* pData);

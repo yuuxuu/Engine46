@@ -25,7 +25,7 @@ namespace Engine46 {
     }
 
     // コンストラクタ
-    CSceneBase::CSceneBase(const char* sceneName) :
+    CSceneBase::CSceneBase(const std::string& sceneName) :
         m_sceneID(0),
         m_sceneName(sceneName)
     {

@@ -85,7 +85,7 @@ namespace Engine46 {
     }
 
     // OBBメッシュを作成
-    void COBB::CreateOBBMesh(const char* meshName) {
+    void COBB::CreateOBBMesh(const std::string& meshName) {
         
         if (!pMesh) {
             CMeshManager* manager = CGameSystem::GetGameSystem().GetMeshManager();

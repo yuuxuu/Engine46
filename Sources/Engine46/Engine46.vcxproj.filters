@@ -210,7 +210,7 @@
     <ClCompile Include="COBJLoader.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="CTaskSystem.cpp">
+    <ClCompile Include="CThreadPoolSystem.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -404,7 +404,7 @@
     <ClInclude Include="COBJLoader.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="CTaskSystem.h">
+    <ClInclude Include="CThreadPoolSystem.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
@@ -461,9 +461,6 @@
       <Filter>リソース ファイル\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="..\..\Assets\Shader\HLSL\SkyDome.hlsl">
-      <Filter>リソース ファイル\HLSL</Filter>
-    </FxCompile>
-    <FxCompile Include="..\..\Assets\Shader\HLSL\CubeMapReflection.hlsl">
       <Filter>リソース ファイル\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="..\..\Assets\Shader\HLSL\CS_LightCulling.hlsl">

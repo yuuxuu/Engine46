@@ -60,7 +60,7 @@ namespace Engine46 {
         BYTE* GetBuffer() const { return m_pBuf.get(); }
         int GetBufferSize() const { return m_byteSize; }
 
-        std::string GetShaderName() const { return m_shaderName.c_str(); }
+        std::string GetShaderName() const { return m_shaderName; }
 
         SHADER_TYPE GetShaderType() const { return m_shaderType; }
     };

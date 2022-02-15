@@ -51,6 +51,10 @@ PS_OUT PS_main(PS_IN input) {
     PS_OUT output = (PS_OUT)0;
 
     output.color = diffuseTex.Sample(sampleState, input.uv);
+    if (output.color.a <= 0.1f)
+    {
+        discard;
+    }
 
     output.color = all(output.color.xyz) ? output.color * material.diffuse : material.diffuse;
 
@@ -95,6 +99,9 @@ PS_OUT PS_main(PS_IN input) {
     }
 
     output.color *= dLight + pLight;
+
+    //float3 v = normalize(cameraPos.xyz - input.posw.xyz);
+    //output.color.xyz = BRDF(output.color.xyz, 1.0f, 0.0f, dLight.xyz + pLight.xyz, n, v);
 
     return output;
 }

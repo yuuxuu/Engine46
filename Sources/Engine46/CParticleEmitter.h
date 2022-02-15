@@ -43,7 +43,7 @@ namespace Engine46 {
 
         std::unique_ptr<CUnorderedAccessBufferBase> m_pParticleUab;
     public:
-        explicit CParticleEmitter(const char* particleEmitterName);
+        CParticleEmitter(const std::string& particleEmitterName);
         ~CParticleEmitter();
 
         void Initialize(UINT numParticle);
