@@ -468,7 +468,7 @@ namespace Engine46 {
             std::string filename(name);
             filename += extension;
 
-            FileInfo* pFileInfo = CGameSystem::GetGameSystem().GetFileManager()->GetFileInfoFromMap(filename);
+            FileInfo* pFileInfo = CFileManager::GetFileManager().GetFileInfoFromMap(filename);
 
             if (!pFileInfo) {
                 filename = name;

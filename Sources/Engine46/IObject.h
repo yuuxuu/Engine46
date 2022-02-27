@@ -20,9 +20,6 @@ namespace Engine46 {
         virtual void Initialize() = 0;
         virtual void Update() = 0;
         virtual void Draw() = 0;
-
-        virtual bool Save(std::ofstream& ofs) = 0;
-        virtual bool Load(std::ifstream& ifs) = 0;
     };
 
 } // namespace

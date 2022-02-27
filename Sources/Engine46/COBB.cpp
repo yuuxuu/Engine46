@@ -34,7 +34,7 @@ namespace Engine46 {
         Transform transform = pActor->GetTransform();
 
         Matrix matRotate;
-        matRotate.dx_m = DirectX::XMMatrixRotationRollPitchYaw(transform.rotation.x, transform.rotation.y, transform.rotation.z);
+        matRotate.dx_m = DirectX::XMMatrixRotationRollPitchYaw(transform.rotate.x, transform.rotate.y, transform.rotate.z);
 
         m_u[0] = VECTOR3(matRotate._11, matRotate._12, matRotate._13);
         m_u[1] = VECTOR3(matRotate._21, matRotate._22, matRotate._23);

@@ -9,6 +9,19 @@
 
 namespace Engine46 {
 
+    std::string CFileManager::ResourceRootPath() {
+        static std::string path;
+        if (!path.empty()) return path;
+
+        path = std::filesystem::current_path().generic_string();
+        int pos = static_cast<int>(path.find(PROJECT_ROOT_PATH));
+        if (pos != std::string::npos) {
+            path = path.substr(0, pos);
+            path += std::string(PROJECT_ROOT_PATH) + std::string(RESOURCE_ROOT_PATH);
+        }
+        return path;
+    }
+
     // コンストラクタ
     CFileManager::CFileManager()
     {}
@@ -20,19 +33,12 @@ namespace Engine46 {
     // 初期化
     bool CFileManager::Initialize() {
 
-        const std::vector<std::string> vecDirName = {
-            RESOURCE_ROOT_PATH
-        };
-
-        for (const auto& name : vecDirName) {
-            std::filesystem::recursive_directory_iterator itr = std::filesystem::recursive_directory_iterator(name);
-
-            for (const auto& entry : itr) {
-                if (entry.path().extension().empty()) {
-                    continue;
-                }
-                FileInfo* fileInfo = CreateFileInfo(entry.path());
+        auto itr = std::filesystem::recursive_directory_iterator(ResourceRootPath());
+        for (const auto& file : itr) {
+            if (file.path().extension().empty()) {
+                continue;
             }
+            FileInfo* fileInfo = CreateFileInfo(file.path());
         }
 
         return true;

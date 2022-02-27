@@ -7,7 +7,6 @@
 
 #include "CActor.h"
 #include "CGameSystem.h"
-#include "CDataRecord.h"
 #include "CMesh.h"
 #include "CMaterial.h"
 #include "CMaterialManager.h"
@@ -51,22 +50,13 @@ namespace Engine46 {
     {}
 
     // 初期化
-    void CActorBase::Initialize() {
-
-        vecDataRecords.clear();
-
-        vecDataRecords.emplace_back(CDataRecordBase(offsetof(CActorBase, m_classID), sizeof(m_classID)));
-        vecDataRecords.emplace_back(CDataRecordBase(offsetof(CActorBase, m_actorID), sizeof(m_actorID)));
-        vecDataRecords.emplace_back(CStrDataRecord(offsetof(CActorBase, m_actorName), m_actorName));
-        vecDataRecords.emplace_back(CDataRecordBase(offsetof(CActorBase, m_transform), sizeof(m_transform)));
-        vecDataRecords.emplace_back(CPtrDataRecord(m_parentActorID));
-        vecDataRecords.emplace_back(CListDataRecord(m_childActorIDList));
-    }
+    void CActorBase::Initialize() 
+    {}
 
     // 更新
     void CActorBase::Update() {
 
-        for (auto& chiled : pChildActorList) {
+        for (const auto& chiled : pChildActorList) {
             chiled->Update();
         }
     }
@@ -116,29 +106,32 @@ namespace Engine46 {
             }
         }
 
-        for (auto& chiled : pChildActorList) {
+        for (const auto& chiled : pChildActorList) {
             chiled->Draw();
         }
     }
 
-    // オブジェクトを保存
-    bool CActorBase::Save(std::ofstream& ofs) {
-        for (auto& record : vecDataRecords) {
-            record.WriteData(ofs, (char*)this);
-        }
+    //　アクターをシリアライズ
+    void CActorBase::SerializeActor(cereal::JSONOutputArchive& archive) {
 
-        return true;
+        archive(
+            cereal::make_nvp("Class", m_classID),
+            cereal::make_nvp(m_actorName, *this)
+        );
+
+        for (const auto& chiled : pChildActorList) {
+            chiled->SerializeActor(archive);
+        }
     }
 
-    // オブジェクト読み込み
-    bool CActorBase::Load(std::ifstream& ifs) {
-        for (auto& record : vecDataRecords) {
-            if (&record == &vecDataRecords[0]) continue;
+    // アクターをデシリアライズ
+    void CActorBase::DeserializeActor(cereal::JSONInputArchive& archive) {
 
-            record.ReadData(ifs, (char*)this);
+        archive(cereal::make_nvp(m_actorName, *this));
+
+        for (const auto& chiled : pChildActorList) {
+            chiled->DeserializeActor(archive);
         }
-
-        return true;
     }
 
     // コンスタントバッファを更新
@@ -294,7 +287,7 @@ namespace Engine46 {
         matScale.dx_m = DirectX::XMMatrixScaling(m_transform.scale.x, m_transform.scale.y, m_transform.scale.z);
 
         Matrix matRotate;
-        matRotate.dx_m = DirectX::XMMatrixRotationRollPitchYaw(m_transform.rotation.x, m_transform.rotation.y, m_transform.rotation.z);
+        matRotate.dx_m = DirectX::XMMatrixRotationRollPitchYaw(m_transform.rotate.x, m_transform.rotate.y, m_transform.rotate.z);
 
         Matrix matTrans;
         matTrans.dx_m = DirectX::XMMatrixTranslation(m_transform.pos.x, m_transform.pos.y, m_transform.pos.z);
@@ -331,7 +324,7 @@ namespace Engine46 {
     // 向きベクトルを取得
     VECTOR3 CActorBase::GetDirectionVector() {
         Matrix matRotate;
-        matRotate.dx_m = DirectX::XMMatrixRotationRollPitchYaw(m_transform.rotation.x, m_transform.rotation.y, m_transform.rotation.z);
+        matRotate.dx_m = DirectX::XMMatrixRotationRollPitchYaw(m_transform.rotate.x, m_transform.rotate.y, m_transform.rotate.z);
 
         VECTOR3 right;
         right.x = matRotate._11;

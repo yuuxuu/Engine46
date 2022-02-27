@@ -98,9 +98,9 @@ void MyInspectorWidget::SetSelectActor(Engine46::CActorBase* pActor) {
     ui.doubleSpinBox_ScaY->setValue(static_cast<float>(transform.scale.y));
     ui.doubleSpinBox_ScaZ->setValue(static_cast<float>(transform.scale.z));
 
-    ui.doubleSpinBox_RotX->setValue(static_cast<float>(transform.rotation.x));
-    ui.doubleSpinBox_RotY->setValue(static_cast<float>(transform.rotation.y));
-    ui.doubleSpinBox_RotZ->setValue(static_cast<float>(transform.rotation.z));
+    ui.doubleSpinBox_RotX->setValue(static_cast<float>(transform.rotate.x));
+    ui.doubleSpinBox_RotY->setValue(static_cast<float>(transform.rotate.y));
+    ui.doubleSpinBox_RotZ->setValue(static_cast<float>(transform.rotate.z));
 
     for (auto spinBox : pSpinBoxs) {
         spinBox->blockSignals(false);

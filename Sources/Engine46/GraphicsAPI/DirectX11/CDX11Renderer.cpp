@@ -105,7 +105,7 @@ namespace Engine46 {
     // 描画準備開始
     void CDX11Renderer::Begine(CSceneBase* pScene) {
         if (!m_pRenderSprite) {
-            m_pRenderSprite = std::make_unique<CSprite>("RenderSprite");
+            m_pRenderSprite = std::make_unique<CActorBase>((UINT)ActorType::Character, "RenderSprite", Transform());
 
             std::unique_ptr<CConstantBufferBase> worldConstantBuffer;
             CreateConstantBuffer(worldConstantBuffer, sizeof(worldCB));
@@ -225,7 +225,7 @@ namespace Engine46 {
 
     // テクスチャ作成
     void CDX11Renderer::CreateTexture(std::unique_ptr<CTextureBase>& pTexture, const std::string& textureName) {
-        FileInfo* pFileInfo = CGameSystem::GetGameSystem().GetFileManager()->GetFileInfoFromMap(textureName);
+        FileInfo* pFileInfo = CFileManager::GetFileManager().GetFileInfoFromMap(textureName);
 
         if (!pFileInfo) return;
 
@@ -239,7 +239,7 @@ namespace Engine46 {
 
     // シェーダー作成
     void CDX11Renderer::CreateShader(std::unique_ptr<CShaderPackage>& pShaderPackage, const std::string& shaderName) {
-        FileInfo* pFileInfo = CGameSystem::GetGameSystem().GetFileManager()->GetFileInfoFromMap(shaderName);
+        FileInfo* pFileInfo = CFileManager::GetFileManager().GetFileInfoFromMap(shaderName);
 
         if (!pFileInfo) return;
 

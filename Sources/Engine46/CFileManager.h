@@ -12,7 +12,8 @@
 
 namespace Engine46 {
 
-    constexpr const char* RESOURCE_ROOT_PATH = "D:/Engine46/Assets/";
+    constexpr const char* PROJECT_ROOT_PATH = "Engine46/";
+    constexpr const char* RESOURCE_ROOT_PATH = "Assets/";
 
     struct FileInfo {
         std::string filePath;
@@ -34,10 +35,18 @@ namespace Engine46 {
     private:
         std::map<std::string, std::unique_ptr<FileInfo>>    m_pMapFileInfo;
 
-
     public:
+        static std::string ResourceRootPath();
+
+    private:
         CFileManager();
         ~CFileManager();
+
+    public:
+        static CFileManager& GetFileManager() {
+            static CFileManager fileSystem;
+            return fileSystem;
+        }
 
         bool Initialize();
 

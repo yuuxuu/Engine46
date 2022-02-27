@@ -6,7 +6,6 @@
  */
 
 #include "CShader.h"
-#include "CDataRecord.h"
 
 namespace Engine46 {
 
@@ -26,8 +25,6 @@ namespace Engine46 {
         m_shaderName.resize(m_shaderName.size());
 
         this->SetData(pBlob);
-
-        this->Initialize();
     }
 
     // デストラクタ
@@ -35,33 +32,8 @@ namespace Engine46 {
     {}
 
     // 初期化
-    void CShaderBase::Initialize() {
-
-        vecDataRecord.clear();
-
-        vecDataRecord.emplace_back(std::make_unique<CDataRecordBase>(offsetof(CShaderBase, m_shaderType), sizeof(UINT)));
-        vecDataRecord.emplace_back(std::make_unique<CStrDataRecord>(offsetof(CShaderBase, m_shaderName), m_shaderName));
-        vecDataRecord.emplace_back(std::make_unique<CDataRecordBase>(offsetof(CShaderBase, m_byteSize), sizeof(m_byteSize)));
-        vecDataRecord.emplace_back(std::make_unique<CBufDataRecord>(m_pBuf, m_byteSize));
-    }
-
-    // シェーダーの保存
-    bool CShaderBase::Save(std::ofstream& ofs) {
-        for (auto& record : vecDataRecord) {
-            record->WriteData(ofs, (char*)this);
-        }
-
-        return true;
-    }
-
-    // シェーダーの読み込み
-    bool CShaderBase::Load(std::ifstream& ifs) {
-        for (auto& record : vecDataRecord) {
-            record->ReadData(ifs, (char*)this);
-        }
-
-        return true;
-    }
+    void CShaderBase::Initialize() 
+    {}
 
     // データを設定
     void CShaderBase::SetData(ComPtr<ID3DBlob>& pBlob) {

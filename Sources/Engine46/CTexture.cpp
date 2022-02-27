@@ -40,7 +40,7 @@ namespace Engine46 {
     bool CTextureBase::LoadTexture(const std::string& textureName) {
         if (m_isLoaded) return true;
         
-        FileInfo* pFileInfo = CGameSystem::GetGameSystem().GetFileManager()->GetFileInfoFromMap(textureName);
+        FileInfo* pFileInfo = CFileManager::GetFileManager().GetFileInfoFromMap(textureName);
         if (!pFileInfo) return false;
         
         std::unique_ptr<wchar_t[]> loadName;

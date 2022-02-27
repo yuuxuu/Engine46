@@ -23,8 +23,6 @@ namespace Engine46 {
         UINT allCount;
         UINT rootCount;
         UINT cameraCount;
-        UINT spriteCount;
-        UINT boxCount;
         UINT charctorCount;
         UINT particeleEmitterCount;
         UINT lightCount;
@@ -33,8 +31,6 @@ namespace Engine46 {
             allCount(0),
             rootCount(0),
             cameraCount(0),
-            spriteCount(0),
-            boxCount(0),
             charctorCount(0),
             particeleEmitterCount(0),
             lightCount(0)
@@ -43,12 +39,12 @@ namespace Engine46 {
 
     class CActorManager {
     private:
-        std::map<std::string, std::unique_ptr<CActorBase>>    m_pMapActor;
-        std::map<std::string, std::unique_ptr<CLight>>        m_pMapLight;
+        std::map<std::string, std::unique_ptr<CActorBase>>      m_pMapActor;
+        std::map<std::string, std::unique_ptr<CLight>>          m_pMapLight;
 
         CRendererBase* pRenderer;
 
-        classCount                                  m_classCount;
+        classCount                                              m_classCount;
 
     public:
         explicit CActorManager(CRendererBase* pRenderer);
@@ -63,11 +59,9 @@ namespace Engine46 {
         void AddLightFromMap(const std::string& name, std::unique_ptr<CLight>& pLight);
         CActorBase* GetLightFromMap(const std::string& name);
 
-        bool SaveActor();
-        bool LoadActor();
-
     private:
         void ConnectActor();
+
 
     };
 } // namespace

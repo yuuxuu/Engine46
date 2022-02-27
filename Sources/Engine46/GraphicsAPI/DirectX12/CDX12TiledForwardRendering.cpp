@@ -264,7 +264,7 @@ namespace Engine46{
     }
 
     // 描画したシーン描画
-    void CDX12TiledForwardRendering::RenderingForRenderScene(CSprite* pSprite, UINT x, UINT y, UINT width, UINT height) {
+    void CDX12TiledForwardRendering::RenderingForRenderScene(CActorBase* pSprite, UINT x, UINT y, UINT width, UINT height) {
 
         if (!pSprite) return;
 

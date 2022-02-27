@@ -16,7 +16,6 @@
 namespace Engine46 {
 
     // 前方宣言
-    class CDataRecordBase;
     class CActorBase;
     class CCamera;
     class CLight;
@@ -25,7 +24,6 @@ namespace Engine46 {
 
     class CSceneBase {
     protected:
-        std::vector<CDataRecordBase>    vecDataRecords;
 
         CActorBase*                     pRootActor;
 
@@ -42,8 +40,8 @@ namespace Engine46 {
         void Update();
         void Draw();
 
-        bool Save(std::ofstream& ofs);
-        bool Load(std::ifstream& ifs);
+        void SaveScene();
+        void LoadScene();
 
         void AddActorToScene(CActorBase* pActor);
 

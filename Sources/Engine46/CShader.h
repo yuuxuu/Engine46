@@ -14,9 +14,6 @@ using Microsoft::WRL::ComPtr;
 
 namespace Engine46 {
 
-    // 前方宣言
-    class CDataRecordBase;
-
     enum class SHADER_TYPE {
         TYPE_VERTEX,                // 頂点
         TYPE_PIXEL,                 // ピクセル
@@ -30,8 +27,6 @@ namespace Engine46 {
 
     class CShaderBase {
     protected:
-        std::vector<std::unique_ptr<CDataRecordBase>>   vecDataRecord;
-
         ComPtr<ID3DBlob>                                m_pBlob;
 
         std::string                                     m_shaderName;
@@ -50,9 +45,6 @@ namespace Engine46 {
 
         virtual void Create() {}
         virtual void Set() {}
-
-        bool Save(std::ofstream& ofs);
-        bool Load(std::ifstream& ifs);
 
         void SetData(ComPtr<ID3DBlob>& pBlob);
 

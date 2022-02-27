@@ -16,7 +16,7 @@ namespace Engine46 {
 
     // 前方宣言
     class CSceneBase;
-    class CSprite;
+    class CActorBase;
 
     static const DXGI_FORMAT RENDER_TARGET_FORMATS[] = {
         DXGI_FORMAT_R16G16B16A16_FLOAT, // Diffuse
@@ -40,11 +40,11 @@ namespace Engine46 {
         virtual void End() {};
 
         virtual void Rendering(CSceneBase* pScene) {};
-        virtual void RenderingForRenderScene(CSprite* pSprite, UINT x, UINT y, UINT width, UINT height) {};
-        virtual void RenderingForSceneLighting(CSprite* pSprite) {};
+        virtual void RenderingForRenderScene(CActorBase* pSprite, UINT x, UINT y, UINT width, UINT height) {};
+        virtual void RenderingForSceneLighting(CActorBase* pSprite) {};
         virtual void RenderingForPostEffect(CSceneBase* pScene) {};
 
-        virtual void DrawForRenderScene(CSprite* pSprite, UINT x, UINT y, UINT width, UINT height) {};
+        virtual void DrawForRenderScene(CActorBase* pSprite, UINT x, UINT y, UINT width, UINT height) {};
 
         CTextureBase* GetRenderTexture() const { return m_pRenderTex.get(); }
     };

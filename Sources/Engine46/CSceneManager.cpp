@@ -13,8 +13,6 @@
 
 namespace Engine46 {
 
-    constexpr const char* g_sceneListFileName = "SceneListData.bin";
-
     // コンストラクタ
     CSceneManager::CSceneManager()
     {}
@@ -25,63 +23,45 @@ namespace Engine46 {
 
     // シーン作成
     CSceneBase* CSceneManager::CreateScene(const std::string& sceneName) {
+        CSceneBase* pScene = GetSceneFromMap(sceneName);
+        
+        if (pScene) return pScene;
+
+        int sceneNo = static_cast<UINT>(m_pMapScene.size());
+        std::string name = sceneName;
+        if (name.empty()) {
+            name = "Scene_" + std::to_string(sceneNo);
+        }
+
         std::unique_ptr<CSceneBase> scene;
+        scene = std::make_unique<CSceneBase>(name);
 
-        if (!sceneName.empty()) {
-            scene = std::make_unique<CSceneBase>(sceneName);
-        }
-        else {
-            scene = std::make_unique<CSceneBase>();
-        }
+        pScene = scene.get();
 
-        scene->SetSceneID((UINT)m_pVecScene.size());
+        scene->SetSceneID(sceneNo);
 
-        scene->Initialize();
-
-        CSceneBase* pScene = scene.get();
-
-        this->AddSceneToVec(scene);
+        AddSceneToMap(sceneName, scene);
 
         return pScene;
     }
 
-    // シーン保存
-    bool CSceneManager::SaveScene() {
-        std::ios_base::openmode mode = std::ios_base::out | std::ios_base::binary;
-
-        std::ofstream ofs;
-        ofs.open(g_sceneListFileName, mode);
-
-        if (!ofs.is_open()) return false;
-
-        for (const auto& scene : m_pVecScene) {
-            scene->Save(ofs);
+    // シーンをマップへ追加
+    void CSceneManager::AddSceneToMap(const std::string& name, std::unique_ptr<CSceneBase>& pScene) {
+        
+        if (!GetSceneFromMap(name)) {
+            m_pMapScene[name] = std::move(pScene);
         }
-
-        return true;
     }
 
-    // シーン読み込み
-    bool CSceneManager::LoadScene() {
-        std::ios_base::openmode mode = std::ios_base::in | std::ios_base::binary;
+    // シーンを取得
+    CSceneBase* CSceneManager::GetSceneFromMap(const std::string& name) {
+        auto itr = m_pMapScene.find(name);
 
-        std::ifstream ifs;
-        ifs.open(g_sceneListFileName, mode);
-
-        if (!ifs.is_open()) return false;
-
-        while (true) {
-
-            if (ifs.eof()) break;
-
-            CSceneBase* pScene = CreateScene();
-
-            pScene->Load(ifs);
+        if (itr != m_pMapScene.end()) {
+            return itr->second.get();
         }
 
-        std::cout << g_sceneListFileName << "を読み込みしました。" << std::endl;
-
-        return true;
+        return nullptr;
     }
 
 } // namespace

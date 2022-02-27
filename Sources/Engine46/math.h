@@ -113,6 +113,15 @@ namespace Engine46 {
             y = f0.z * f1.x - f0.x * f1.z;
             z = f0.x * f1.y - f0.y * f1.x;
         };
+
+        template<class archive>
+        void serialize(archive& ar) {
+            ar(
+                CEREAL_NVP(x),
+                CEREAL_NVP(y),
+                CEREAL_NVP(z)
+            );
+        }
     };
 
     struct VECTOR4 {
@@ -160,20 +169,29 @@ namespace Engine46 {
 
     struct Transform {
         VECTOR3 pos;
-        VECTOR3 rotation;
+        VECTOR3 rotate;
         VECTOR3 scale;
 
         Transform() :
             pos(),
-            rotation(),
+            rotate(),
             scale(1.0f, 1.0f, 1.0f)
         {}
 
         Transform(VECTOR3 pos, VECTOR3 rotation, VECTOR3 scale) :
             pos(pos),
-            rotation(rotation),
+            rotate(rotation),
             scale(scale)
         {}
+
+        template<class archive>
+        void serialize(archive& ar) {
+            ar(
+                CEREAL_NVP(pos),
+                CEREAL_NVP(rotate),
+                CEREAL_NVP(scale)
+            );
+        }
     };
 
     struct Matrix {

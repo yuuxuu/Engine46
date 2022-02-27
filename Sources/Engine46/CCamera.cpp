@@ -6,7 +6,6 @@
  */
 
 #include "CCamera.h"
-#include "CDataRecord.h"
 #include "CInput.h"
 #include "CConstantBuffer.h"
 
@@ -32,14 +31,8 @@ namespace Engine46 {
     {}
 
     // 初期化
-    void CCamera::Initialize() {
-
-        vecDataRecords.emplace_back(CDataRecordBase(offsetof(CCamera, m_eye), sizeof(m_eye)));
-        vecDataRecords.emplace_back(CDataRecordBase(offsetof(CCamera, m_forcus), sizeof(m_forcus)));
-        vecDataRecords.emplace_back(CDataRecordBase(offsetof(CCamera, m_up), sizeof(m_up)));
-        vecDataRecords.emplace_back(CDataRecordBase(offsetof(CCamera, m_matView), sizeof(m_matView)));
-        vecDataRecords.emplace_back(CDataRecordBase(offsetof(CCamera, m_matProj), sizeof(m_matProj)));
-    }
+    void CCamera::Initialize() 
+    {}
 
     // 更新
     void CCamera::Update() {
@@ -78,8 +71,8 @@ namespace Engine46 {
             if (pInput->IsTriggerRightMouse()) {
                 float r = Vec3Lenght(m_forcus - m_eye);
 
-                float theta = m_transform.rotation.y + pInput->GetMousePosY() * speed;
-                float phi = m_transform.rotation.x + pInput->GetMousePosX() * speed;
+                float theta = m_transform.rotate.y + pInput->GetMousePosY() * speed;
+                float phi = m_transform.rotate.x + pInput->GetMousePosX() * speed;
 
                 VECTOR3 pos;
                 pos.x = r * sinf(theta) * cosf(phi);
@@ -88,8 +81,8 @@ namespace Engine46 {
 
                 m_eye = m_forcus + pos;
 
-                m_transform.rotation.x = phi;
-                m_transform.rotation.y = theta;
+                m_transform.rotate.x = phi;
+                m_transform.rotate.y = theta;
             }
         }
 

@@ -102,7 +102,7 @@ void Engine46Editor::InitializeFileTreeView() {
     QFileSystemModel* pFileModel = new QFileSystemModel;
 
     // ルートパスを設定
-    QModelIndex rootIndex = pFileModel->setRootPath(Engine46::RESOURCE_ROOT_PATH);
+    QModelIndex rootIndex = pFileModel->setRootPath(Engine46::CFileManager::ResourceRootPath().c_str());
 
     ui.FileTreeView->setModel(pFileModel);
     ui.FileTreeView->setRootIndex(rootIndex);

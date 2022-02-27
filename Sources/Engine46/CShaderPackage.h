@@ -138,9 +138,6 @@ namespace Engine46 {
 
         void AddShaderToVec(std::unique_ptr<CShaderBase>& pShader) { m_pVecShader.emplace_back(move(pShader)); }
 
-        bool SavePackage(std::ofstream& ofs);
-        bool LoadPackage(std::ifstream& ifs);
-
         CShaderBase* GetShader(SHADER_TYPE type);
 
         std::string GetPackageName() const { return m_PakageName; }

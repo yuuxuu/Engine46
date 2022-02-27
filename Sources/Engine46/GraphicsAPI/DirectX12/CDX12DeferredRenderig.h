@@ -48,10 +48,10 @@ namespace Engine46 {
         void End() override;
 
         void Rendering(CSceneBase* pScene) override;
-        void RenderingForSceneLighting(CSprite* pSprite) override;
+        void RenderingForSceneLighting(CActorBase* pSprite) override;
         void RenderingForPostEffect(CSceneBase* pScene) override;
 
-        void DrawForRenderScene(CSprite* pSprite, UINT x, UINT y, UINT width, UINT height) override;
+        void DrawForRenderScene(CActorBase* pSprite, UINT x, UINT y, UINT width, UINT height) override;
 
         CDX12Texture* GetRenderTexture() const { return m_pRenderTex.get(); };
 

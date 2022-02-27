@@ -13,8 +13,6 @@
 
 namespace Engine46 {
 
-    constexpr const char* g_ShaderPackageListFileName = "ShaderPackageList.bin";
-
     // コンストラクタ
     CShaderManager::CShaderManager(CRendererBase* pRenderer) :
         pRenderer(pRenderer)
@@ -61,50 +59,6 @@ namespace Engine46 {
         }
 
         return nullptr;
-    }
-
-    // シェーダーパッケージの保存
-    bool CShaderManager::SaveShaderPackageList() {
-
-        std::ios_base::openmode mode = std::ios_base::out | std::ios_base::binary;
-
-        std::ofstream ofs;
-        ofs.open(g_ShaderPackageListFileName, mode);
-
-        if (!ofs.is_open()) return false;
-
-        int packageSize = (UINT)m_pMapShaderPackage.size();
-        ofs.write((char*)&packageSize, sizeof(int));
-
-        for (const auto& pSp : m_pMapShaderPackage) {
-            if (!pSp.second->SavePackage(ofs)) continue;
-        }
-
-        return true;
-    }
-
-    // シェーダーパッケージの読み込み
-    bool CShaderManager::LoadShaderPackageList() {
-
-        std::ios_base::openmode mode = std::ios_base::in | std::ios_base::binary;
-
-        std::ifstream ifs;
-        ifs.open(g_ShaderPackageListFileName, mode);
-
-        if (!ifs.is_open()) return false;
-
-        int packageSize = 0;
-        ifs.read((char*)&packageSize, sizeof(int));
-
-        for (int i = 0; i < packageSize; ++i) {
-            std::unique_ptr<CShaderPackage> sp = std::make_unique<CShaderPackage>();
-
-            if (sp->LoadPackage(ifs)) {
-                this->AddShaderPackageToMap(sp->GetPackageName(), sp);
-            }
-        }
-
-        return true;
     }
 
 } // namespace

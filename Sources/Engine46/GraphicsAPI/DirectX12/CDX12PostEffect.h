@@ -24,7 +24,7 @@ namespace Engine46 {
     class CDX12Texture;
     class CDX12UnorderedAccessBuffer;
     class CConstantBufferBase;
-    class CSprite;
+    class CActorBase;
 
     class CDX12PostEffect : public IPostEffect {
     private:
@@ -65,10 +65,10 @@ namespace Engine46 {
         void PostEffectBlur_CS(CDX12Texture* pDX12Texture);
         void Blur_CS(CDX12Texture* pDX12InTexture, CDX12Texture* pDX12OutTexture);
 
-        void LuminanceExtraction(CDX12Texture* pDX12Texture, CSprite* pSprite);
-        void PostEffectBlur(CDX12Texture* pDX12Texture, CSprite* pSprite);
-        void PostEffectBloom(CDX12Texture* pDX12Texture, CSprite* pSprite);
-        void RenderingForPostEffect(CDX12Texture* pDX12Texture, D3D12_CPU_DESCRIPTOR_HANDLE handle, CSprite* pSprite);
+        void LuminanceExtraction(CDX12Texture* pDX12Texture, CActorBase* pSprite);
+        void PostEffectBlur(CDX12Texture* pDX12Texture, CActorBase* pSprite);
+        void PostEffectBloom(CDX12Texture* pDX12Texture, CActorBase* pSprite);
+        void RenderingForPostEffect(CDX12Texture* pDX12Texture, D3D12_CPU_DESCRIPTOR_HANDLE handle, CActorBase* pSprite);
 
         CDX12Texture* GetLuminanceExtractionTexture() const { return m_pLuminanceExtractionTexture.get(); }
         CDX12Texture* GetBloomTexture() const { return m_pBloomTexture.get(); }

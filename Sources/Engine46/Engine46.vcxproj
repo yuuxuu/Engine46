@@ -29,7 +29,6 @@
     <ClCompile Include="CActorManager.cpp" />
     <ClCompile Include="CCamera.cpp" />
     <ClCompile Include="CConstantBuffer.cpp" />
-    <ClCompile Include="CDataRecord.cpp" />
     <ClCompile Include="CDirectionalLight.cpp" />
     <ClCompile Include="CFBXLoader.cpp" />
     <ClCompile Include="CFileManager.cpp" />
@@ -54,7 +53,6 @@
     <ClCompile Include="CShaderPackage.cpp" />
     <ClCompile Include="CModelMesh.cpp" />
     <ClCompile Include="CSpotLight.cpp" />
-    <ClCompile Include="CSprite.cpp" />
     <ClCompile Include="CThreadPoolSystem.cpp" />
     <ClCompile Include="CTexture.cpp" />
     <ClCompile Include="CTextureManager.cpp" />
@@ -132,7 +130,6 @@
     <ClInclude Include="CActorManager.h" />
     <ClInclude Include="CCamera.h" />
     <ClInclude Include="CConstantBuffer.h" />
-    <ClInclude Include="CDataRecord.h" />
     <ClInclude Include="CDirectionalLight.h" />
     <ClInclude Include="CFBXLoader.h" />
     <ClInclude Include="CFileManager.h" />
@@ -157,7 +154,6 @@
     <ClInclude Include="CShaderPackage.h" />
     <ClInclude Include="CModelMesh.h" />
     <ClInclude Include="CSpotLight.h" />
-    <ClInclude Include="CSprite.h" />
     <ClInclude Include="CThreadPoolSystem.h" />
     <ClInclude Include="CTexture.h" />
     <ClInclude Include="CTextureManager.h" />
@@ -219,6 +215,9 @@
     </FxCompile>
     <FxCompile Include="..\..\Assets\Shader\HLSL\CS_LightCulling.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\..\Assets\Shader\HLSL\CS_LuminanceExtraction.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>

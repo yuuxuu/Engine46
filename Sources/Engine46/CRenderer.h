@@ -17,7 +17,8 @@
 #include "CShaderPackage.h"
 #include "CConstantBuffer.h"
 #include "CUnorderedAccessBuffer.h"
-#include "CSprite.h"
+
+#include "CActor.h"
 
 namespace Engine46 {
 
@@ -40,7 +41,7 @@ namespace Engine46 {
         std::unique_ptr<CConstantBufferBase>    m_pSpotLightCB;
         std::unique_ptr<CConstantBufferBase>    m_pScreenParamCB;
 
-        std::unique_ptr<CSprite>                m_pRenderSprite;
+        std::unique_ptr<CActorBase>             m_pRenderSprite;
 
         CTextureBase*                           pCubeTexture;
 
@@ -68,7 +69,7 @@ namespace Engine46 {
         virtual void CreateShader(std::unique_ptr<CShaderPackage>& pShaderPackage, const std::string& shaderName) {};
 
         RECT GetWindowRect() const { return m_windowRect; }
-        CSprite* GetRenderSprite() const { return m_pRenderSprite.get(); }
+        CActorBase* GetRenderSprite() const { return m_pRenderSprite.get(); }
     };
 
 } // namespace

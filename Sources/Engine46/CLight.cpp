@@ -9,7 +9,6 @@
 #include "CMesh.h"
 #include "CMaterial.h"
 #include "CConstantBuffer.h"
-#include "CSprite.h"
 
 namespace Engine46 {
 

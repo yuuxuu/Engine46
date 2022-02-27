@@ -56,9 +56,6 @@ namespace Engine46 {
         // タイマの分解能力を１ｍｓにする
         timeBeginPeriod(1);
 
-        m_pFileManager = std::make_unique<CFileManager>();
-        if (!m_pFileManager->Initialize()) return false;
-
         m_pActorManager = std::make_unique<CActorManager>(pRenderer);
 
         m_pShaderManager = std::make_unique<CShaderManager>(pRenderer);
@@ -69,16 +66,18 @@ namespace Engine46 {
 
         m_pMaterialManager = std::make_unique<CMaterialManager>(pRenderer);
 
-        m_pSceneManager = std::make_unique<CSceneManager>();
-
         HINSTANCE hInstance = GetModuleHandle(NULL);
 
         m_pInput = std::make_unique<CInput>(hwnd);
         if (!m_pInput->Initialize(hInstance)) return false;
 
         // レンダーシステムにシーンを設定
-        CSceneBase* pScene = m_pSceneManager->CreateScene();
+        CSceneBase* pScene = CSceneManager::GetSceneManager().CreateScene();
         CRendererSystem::GetRendererSystem().SetRenderScene(pScene);
+
+        if (!CFileManager::GetFileManager().Initialize()) {
+            return false;
+        }
 
         {
             CActorBase* pRoot = m_pActorManager->CreateActor(ActorType::Root);
@@ -240,6 +239,8 @@ namespace Engine46 {
         }
 
         m_isInitialize = true;
+
+        pScene->SaveScene();
 
         return true;
     }

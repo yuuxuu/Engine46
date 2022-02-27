@@ -20,7 +20,7 @@ namespace Engine46 {
     private:
         std::map<std::string, std::unique_ptr<CMaterialBase>>   m_pMapMaterial;
 
-        CRendererBase* pRenderer;
+        CRendererBase*                                          pRenderer;
 
         int                                                     m_materialCount;
 

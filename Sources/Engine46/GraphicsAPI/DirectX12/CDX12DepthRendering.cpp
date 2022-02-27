@@ -11,6 +11,8 @@
 #include "CDX12Renderer.h"
 #include "CDX12Texture.h"
 
+#include "../CActor.h"
+
 #include "../CGameSystem.h"
 #include "../CRendererSystem.h"
 #include "../CShaderManager.h"
@@ -144,7 +146,7 @@ namespace Engine46 {
     }
 
     // 描画したシーン描画
-    void CDX12DepthRendering::DrawForRenderScene(CSprite* pSprite, UINT x, UINT y, UINT width, UINT height) {
+    void CDX12DepthRendering::DrawForRenderScene(CActorBase* pSprite, UINT x, UINT y, UINT width, UINT height) {
 
         if (!pSprite) return;
 

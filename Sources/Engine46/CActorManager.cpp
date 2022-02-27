@@ -6,7 +6,6 @@
  */
 
 #include "CActorManager.h"
-#include "CSprite.h"
 #include "CCamera.h"
 #include "CDirectionalLight.h"
 #include "CPointLight.h"
@@ -20,8 +19,6 @@
 
 namespace Engine46 {
 
-    constexpr const char* g_ActorListFileName = "ActorListData.bin";
-
     // コンストラクタ
     CActorManager::CActorManager(CRendererBase* pRenderer) :
         pRenderer(pRenderer)
@@ -34,49 +31,33 @@ namespace Engine46 {
     // オブジェクト作成
     CActorBase* CActorManager::CreateActor(ActorType actorType) {
         std::unique_ptr<CActorBase> actor;
-        RECT rect;
         std::string actorName;
-        CMeshBase* pMesh = nullptr;
+        const RECT rect = pRenderer->GetWindowRect();
 
         switch (actorType) {
         case ActorType::Root:
             actorName = "Root_" + std::to_string(m_classCount.rootCount++);
-
-            actor = std::make_unique<CActorBase>((UINT)actorType, actorName, Transform());
             break;
         case ActorType::Camera:
-            rect = pRenderer->GetWindowRect();
             actorName = "Camera_" + std::to_string(m_classCount.cameraCount++);
-
             actor = std::make_unique<CCamera>(actorName, rect.w, rect.h);
             break;
-        case ActorType::Sprite:
-            actorName = "Sprite_" + std::to_string(m_classCount.spriteCount++);
-
-            actor = std::make_unique<CSprite>(actorName);
-            break;
-        case ActorType::Box:
-            actorName = "Box_" + std::to_string(m_classCount.boxCount++);
-
-            actor = std::make_unique<CActorBase>((UINT)actorType, actorName, Transform());
-            break;
-        case ActorType::Character:
+        case ActorType::Actor:
             actorName = "Character_" + std::to_string(m_classCount.charctorCount++);
-
-            actor = std::make_unique<CActorBase>((UINT)actorType, actorName, Transform());
             break;
         case ActorType::ParticleEmitter:
             actorName = "ParticleEmitter_" + std::to_string(m_classCount.particeleEmitterCount++);
-
             actor = std::make_unique<CParticleEmitter>(actorName);
             break;
         case ActorType::SkyDome:
             actorName = "SkyDome_" + std::to_string(0);
-
-            actor = std::make_unique<CActorBase>((UINT)actorType, actorName, Transform());
             break;
-        case ActorType::Light:
+        default:
             return nullptr;
+        }
+
+        if (!actor) {
+            actor = std::make_unique<CActorBase>((UINT)actorType, actorName, Transform());
         }
 
         std::unique_ptr<CConstantBufferBase> worldConstantBuffer;
@@ -84,8 +65,6 @@ namespace Engine46 {
         actor->SetWorldConstantBuffer(worldConstantBuffer);
 
         actor->SetActorID(m_classCount.allCount++);
-
-        //actor->CActorBase::Initialize();
 
         CActorBase* pActor = actor.get();
 
@@ -124,7 +103,7 @@ namespace Engine46 {
 
         light->SetLightType(lightType);
 
-        light->SetMesh(lightName);
+        light->SetMesh("LightMesh");
 
         CMeshBase* pMesh = light->GetMesh();
         if (pMesh) {
@@ -194,52 +173,6 @@ namespace Engine46 {
         }
 
         return nullptr;
-    }
-
-    // オブジェクトを保存
-    bool CActorManager::SaveActor() {
-
-        std::ios_base::openmode mode = std::ios_base::out | std::ios_base::binary;
-
-        std::ofstream ofs;
-        ofs.open(g_ActorListFileName, mode);
-
-        if (!ofs.is_open()) return false;
-
-        for (const auto& actor : m_pMapActor) {
-            actor.second->Save(ofs);
-        }
-
-        return true;
-    }
-
-    // オブジェクトを読み込み
-    bool CActorManager::LoadActor() {
-
-        std::ios_base::openmode mode = std::ios_base::in | std::ios_base::binary;
-
-        std::ifstream ifs;
-        ifs.open(g_ActorListFileName, mode);
-
-        if (!ifs.is_open()) return false;
-
-        while (true) {
-
-            int classType = -1;
-            ifs.read((char*)&classType, sizeof(int));
-
-            if (ifs.eof()) break;
-
-            CActorBase* pActor = this->CreateActor((ActorType)classType);
-
-            pActor->Load(ifs);
-        }
-
-        std::cout << g_ActorListFileName << "を読み込みしました。" << std::endl;
-
-        this->ConnectActor();
-
-        return true;
     }
 
     // オブジェクト同士の接続

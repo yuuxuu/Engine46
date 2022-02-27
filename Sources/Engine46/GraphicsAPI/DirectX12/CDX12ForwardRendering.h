@@ -44,7 +44,7 @@ namespace Engine46 {
         void End() override;
 
         void Rendering(CSceneBase* pScene) override;
-        void RenderingForRenderScene(CSprite* pSprite, UINT x, UINT y, UINT width, UINT height) override;
+        void RenderingForRenderScene(CActorBase* pSprite, UINT x, UINT y, UINT width, UINT height) override;
 
         CDX12Texture* GetRenderTexture() const { return pDX12RenderTexture; }
     };

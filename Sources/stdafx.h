@@ -9,12 +9,12 @@
 
 #include <string>
 #include <regex>
+
 #include <vector>
 #include <array>
 #include <list>
 #include <map>
 #include <queue>
-#include <sstream>
 
 #include <thread>
 #include <mutex>
@@ -23,7 +23,12 @@
 
 #include <iostream>
 #include <fstream>
+#include <sstream>
+
 #include <filesystem>
+
+#include <cereal/cereal.hpp>
+#include <cereal/archives/json.hpp>
 
 #include <wrl/client.h>
 

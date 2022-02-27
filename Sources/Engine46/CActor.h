@@ -16,7 +16,6 @@
 namespace Engine46 {
 
     // 前方宣言
-    class CDataRecordBase;
     class CConstantBufferBase;
     class CMeshBase;
     class CTextureBase;
@@ -27,19 +26,15 @@ namespace Engine46 {
 
     enum class ActorType {
         Root,
+        Actor,
         Camera,
-        Sprite,
-        Box,
-        Character,
-        ParticleEmitter,
-        SkyDome,
         Light,
+        SkyDome,
+        ParticleEmitter,
     };
 
     class CActorBase : public IObject {
     protected:
-        std::vector<CDataRecordBase>            vecDataRecords;
-
         UINT                                    m_classID;
 
         UINT                                    m_actorID;
@@ -71,6 +66,16 @@ namespace Engine46 {
         bool                                    m_billboradEnabled;
 
     public:
+        template<class archive>
+        void serialize(archive& ar) {
+            ar(
+                cereal::make_nvp("ActorID", m_actorID),
+                cereal::make_nvp("Transform", m_transform),
+                cereal::make_nvp("visible", m_visible)
+            );
+        }
+
+    public:
         CActorBase();
         CActorBase(const UINT classID, const std::string& actorName, const Transform transform);
         virtual ~CActorBase();
@@ -79,8 +84,8 @@ namespace Engine46 {
         virtual void Update() override;
         virtual void Draw() override;
 
-        virtual bool Save(std::ofstream& ofs) override;
-        virtual bool Load(std::ifstream& ifs) override;
+        void SerializeActor(cereal::JSONOutputArchive& archive);
+        void DeserializeActor(cereal::JSONInputArchive& archive);
 
         UINT GetClassID() const { return m_classID; }
 
@@ -134,8 +139,8 @@ namespace Engine46 {
         void SetPos(const VECTOR3& pos) { m_transform.pos = pos; }
         VECTOR3 GetPos() const { return m_transform.pos; }
 
-        void SetRotation(const VECTOR3& rotation) { m_transform.rotation = rotation; }
-        VECTOR3 GetRotation() const { return m_transform.rotation; }
+        void SetRotation(const VECTOR3& rotation) { m_transform.rotate = rotation; }
+        VECTOR3 GetRotation() const { return m_transform.rotate; }
 
         void SetScale(const VECTOR3& scale) { m_transform.scale = scale; }
         VECTOR3 GetScale() const { return m_transform.scale; }

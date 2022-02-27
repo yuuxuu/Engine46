@@ -13,9 +13,10 @@
 #include "CDX12Texture.h"
 #include "CDX12UnorderedAccessBuffer.h"
 
+#include "../CActor.h"
+
 #include "../CGameSystem.h"
 #include "../CShaderManager.h"
-#include "../CSprite.h"
 #include "../CMesh.h"
 
 namespace Engine46 {
@@ -397,7 +398,7 @@ namespace Engine46 {
     }
 
     //輝度抽出描画
-    void CDX12PostEffect::LuminanceExtraction(CDX12Texture* pDX12Texture, CSprite* pSprite) {
+    void CDX12PostEffect::LuminanceExtraction(CDX12Texture* pDX12Texture, CActorBase* pSprite) {
 
         pDX12Command->SetResourceBarrier(m_pDsvResource.Get(), D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_DEPTH_WRITE);
 
@@ -411,7 +412,7 @@ namespace Engine46 {
     }
 
     // ブラー
-    void CDX12PostEffect::PostEffectBlur(CDX12Texture* pDX12Texture, CSprite* pSprite) {
+    void CDX12PostEffect::PostEffectBlur(CDX12Texture* pDX12Texture, CActorBase* pSprite) {
         if (!pSprite) return;
         if (!pDX12Texture) return;
 
@@ -463,7 +464,7 @@ namespace Engine46 {
     }
 
     // ブルーム
-    void CDX12PostEffect::PostEffectBloom(CDX12Texture* pDX12Texture, CSprite* pSprite) {
+    void CDX12PostEffect::PostEffectBloom(CDX12Texture* pDX12Texture, CActorBase* pSprite) {
         if (!pSprite) return;
         if (!pDX12Texture) return;
 
@@ -498,7 +499,7 @@ namespace Engine46 {
     }
 
     // ブラー描画
-    void CDX12PostEffect::RenderingForPostEffect(CDX12Texture* pDX12Texture, D3D12_CPU_DESCRIPTOR_HANDLE handle, CSprite* pSprite) {
+    void CDX12PostEffect::RenderingForPostEffect(CDX12Texture* pDX12Texture, D3D12_CPU_DESCRIPTOR_HANDLE handle, CActorBase* pSprite) {
 
         pDX12Command->SetResourceBarrier(pDX12Texture->GetResource(), D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_RENDER_TARGET);
 

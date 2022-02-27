@@ -59,42 +59,6 @@ namespace Engine46 {
         return true;
     }
 
-    // シェーダーパッケージを保存
-    bool CShaderPackage::SavePackage(std::ofstream& ofs) {
-        int strSize = static_cast<int>(m_PakageName.size()) + 1;
-        ofs.write((char*)&strSize, sizeof(int));
-        ofs.write((char*)&m_PakageName, strSize);
-
-        int packageSize = (UINT)m_pVecShader.size();
-        ofs.write((char*)&packageSize, sizeof(int));
-
-        for (const auto& shader : m_pVecShader) {
-            if (!shader->Save(ofs)) continue;
-        }
-
-        return true;
-    }
-
-    // シェーダーパッケージを読み込み
-    bool CShaderPackage::LoadPackage(std::ifstream& ifs) {
-        int strSize = 0;
-        ifs.read((char*)&strSize, sizeof(int));
-        ifs.read((char*)&m_PakageName, strSize);
-
-        int packageSize = 0;
-        ifs.read((char*)&packageSize, sizeof(int));
-
-        for (int i = 0; i < packageSize; ++i) {
-            std::unique_ptr<CShaderBase> pShader = std::make_unique<CShaderBase>();
-
-            if (pShader->Load(ifs)) {
-                this->AddShaderToVec(pShader);
-            }
-        }
-
-        return IsCompile();
-    }
-
     // シェーダーの取得
     CShaderBase* CShaderPackage::GetShader(SHADER_TYPE type) {
         for (const auto& shader : m_pVecShader) {

@@ -328,7 +328,7 @@ namespace Engine46 {
 
     bool COBJLoader::LoadMaterial(const std::string& fileName) {
 
-        FileInfo* pFileInfo = CGameSystem::GetGameSystem().GetFileManager()->GetFileInfoFromMap(fileName);
+        FileInfo* pFileInfo = CFileManager::GetFileManager().GetFileInfoFromMap(fileName);
         if (pFileInfo) {
             std::ifstream ifs;
 

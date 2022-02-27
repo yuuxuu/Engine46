@@ -81,7 +81,7 @@ namespace Engine46 {
 
         pModelMesh = modelMesh.get();
 
-        FileInfo* pFileInfo = CGameSystem::GetGameSystem().GetFileManager()->GetFileInfoFromMap(modelName);
+        FileInfo* pFileInfo = CFileManager::GetFileManager().GetFileInfoFromMap(modelName);
         if (pFileInfo) {
             std::string ext = pFileInfo->extensionName;
             std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);

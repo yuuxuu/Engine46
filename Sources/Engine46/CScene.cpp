@@ -6,13 +6,13 @@
  */
 
 #include "CScene.h"
-#include "CDataRecord.h"
 #include "CActor.h"
 #include "CCamera.h"
 #include "CLight.h"
-#include "CSprite.h"
 #include "CParticleEmitter.h"
 #include "COBB.h"
+
+#include "CFileManager.h"
 
 namespace Engine46 {
 
@@ -20,30 +20,21 @@ namespace Engine46 {
     CSceneBase::CSceneBase() :
         m_sceneID(0),
         m_sceneName("Scene_" + std::to_string(m_sceneID))
-    {
-        m_sceneName.resize(m_sceneName.size());
-    }
+    {}
 
     // コンストラクタ
     CSceneBase::CSceneBase(const std::string& sceneName) :
         m_sceneID(0),
         m_sceneName(sceneName)
-    {
-        m_sceneName.resize(m_sceneName.size());
-    }
+    {}
 
     // デストラクタ
     CSceneBase::~CSceneBase()
     {}
 
     //初期化
-    void CSceneBase::Initialize() {
-
-        vecDataRecords.clear();
-
-        vecDataRecords.emplace_back(CDataRecordBase(offsetof(CSceneBase, m_sceneID), sizeof(m_sceneID)));
-        vecDataRecords.emplace_back(CStrDataRecord(offsetof(CSceneBase, m_sceneName), m_sceneName));
-    }
+    void CSceneBase::Initialize() 
+    {}
 
     // シーン更新
     void CSceneBase::Update() {
@@ -59,26 +50,34 @@ namespace Engine46 {
         }
     }
 
-    // シーン出力
-    bool CSceneBase::Save(std::ofstream& ofs) {
+    // シーンを保存
+    void CSceneBase::SaveScene() {
 
-        for (auto& records : vecDataRecords) {
-            records.WriteData(ofs, (char*)this);
+        std::string inputPath = CFileManager::ResourceRootPath() + m_sceneName + ".json";
+
+        std::ofstream ofs(inputPath, std::ios::out);
+        if (!ofs.is_open()) return;
+
+        cereal::JSONOutputArchive archive(ofs);
+
+        if (pRootActor) {
+            pRootActor->SerializeActor(archive);
         }
-
-        return true;
     }
 
-    // シーン読み込み
-    bool CSceneBase::Load(std::ifstream& ifs) {
+    // シーンを読み込み
+    void CSceneBase::LoadScene() {
 
-        for (auto& records : vecDataRecords) {
-            if (&records == &vecDataRecords[0]) continue;
+        std::string outputPath = CFileManager::ResourceRootPath() + m_sceneName + ".json";
 
-            records.ReadData(ifs, (char*)this);
+        std::ifstream ifs(outputPath, std::ios::in);
+        if (!ifs.is_open()) return;
+
+        cereal::JSONInputArchive archive(ifs);
+
+        if (pRootActor) {
+            //pRootActor->DeserializeActor(archive);
         }
-
-        return true;
     }
 
     // シーンにアクターを追加
@@ -207,8 +206,6 @@ namespace Engine46 {
 
         if (pRootActor) {
             std::vector<CActorBase*> pActors;
-            this->GetActorsRecursiveInActor(pActors, pRootActor, (int)ActorType::Sprite);
-            this->GetActorsRecursiveInActor(pActors, pRootActor, (int)ActorType::Box);
             this->GetActorsRecursiveInActor(pActors, pRootActor, (int)ActorType::Character);
 
             if (!pActors.empty()) {

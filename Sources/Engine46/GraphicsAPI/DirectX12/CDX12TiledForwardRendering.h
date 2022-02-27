@@ -49,7 +49,7 @@ namespace Engine46 {
         void End() override;
 
         void Rendering(CSceneBase* pScene) override;
-        void RenderingForRenderScene(CSprite* pSprite, UINT x, UINT y, UINT width, UINT height) override;
+        void RenderingForRenderScene(CActorBase* pSprite, UINT x, UINT y, UINT width, UINT height) override;
 
         void UpdateLightIndexUab(const int numLight);
         void LightCulling_CS(CDX12Texture* pDX12DepthTexture);

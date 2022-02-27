@@ -343,7 +343,7 @@ namespace Engine46 {
     }
 
     // 描画したシーンをライティング描画
-    void CDX12DeferredRenderig::RenderingForSceneLighting(CSprite* pSprite) {
+    void CDX12DeferredRenderig::RenderingForSceneLighting(CActorBase* pSprite) {
 
         if (!pSprite) return;
 
@@ -397,7 +397,7 @@ namespace Engine46 {
     }
 
     // 描画したシーン描画
-    void CDX12DeferredRenderig::DrawForRenderScene(CSprite* pSprite, UINT x, UINT y, UINT width, UINT height) {
+    void CDX12DeferredRenderig::DrawForRenderScene(CActorBase* pSprite, UINT x, UINT y, UINT width, UINT height) {
 
         if (!pSprite) return;
 

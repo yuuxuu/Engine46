@@ -159,7 +159,7 @@ namespace Engine46 {
     // 描画準備開始
     void CDX12Renderer::Begine(CSceneBase* pScene) {
         if (!m_pRenderSprite) {
-            m_pRenderSprite = std::make_unique<CSprite>("RenderSprite");
+            m_pRenderSprite = std::make_unique<CActorBase>((UINT)ActorType::Character, "RenderSprite", Transform());
 
             std::unique_ptr<CConstantBufferBase> worldConstantBuffer;
             CreateConstantBuffer(worldConstantBuffer, sizeof(worldCB));
@@ -500,7 +500,7 @@ namespace Engine46 {
 
     // シェーダー作成
     void CDX12Renderer::CreateShader(std::unique_ptr<CShaderPackage>& pShaderPackage, const std::string& shaderName) {
-        FileInfo* pFileInfo = CGameSystem::GetGameSystem().GetFileManager()->GetFileInfoFromMap(shaderName);
+        FileInfo* pFileInfo = CFileManager::GetFileManager().GetFileInfoFromMap(shaderName);
         if (!pFileInfo) return;
 
         pShaderPackage = std::make_unique<CDX12ShaderPackage>(m_pDX12Device.get(), m_pDX12Command.get(), shaderName);
