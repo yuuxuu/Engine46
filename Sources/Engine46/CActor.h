@@ -53,7 +53,7 @@ namespace Engine46 {
 
         std::unique_ptr<COBB>                   m_pObb;
 
-        CInput*                                 pInput;
+        std::unique_ptr<CInput>                 m_pInput;
 
         CActorBase*                             pParentActor;
         int                                     m_parentActorID;
@@ -114,7 +114,8 @@ namespace Engine46 {
         COBB* GetOBB() const { return m_pObb.get(); }
         void CreateOBB();
 
-        void SetInput(CInput* pInput);
+        CInput* GetInput() const { return m_pInput.get(); }
+        void CreateInput();
 
         void ConnectParentActor(CActorBase* pParentActor);
         void DisconnectParentActor(CActorBase* pParentActor);

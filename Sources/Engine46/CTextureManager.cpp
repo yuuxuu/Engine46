@@ -37,10 +37,12 @@ namespace Engine46 {
         if (texture) {
             pTexture = texture.get();
 
-            if (pTexture->LoadTexture(textureName)) {
-                pTexture->CreateTexture();
-                pRenderer->CreateShaderResourceView(pTexture);
+            if (!pTexture->LoadTexture(textureName)) {
+                return nullptr;
             }
+
+            pTexture->CreateTexture();
+            pRenderer->CreateShaderResourceView(pTexture);
 
             this->AddTextureToMap(textureName, texture);
 

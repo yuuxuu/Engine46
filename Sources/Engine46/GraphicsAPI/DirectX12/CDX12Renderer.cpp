@@ -144,8 +144,6 @@ namespace Engine46 {
         //m_pDX12PostEffect = std::make_unique<CDX12PostEffect>(m_pDX12Device.get(), m_pDX12Command.get());
         //if (!m_pDX12PostEffect->Initialize(this, width, height)) return false;
 
-        m_pDX12Command->CloseCommandList();
-
         m_windowRect = RECT(width, height);
 
         return true;
@@ -159,7 +157,7 @@ namespace Engine46 {
     // 描画準備開始
     void CDX12Renderer::Begine(CSceneBase* pScene) {
         if (!m_pRenderSprite) {
-            m_pRenderSprite = std::make_unique<CActorBase>((UINT)ActorType::Character, "RenderSprite", Transform());
+            m_pRenderSprite = std::make_unique<CActorBase>((UINT)ActorType::Actor, "RenderSprite", Transform());
 
             std::unique_ptr<CConstantBufferBase> worldConstantBuffer;
             CreateConstantBuffer(worldConstantBuffer, sizeof(worldCB));

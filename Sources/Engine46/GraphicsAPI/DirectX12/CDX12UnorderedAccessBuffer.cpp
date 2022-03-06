@@ -45,7 +45,6 @@ namespace Engine46 {
         rDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
         rDesc.SampleDesc.Count = 1;
 
-        if (m_pUabResource) m_pUabResource.Reset();
         pDX12Device->CreateResource(m_pUabResource, prop, rDesc, nullptr);
 
         D3D12_RANGE range = { 0, 0 };
@@ -57,10 +56,19 @@ namespace Engine46 {
             return;
         }
 
-        
-
         m_byteWidth = byteWidth;
         m_byteSize = byteSize;
+
+        if (m_uavCpuHandle.ptr != 0) {
+            D3D12_UNORDERED_ACCESS_VIEW_DESC uavDesc = {};
+
+            uavDesc.Format = DXGI_FORMAT_UNKNOWN;
+            uavDesc.ViewDimension = D3D12_UAV_DIMENSION_BUFFER;
+            uavDesc.Buffer.NumElements = m_byteSize;
+            uavDesc.Buffer.StructureByteStride = m_byteWidth;
+
+            CreateUnorderedAccessBufferView(m_pUabResource.Get(), uavDesc, nullptr, 0);
+        }
     }
 
     // アンオーダードアクセスバッファビュー作成

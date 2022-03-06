@@ -200,12 +200,14 @@ namespace Engine46{
         if (pSp) {
             pSp->SetShader();
 
-            m_pLightIndexUab->Set((UINT)MyRS_ModelLighting_Of_LightCulling::UAV_0);
+            if (m_pLightIndexUab) {
+                m_pLightIndexUab->Set((UINT)MyRS_ModelLighting_Of_LightCulling::UAV_0);
+            }
 
             CRendererBase* pRenderer = CRendererSystem::GetRendererSystem().GetRenderer();
             if (pRenderer) {
                 pRenderer->SetSceneConstantBuffers((UINT)MyRS_ModelLighting_Of_LightCulling::CBV_Camera);
-                pRenderer->SetCubeTexture((UINT)MyRS_ModelLighting_Of_LightCulling::SRV_Cube);
+                //pRenderer->SetCubeTexture((UINT)MyRS_ModelLighting_Of_LightCulling::SRV_Cube);
                 pRenderer->SetScreenParamCb((UINT)MyRS_ModelLighting_Of_LightCulling::CBV_ScreenParam, false);
             }
 

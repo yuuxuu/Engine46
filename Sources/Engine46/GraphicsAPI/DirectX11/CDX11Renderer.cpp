@@ -105,7 +105,7 @@ namespace Engine46 {
     // 描画準備開始
     void CDX11Renderer::Begine(CSceneBase* pScene) {
         if (!m_pRenderSprite) {
-            m_pRenderSprite = std::make_unique<CActorBase>((UINT)ActorType::Character, "RenderSprite", Transform());
+            m_pRenderSprite = std::make_unique<CActorBase>((UINT)ActorType::Actor, "RenderSprite", Transform());
 
             std::unique_ptr<CConstantBufferBase> worldConstantBuffer;
             CreateConstantBuffer(worldConstantBuffer, sizeof(worldCB));

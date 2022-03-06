@@ -18,6 +18,7 @@
 #include "CModelMesh.h"
 
 #include "CActor.h"
+#include "CCamera.h"
 #include "CLight.h"
 #include "CPointLight.h"
 #include "CParticleEmitter.h"
@@ -34,9 +35,7 @@ namespace Engine46 {
 
     // コンストラクタ
     CGameSystem::CGameSystem() :
-        m_hGame(nullptr),
         m_isInitialize(false)
-
     {}
 
     // デストラクタ
@@ -66,9 +65,10 @@ namespace Engine46 {
 
         m_pMaterialManager = std::make_unique<CMaterialManager>(pRenderer);
 
-        HINSTANCE hInstance = GetModuleHandle(NULL);
+        m_hwnd = hwnd;
+        m_pInput = std::make_unique<CInput>(m_hwnd);
 
-        m_pInput = std::make_unique<CInput>(hwnd);
+        HINSTANCE hInstance = GetModuleHandle(NULL);
         if (!m_pInput->Initialize(hInstance)) return false;
 
         // レンダーシステムにシーンを設定
@@ -84,8 +84,11 @@ namespace Engine46 {
             pScene->SetRootActor(pRoot);
 
             CActorBase* pCamera = m_pActorManager->CreateActor(ActorType::Camera);
-            pCamera->SetInput(m_pInput.get());
-            pScene->AddActorToScene(pCamera);
+            CCamera* pCam = dynamic_cast<CCamera*>(pCamera);
+            if (pCam) {
+                pCam->SetInput(m_pInput.get());
+                pScene->AddActorToScene(pCam);
+            }
 
             CMeshBase* pMesh = nullptr;
             CModelMesh* pModelMesh = nullptr;
@@ -149,14 +152,14 @@ namespace Engine46 {
             pBox->SetShaderPackage("Model.hlsl");
             pScene->AddActorToScene(pBox);*/
 
-            /*CActorBase* pSphere = m_pActorManager->CreateActor(ActorType::Character);
+            /*CActorBase* pSphere = m_pActorManager->CreateActor(ActorType::Actor);
             pSphere->SetScale(VECTOR3(0.1f, 0.1f, 0.1f));
             pSphere->SetModelMesh("SM_SkySphere.FBX");
 
             pSphere->SetShaderPackage("Model.hlsl");
             pScene->AddActorToScene(pSphere);*/
 
-            CActorBase* pCharacter = m_pActorManager->CreateActor(ActorType::Character);
+            /*CActorBase* pCharacter = m_pActorManager->CreateActor(ActorType::Actor);
             pCharacter->SetModelMesh("sponza.obj");
 
             pModelMesh = pCharacter->GetModelMesh();
@@ -190,7 +193,7 @@ namespace Engine46 {
                 }
 
                 pScene->AddActorToScene(pLight);
-            }
+            }*/
 
             //CActorBase* pActor = m_pActorManager->CreateActor(ActorType::ParticleEmitter);
             //CParticleEmitter* pParticleEmitter = dynamic_cast<CParticleEmitter*>(pActor);
@@ -240,26 +243,22 @@ namespace Engine46 {
 
         m_isInitialize = true;
 
-        pScene->SaveScene();
-
         return true;
     }
 
     // 終了
     void CGameSystem::Finalize() {
-        // スレッドプールを終了
-        CThreadPoolSystem::GetThreadPoolSystem().Finalize();
-        // レンダラースレッドを終了
-        CRendererSystem::GetRendererSystem().Finalize();
 
         if (m_hGame) {
             CloseHandle(m_hGame);
             m_hGame = 0;
         }
+
         // ゲームメインスレッドの終了待ち
         if (m_gameSystemThread.joinable()) {
             m_gameSystemThread.join();
         }
+
         // タイマの分解能力を元に戻す
         timeEndPeriod(1);
     }
@@ -273,17 +272,18 @@ namespace Engine46 {
             sts = WaitForSingleObject(m_hGame, ms);
             if (sts == WAIT_FAILED) break;
 
-            this->Update();
+            Update();
         }
     }
 
     // 更新
     void CGameSystem::Update() {
+        CRendererBase* pRenderer = CRendererSystem::GetRendererSystem().GetRenderer();
         CSceneBase* pScene = CRendererSystem::GetRendererSystem().GetRenderScene();
 
-        if (pScene) {
-            pScene->Update();
-        }
+        if (!pRenderer || !pScene) return;
+
+        pScene->Update();
     }
 
 } // namespace

@@ -32,18 +32,20 @@ namespace Engine46 {
     CActorBase* CActorManager::CreateActor(ActorType actorType) {
         std::unique_ptr<CActorBase> actor;
         std::string actorName;
-        const RECT rect = pRenderer->GetWindowRect();
+        RECT rect;
 
         switch (actorType) {
         case ActorType::Root:
             actorName = "Root_" + std::to_string(m_classCount.rootCount++);
             break;
         case ActorType::Camera:
+            rect = pRenderer->GetWindowRect();
+
             actorName = "Camera_" + std::to_string(m_classCount.cameraCount++);
             actor = std::make_unique<CCamera>(actorName, rect.w, rect.h);
             break;
         case ActorType::Actor:
-            actorName = "Character_" + std::to_string(m_classCount.charctorCount++);
+            actorName = "Actor_" + std::to_string(m_classCount.charctorCount++);
             break;
         case ActorType::ParticleEmitter:
             actorName = "ParticleEmitter_" + std::to_string(m_classCount.particeleEmitterCount++);

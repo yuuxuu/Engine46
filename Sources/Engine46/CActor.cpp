@@ -16,6 +16,7 @@
 #include "CCamera.h"
 #include "COBB.h"
 #include "CModelMesh.h"
+#include "CInput.h"
 
 #include "CRenderer.h"
 
@@ -115,7 +116,6 @@ namespace Engine46 {
     void CActorBase::SerializeActor(cereal::JSONOutputArchive& archive) {
 
         archive(
-            cereal::make_nvp("Class", m_classID),
             cereal::make_nvp(m_actorName, *this)
         );
 
@@ -203,10 +203,15 @@ namespace Engine46 {
         m_pObb->CreateOBBMesh(m_actorName + "_obbMesh");
     }
 
-    // インプットを設定
-    void CActorBase::SetInput(CInput* pInput) {
-        if (pInput) {
-            this->pInput = pInput;
+    // インプットを作成
+    void CActorBase::CreateInput(){
+        HWND hwnd = CGameSystem::GetGameSystem().GetHwnd();
+
+        m_pInput = std::make_unique<CInput>(hwnd);
+
+        HINSTANCE hInstance = GetModuleHandle(NULL);
+        if (!m_pInput->Initialize(hInstance)) {
+            m_pInput.release();
         }
     }
 

@@ -53,13 +53,19 @@ namespace Engine46 {
 
     // 終了
     void CRendererSystem::Finalize() {
+
         if (m_hRenderer) {
             CloseHandle(m_hRenderer);
             m_hRenderer = 0;
         }
+
         // レンダラースレッドの終了待ち
         if (m_rendererSystemThread.joinable()) {
             m_rendererSystemThread.join();
+        }
+
+        if (m_pRenderer) {
+            m_pRenderer.release();
         }
     }
 
@@ -76,17 +82,16 @@ namespace Engine46 {
             sts = WaitForSingleObject(m_hRenderer, ms);
             if (sts == WAIT_FAILED) break;
 
-            this->Draw();
+            Update();
         }
     }
 
     // 描画
-    void CRendererSystem::Draw() {
-        if (pRenderScene) {
-            m_pRenderer->Begine(pRenderScene);
+    void CRendererSystem::Update() {
+        if (!m_pRenderer || !pRenderScene) return;
 
-            m_pRenderer->Render(pRenderScene);
-        }
+        m_pRenderer->Begine(pRenderScene);
+        m_pRenderer->Render(pRenderScene);
     }
 
 } // namespace

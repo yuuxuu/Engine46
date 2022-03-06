@@ -10,8 +10,6 @@
 #ifndef _CGAME_SYSTEM_H_
 #define _CGAME_SYSTEM_H_
 
-#include "math.h"
-
 namespace Engine46 {
 
     // 前方宣言
@@ -21,14 +19,14 @@ namespace Engine46 {
     class CMeshManager;
     class CMaterialManager;
     class CTextureManager;
-    class CSceneManager;
-    class CFileManager;
     class CInput;
 
     class CGameSystem {
     private:
         std::thread                         m_gameSystemThread;
         HANDLE                              m_hGame;
+
+        HWND                                m_hwnd;
 
         std::unique_ptr<CActorManager>      m_pActorManager;
 
@@ -53,8 +51,8 @@ namespace Engine46 {
 
     public:
 
-        bool    Initialize(CRendererBase* pRenderer, HWND hwnd);
-        void    Finalize();
+        bool Initialize(CRendererBase* pRenderer, HWND hwnd);
+        void Finalize();
 
         static CGameSystem& GetGameSystem() {
             static CGameSystem gameSystem;
@@ -66,6 +64,8 @@ namespace Engine46 {
         CMeshManager* GetMeshManager() const { return m_pMeshManager.get(); }
         CMaterialManager* GetMaterialManager() const { return m_pMaterialManager.get(); }
         CTextureManager* GetTextureManager() const { return m_pTextureManager.get(); }
+
+        HWND GetHwnd() const { return m_hwnd; }
 
         CInput* GetInput() const { return m_pInput.get(); }
 

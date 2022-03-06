@@ -25,7 +25,7 @@ namespace Engine46 {
 
         std::unique_ptr<CRendererBase>  m_pRenderer;
 
-        CSceneBase* pRenderScene;
+        CSceneBase*                     pRenderScene;
 
         bool                            m_isInitialize;
 
@@ -34,7 +34,7 @@ namespace Engine46 {
         ~CRendererSystem();
 
         void Loop();
-        void Draw();
+        void Update();
 
     public:
         bool Initialize(HWND hwnd, RECT rect);

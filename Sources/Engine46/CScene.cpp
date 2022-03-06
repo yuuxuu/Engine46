@@ -76,7 +76,7 @@ namespace Engine46 {
         cereal::JSONInputArchive archive(ifs);
 
         if (pRootActor) {
-            //pRootActor->DeserializeActor(archive);
+            pRootActor->DeserializeActor(archive);
         }
     }
 
@@ -206,7 +206,7 @@ namespace Engine46 {
 
         if (pRootActor) {
             std::vector<CActorBase*> pActors;
-            this->GetActorsRecursiveInActor(pActors, pRootActor, (int)ActorType::Character);
+            this->GetActorsRecursiveInActor(pActors, pRootActor, (int)ActorType::Actor);
 
             if (!pActors.empty()) {
                 for (const auto pActor : pActors) {
