@@ -29,37 +29,42 @@ namespace Engine46 {
     {}
 
     // オブジェクト作成
-    CActorBase* CActorManager::CreateActor(ActorType actorType) {
+    CActorBase* CActorManager::CreateActor(ActorType actorType, const std::string& actorName) {
         std::unique_ptr<CActorBase> actor;
-        std::string actorName;
+        std::string name = actorName;
         RECT rect;
 
-        switch (actorType) {
-        case ActorType::Root:
-            actorName = "Root_" + std::to_string(m_classCount.rootCount++);
-            break;
-        case ActorType::Camera:
-            rect = pRenderer->GetWindowRect();
-
-            actorName = "Camera_" + std::to_string(m_classCount.cameraCount++);
-            actor = std::make_unique<CCamera>(actorName, rect.w, rect.h);
-            break;
-        case ActorType::Actor:
-            actorName = "Actor_" + std::to_string(m_classCount.charctorCount++);
-            break;
-        case ActorType::ParticleEmitter:
-            actorName = "ParticleEmitter_" + std::to_string(m_classCount.particeleEmitterCount++);
-            actor = std::make_unique<CParticleEmitter>(actorName);
-            break;
-        case ActorType::SkyDome:
-            actorName = "SkyDome_" + std::to_string(0);
-            break;
-        default:
-            return nullptr;
+        if (name.empty()) {
+            switch (actorType) {
+            case ActorType::Root:
+                name = "Root_" + std::to_string(m_classCount.rootCount++);
+                break;
+            case ActorType::Camera:
+                name = "Camera_" + std::to_string(m_classCount.cameraCount++);
+                break;
+            case ActorType::Actor:
+                name = "Actor_" + std::to_string(m_classCount.actorCount++);
+                break;
+            case ActorType::ParticleEmitter:
+                name = "ParticleEmitter_" + std::to_string(m_classCount.particeleEmitterCount++);
+                break;
+            case ActorType::SkyDome:
+                name = "SkyDome_" + std::to_string(m_classCount.skyDomeCount++);
+                break;
+            case ActorType::Light:
+                return nullptr;
+            }
         }
 
-        if (!actor) {
-            actor = std::make_unique<CActorBase>((UINT)actorType, actorName, Transform());
+        if (actorType == ActorType::Camera) {
+            rect = pRenderer->GetWindowRect();
+            actor = std::make_unique<CCamera>(name, rect.w, rect.h);
+        }
+        else if (actorType == ActorType::ParticleEmitter) {
+            actor = std::make_unique<CParticleEmitter>(name);
+        }
+        else {
+            actor = std::make_unique<CActorBase>(UINT(actorType), name, Transform());
         }
 
         std::unique_ptr<CConstantBufferBase> worldConstantBuffer;
@@ -70,46 +75,49 @@ namespace Engine46 {
 
         CActorBase* pActor = actor.get();
 
-        AddActorFromMap(actorName, actor);
+        AddActorFromMap(name, actor);
 
         return pActor;
     }
 
     // ライト作成
-    CLight* CActorManager::CreateLight(LightType lightType) {
+    CLight* CActorManager::CreateLight(LightType lightType, const std::string& lightName) {
         std::unique_ptr<CLight> light;
-        std::string lightName;
+        std::string name = lightName;
 
-        switch (lightType)
-        {
-        case LightType::Directional:
-            lightName = "DirectionalLight_" + std::to_string(m_classCount.lightCount);
+        if (name.empty()) {
+            switch (lightType) {
+            case LightType::Directional:
+                name = "DirectionalLight_" + std::to_string(m_classCount.lightCount);
+                break;
+            case LightType::Point:
+                name = "PointLight_" + std::to_string(m_classCount.lightCount);
+                break;
+            case LightType::Spot:
+                name = "SpotLight_" + std::to_string(m_classCount.lightCount);
+                break;
+            }
+        }
 
-            light = std::make_unique<CDirectionalLight>(lightName);
-            break;
-        case LightType::Point:
-            lightName = "PointLight_" + std::to_string(m_classCount.lightCount);
-
-            light = std::make_unique<CPointLight>(lightName);
-            break;
-        case LightType::Spot:
-            lightName = "SpotLight_" + std::to_string(m_classCount.lightCount);
-
-            light = std::make_unique<CSpotLight>(lightName);
-            break;
+        if (lightType == LightType::Directional) {
+            light = std::make_unique<CDirectionalLight>(name);
+        }
+        else if (lightType == LightType::Point) {
+            light = std::make_unique<CPointLight>(name);
+        }
+        else if (lightType == LightType::Spot) {
+            light = std::make_unique<CSpotLight>(name);
         }
 
         std::unique_ptr<CConstantBufferBase> worldConstantBuffer;
         pRenderer->CreateConstantBuffer(worldConstantBuffer, sizeof(worldCB));
         light->SetWorldConstantBuffer(worldConstantBuffer);
 
-        light->SetLightType(lightType);
-
         light->SetMesh("LightMesh");
 
         CMeshBase* pMesh = light->GetMesh();
         if (pMesh) {
-            pMesh->SetMaterial(lightName);
+            pMesh->SetMaterial(name);
 
             pMesh->CreateSpriteMesh();
 
@@ -128,11 +136,9 @@ namespace Engine46 {
 
         light->SetBillBoardEnabled(true);
 
-        light->CActorBase::Initialize();
-
         CLight* pLight = light.get();
 
-        AddLightFromMap(lightName, light);
+        AddLightFromMap(name, light);
 
         return pLight;
     }

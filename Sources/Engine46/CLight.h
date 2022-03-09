@@ -25,7 +25,7 @@ namespace Engine46 {
 
     class CLight : public CActorBase {
     protected:
-        LightType   m_lightType;
+        UINT        m_lightType;
 
         int         m_lightID;
 
@@ -42,13 +42,13 @@ namespace Engine46 {
         int         m_turn;
 
     public:
-        CLight(const std::string& lightName);
+        CLight(const UINT lightType, const std::string& lightName);
         virtual ~CLight();
 
         virtual void Update() override;
 
-        void SetLightType(LightType type) { m_lightType = type; }
-        LightType GetLightType() const { return m_lightType; }
+        void SetLightType(const UINT type) { m_lightType = type; }
+        LightType GetLightType() const { return LightType(m_lightType); }
 
         void SetLightID(const int id) { m_lightID = id; }
 

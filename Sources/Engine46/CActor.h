@@ -69,6 +69,7 @@ namespace Engine46 {
         template<class archive>
         void serialize(archive& ar) {
             ar(
+                cereal::make_nvp("ClassID", m_classID),
                 cereal::make_nvp("ActorID", m_actorID),
                 cereal::make_nvp("Transform", m_transform),
                 cereal::make_nvp("visible", m_visible)
@@ -77,7 +78,7 @@ namespace Engine46 {
 
     public:
         CActorBase();
-        CActorBase(const UINT classID, const std::string& actorName, const Transform transform);
+        CActorBase(const UINT classID, const std::string& actorName, const Transform& transform);
         virtual ~CActorBase();
 
         virtual void Initialize() override;

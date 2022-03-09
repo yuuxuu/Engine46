@@ -80,7 +80,7 @@ namespace Engine46 {
         }
 
         {
-            CActorBase* pRoot = m_pActorManager->CreateActor(ActorType::Root);
+            /*CActorBase* pRoot = m_pActorManager->CreateActor(ActorType::Root);
             pScene->SetRootActor(pRoot);
 
             CActorBase* pCamera = m_pActorManager->CreateActor(ActorType::Camera);
@@ -90,8 +90,10 @@ namespace Engine46 {
                 pScene->AddActorToScene(pCam);
             }
 
-            CMeshBase* pMesh = nullptr;
-            CModelMesh* pModelMesh = nullptr;
+            pScene->SaveScene();*/
+
+            //CMeshBase* pMesh = nullptr;
+            //CModelMesh* pModelMesh = nullptr;
 
             /*CActorBase* pSkyDome = m_pActorManager->CreateActor(ActorType::SkyDome);
             pSkyDome->SetModelMesh("SM_SkySphere.FBX");

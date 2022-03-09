@@ -24,7 +24,7 @@ namespace Engine46 {
 
     // コンストラクタ
     CActorBase::CActorBase() :
-        m_classID((int)ActorType::Root),
+        m_classID(int(ActorType::Root)),
         m_actorID(0),
         m_actorName("Actor_" + std::to_string(m_actorID)),
         m_transform(Transform()),
@@ -35,7 +35,7 @@ namespace Engine46 {
     {}
 
     // コンストラクタ
-    CActorBase::CActorBase(const UINT classID, const std::string& actorName, const Transform transform) :
+    CActorBase::CActorBase(const UINT classID, const std::string& actorName, const Transform& transform) :
         m_classID(classID),
         m_actorID(0),
         m_actorName(actorName),
@@ -115,9 +115,7 @@ namespace Engine46 {
     //　アクターをシリアライズ
     void CActorBase::SerializeActor(cereal::JSONOutputArchive& archive) {
 
-        archive(
-            cereal::make_nvp(m_actorName, *this)
-        );
+        archive(cereal::make_nvp(m_actorName, *this));
 
         for (const auto& chiled : pChildActorList) {
             chiled->SerializeActor(archive);
@@ -127,7 +125,11 @@ namespace Engine46 {
     // アクターをデシリアライズ
     void CActorBase::DeserializeActor(cereal::JSONInputArchive& archive) {
 
-        archive(cereal::make_nvp(m_actorName, *this));
+        archive(
+            cereal::make_nvp("ActorID", m_actorID),
+            cereal::make_nvp("Transform", m_transform),
+            cereal::make_nvp("visible", m_visible)
+        );
 
         for (const auto& chiled : pChildActorList) {
             chiled->DeserializeActor(archive);

@@ -11,7 +11,7 @@ namespace Engine46 {
 
     // コンストラクタ
     CSpotLight::CSpotLight(const std::string& lightName) :
-        CLight(lightName)
+        CLight(UINT(LightType::Spot), lightName)
     {}
 
     // デストラクタ

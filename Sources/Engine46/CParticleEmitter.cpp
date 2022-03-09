@@ -17,7 +17,7 @@ namespace Engine46 {
 
     // コンストラクタ
     CParticleEmitter::CParticleEmitter(const std::string& particleEmitterName) :
-        CActorBase((int)ActorType::ParticleEmitter, particleEmitterName, Transform()),
+        CActorBase(int(ActorType::ParticleEmitter), particleEmitterName, Transform()),
         m_maxParticle(DEFAULT_MAX_PARTICLE)
     {}
 

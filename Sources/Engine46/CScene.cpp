@@ -12,7 +12,10 @@
 #include "CParticleEmitter.h"
 #include "COBB.h"
 
+#include "CGameSystem.h"
+
 #include "CFileManager.h"
+#include "CActorManager.h"
 
 namespace Engine46 {
 
@@ -67,16 +70,30 @@ namespace Engine46 {
 
     // シーンを読み込み
     void CSceneBase::LoadScene() {
-
         std::string outputPath = CFileManager::ResourceRootPath() + m_sceneName + ".json";
 
         std::ifstream ifs(outputPath, std::ios::in);
         if (!ifs.is_open()) return;
 
+        CActorManager* pActorManager = CGameSystem::GetGameSystem().GetActorManager();
+        if (!pActorManager) return;
+
         cereal::JSONInputArchive archive(ifs);
 
-        if (pRootActor) {
-            pRootActor->DeserializeActor(archive);
+        while (archive.getNodeName()) {
+
+            std::string actorName = archive.getNodeName();
+            archive.startNode();
+
+            UINT actorType;
+            archive.loadValue(actorType);
+
+            CActorBase* pActor = pActorManager->CreateActor(ActorType(actorType), actorName);
+            pActor->DeserializeActor(archive);
+
+            AddActorToScene(pActor);
+
+            archive.finishNode();
         }
     }
 
@@ -99,7 +116,7 @@ namespace Engine46 {
             if (pRootActor->GetActorName() == actorName) {
                 return pRootActor;
             }
-            return this->GetActorRecursiveInName(pRootActor, actorName);
+            return GetActorRecursiveInName(pRootActor, actorName);
         }
 
         return nullptr;
@@ -126,7 +143,7 @@ namespace Engine46 {
             ray.orgRay = nearVec;
             ray.dirRay = farVec - nearVec;
 
-            for (const auto& pActor : pRootActor->GetChildActorList()) {
+            for (const auto pActor : pRootActor->GetChildActorList()) {
                 if (!pActor->GetVisible()) continue;
 
                 COBB* pObb = pActor->GetOBB();
@@ -146,13 +163,13 @@ namespace Engine46 {
     // シーン内のスカイドームを取得
     CActorBase* CSceneBase::GetSkyDomeFromScene() {
         if (pRootActor) {
-            if (pRootActor->GetClassID() == (int)ActorType::SkyDome) {
+            if (pRootActor->GetClassID() == int(ActorType::SkyDome)) {
                 if (pRootActor->GetVisible()) {
                     return pRootActor;
                 }
                 return nullptr;
             }
-            CActorBase* pSkyDome = this->GetActorRecursiveInActor(pRootActor, (int)ActorType::SkyDome);
+            CActorBase* pSkyDome = this->GetActorRecursiveInActor(pRootActor, int(ActorType::SkyDome));
             if (!pSkyDome) return nullptr;
 
             if (pSkyDome->GetVisible()) {
@@ -165,13 +182,13 @@ namespace Engine46 {
     // シーン内のカメラを取得
     CCamera* CSceneBase::GetCameraFromScene() {
         if (pRootActor) {
-            if (pRootActor->GetClassID() == (int)ActorType::Camera) {
+            if (pRootActor->GetClassID() == int(ActorType::Camera)) {
                 if (pRootActor->GetVisible()) {
                     return dynamic_cast<CCamera*>(pRootActor);
                 }
                 return nullptr;
             }
-            CActorBase* pCamera = this->GetActorRecursiveInActor(pRootActor, (int)ActorType::Camera);
+            CActorBase* pCamera = this->GetActorRecursiveInActor(pRootActor, int(ActorType::Camera));
             if (!pCamera) return nullptr;
 
             if (pCamera->GetVisible()) {
@@ -184,13 +201,13 @@ namespace Engine46 {
     // シーン内のライトを取得
     CLight* CSceneBase::GetLightFromScene() {
         if (pRootActor) {
-            if (pRootActor->GetClassID() == (int)ActorType::Light) {
+            if (pRootActor->GetClassID() == int(ActorType::Light)) {
                 if (pRootActor->GetVisible()) {
                     return dynamic_cast<CLight*>(pRootActor);
                 }
                 return nullptr;
             }
-            CActorBase* pLight = this->GetActorRecursiveInActor(pRootActor, (int)ActorType::Light);
+            CActorBase* pLight = this->GetActorRecursiveInActor(pRootActor, int(ActorType::Light));
             if (!pLight) return nullptr;
 
             if (pLight->GetVisible()) {
@@ -206,7 +223,7 @@ namespace Engine46 {
 
         if (pRootActor) {
             std::vector<CActorBase*> pActors;
-            this->GetActorsRecursiveInActor(pActors, pRootActor, (int)ActorType::Actor);
+            GetActorsRecursiveInActor(pActors, pRootActor, int(ActorType::Actor));
 
             if (!pActors.empty()) {
                 for (const auto pActor : pActors) {
@@ -224,7 +241,7 @@ namespace Engine46 {
 
         if (pRootActor) {
             std::vector<CActorBase*> pActors;
-            this->GetActorsRecursiveInActor(pActors, pRootActor, (int)ActorType::Camera);
+            GetActorsRecursiveInActor(pActors, pRootActor, int(ActorType::Camera));
 
             if (!pActors.empty()) {
                 for (const auto pActor : pActors) {
@@ -242,7 +259,7 @@ namespace Engine46 {
 
         if (pRootActor) {
             std::vector<CActorBase*> pActors;
-            this->GetActorsRecursiveInActor(pActors, pRootActor, (int)ActorType::Light);
+            GetActorsRecursiveInActor(pActors, pRootActor, int(ActorType::Light));
 
             if (!pActors.empty()) {
                 for (const auto pActor : pActors) {
@@ -260,7 +277,7 @@ namespace Engine46 {
 
         if (pRootActor) {
             std::vector<CActorBase*> pActors;
-            this->GetActorsRecursiveInActor(pActors, pRootActor, (int)ActorType::ParticleEmitter);
+            GetActorsRecursiveInActor(pActors, pRootActor, int(ActorType::ParticleEmitter));
 
             if (!pActors.empty()) {
                 for (const auto pActor : pActors) {

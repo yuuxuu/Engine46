@@ -23,17 +23,19 @@ namespace Engine46 {
         UINT allCount;
         UINT rootCount;
         UINT cameraCount;
-        UINT charctorCount;
+        UINT actorCount;
         UINT particeleEmitterCount;
         UINT lightCount;
+        UINT skyDomeCount;
 
         classCount() :
             allCount(0),
             rootCount(0),
             cameraCount(0),
-            charctorCount(0),
+            actorCount(0),
             particeleEmitterCount(0),
-            lightCount(0)
+            lightCount(0),
+            skyDomeCount(0)
         {}
     };
 
@@ -50,8 +52,8 @@ namespace Engine46 {
         explicit CActorManager(CRendererBase* pRenderer);
         ~CActorManager();
 
-        CActorBase* CreateActor(ActorType actorType);
-        CLight* CreateLight(LightType lightType);
+        CActorBase* CreateActor(ActorType actorType, const std::string& actorName = "");
+        CLight* CreateLight(LightType lightType, const std::string& lightName = "");
 
         void AddActorFromMap(const std::string& name, std::unique_ptr<CActorBase>& pActor);
         CActorBase* GetActorFromMap(const std::string& name);

@@ -46,5 +46,14 @@ int main(int argc, char* argv[])
 
     w.InitializeEditor();
 
-    return a.exec();
+    int ret = a.exec();
+
+    // スレッドプールシステム終了
+    threadPoolSystem.Finalize();
+    // レンダラーシステム終了
+    rendererSystem.Finalize();
+    // ゲームシステム終了
+    gameSystem.Finalize();
+
+    return ret;
 }

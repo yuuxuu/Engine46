@@ -40,6 +40,8 @@ namespace Engine46 {
 
         scene->SetSceneID(sceneNo);
 
+        scene->LoadScene();
+
         AddSceneToMap(sceneName, scene);
 
         return pScene;

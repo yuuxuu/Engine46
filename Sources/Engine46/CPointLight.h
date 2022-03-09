@@ -19,6 +19,8 @@ namespace Engine46 {
         CPointLight(const std::string& lightName);
         ~CPointLight();
 
+        void Update() override;
+
         void SetRadius(float radius) { m_radius = radius; }
         float GetRadius() const { return m_radius; }
     };
