@@ -38,7 +38,7 @@ namespace Engine46 {
 
         std::unique_ptr<CTextureManager>    m_pTextureManager;
 
-        std::unique_ptr<CInput>             m_pInput;
+        CInput*                             pInput;
 
         bool                                m_isInitialize;
 
@@ -67,7 +67,8 @@ namespace Engine46 {
 
         HWND GetHwnd() const { return m_hwnd; }
 
-        CInput* GetInput() const { return m_pInput.get(); }
+        void SetInput(CInput* pInput) { this->pInput = pInput; }
+        CInput* GetInput() const { return pInput; }
 
         bool IsInitialize() const { return m_isInitialize; }
     };

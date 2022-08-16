@@ -7,12 +7,6 @@
 
 #include "Engine46Editor.h"
 
-#include <QStandardItemModel>
-#include <QFileSystemModel>
-
-#include "MyStandardItem.h"
-
-#include "Engine46/CFileManager.h"
 #include "Engine46/CRendererSystem.h"
 #include "Engine46/CScene.h"
 
@@ -26,23 +20,22 @@ Engine46Editor::Engine46Editor(QWidget* parent)
 
     move(QPoint(0, 0));
 
-    // レンダーウェジット
     pRenderWidget = std::make_unique<MyRenderWidget>(this);
     ui.tabWidget->addTab(pRenderWidget.get(), "RenderWidget");
 
-    // インスペクターウェジット
-    pInspectorWidget = std::make_unique<MyInspectorWidget>(this);
-    ui.dockWidget_Inspector->setWidget(pInspectorWidget.get());
+    pSceneDockWidget = std::make_unique<SceneDockWidget>(this);
+    addDockWidget(Qt::DockWidgetArea::LeftDockWidgetArea, pSceneDockWidget.get());
 
-    ui.FileListView->setViewMode(QListView::IconMode);
-    ui.FileListView->setFlow(QListView::LeftToRight);
+    pInspectorDockWidget = std::make_unique<InspectorDockWidget>(this);
+    addDockWidget(Qt::DockWidgetArea::RightDockWidgetArea, pInspectorDockWidget.get());
+
+    pFileDockWidget = std::make_unique<FileDockWidget>(this);
+    addDockWidget(Qt::DockWidgetArea::BottomDockWidgetArea, pFileDockWidget.get());
 
     // 接続
-    //connect(ui.checkBox_visible, &QCheckBox::clicked, this, )
-
-    connect(ui.sceneTreeView, &QAbstractItemView::clicked, this, &Engine46Editor::SelectActorForSceneTreeView);
-
     connect(pRenderWidget.get(), &MyRenderWidget::MouseLeftPress, this, &Engine46Editor::SelectActorForMouseLeftPress);
+
+    connect(pInspectorDockWidget->ui.lineEdit_ActorName, &QLineEdit::textChanged, this, &Engine46Editor::UpdateActorName);
 }
 
 // デストラクタ
@@ -51,68 +44,29 @@ Engine46Editor::~Engine46Editor()
 
 // エディタの初期化
 void Engine46Editor::InitializeEditor() {
-
-    InitializeSceneTreeView();
-    InitializeFileTreeView();
+    pSceneDockWidget->Initialize();
+    pInspectorDockWidget->Initialize();
+    pFileDockWidget->Initialize();
 }
 
-// シーンツリービュー用アクター再帰検索
-static void RecursiveActor(QStandardItem* pRootItem, Engine46::CActorBase* pRootActor) {
-    int rowIndex = 0;
-    for (auto& pChildActor : pRootActor->GetChildActorList()) {
-        
-        if (!pChildActor) continue;
-
-        MyStandardItem* pChildItem = new MyStandardItem(pChildActor);
-
-        pRootItem->setChild(rowIndex++, 0, pChildItem);
-
-        RecursiveActor(pChildItem, pChildActor);
-    }
+// アクター選択を設定
+void Engine46Editor::SetSelectActor(Engine46::CActorBase* pActor) {
+    pInspectorDockWidget->SelectActor(pActor);
 }
 
-// シーンツリービュー初期化
-void Engine46Editor::InitializeSceneTreeView() {
-    Engine46::CSceneBase* pScene = Engine46::CRendererSystem::GetRendererSystem().GetRenderScene();
-    if (!pScene) return;
-
-    Engine46::CActorBase* pRootActor = pScene->GetRootActor();
-    if (!pRootActor) return;
-
-    ui.sceneTreeView->reset();
-
-    QStandardItemModel* pItemModel = new QStandardItemModel;
-    QStringList strList = {
-        QString(pScene->GetSceneName().c_str()),
-    };
-    pItemModel->setHorizontalHeaderLabels(strList);
-
-    MyStandardItem* pRootItem = new MyStandardItem(pRootActor);
+// アクター名を更新
+void Engine46Editor::UpdateActorName(const QString& name) {
     
-    RecursiveActor(pRootItem, pRootActor);
-    pItemModel->appendRow(pRootItem);
+    pInspectorDockWidget->ui.lineEdit_ActorName->blockSignals(true);
 
-    ui.sceneTreeView->setModel(pItemModel);
+    pInspectorDockWidget->UpdateActorName(name);
+    pSceneDockWidget->UpdateItemText(name);
 
-    ui.sceneTreeView->expandAll();
+    pInspectorDockWidget->ui.lineEdit_ActorName->blockSignals(false);
 }
 
-// ファイルツリービュー初期化
-void Engine46Editor::InitializeFileTreeView() {
-    QFileSystemModel* pFileModel = new QFileSystemModel;
 
-    // ルートパスを設定
-    QModelIndex rootIndex = pFileModel->setRootPath(Engine46::CFileManager::ResourceRootPath().c_str());
-
-    ui.FileTreeView->setModel(pFileModel);
-    ui.FileTreeView->setRootIndex(rootIndex);
-
-    ui.FileListView->setModel(pFileModel);
-    ui.FileListView->setRootIndex(rootIndex);
-}
-
-//////////////////////
-// slots 
+// slots
 
 // 左マウス押下でアクターを選択
 void Engine46Editor::SelectActorForMouseLeftPress(const QPoint& point) {
@@ -125,19 +79,6 @@ void Engine46Editor::SelectActorForMouseLeftPress(const QPoint& point) {
     Engine46::CActorBase* pActor = pScene->GetMouseSelectActorFromScene(screenSize, mousePos);
     if (!pActor) return;
 
-    pInspectorWidget->SetSelectActor(pActor);
-}
-
-// シーンツリービューからアクターを選択
-void Engine46Editor::SelectActorForSceneTreeView(const QModelIndex& index) {
-    QStandardItemModel* pItemModel = dynamic_cast<QStandardItemModel*>(ui.sceneTreeView->model());
-    if (!pItemModel) return;
-
-    MyStandardItem* pItem = dynamic_cast<MyStandardItem*>(pItemModel->itemFromIndex(index));
-    if (!pItem) return;
-
-    Engine46::CActorBase* pActor = pItem->GetActor();
-    if (!pActor) return;
-
-    pInspectorWidget->SetSelectActor(pActor);
+    pInspectorDockWidget->SelectActor(pActor);
+    pSceneDockWidget->SelectItem(pActor);
 }

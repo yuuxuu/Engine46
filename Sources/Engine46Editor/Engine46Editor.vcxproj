@@ -199,18 +199,30 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="FileDockWidget.cpp" />
+    <ClCompile Include="InspectorDockWidget.cpp" />
+    <ClCompile Include="MeshWidget.cpp" />
     <ClCompile Include="MyRenderWidget.cpp" />
     <ClCompile Include="MyStandardItem.cpp" />
+    <ClCompile Include="SceneDockWidget.cpp" />
+    <ClInclude Include="FileDockWidget.h" />
+    <ClInclude Include="InspectorDockWidget.h" />
+    <QtMoc Include="MeshWidget.h" />
+    <ClInclude Include="SceneDockWidget.h" />
     <QtRcc Include="Engine46Editor.qrc" />
-    <QtUic Include="InspectorWidget.ui" />
+    <QtUic Include="FileDockWidget .ui" />
+    <QtUic Include="InspectorDockWidget.ui" />
+    <QtUic Include="MeshWidget.ui" />
+    <QtUic Include="TransformWidget.ui" />
     <ClInclude Include="Engine46Editor.h" />
     <ClCompile Include="Engine46Editor.cpp" />
-    <ClCompile Include="MyInspectorWidget.cpp" />
+    <ClCompile Include="TransformWidget.cpp" />
     <ClCompile Include="main.cpp" />
     <QtUic Include="Engine46Editor.ui" />
+    <QtUic Include="SceneDockWidget.ui" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MyInspectorWidget.h" />
+    <QtMoc Include="TransformWidget.h" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="MyRenderWidget.h" />

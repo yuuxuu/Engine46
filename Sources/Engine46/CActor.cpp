@@ -24,7 +24,7 @@ namespace Engine46 {
 
     // コンストラクタ
     CActorBase::CActorBase() :
-        m_classID(int(ActorType::Root)),
+        m_classID(int(ActorType::Actor)),
         m_actorID(0),
         m_actorName("Actor_" + std::to_string(m_actorID)),
         m_transform(Transform()),
@@ -214,6 +214,11 @@ namespace Engine46 {
         HINSTANCE hInstance = GetModuleHandle(NULL);
         if (!m_pInput->Initialize(hInstance)) {
             m_pInput.release();
+        }
+
+        CInput* input = CGameSystem::GetGameSystem().GetInput();
+        if (!input) {
+            CGameSystem::GetGameSystem().SetInput(m_pInput.get());
         }
     }
 

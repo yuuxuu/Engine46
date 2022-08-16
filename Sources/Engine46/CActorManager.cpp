@@ -59,6 +59,7 @@ namespace Engine46 {
         if (actorType == ActorType::Camera) {
             rect = pRenderer->GetWindowRect();
             actor = std::make_unique<CCamera>(name, rect.w, rect.h);
+            actor->CreateInput();
         }
         else if (actorType == ActorType::ParticleEmitter) {
             actor = std::make_unique<CParticleEmitter>(name);

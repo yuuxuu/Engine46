@@ -31,8 +31,6 @@ namespace Engine46 {
 
         float                       m_speed;
 
-        CInput*                     pInput;
-
     private:
         float GetCameraSpeed(float nowSpeed);
 
@@ -53,8 +51,6 @@ namespace Engine46 {
         VECTOR3 GetCameraRightVector();
         VECTOR3 GetCameraUpVector();
         VECTOR3 GetCameraForwardVector();
-
-        void SetInput(CInput* pInput) { this->pInput = pInput; }
     };
 
 } // namespace

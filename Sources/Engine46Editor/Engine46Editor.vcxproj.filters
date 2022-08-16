@@ -34,7 +34,7 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MyInspectorWidget.cpp">
+    <ClCompile Include="TransformWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MyRenderWidget.cpp">
@@ -43,28 +43,64 @@
     <ClCompile Include="MyStandardItem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SceneDockWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InspectorDockWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FileDockWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <QtUic Include="InspectorWidget.ui">
+    <QtUic Include="TransformWidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="Engine46Editor.ui">
       <Filter>Form Files</Filter>
     </QtUic>
+    <QtUic Include="SceneDockWidget.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="InspectorDockWidget.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="FileDockWidget .ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="MeshWidget.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MyInspectorWidget.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Engine46Editor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MyStandardItem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SceneDockWidget.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InspectorDockWidget.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FileDockWidget.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="MyRenderWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="TransformWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="MeshWidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

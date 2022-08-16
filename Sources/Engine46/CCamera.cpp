@@ -36,8 +36,8 @@ namespace Engine46 {
 
     // 更新
     void CCamera::Update() {
-        if (pInput) {
-            pInput->UpdateInput();
+        if (m_pInput) {
+            m_pInput->UpdateInput();
 
             m_speed = this->GetCameraSpeed(m_speed);
 
@@ -45,34 +45,34 @@ namespace Engine46 {
             VECTOR3 right = GetCameraRightVector() * m_speed;
             VECTOR3 up = GetCameraUpVector() * m_speed;
 
-            if(pInput->IsPressKey(DIK_W)) {
+            if(m_pInput->IsPressKey(DIK_W)) {
                 m_eye += forward;
                 m_forcus += forward;
             }
-            if (pInput->IsPressKey(DIK_S)) {
+            if (m_pInput->IsPressKey(DIK_S)) {
                 m_eye -= forward;
                 m_forcus -= forward;
             }
-            if (pInput->IsPressKey(DIK_A)) {
+            if (m_pInput->IsPressKey(DIK_A)) {
                 m_eye -= right;
                 m_forcus -= right;
             }
-            if (pInput->IsPressKey(DIK_D)) {
+            if (m_pInput->IsPressKey(DIK_D)) {
                 m_eye += right;
                 m_forcus += right;
             }
 
             const float speed = 0.01f;
-            if (pInput->IsTriggerLeftMouse()) {
+            if (m_pInput->IsTriggerLeftMouse()) {
 
-                m_forcus += right * pInput->GetMousePosX() * speed;
-                m_forcus += up * pInput->GetMousePosY() * speed;
+                m_forcus += right * m_pInput->GetMousePosX() * speed;
+                m_forcus += up * m_pInput->GetMousePosY() * speed;
             }
-            if (pInput->IsTriggerRightMouse()) {
+            if (m_pInput->IsTriggerRightMouse()) {
                 float r = Vec3Lenght(m_forcus - m_eye);
 
-                float theta = m_transform.rotate.y + pInput->GetMousePosY() * speed;
-                float phi = m_transform.rotate.x + pInput->GetMousePosX() * speed;
+                float theta = m_transform.rotate.y + m_pInput->GetMousePosY() * speed;
+                float phi = m_transform.rotate.x + m_pInput->GetMousePosX() * speed;
 
                 VECTOR3 pos;
                 pos.x = r * sinf(theta) * cosf(phi);
@@ -126,7 +126,7 @@ namespace Engine46 {
         const float minSpeed = 1.0f;
         const float maxSpeed = 10.0f;
         
-        float raito = pInput->GetMousePosZ();
+        float raito = m_pInput->GetMousePosZ();
         if (raito < 0.1f && raito > -0.1f) {
             return nowSpeed;
         }

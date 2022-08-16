@@ -37,57 +37,6 @@
    </property>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <widget class="QDockWidget" name="dockWidget_Inspector">
-   <property name="windowTitle">
-    <string>Inspector</string>
-   </property>
-   <attribute name="dockWidgetArea">
-    <number>2</number>
-   </attribute>
-   <widget class="QWidget" name="dockWidgetContents_Inspector">
-    <layout class="QVBoxLayout" name="verticalLayout"/>
-   </widget>
-  </widget>
-  <widget class="QDockWidget" name="dockWidget_Scene">
-   <property name="windowTitle">
-    <string>Scene</string>
-   </property>
-   <attribute name="dockWidgetArea">
-    <number>1</number>
-   </attribute>
-   <widget class="QWidget" name="dockWidgetContents_Scene">
-    <layout class="QVBoxLayout" name="verticalLayout_3">
-     <item>
-      <widget class="QTreeView" name="sceneTreeView">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-  </widget>
-  <widget class="QDockWidget" name="dockWidget_File">
-   <property name="windowTitle">
-    <string>File</string>
-   </property>
-   <attribute name="dockWidgetArea">
-    <number>8</number>
-   </attribute>
-   <widget class="QWidget" name="dockWidgetContents_File">
-    <layout class="QHBoxLayout" name="horizontalLayout_3">
-     <item>
-      <widget class="QTreeView" name="FileTreeView"/>
-     </item>
-     <item>
-      <widget class="QListView" name="FileListView"/>
-     </item>
-    </layout>
-   </widget>
-  </widget>
  </widget>
  <resources/>
  <connections/>

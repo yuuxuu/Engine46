@@ -70,9 +70,11 @@ namespace Engine46 {
 
     // シーンを読み込み
     void CSceneBase::LoadScene() {
-        std::string outputPath = CFileManager::ResourceRootPath() + m_sceneName + ".json";
 
-        std::ifstream ifs(outputPath, std::ios::in);
+        FileInfo* fileInfo = CFileManager::GetFileManager().GetFileInfoFromMap(m_sceneName + ".json");
+        if (!fileInfo) return;
+
+        std::ifstream ifs(fileInfo->filePath, std::ios::in);
         if (!ifs.is_open()) return;
 
         CActorManager* pActorManager = CGameSystem::GetGameSystem().GetActorManager();

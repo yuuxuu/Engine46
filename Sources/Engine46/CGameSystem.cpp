@@ -66,18 +66,14 @@ namespace Engine46 {
         m_pMaterialManager = std::make_unique<CMaterialManager>(pRenderer);
 
         m_hwnd = hwnd;
-        m_pInput = std::make_unique<CInput>(m_hwnd);
-
-        HINSTANCE hInstance = GetModuleHandle(NULL);
-        if (!m_pInput->Initialize(hInstance)) return false;
-
-        // レンダーシステムにシーンを設定
-        CSceneBase* pScene = CSceneManager::GetSceneManager().CreateScene();
-        CRendererSystem::GetRendererSystem().SetRenderScene(pScene);
 
         if (!CFileManager::GetFileManager().Initialize()) {
             return false;
         }
+
+        // レンダーシステムにシーンを設定
+        CSceneBase* pScene = CSceneManager::GetSceneManager().CreateScene();
+        CRendererSystem::GetRendererSystem().SetRenderScene(pScene);
 
         {
             /*CActorBase* pRoot = m_pActorManager->CreateActor(ActorType::Root);

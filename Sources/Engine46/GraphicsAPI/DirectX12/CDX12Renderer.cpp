@@ -174,7 +174,7 @@ namespace Engine46 {
             m_pRenderSprite->SetShaderPackage("Sprite.hlsl");
         }
 
-        if(!pCubeTexture){
+        /*if(!pCubeTexture){
             CTextureManager* textureManager = CGameSystem::GetGameSystem().GetTextureManager();
             pCubeTexture = textureManager->CreateTexture("Snow_Bg.jpg");
             if (pCubeTexture) {
@@ -182,7 +182,7 @@ namespace Engine46 {
 
                 CreateCubeTextureShaderResourceView(dynamic_cast<CDX12Texture*>(pCubeTexture));
             }
-        }
+        }*/
 
         ScreenParamCB screenParamCb = {
             m_windowRect.w,
