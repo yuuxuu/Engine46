@@ -37,7 +37,7 @@ namespace Engine46 {
     protected:
         UINT                                    m_classID;
 
-        UINT                                    m_actorID;
+        std::string                             m_actorID;
 
         std::string                             m_actorName;
 
@@ -56,10 +56,10 @@ namespace Engine46 {
         std::unique_ptr<CInput>                 m_pInput;
 
         CActorBase*                             pParentActor;
-        int                                     m_parentActorID;
+        std::string                             m_parentActorID;
 
         std::list<CActorBase*>                  pChildActorList;
-        std::vector<int>                        m_childActorIDList;
+        std::vector<std::string>                m_childActorIDList;
 
         bool                                    m_visible;
 
@@ -90,8 +90,8 @@ namespace Engine46 {
 
         UINT GetClassID() const { return m_classID; }
 
-        UINT GetActorID() const { return m_actorID; }
-        void SetActorID(const UINT id) { m_actorID = id; }
+        std::string GetActorID() const { return m_actorID; }
+        void SetActorID(const std::string& id) { m_actorID = id; }
 
         void SetActorName(const std::string& actorName) { m_actorName = actorName; }
         std::string GetActorName() const { return m_actorName; }
@@ -122,12 +122,12 @@ namespace Engine46 {
         void DisconnectParentActor(CActorBase* pParentActor);
 
         CActorBase* GetParentActor() const { return pParentActor; }
-        int GetParentActorID() const { return m_parentActorID; }
+        std::string GetParentActorID() const { return m_parentActorID; }
 
         void AddChiledActorList(CActorBase* pChiledObject);
 
         std::list<CActorBase*> GetChildActorList() const { return pChildActorList; }
-        std::vector<int> GetChildActorIDList() const { return m_childActorIDList; }
+        std::vector<std::string> GetChildActorIDList() const { return m_childActorIDList; }
 
         bool GetVisible() const { return m_visible; }
         void SetVisible(bool visible);

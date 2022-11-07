@@ -46,6 +46,10 @@
 
 #include <dinput.h>
 
+#include <rpc.h>
+
+#pragma comment(lib, "Rpcrt4.lib")
+
 #pragma comment(lib, "dinput8.lib")
 #pragma comment(lib, "dxguid.lib")
 

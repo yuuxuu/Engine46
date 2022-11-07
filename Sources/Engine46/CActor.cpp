@@ -25,11 +25,11 @@ namespace Engine46 {
     // コンストラクタ
     CActorBase::CActorBase() :
         m_classID(int(ActorType::Root)),
-        m_actorID(0),
-        m_actorName("Actor_" + std::to_string(m_actorID)),
+        m_actorID(std::string()),
+        m_actorName("Actor_"),
         m_transform(Transform()),
         pParentActor(nullptr),
-        m_parentActorID(-1),
+        m_parentActorID(std::string()),
         m_visible(true),
         m_billboradEnabled(false)
     {}
@@ -37,11 +37,11 @@ namespace Engine46 {
     // コンストラクタ
     CActorBase::CActorBase(const UINT classID, const std::string& actorName, const Transform& transform) :
         m_classID(classID),
-        m_actorID(0),
+        m_actorID(std::string()),
         m_actorName(actorName),
         m_transform(transform),
         pParentActor(nullptr),
-        m_parentActorID(-1),
+        m_parentActorID(std::string()),
         m_visible(true),
         m_billboradEnabled(false)
     {}
@@ -230,7 +230,7 @@ namespace Engine46 {
             m_parentActorID = pParentActor->m_actorID;
         }
         else {
-            m_parentActorID = -1;
+            m_parentActorID = std::string();
         }
 
         this->pParentActor = pParentActor;

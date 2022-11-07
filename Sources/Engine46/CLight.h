@@ -27,8 +27,6 @@ namespace Engine46 {
     protected:
         UINT        m_lightType;
 
-        int         m_lightID;
-
         VECTOR4     m_lightDiffuse;
         VECTOR4     m_lightSpecular;
         VECTOR4     m_lightAmbinet;
@@ -49,8 +47,6 @@ namespace Engine46 {
 
         void SetLightType(const UINT type) { m_lightType = type; }
         LightType GetLightType() const { return LightType(m_lightType); }
-
-        void SetLightID(const int id) { m_lightID = id; }
 
         void SetLightDiffuse(const VECTOR4& diffuse) { m_lightDiffuse = diffuse; }
         void SetLightSpecular(const VECTOR4& specular) { m_lightSpecular = specular; }
