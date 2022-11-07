@@ -16,7 +16,6 @@ namespace Engine46 {
     CLight::CLight(const UINT lightType, const std::string& lightName) :
         CActorBase(int(ActorType::Light), lightName, Transform()),
         m_lightType(lightType),
-        m_lightID(0),
         m_lightDiffuse(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),
         m_lightSpecular(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),
         m_lightAmbinet(VECTOR4(1.0f, 1.0f, 1.0f, 1.0f)),

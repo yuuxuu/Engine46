@@ -80,8 +80,8 @@ namespace Engine46 {
             pScene->SetRootActor(pRoot);
 
             CActorBase* pCamera = m_pActorManager->CreateActor(ActorType::Camera);
-            CCamera* pCam = dynamic_cast<CCamera*>(pCamera);
-            if (pCam) {
+            if(CCamera* pCam = dynamic_cast<CCamera*>(pCamera))
+            {
                 pCam->SetInput(m_pInput.get());
                 pScene->AddActorToScene(pCam);
             }
