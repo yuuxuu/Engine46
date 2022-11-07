@@ -17,6 +17,8 @@
 
 #include "CRenderer.h"
 
+#include "utility.h"
+
 namespace Engine46 {
 
     // コンストラクタ
@@ -71,7 +73,22 @@ namespace Engine46 {
         pRenderer->CreateConstantBuffer(worldConstantBuffer, sizeof(worldCB));
         actor->SetWorldConstantBuffer(worldConstantBuffer);
 
-        actor->SetActorID(m_classCount.allCount++);
+        GUID id;
+        if (SUCCEEDED(CoCreateGuid(&id)))
+        {
+            RPC_WSTR wString;
+            if (RPC_S_OK == UuidToStringW(&id, &wString))
+            {
+                std::string str;
+                std::wstring outString =(WCHAR*)wString;
+
+                WStringConvertToStrig(outString, str);
+
+                actor->SetActorID(str);
+
+                RpcStringFreeW(&wString);
+            }
+        }
 
         CActorBase* pActor = actor.get();
 
@@ -131,8 +148,22 @@ namespace Engine46 {
 
         light->SetShaderPackage("CPUParticle.hlsl");
 
-        light->SetActorID(m_classCount.allCount++);
-        light->SetLightID(m_classCount.lightCount++);
+        GUID id;
+        if (SUCCEEDED(CoCreateGuid(&id)))
+        {
+            RPC_WSTR wString;
+            if (RPC_S_OK == UuidToStringW(&id, &wString))
+            {
+                std::string str;
+                std::wstring outString = (WCHAR*)wString;
+
+                WStringConvertToStrig(outString, str);
+
+                light->SetActorID(str);
+
+                RpcStringFreeW(&wString);
+            }
+        }
 
         light->SetBillBoardEnabled(true);
 
@@ -190,9 +221,9 @@ namespace Engine46 {
                 
                 if (actor == connectActor) continue;
 
-                int parentId = actor.second->GetParentActorID();
-                if (parentId > -1) {
-                    if (parentId == connectActor.second->GetActorID()) {
+                std::string parentIdStr = actor.second->GetParentActorID();
+                if (!parentIdStr.empty()) {
+                    if (parentIdStr == connectActor.second->GetActorID()) {
                         actor.second->ConnectParentActor(connectActor.second.get());
                     }
                 }

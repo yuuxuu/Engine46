@@ -37,11 +37,11 @@ namespace Engine46 {
         shaderFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
 #endif
 
-        std::unique_ptr<wchar_t[]> name;
-        CharConvertToWchar(name, shaderName);
+        std::wstring name;
+        CharConvertToWchar(shaderName, name);
 
         HRESULT hr = D3DCompileFromFile(
-            name.get(),
+            name.c_str(),
             nullptr,
             D3D_COMPILE_STANDARD_FILE_INCLUDE,
             entryPoint,
@@ -52,7 +52,7 @@ namespace Engine46 {
             &pErrBlob);
 
         if (FAILED(hr)) {
-            std::cout << name.get() << " " << (char*)pErrBlob->GetBufferPointer() << "コンパイル:失敗" << std::endl;
+            std::cout << name.c_str() << " " << (char*)pErrBlob->GetBufferPointer() << "コンパイル:失敗" << std::endl;
             return false;
         }
 

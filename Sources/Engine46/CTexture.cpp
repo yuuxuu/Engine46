@@ -43,11 +43,11 @@ namespace Engine46 {
         FileInfo* pFileInfo = CFileManager::GetFileManager().GetFileInfoFromMap(textureName);
         if (!pFileInfo) return false;
         
-        std::unique_ptr<wchar_t[]> loadName;
-        CharConvertToWchar(loadName, pFileInfo->filePath.c_str());
+        std::wstring loadName;
+        CharConvertToWchar(pFileInfo->filePath.c_str(), loadName);
 
         DirectX::ScratchImage sImage;
-        HRESULT hr = DirectX::LoadFromWICFile(loadName.get(), 0, nullptr, sImage);
+        HRESULT hr = DirectX::LoadFromWICFile(loadName.c_str(), 0, nullptr, sImage);
         if (FAILED(hr)) {
             std::string errorStr = pFileInfo->filePath;
             errorStr += "読み込み：失敗";
