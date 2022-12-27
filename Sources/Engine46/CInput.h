@@ -32,6 +32,8 @@ namespace Engine46 {
         DIMOUSESTATE                    m_oldMouse;
 
         POINT                           m_mousePos;
+        POINT                           m_oldMousePos;
+        POINT                           m_deltaMousePos;
 
         bool                            m_isKeyUpdate;
         bool                            m_isMouseUpdate;
@@ -68,6 +70,9 @@ namespace Engine46 {
         float GetMousePosX() { return (float)m_mouse.lX; }
         float GetMousePosY() { return (float)m_mouse.lY; }
         float GetMousePosZ() { return (float)m_mouse.lZ; }
+
+        float GetDeltaMousePosX() { return (float)m_deltaMousePos.x; }
+        float GetDeltaMousePosY() { return (float)m_deltaMousePos.y; }
     };
 
 } // namespace

@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Engine46Editor": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}

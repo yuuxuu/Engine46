@@ -10,6 +10,11 @@
 #ifndef _MATH_H_
 #define _MATH_H_
 
+#include <cereal/cereal.hpp>
+#include <cereal/archives/json.hpp>
+
+#include <DirectXmath.h>
+
 namespace Engine46 {
 
     constexpr float PI = 3.141592654f;

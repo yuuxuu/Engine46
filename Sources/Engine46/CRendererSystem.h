@@ -10,13 +10,13 @@
 #ifndef _CRENDERER_SYSTEM_H_
 #define _CRENDERER_SYSTEM_H_
 
-#include "math.h"
-
 namespace Engine46 {
 
     // 前方宣言
     class CRendererBase;
     class CSceneBase;
+
+    struct RECT;
 
     class CRendererSystem {
     private:
@@ -37,7 +37,7 @@ namespace Engine46 {
         void Update();
 
     public:
-        bool Initialize(HWND hwnd, RECT rect);
+        bool Initialize(HWND hwnd, UINT width, UINT height);
         void Finalize();
 
         static CRendererSystem& GetRendererSystem() {

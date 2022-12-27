@@ -26,12 +26,12 @@ namespace Engine46 {
     }
 
     // 初期化
-    bool CRendererSystem::Initialize(HWND hwnd, RECT rect) {
+    bool CRendererSystem::Initialize(HWND hwnd, UINT width, UINT height) {
 
         if (m_isInitialize) return true;
 
         m_pRenderer = std::make_unique<CDX12Renderer>();
-        if (!m_pRenderer->Initialize(hwnd, rect.w, rect.h)) return false;
+        if (!m_pRenderer->Initialize(hwnd, width, height)) return false;
 
         // イベントハンドル生成
         m_hRenderer = CreateEvent(NULL, false, false, NULL);

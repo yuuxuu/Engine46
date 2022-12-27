@@ -129,33 +129,33 @@ namespace Engine46 {
     bool CWindow::Initialize(HINSTANCE hInstance, const char* className, const char* titleName) {
 
         WNDCLASSEX	wcex;
-        wcex.hInstance = hInstance;									// インスタンス値のセット
-        wcex.lpszClassName = className;									// クラス名
-        wcex.lpfnWndProc = WindowProc;									// ウインドウメッセージ関数
-        wcex.style = CS_HREDRAW | CS_VREDRAW;						// ウインドウスタイル
-        wcex.cbSize = sizeof(WNDCLASSEX);							// 構造体のサイズ
-        wcex.hIcon = LoadIcon((HINSTANCE)NULL, IDI_APPLICATION);	// ラージアイコン
-        wcex.hIconSm = LoadIcon((HINSTANCE)NULL, IDI_WINLOGO);		// スモールアイコン
-        wcex.hCursor = LoadCursor((HINSTANCE)NULL, IDC_ARROW);		// カーソルスタイル
-        wcex.lpszMenuName = NULL; 										// メニューなし
-        wcex.cbClsExtra = 0;											// エキストラなし
+        wcex.hInstance = hInstance;                                 // インスタンス値のセット
+        wcex.lpszClassName = className;                             // クラス名
+        wcex.lpfnWndProc = WindowProc;                              // ウインドウメッセージ関数
+        wcex.style = CS_HREDRAW | CS_VREDRAW;                       // ウインドウスタイル
+        wcex.cbSize = sizeof(WNDCLASSEX);                           // 構造体のサイズ
+        wcex.hIcon = LoadIcon((HINSTANCE)NULL, IDI_APPLICATION);    // ラージアイコン
+        wcex.hIconSm = LoadIcon((HINSTANCE)NULL, IDI_WINLOGO);      // スモールアイコン
+        wcex.hCursor = LoadCursor((HINSTANCE)NULL, IDC_ARROW);      // カーソルスタイル
+        wcex.lpszMenuName = NULL;                                   // メニューなし
+        wcex.cbClsExtra = 0;                                        // エキストラなし
         wcex.cbWndExtra = 0;
-        wcex.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);			// 背景色白
+        wcex.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);   // 背景色白
 
-        if (!RegisterClassEx(&wcex)) return false;							// ウインドウクラスの登録
+        if (!RegisterClassEx(&wcex)) return false;                  // ウインドウクラスの登録
 
         m_hwnd = CreateWindow(
-            className,						// ウィンドウクラスの名前
-            titleName,						// タイトル
-            WS_VISIBLE | WS_SYSMENU,		// ウィンドウスタイル
-            0,								// ウィンドウ位置_縦
-            0,								// ウィンドウ位置_横
-            m_windowSize.w,					// ウィンドウ横幅
-            m_windowSize.h,					// ウィンドウ縦幅
-            NULL,							// 親ウィンドウなし
-            NULL,							// メニューなし
-            hInstance,						// インスタンスハンドル
-            NULL);							// 追加引数なし
+            className,                      // ウィンドウクラスの名前
+            titleName,                      // タイトル
+            WS_VISIBLE | WS_SYSMENU,        // ウィンドウスタイル
+            0,                              // ウィンドウ位置_縦
+            0,                              // ウィンドウ位置_横
+            m_windowSize.w,                 // ウィンドウ横幅
+            m_windowSize.h,                 // ウィンドウ縦幅
+            NULL,                           // 親ウィンドウなし
+            NULL,                           // メニューなし
+            hInstance,                      // インスタンスハンドル
+            NULL);                          // 追加引数なし
 
         if (!m_hwnd) return false;
         else { std::cout << "ウインドウ初期化:完了" << std::endl; }

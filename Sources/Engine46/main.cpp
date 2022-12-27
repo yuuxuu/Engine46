@@ -5,38 +5,79 @@
  * @date 2018/12/15
  */
 
+#include "main .h"
+
 #include "CGameSystem.h"
+#include "CRendererSystem.h"
+#include "CThreadPoolSystem.h"
+#include "CWinow.h"
 
-using namespace Engine46;
+namespace Engine46 {
+    void Initialize(HWND hwnd, int width, int height) {
+        CallConsole();
 
-// コンソールの呼び出し
-void CallConsole()
-{
-    char Console[128];
-    HWND ConsoleWindow;
-    ::RECT ConsoleWindowRect;
+        Engine46::CRendererSystem& renderSystem = Engine46::CRendererSystem::GetRendererSystem();
+        if (!renderSystem.Initialize(hwnd, width, height)) {
+            MessageBoxA(NULL, "レンダラーシステム初期化：失敗", "MessageBox", MB_OK);
+        }
 
-    FILE* pfile = NULL; // ファイルポインタ
+        Engine46::CThreadPoolSystem& threadPoolSystem = Engine46::CThreadPoolSystem::GetThreadPoolSystem();
+        threadPoolSystem.Initialize(3);
 
-    // コンソール出力
-    AllocConsole();
-    // ストリームと結ぶ
-    freopen_s(&pfile, "CONOUT$", "w", stdout);
-    freopen_s(&pfile, "CONNIN$", "r", stdin);
+        Engine46::CGameSystem& gameSystem = Engine46::CGameSystem::GetGameSystem();
+        if (!gameSystem.Initialize(renderSystem.GetRenderer(), hwnd)) {
+            MessageBoxA(NULL, "ゲームシステム初期化：失敗", "MessageBox", MB_OK);
+        }
+    }
 
-    // コンソールタイトル検索
-    GetConsoleTitle(Console, sizeof(Console));
-    // コンソールウインドウハンドル取得
-    ConsoleWindow = FindWindow(NULL, Console);
-    // 現在のコンソールウインドウ位置を取得
-    GetWindowRect(ConsoleWindow, &ConsoleWindowRect);
-    // コンソールウインドウ位置変更
-    MoveWindow(ConsoleWindow, 0, 0, ConsoleWindowRect.right - ConsoleWindowRect.left, ConsoleWindowRect.bottom - ConsoleWindowRect.top, TRUE);
-}
+    void Finalize() {
+        Engine46::CThreadPoolSystem& threadPoolSystem = Engine46::CThreadPoolSystem::GetThreadPoolSystem();
+        threadPoolSystem.Finalize();
+
+        Engine46::CRendererSystem& renderSystem = Engine46::CRendererSystem::GetRendererSystem();
+        renderSystem.Finalize();
+
+        Engine46::CGameSystem& gameSystem = Engine46::CGameSystem::GetGameSystem();
+        gameSystem.Finalize();
+
+        FreeConsole();
+    }
+
+    // コンソールの呼び出し
+    void CallConsole()
+    {
+        char Console[128];
+        HWND ConsoleWindow;
+        ::RECT ConsoleWindowRect;
+
+        FILE* pfile = NULL; // ファイルポインタ
+
+        // コンソール出力
+        AllocConsole();
+        // ストリームと結ぶ
+        freopen_s(&pfile, "CONOUT$", "w", stdout);
+        freopen_s(&pfile, "CONNIN$", "r", stdin);
+
+        // コンソールタイトル検索
+        GetConsoleTitle(Console, sizeof(Console));
+        // コンソールウインドウハンドル取得
+        ConsoleWindow = FindWindow(NULL, Console);
+        // 現在のコンソールウインドウ位置を取得
+        GetWindowRect(ConsoleWindow, &ConsoleWindowRect);
+        // コンソールウインドウ位置変更
+        MoveWindow(ConsoleWindow, 0, 0, ConsoleWindowRect.right - ConsoleWindowRect.left, ConsoleWindowRect.bottom - ConsoleWindowRect.top, TRUE);
+    }
+} // namespace
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszArgs, int nWinMode)
 {
-    CallConsole();
+    Engine46::CallConsole();
+
+    Engine46::CWindow window;
+    if (!window.Initialize(hInstance, "Engine46", ""))
+        return -1;
+
+    Engine46::Initialize(window.GetHwnd(), window.GetWindowSize().w, window.GetWindowSize().h);
 
     MSG	msg;
     while (1) {
@@ -50,6 +91,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszArgs,
             DispatchMessage(&msg);
         }
     }
+
+    Engine46::Finalize();
 
     FreeConsole();
 

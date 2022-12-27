@@ -15,6 +15,7 @@
 #include <list>
 #include <map>
 #include <queue>
+#include <functional>
 
 #include <thread>
 #include <mutex>
@@ -27,9 +28,6 @@
 
 #include <filesystem>
 
-#include <cereal/cereal.hpp>
-#include <cereal/archives/json.hpp>
-
 #include <wrl/client.h>
 
 #include <d3d11.h>
@@ -38,9 +36,9 @@
 #include <dxgi1_4.h>
 #include <d3dcompiler.h>
 
-#include <DirectXTex/d3dx12.h>
-
 #include <DirectXTex/DirectXTex.h>
+
+#include <DirectXTex/d3dx12.h>
 
 #include <fbxsdk.h>
 

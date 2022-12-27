@@ -47,7 +47,7 @@ namespace Engine46 {
         CharConvertToWchar(pFileInfo->filePath.c_str(), loadName);
 
         DirectX::ScratchImage sImage;
-        HRESULT hr = DirectX::LoadFromWICFile(loadName.c_str(), 0, nullptr, sImage);
+        HRESULT hr = DirectX::LoadFromWICFile(loadName.c_str(), DirectX::WIC_FLAGS_NONE, nullptr, sImage);
         if (FAILED(hr)) {
             std::string errorStr = pFileInfo->filePath;
             errorStr += "読み込み：失敗";

@@ -12,8 +12,13 @@ namespace Engine46 {
     // コンストラクタ
     CInput::CInput(HWND hwnd) :
         m_hWnd(hwnd),
-        m_isKeyUpdate(false),
-        m_isMouseUpdate(false)
+        m_mouse(),
+        m_key(),
+        m_mousePos(),
+        m_oldKey(),
+        m_oldMouse(),
+        m_isKeyUpdate(true),
+        m_isMouseUpdate(true)
     {}
 
     // デストラクタ
@@ -103,14 +108,12 @@ namespace Engine46 {
     void CInput::UpdateInput() {
 
         if (m_isMouseUpdate) {
-            if (!UpdateMouse()) {
-
+            if (!UpdateMouse()) { 
             }
         }
 
         if (m_isKeyUpdate) {
             if (!UpdateKeyBoard()) {
-
             }
         }
     }
@@ -153,10 +156,14 @@ namespace Engine46 {
     // マウス更新
     bool CInput::UpdateMouse() {
 
+        m_oldMouse = m_mouse;
+        m_oldMousePos = m_mousePos;
+
         GetCursorPos(&m_mousePos);
         ScreenToClient(m_hWnd, &m_mousePos);
 
-        m_oldMouse = m_mouse;
+        m_deltaMousePos.x = m_oldMousePos.x - m_mousePos.x;
+        m_deltaMousePos.y = m_oldMousePos.y - m_mousePos.y;
 
         HRESULT hr = m_pDirectDeviceMouse->GetDeviceState(sizeof(m_mouse), &m_mouse);
         if (FAILED(hr)) {
@@ -185,7 +192,7 @@ namespace Engine46 {
 
     // マウスの左が押さ続けているかの取得
     bool CInput::IsTriggerLeftMouse() {
-        return (m_mouse.rgbButtons[0] & 0x80) && (m_mouse.rgbButtons[0] & 0x80);
+        return (m_mouse.rgbButtons[0] & 0x80) && (m_oldMouse.rgbButtons[0] & 0x80);
     }
 
     // マウスの右が押されたかの取得
@@ -195,7 +202,7 @@ namespace Engine46 {
 
     // マウスの右が押さ続けているかの取得
     bool CInput::IsTriggerRightMouse() {
-        return (m_mouse.rgbButtons[1] & 0x80) && (m_mouse.rgbButtons[1] & 0x80);
+        return (m_mouse.rgbButtons[1] & 0x80) && (m_oldMouse.rgbButtons[1] & 0x80);
     }
 
     // マウスのホイールが押されたかの取得

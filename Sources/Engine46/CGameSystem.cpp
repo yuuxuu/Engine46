@@ -74,6 +74,10 @@ namespace Engine46 {
         // レンダーシステムにシーンを設定
         CSceneBase* pScene = CSceneManager::GetSceneManager().CreateScene();
         CRendererSystem::GetRendererSystem().SetRenderScene(pScene);
+        if (pScene) {
+            CCamera* pCamera = pScene->GetCameraFromScene();
+            pCamera->SetInput(m_pInput.get());
+        }
 
         if (!CFileManager::GetFileManager().Initialize()) {
             return false;
@@ -92,8 +96,8 @@ namespace Engine46 {
 
             pScene->SaveScene();*/
 
-            //CMeshBase* pMesh = nullptr;
-            //CModelMesh* pModelMesh = nullptr;
+            CMeshBase* pMesh = nullptr;
+            CModelMesh* pModelMesh = nullptr;
 
             /*CActorBase* pSkyDome = m_pActorManager->CreateActor(ActorType::SkyDome);
             pSkyDome->SetModelMesh("SM_SkySphere.FBX");
@@ -108,7 +112,7 @@ namespace Engine46 {
 
                         pMaterial = pMesh->GetMaterial();
                     }
-                    pMaterial->SetTexture("Snow_Bg.jpg");
+                    pMaterial->SetTexture("Road_to_MonumentValley_8k.jpg");
                 }
             }
             pSkyDome->SetShaderPackage("SkyDome.hlsl");
@@ -169,13 +173,13 @@ namespace Engine46 {
                 pCharacter->CreateOBB();
             }
             pCharacter->SetShaderPackage("Model.hlsl");
-            pScene->AddActorToScene(pCharacter);
+            pScene->AddActorToScene(pCharacter);*/
 
             CLight* pDirectionalLight = m_pActorManager->CreateLight(LightType::Directional);
             pDirectionalLight->SetVisible(false);
             pScene->AddActorToScene(pDirectionalLight);
 
-            std::random_device rd;
+            /*std::random_device rd;
             std::mt19937 mt(rd());
 
             std::uniform_real_distribution<float> rand_color(0.0f, 1.0f);
@@ -197,10 +201,10 @@ namespace Engine46 {
                 pScene->AddActorToScene(pLight);
             }*/
 
-            //CActorBase* pActor = m_pActorManager->CreateActor(ActorType::ParticleEmitter);
-            //CParticleEmitter* pParticleEmitter = dynamic_cast<CParticleEmitter*>(pActor);
+            CActorBase* pActor = m_pActorManager->CreateActor(ActorType::ParticleEmitter);
+            CParticleEmitter* pParticleEmitter = dynamic_cast<CParticleEmitter*>(pActor);
 
-            /*UINT numParticle = DEFAULT_MAX_PARTICLE;
+            UINT numParticle = DEFAULT_MAX_PARTICLE;
             if (pParticleEmitter) {
                 pParticleEmitter->Initialize(numParticle);
 
@@ -227,7 +231,7 @@ namespace Engine46 {
                 pParticleEmitter->Update(vecParticle);
 
                 pScene->AddActorToScene(pParticleEmitter);
-            }*/
+            }
         }
 
         // イベントハンドル生成
@@ -283,7 +287,7 @@ namespace Engine46 {
         CRendererBase* pRenderer = CRendererSystem::GetRendererSystem().GetRenderer();
         CSceneBase* pScene = CRendererSystem::GetRendererSystem().GetRenderScene();
 
-        if (!pRenderer || !pScene) return;
+        if (!pRenderer || !pScene || !m_pInput) return;
 
         pScene->Update();
     }

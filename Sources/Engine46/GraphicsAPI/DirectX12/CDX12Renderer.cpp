@@ -132,17 +132,17 @@ namespace Engine46 {
         //m_pForwardRendering = std::make_unique<CDX12ForwardRendering>(m_pDX12Device.get(), m_pDX12Command.get());
         //if (!m_pForwardRendering->Initialize(width, height)) return false;
 
-        m_pTiledForwardRendering = std::make_unique<CDX12TiledForwardRendering>(m_pDX12Device.get(), m_pDX12Command.get());
-        if (!m_pTiledForwardRendering->Initialize(width, height)) return false;
+        //m_pTiledForwardRendering = std::make_unique<CDX12TiledForwardRendering>(m_pDX12Device.get(), m_pDX12Command.get());
+        //if (!m_pTiledForwardRendering->Initialize(width, height)) return false;
 
-        //m_pDeferredRendering = std::make_unique<CDX12DeferredRenderig>(m_pDX12Device.get(), m_pDX12Command.get());
-        //if (!m_pDeferredRendering->Initialize(width, height)) return false;
+        m_pDeferredRendering = std::make_unique<CDX12DeferredRenderig>(m_pDX12Device.get(), m_pDX12Command.get());
+        if (!m_pDeferredRendering->Initialize(width, height)) return false;
 
         m_pDepthRendring = std::make_unique<CDX12DepthRendering>(m_pDX12Device.get(), m_pDX12Command.get());
         if (!m_pDepthRendring->Initialize(width, height)) return false;
 
-        //m_pDX12PostEffect = std::make_unique<CDX12PostEffect>(m_pDX12Device.get(), m_pDX12Command.get());
-        //if (!m_pDX12PostEffect->Initialize(this, width, height)) return false;
+        m_pDX12PostEffect = std::make_unique<CDX12PostEffect>(m_pDX12Device.get(), m_pDX12Command.get());
+        if (!m_pDX12PostEffect->Initialize(this, width, height)) return false;
 
         m_windowRect = RECT(width, height);
 

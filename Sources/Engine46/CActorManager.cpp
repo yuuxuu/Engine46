@@ -105,13 +105,13 @@ namespace Engine46 {
         if (name.empty()) {
             switch (lightType) {
             case LightType::Directional:
-                name = "DirectionalLight_" + std::to_string(m_classCount.lightCount);
+                name = "DirectionalLight_" + std::to_string(m_classCount.lightCount++);
                 break;
             case LightType::Point:
-                name = "PointLight_" + std::to_string(m_classCount.lightCount);
+                name = "PointLight_" + std::to_string(m_classCount.lightCount++);
                 break;
             case LightType::Spot:
-                name = "SpotLight_" + std::to_string(m_classCount.lightCount);
+                name = "SpotLight_" + std::to_string(m_classCount.lightCount++);
                 break;
             }
         }
