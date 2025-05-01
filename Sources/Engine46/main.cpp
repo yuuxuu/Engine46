@@ -5,7 +5,7 @@
  * @date 2018/12/15
  */
 
-#include "main .h"
+#include "main.h"
 
 #include "CGameSystem.h"
 #include "CRendererSystem.h"

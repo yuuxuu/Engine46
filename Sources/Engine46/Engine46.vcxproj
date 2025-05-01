@@ -350,7 +350,7 @@
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{651c44ac-c73c-4de1-b557-f02bf121cd47}</ProjectGuid>
     <RootNamespace>Engine46</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
@@ -426,7 +426,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-      <AdditionalIncludeDirectories>C:\Engine46\Inc;C:\Engine46\Sources;C:\Engine46\Sources\Engine46\GraphicsAPI;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\Inc;$(SolutionDir)\Sources;$(SolutionDir)\Sources\Engine46\GraphicsAPI;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <ShowIncludes>false</ShowIncludes>
       <CompileAs>Default</CompileAs>
@@ -479,7 +479,7 @@
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
-      <AdditionalIncludeDirectories>C:\Engine46\Inc;C:\Engine46\Sources;C:\Engine46\Sources\Engine46\GraphicsAPI;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\Inc;$(SolutionDir)\Sources;$(SolutionDir)\Sources\Engine46\GraphicsAPI;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <ShowIncludes>false</ShowIncludes>
     </ClCompile>
