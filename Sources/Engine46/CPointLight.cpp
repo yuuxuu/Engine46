@@ -19,7 +19,7 @@ namespace Engine46 {
 
         std::uniform_real_distribution<float> rand_degree(0.0f, 360.0f);
         std::uniform_real_distribution<float> rand_r(0.0f, 3000.0f);
-        std::uniform_int ran_turn(0, 1);
+        std::uniform_int_distribution ran_turn(0, 1);
         std::uniform_real_distribution<float> rand_speed(0.1f, 1.5f);
 
         m_degree = rand_degree(mt);

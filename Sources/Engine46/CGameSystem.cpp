@@ -74,17 +74,13 @@ namespace Engine46 {
         // レンダーシステムにシーンを設定
         CSceneBase* pScene = CSceneManager::GetSceneManager().CreateScene();
         CRendererSystem::GetRendererSystem().SetRenderScene(pScene);
-        if (pScene) {
-            CCamera* pCamera = pScene->GetCameraFromScene();
-            pCamera->SetInput(m_pInput.get());
-        }
 
         if (!CFileManager::GetFileManager().Initialize()) {
             return false;
         }
 
         {
-            /*CActorBase* pRoot = m_pActorManager->CreateActor(ActorType::Root);
+            CActorBase* pRoot = m_pActorManager->CreateActor(ActorType::Root);
             pScene->SetRootActor(pRoot);
 
             CActorBase* pCamera = m_pActorManager->CreateActor(ActorType::Camera);
@@ -94,7 +90,12 @@ namespace Engine46 {
                 pScene->AddActorToScene(pCam);
             }
 
-            pScene->SaveScene();*/
+            if (pScene) {
+                CCamera* pCamera = pScene->GetCameraFromScene();
+                pCamera->SetInput(m_pInput.get());
+            }
+
+            //pScene->SaveScene();
 
             CMeshBase* pMesh = nullptr;
             CModelMesh* pModelMesh = nullptr;
@@ -165,7 +166,7 @@ namespace Engine46 {
             pSphere->SetShaderPackage("Model.hlsl");
             pScene->AddActorToScene(pSphere);*/
 
-            /*CActorBase* pCharacter = m_pActorManager->CreateActor(ActorType::Actor);
+            CActorBase* pCharacter = m_pActorManager->CreateActor(ActorType::Actor);
             pCharacter->SetModelMesh("sponza.obj");
 
             pModelMesh = pCharacter->GetModelMesh();
@@ -173,13 +174,13 @@ namespace Engine46 {
                 pCharacter->CreateOBB();
             }
             pCharacter->SetShaderPackage("Model.hlsl");
-            pScene->AddActorToScene(pCharacter);*/
+            pScene->AddActorToScene(pCharacter);
 
             CLight* pDirectionalLight = m_pActorManager->CreateLight(LightType::Directional);
             pDirectionalLight->SetVisible(false);
             pScene->AddActorToScene(pDirectionalLight);
 
-            /*std::random_device rd;
+            std::random_device rd;
             std::mt19937 mt(rd());
 
             std::uniform_real_distribution<float> rand_color(0.0f, 1.0f);
@@ -199,9 +200,9 @@ namespace Engine46 {
                 }
 
                 pScene->AddActorToScene(pLight);
-            }*/
+            }
 
-            CActorBase* pActor = m_pActorManager->CreateActor(ActorType::ParticleEmitter);
+            /*CActorBase* pActor = m_pActorManager->CreateActor(ActorType::ParticleEmitter);
             CParticleEmitter* pParticleEmitter = dynamic_cast<CParticleEmitter*>(pActor);
 
             UINT numParticle = DEFAULT_MAX_PARTICLE;
@@ -231,7 +232,7 @@ namespace Engine46 {
                 pParticleEmitter->Update(vecParticle);
 
                 pScene->AddActorToScene(pParticleEmitter);
-            }
+            }*/
         }
 
         // イベントハンドル生成

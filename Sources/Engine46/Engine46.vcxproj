@@ -187,10 +187,7 @@
     <ClInclude Include="IObject.h" />
     <ClInclude Include="IPostEffect.h" />
     <ClInclude Include="IRenderer.h" />
-    <ClInclude Include="main .h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </ExcludedFromBuild>
-    </ClInclude>
+    <ClInclude Include="main.h" />
     <ClInclude Include="math.h" />
     <ClInclude Include="utility.h" />
   </ItemGroup>
