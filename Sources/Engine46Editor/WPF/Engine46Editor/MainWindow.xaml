@@ -7,8 +7,8 @@
         xmlns:wfc ="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
         mc:Ignorable="d"
         Title="MainWindow"
-        Width="1280"
-        Height="720"
+        Width="1920"
+        Height="1080"
         Loaded="Window_Loaded"
         Closed="Window_Closed">
 </Window>

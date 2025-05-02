@@ -96,87 +96,45 @@ namespace Engine46 {
             }
 
             //pScene->SaveScene();
+        }
 
-            CMeshBase* pMesh = nullptr;
-            CModelMesh* pModelMesh = nullptr;
+        {
+            auto pSkyDome = m_pActorManager->CreateActor(ActorType::SkyDome);
+            if (pSkyDome)
+            {
+                pSkyDome->SetModelMesh("SM_SkySphere.FBX");
+                pSkyDome->SetScale({ 10.0f, 10.0f, 10.0f });
 
-            /*CActorBase* pSkyDome = m_pActorManager->CreateActor(ActorType::SkyDome);
-            pSkyDome->SetModelMesh("SM_SkySphere.FBX");
+                auto pModelMesh = pSkyDome->GetModelMesh();
+                if (pModelMesh) {
+                    std::vector<CMeshBase*> pVecMesh = pModelMesh->GetVecMesh();
+                    for (const auto& pMesh : pVecMesh) {
+                        CMaterialBase* pMaterial = pMesh->GetMaterial();
+                        if (!pMaterial) {
+                            pMesh->SetMaterial("skydome");
 
-            pModelMesh = pSkyDome->GetModelMesh();
-            if (pModelMesh) {
-                std::vector<CMeshBase*> pVecMesh = pModelMesh->GetVecMesh();
-                for (const auto& pMesh : pVecMesh) {
-                    CMaterialBase* pMaterial = pMesh->GetMaterial();
-                    if (!pMaterial) {
-                        pMesh->SetMaterial("skydome");
-
-                        pMaterial = pMesh->GetMaterial();
+                            pMaterial = pMesh->GetMaterial();
+                        }
+                        pMaterial->SetTexture("SunsetAmbientCubemap.HDR");
                     }
-                    pMaterial->SetTexture("Road_to_MonumentValley_8k.jpg");
                 }
+                pSkyDome->SetShaderPackage("SkyDome.hlsl");
+                pScene->AddActorToScene(pSkyDome);
             }
-            pSkyDome->SetShaderPackage("SkyDome.hlsl");
-            pScene->AddActorToScene(pSkyDome);*/
+        }
 
-            /*CActorBase* pPlane = m_pActorManager->CreateActor(ActorType::Sprite);
-            pPlane->SetMesh("PlaneMesh");
-
-            pMesh = pPlane->GetMesh();
-            if (pMesh) {
-                pMesh->SetMaterial("PlaneMaterial");
-
-                pMesh->CreateSpriteMesh();
-
-                pPlane->CreateOBB();
-
-                CMaterialBase* pMaterial = pMesh->GetMaterial();
-                if (pMaterial) {
-                    pMaterial->SetTexture("floor_tiles_06_diff_4k.jpg");
-                }
-            }
-            pPlane->SetRotation(VECTOR3(DegreeToRadian(-90.0f), 0.0f, 0.0f));
-            pPlane->SetScale(VECTOR3(100.0f, 100.0f, 1.0f));
-            pPlane->SetShaderPackage("Model.hlsl");
-            pScene->AddActorToScene(pPlane);*/
-
-            /*CActorBase* pBox = m_pActorManager->CreateActor(ActorType::Box);
-            pBox->SetMesh("BoxMesh");
-
-            pMesh = pBox->GetMesh();
-            if (pMesh) {
-                pMesh->SetMaterial("BoxMaterial");
-
-                pMesh->CreateBoxMesh();
-
-                pBox->CreateOBB();
-
-                CMaterialBase* pMaterial = pMesh->GetMaterial();
-                if (pMaterial) {
-                    pMaterial->SetTexture("E3g6p9QUYAMTSbT.jpg");
-                }
-            }
-            pBox->SetShaderPackage("Model.hlsl");
-            pScene->AddActorToScene(pBox);*/
-
-            /*CActorBase* pSphere = m_pActorManager->CreateActor(ActorType::Actor);
-            pSphere->SetScale(VECTOR3(0.1f, 0.1f, 0.1f));
-            pSphere->SetModelMesh("SM_SkySphere.FBX");
-
-            pSphere->SetShaderPackage("Model.hlsl");
-            pScene->AddActorToScene(pSphere);*/
-
-            CActorBase* pCharacter = m_pActorManager->CreateActor(ActorType::Actor);
+        /*{
+            auto pCharacter = m_pActorManager->CreateActor(ActorType::Actor);
             pCharacter->SetModelMesh("sponza.obj");
 
-            pModelMesh = pCharacter->GetModelMesh();
+            auto pModelMesh = pCharacter->GetModelMesh();
             if (pModelMesh) {
                 pCharacter->CreateOBB();
             }
             pCharacter->SetShaderPackage("Model.hlsl");
             pScene->AddActorToScene(pCharacter);
 
-            CLight* pDirectionalLight = m_pActorManager->CreateLight(LightType::Directional);
+            auto pDirectionalLight = m_pActorManager->CreateLight(LightType::Directional);
             pDirectionalLight->SetVisible(false);
             pScene->AddActorToScene(pDirectionalLight);
 
@@ -189,10 +147,10 @@ namespace Engine46 {
 
             const int numLight = LIGHT_MAX;
             for (int i = 0; i < numLight; ++i) {
-                CLight* pLight = m_pActorManager->CreateLight(LightType::Point);
+                auto pLight = m_pActorManager->CreateLight(LightType::Point);
                 pLight->SetVisible(false);
 
-                CPointLight* pPointLight = dynamic_cast<CPointLight*>(pLight);
+                auto pPointLight = dynamic_cast<CPointLight*>(pLight);
                 if (pPointLight) {
                     pPointLight->SetPos(VECTOR3(0.0f, rand_posY(mt), 0.0f));
                     pPointLight->SetRadius(rand_radius(mt));
@@ -201,12 +159,13 @@ namespace Engine46 {
 
                 pScene->AddActorToScene(pLight);
             }
+        }*/
 
-            /*CActorBase* pActor = m_pActorManager->CreateActor(ActorType::ParticleEmitter);
-            CParticleEmitter* pParticleEmitter = dynamic_cast<CParticleEmitter*>(pActor);
-
-            UINT numParticle = DEFAULT_MAX_PARTICLE;
+        {
+            auto pActor = m_pActorManager->CreateActor(ActorType::ParticleEmitter);
+            auto pParticleEmitter = dynamic_cast<CParticleEmitter*>(pActor);
             if (pParticleEmitter) {
+                UINT numParticle = DEFAULT_MAX_PARTICLE;
                 pParticleEmitter->Initialize(numParticle);
 
                 std::random_device rd;
@@ -232,7 +191,7 @@ namespace Engine46 {
                 pParticleEmitter->Update(vecParticle);
 
                 pScene->AddActorToScene(pParticleEmitter);
-            }*/
+            }
         }
 
         // イベントハンドル生成

@@ -132,11 +132,11 @@ namespace Engine46 {
         //m_pForwardRendering = std::make_unique<CDX12ForwardRendering>(m_pDX12Device.get(), m_pDX12Command.get());
         //if (!m_pForwardRendering->Initialize(width, height)) return false;
 
-        m_pTiledForwardRendering = std::make_unique<CDX12TiledForwardRendering>(m_pDX12Device.get(), m_pDX12Command.get());
-        if (!m_pTiledForwardRendering->Initialize(width, height)) return false;
+        //m_pTiledForwardRendering = std::make_unique<CDX12TiledForwardRendering>(m_pDX12Device.get(), m_pDX12Command.get());
+        //if (!m_pTiledForwardRendering->Initialize(width, height)) return false;
 
-        //m_pDeferredRendering = std::make_unique<CDX12DeferredRenderig>(m_pDX12Device.get(), m_pDX12Command.get());
-        //if (!m_pDeferredRendering->Initialize(width, height)) return false;
+        m_pDeferredRendering = std::make_unique<CDX12DeferredRenderig>(m_pDX12Device.get(), m_pDX12Command.get());
+        if (!m_pDeferredRendering->Initialize(width, height)) return false;
 
         m_pDepthRendring = std::make_unique<CDX12DepthRendering>(m_pDX12Device.get(), m_pDX12Command.get());
         if (!m_pDepthRendring->Initialize(width, height)) return false;
@@ -316,7 +316,7 @@ namespace Engine46 {
             m_pDeferredRendering->RenderingForSceneLighting(m_pRenderSprite.get());
             Reset();
 
-            pRenderTexture = dynamic_cast<CDX12DeferredRenderig*>(m_pDeferredRendering.get())->GetRenderTexture();
+            pRenderTexture = dynamic_cast<CDX12DeferredRenderig*>(m_pDeferredRendering.get())->GetRenderTexture(DXGI_FORMAT_R16G16B16A16_FLOAT);
         }
 
         if (m_pDX12PostEffect) {
@@ -350,22 +350,24 @@ namespace Engine46 {
             m_pRenderSprite->Draw();
         }
 
-        /*UINT width = (UINT)m_windowRect.w / (RENDER_TARGET_SIZE + 1);
-        UINT height = m_windowRect.h / (RENDER_TARGET_SIZE + 1);
-        UINT x = 0;
-        UINT y = (UINT)m_windowRect.h - height;*/
+        /*{
+            UINT width = (UINT)m_windowRect.w / (RENDER_TARGET_SIZE + 1);
+            UINT height = m_windowRect.h / (RENDER_TARGET_SIZE + 1);
+            UINT x = 0;
+            UINT y = (UINT)m_windowRect.h - height;
 
-        /*if (m_pTiledForwardRendering) {
-            m_pTiledForwardRendering->DrawForRenderScene(m_pRenderSprite.get(), 0, 0, m_windowRect.w, m_windowRect.h);
-        }*/
+            if (m_pTiledForwardRendering) {
+                m_pTiledForwardRendering->DrawForRenderScene(m_pRenderSprite.get(), 0, 0, m_windowRect.w, m_windowRect.h);
+            }
 
-        /*if (m_pDeferredRendering) {
-            m_pDeferredRendering->DrawForRenderScene(m_pRenderSprite.get(), x, y, width, height);
-        }*/
+            if (m_pDeferredRendering) {
+                m_pDeferredRendering->DrawForRenderScene(m_pRenderSprite.get(), x, y, width, height);
+            }
 
-        /*if (m_pDepthRendring) {
-            x += width * RENDER_TARGET_SIZE;
-            m_pDepthRendring->DrawForRenderScene(m_pRenderSprite.get(), x, y, width, height);
+            if (m_pDepthRendring) {
+                x += width * RENDER_TARGET_SIZE;
+                m_pDepthRendring->DrawForRenderScene(m_pRenderSprite.get(), x, y, width, height);
+            }
         }*/
 
         m_pDX12Command->SetResourceBarrier(m_pRtvResource[index].Get(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);

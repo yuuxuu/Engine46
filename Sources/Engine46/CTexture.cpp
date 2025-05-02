@@ -47,7 +47,13 @@ namespace Engine46 {
         CharConvertToWchar(pFileInfo->filePath.c_str(), loadName);
 
         DirectX::ScratchImage sImage;
-        HRESULT hr = DirectX::LoadFromWICFile(loadName.c_str(), DirectX::WIC_FLAGS_NONE, nullptr, sImage);
+
+        HRESULT hr;
+        if (pFileInfo->extensionName == ".HDR")
+            hr = DirectX::LoadFromHDRFile(loadName.c_str(), nullptr, sImage);
+        else
+            hr = DirectX::LoadFromWICFile(loadName.c_str(), DirectX::WIC_FLAGS_NONE, nullptr, sImage);
+
         if (FAILED(hr)) {
             std::string errorStr = pFileInfo->filePath;
             errorStr += "読み込み：失敗";
