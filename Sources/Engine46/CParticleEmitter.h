@@ -16,7 +16,7 @@ namespace Engine46 {
     class CUnorderedAccessBufferBase;
     class CTextureBase;
 
-    constexpr UINT DEFAULT_MAX_PARTICLE = 100000;
+    constexpr UINT DEFAULT_MAX_PARTICLE = 1000000;
 
     struct Particle {
         VECTOR3 pos;

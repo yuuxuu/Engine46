@@ -87,28 +87,20 @@ namespace Engine46 {
             std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
 
             if (ext == ".fbx") {
-                std::function<void()> task = [=] {
-                    if (!fbxLoader.LoadModel(pModelMesh, pFileInfo->filePath)) {
-                        std::string errorStr = pFileInfo->filePath;
-                        errorStr += "読み込み：失敗";
+                if (!fbxLoader.LoadModel(pModelMesh, pFileInfo->filePath)) {
+                    std::string errorStr = pFileInfo->filePath;
+                    errorStr += "読み込み：失敗";
 
-                        MessageBox(NULL, errorStr.c_str(), "MessageBox", MB_OK);
-                    }
-                };
-
-                CThreadPoolSystem::GetThreadPoolSystem().AddWorkTask(task);
+                    MessageBox(NULL, errorStr.c_str(), "MessageBox", MB_OK);
+                }
             }
             else if (ext == ".obj") {
-                std::function<void()> task = [=] {
-                    if (!objLoader.LoadModel(pModelMesh, pFileInfo->filePath)) {
-                        std::string errorStr = pFileInfo->filePath;
-                        errorStr += "読み込み：失敗";
+                if (!objLoader.LoadModel(pModelMesh, pFileInfo->filePath)) {
+                    std::string errorStr = pFileInfo->filePath;
+                    errorStr += "読み込み：失敗";
 
-                        MessageBox(NULL, errorStr.c_str(), "MessageBox", MB_OK);
-                    }
-                };
-
-                CThreadPoolSystem::GetThreadPoolSystem().AddWorkTask(task);
+                    MessageBox(NULL, errorStr.c_str(), "MessageBox", MB_OK);
+                }
             }
         }
 

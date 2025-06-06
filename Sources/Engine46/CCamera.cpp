@@ -17,7 +17,7 @@ namespace Engine46 {
         m_eye(0.0f, 0.0f, -10.0f),
         m_forcus(),
         m_up(0.0f, 1.0f, 0.0f),
-        m_speed(1.0f)
+        m_speed(30.0f)
     {
         m_matProj.dx_m = DirectX::XMMatrixPerspectiveFovLH(
             DegreeToRadian(90.0f),
@@ -124,7 +124,7 @@ namespace Engine46 {
     // カメラのスピードを取得
     float CCamera::GetCameraSpeed(float nowSpeed) {
         const float minSpeed = 1.0f;
-        const float maxSpeed = 10.0f;
+        const float maxSpeed = 30.0f;
         
         float raito = pInput->GetMousePosZ();
         if (raito < 0.1f && raito > -0.1f) {

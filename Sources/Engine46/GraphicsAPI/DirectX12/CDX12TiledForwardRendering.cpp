@@ -157,43 +157,6 @@ namespace Engine46{
 
         Begine();
 
-        CActorBase* pSkyDome = pScene->GetSkyDomeFromScene();
-        if (pSkyDome) {
-            CShaderPackage* pSp = pSkyDome->GetShaderPackage();
-            if (pSp) {
-                pSp->SetShader();
-
-                CRendererBase* pRenderer = CRendererSystem::GetRendererSystem().GetRenderer();
-                if (pRenderer) {
-                    pRenderer->SetSceneConstantBuffers((UINT)CB_TYPE::CAMERA);
-                }
-
-                CConstantBufferBase* pCb = pSkyDome->GetWorldConstantBuffer();
-                if (pCb) {
-                    Matrix matW = pSkyDome->GetWorldMatrix();
-                    matW.dx_m = DirectX::XMMatrixTranspose(matW.dx_m);
-
-                    worldCB cb = {
-                        matW,
-                    };
-                    pSkyDome->UpdateWorldConstantBuffer(&cb);
-
-                    CModelMesh* pModelMesh = pSkyDome->GetModelMesh();
-                    if (pModelMesh) {
-                        std::vector<CMeshBase*> vecMesh = pModelMesh->GetVecMesh();
-                        for (const auto& mesh : vecMesh) {
-                            mesh->Set();
-                            CMaterialBase* pMaterial = mesh->GetMaterial();
-                            if (pMaterial) {
-                                pMaterial->SetTexture((UINT)MyRS_Model::SRV_Diffuse);
-                            }
-                            mesh->Draw();
-                        }
-                    }
-                }
-            }
-        }
-
         CShaderManager* pShaderManager = CGameSystem::GetGameSystem().GetShaderManager();
 
         CShaderPackage* pSp = pShaderManager->CreateShaderPackage("Model_LightingOfLightCulling.hlsl");
@@ -249,6 +212,43 @@ namespace Engine46{
                                 if (pMaterial) {
                                     pMaterial->SetTexture((UINT)MyRS_ModelLighting_Of_LightCulling::SRV_Diffuse);
                                 }
+                            }
+                            mesh->Draw();
+                        }
+                    }
+                }
+            }
+        }
+
+        CActorBase* pSkyDome = pScene->GetSkyDomeFromScene();
+        if (pSkyDome) {
+            CShaderPackage* pSp = pSkyDome->GetShaderPackage();
+            if (pSp) {
+                pSp->SetShader();
+
+                CRendererBase* pRenderer = CRendererSystem::GetRendererSystem().GetRenderer();
+                if (pRenderer) {
+                    pRenderer->SetSceneConstantBuffers((UINT)CB_TYPE::CAMERA);
+                }
+
+                CConstantBufferBase* pCb = pSkyDome->GetWorldConstantBuffer();
+                if (pCb) {
+                    Matrix matW = pSkyDome->GetWorldMatrix();
+                    matW.dx_m = DirectX::XMMatrixTranspose(matW.dx_m);
+
+                    worldCB cb = {
+                        matW,
+                    };
+                    pSkyDome->UpdateWorldConstantBuffer(&cb);
+
+                    CModelMesh* pModelMesh = pSkyDome->GetModelMesh();
+                    if (pModelMesh) {
+                        std::vector<CMeshBase*> vecMesh = pModelMesh->GetVecMesh();
+                        for (const auto& mesh : vecMesh) {
+                            mesh->Set();
+                            CMaterialBase* pMaterial = mesh->GetMaterial();
+                            if (pMaterial) {
+                                pMaterial->SetTexture((UINT)MyRS_Model::SRV_Diffuse);
                             }
                             mesh->Draw();
                         }
